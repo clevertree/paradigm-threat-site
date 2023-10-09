@@ -1,0 +1,81 @@
+.container {
+  border-radius: 0.4em;
+  border: 2px ridge var(--fg-color);
+  margin: 1rem auto;
+  padding: 0.4rem;
+  background-color: var(--bg-color2);
+  max-width: 1800px;
+  //display: flex;
+  //flex-direction: column;
+}
+
+.channelTitle {
+  text-align: center;
+  font-size: 1.2rem;
+}
+
+.channelFooter {
+  font-size: 0.8rem;
+}
+
+.channel {
+  background-color: var(--bg-color-full);
+  border: 2px groove var(--bg-color2);
+  padding: 0.4rem;
+}
+
+
+.post {
+  font-family: monospace;
+}
+
+.username {
+  margin-right: 4px;
+  font-weight: bold;
+
+}
+
+.username:after {
+  content: ':'
+}
+
+.message {
+  & p {
+    font-family: inherit;
+    display: inline;
+  }
+}
+
+.input {
+  box-shadow: rgba(225, 228, 232, 0.2) 0 1px 0 inset;
+  padding: 4px;
+  border: 2px groove var(--bg-color2);
+  background-color: var(--bg-color-full);
+  color: var(--fg-color);
+
+  &::placeholder {
+    color: #666;
+
+  }
+
+  //&:focus:invalid {
+  //  background-color: red;
+  //}
+}
+
+.submit {
+  cursor: pointer;
+  transition: background-color .4s;
+
+  &:active {
+    background-color: #29A;
+  }
+}
+
+.error {
+  display: inline-block;
+  color: #D8000C;
+  background-color: #FFD2D2;
+  padding: 0.5em 1em;
+  border-radius: 4px;
+}

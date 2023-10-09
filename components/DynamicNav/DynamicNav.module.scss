@@ -1,0 +1,52 @@
+/** AutoGenerateContent **/
+
+.navFloating {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  z-index: 9;
+}
+
+.linkContainer {
+  /*font-size: 18px;*/
+  padding: 2px;
+  background-color: var(--nav-bg-color, #999);
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+
+  a {
+    color: var(--fg-color);
+
+    &:hover {
+      color: var(--fg-color-link);
+    }
+
+    &.current {
+      font-weight: bold;
+      //color: #1c1cd4;
+    }
+
+
+    //text-decoration: none;
+    //display: block;
+    padding: 0.2vw 0.5vw;
+    margin: 0 0.2vw;
+  }
+
+  + .linkSubContainer {
+    background-color: color-mix(in srgb, var(--nav-bg-color, #999), #000 10%);
+
+    + .linkSubContainer {
+      background-color: color-mix(in srgb, var(--nav-bg-color, #999), #000 20%);
+
+      + .linkSubContainer {
+        background-color: color-mix(in srgb, var(--nav-bg-color, #999), #000 30%);
+      }
+    }
+  }
+}
+
+
+

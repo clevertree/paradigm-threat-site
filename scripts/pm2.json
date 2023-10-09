@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "Paradigm Threat Server",
+      "script": "npm",
+      "args": "start"
+    }
+  ]
+}

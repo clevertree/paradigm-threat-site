@@ -1,0 +1,84 @@
+.container {
+  cursor: pointer;
+
+  & > img {
+    width: 100%;
+  }
+
+  & p {
+    margin-top: 0;
+    padding: 0;
+    font-size: smaller;
+    font-style: italic;
+  }
+}
+
+
+.fullscreen {
+  background-color: #000C;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  z-index: 9;
+  animation: fade 1s linear;
+
+  & > p {
+    background-color: #000;
+    border-radius: 1rem;
+    padding: 1rem;
+    margin-top: 0;
+  }
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 3rem;
+  color: indianred;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 4px;
+  cursor: pointer;
+  z-index: 9;
+
+  &:hover {
+    background-color: indianred;
+    color: red;
+  }
+}
+
+.next {
+  top: 50vh
+}
+
+.previous {
+  left: 0;
+  top: 50vh
+}
+
+.fullscreenImage {
+  padding: 1rem 0;
+  cursor: pointer;
+  width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0
+  }
+  100% {
+    opacity: 1
+  }
+}

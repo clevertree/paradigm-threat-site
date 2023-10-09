@@ -1,0 +1,6 @@
+[submodule "sources"]
+	path = sources
+	url = ssh://git.pthreat.co:2222/ari/paradigm-threat-sources.git
+[submodule "app"]
+	path = app
+	url = ssh://git.pthreat.co:2222/ari/paradigm-threat-pages.git
