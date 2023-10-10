@@ -28,4 +28,5 @@ pm2 restart "Paradigm Threat Server"
 echo "Running tests"
 CYPRESS_BASE_URL=https://paradigmthreat.net npx cypress run --e2e || exit;
 npx cypress run --component
+echo "Deploy complete"
 EOF

@@ -14,7 +14,7 @@ export default function ChatRoom({channel, title, className}) {
 
     useEffect(() => {
         // Fetch top directory
-        fetch(`/api/chat/channels/${channel}/getPosts`)
+        fetch(`/api/chat/channel/${channel}/getPosts`)
             .then(res => res.json())
             .then((channelInfo) => {
                 setChannelInfo(channelInfo)
@@ -39,7 +39,7 @@ export default function ChatRoom({channel, title, className}) {
             formDataObject.username = 'guest';
         formElm.elements.message.value = '';
         formElm.elements.message.disabled = true;
-        const response = await fetch(`/api/chat/channels/${channel}/createGuestPost`, {
+        const response = await fetch(`/api/chat/channel/${channel}/createGuestPost`, {
             headers: {
                 "Content-Type": "application/json",
                 Accept: "application/json",

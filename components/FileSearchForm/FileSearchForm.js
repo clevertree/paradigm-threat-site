@@ -37,8 +37,9 @@ export default function FileSearchForm({keywords}) {
         <article className={"search asset-spread"}>
             {!loading ? <ul>
                 <h2>Markdown Search Results:</h2>
-                {fileList.map((file, key) => <li key={key}>
-                    <a href={file}>{file}</a>
+                {fileList.map(({path, lines}) => <li key={path}>
+                    <a href={path}>{path}</a>
+                    <pre>{lines.join("\n")}</pre>
                 </li>)}
             </ul> : null}
         </article>
