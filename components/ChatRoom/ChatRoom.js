@@ -18,7 +18,6 @@ export default function ChatRoom({channel, title, className}) {
             .then(res => res.json())
             .then((channelInfo) => {
                 setChannelInfo(channelInfo)
-                console.log('channelInfo', channelInfo)
             }).catch(error => setError(error))
     }, [channel])
 
@@ -47,7 +46,6 @@ export default function ChatRoom({channel, title, className}) {
             method: 'POST',
             body: JSON.stringify(formDataObject),
         })
-        console.log('response', response);
 
         const {message, username} = await response.json()
         setChannelInfo({

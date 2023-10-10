@@ -29,9 +29,9 @@
   animation: fade 1s linear;
 
   & > p {
-    background-color: #000;
-    border-radius: 1rem;
-    padding: 1rem;
+    //background-color: #000;
+    //border-radius: 1rem;
+    //padding: 1rem;
     margin-top: 0;
   }
 }
@@ -67,10 +67,10 @@
 }
 
 .fullscreenImage {
-  padding: 1rem 0;
+  margin: 1rem 0;
   cursor: pointer;
-  width: 90%;
-  max-height: 90%;
+  //width: 90%;
+  //max-height: 90%;
   object-fit: contain;
 }
 

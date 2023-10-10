@@ -11,14 +11,16 @@ module.exports = async function (buffer) {
 
     const {width, height, format} = await sharpOriginal.metadata()
     const result = await sharpOriginal
-        .resize(2)
+        .resize(8)
         .toBuffer();
     const blurDataURL = `data:image/${format};base64,${result.toString('base64')}`;
+
     const data = {
         src: relativePath,
         width,
         height,
         // bytes,
+        placeholder: 'blur',
         blurDataURL,
     }
     // const response = await getImageSize(source, ext);

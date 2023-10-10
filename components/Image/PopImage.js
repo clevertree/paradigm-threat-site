@@ -17,6 +17,8 @@ export default function PopImage({children, className, ...props}) {
         srcProps = {...props, ...props.src.default};
     else if (typeof props.src === "object")
         srcProps = {...props, ...props.src};
+    else if (typeof props.default === "object")
+        srcProps = {...props, ...props.default};
 
     function toggleFullscreen(e) {
         console.log('e', e)
@@ -27,6 +29,7 @@ export default function PopImage({children, className, ...props}) {
         <div className={`${styles.container} ${className}`} onClick={toggleFullscreen}>
             <Image
                 {...srcProps}
+
             />
             {children}
         </div>)
