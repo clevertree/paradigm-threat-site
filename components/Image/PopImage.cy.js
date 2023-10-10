@@ -1,9 +1,9 @@
 import React from 'react'
-import ChangeLog from './ChangeLog'
+import PopImage from './PopImage'
 
-describe('<ChangeLog />', () => {
+describe('<PopImage />', () => {
   it('renders', () => {
     // see: https://on.cypress.io/mounting-react
-    cy.mount(<ChangeLog />)
+    cy.mount(<PopImage />)
   })
 })

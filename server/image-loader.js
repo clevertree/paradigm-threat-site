@@ -4,7 +4,7 @@ const Sharp = require('sharp')
 
 module.exports = async function (buffer) {
     const relativePath = '/' + relative(join(process.cwd(), 'app'), this.resourcePath);
-    console.log('import image', relativePath)
+    // console.log('import image', relativePath)
     // const bytes = fs.statSync(this.resourcePath).size;
 
     let sharpOriginal = Sharp(buffer);
