@@ -35,13 +35,13 @@
     margin: 0 0.2vw;
   }
 
-  + .linkSubContainer {
+  + .linkContainer {
     background-color: color-mix(in srgb, var(--nav-bg-color, #999), #000 10%);
 
-    + .linkSubContainer {
+    + .linkContainer {
       background-color: color-mix(in srgb, var(--nav-bg-color, #999), #000 20%);
 
-      + .linkSubContainer {
+      + .linkContainer {
         background-color: color-mix(in srgb, var(--nav-bg-color, #999), #000 30%);
       }
     }

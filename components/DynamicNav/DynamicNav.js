@@ -1,63 +1,49 @@
+"use client";
+
 import React from "react";
 
 import styles from "./DynamicNav.module.scss"
 import Link from "next/link";
-import {FloatingDiv} from "/components";
+import {usePathname} from "next/navigation";
 
-const FETCH_URL = '/api/fs/nav/'
 
-export default async function DynamicNav({pathname, directoryLevels, children}) {
-    // const [directoryLevels, setDirectoryLevels] = useState([[]])
-    // const [isLoaded, setIsLoaded] = useState(false)
+export default function DynamicNav({directory, children}) {
+    const currentPath = usePathname();
 
-    // if (pathname) {
-    //     const url = new URL(pathname, 'http://localhost')
-    //     pathname = url.pathname;
-    // }
+    function renderDirectory(directory, currentPath, children = null) {
+        return <div key={currentPath} className={styles.linkContainer}>
+            {children}
+            {Object.keys(directory).map(subPathName => {
+                const relativeSubPathName = currentPath + subPathName
+                console.log('relativeSubPathName', relativeSubPathName)
+                return (
+                    <Link key={subPathName}
+                          className={relativeSubPathName === currentPath ? styles.current : ''}
+                          href={relativeSubPathName}>{subPathName.split('/').pop()}
+                    </Link>
 
-    // useEffect(() => {
-    //     setDirectoryLevels(directoryLevels => [[...directoryLevels[0]]])
-    //     // Fetch directory structure
-    //     fetch(`${FETCH_URL}/${pathname}`)
-    //         .then(res => res.json())
-    //         .then(response => {
-    //             setDirectoryLevels(response.directories)
-    //             setIsLoaded(true);
-    //         });
-    //
-    // }, [pathname])
-
-    let subDirectoryOutput = [];
-    let directoryOutput = [];
-    // if (isLoaded) {
-    directoryOutput = (<div key={0} className={styles.linkContainer}>
-        {children}
-        {directoryLevels[0].map(subPathName => (
-            <Link key={subPathName}
-                  className={subPathName === pathname ? styles.current : ''}
-                  href={subPathName}>{subPathName.split('/').pop()}</Link>)
-        )}
-    </div>)
-    if (directoryLevels.length > 0) {
-        for (let level = 1; level < directoryLevels.length; level++) {
-            const subDirectoryLevel = directoryLevels[level];
-            if (!subDirectoryLevel || subDirectoryLevel.length === 0)
-                break;
-            subDirectoryOutput.push(
-                <div key={level}
-                     className={`${styles.linkContainer} ${styles.linkSubContainer}`}>
-                    {subDirectoryLevel.map(subPathName => (
-                        <Link key={subPathName}
-                              className={subPathName === pathname ? styles.current : ''}
-                              href={subPathName}>{subPathName.split('/').pop()}</Link>))}
-                </div>)
-        }
+                )
+            })}
+        </div>
     }
 
-    return <>
-        {directoryOutput}
-        {subDirectoryOutput}
-    </>
-    // }
+    if (!directory)
+        return null
 
+    let content = [
+        renderDirectory(directory, '/', children)
+    ];
+    if (currentPath) {
+        const splitPath = currentPath.split('/');
+        let directoryPointer = directory;
+        let iSubPath = '/'
+        for (const subPath of splitPath) {
+            if (directoryPointer[subPath]) {
+                directoryPointer = directoryPointer[subPath]
+                iSubPath += subPath + '/';
+                content.push(renderDirectory(directoryPointer, iSubPath))
+            }
+        }
+    }
+    return content;
 }

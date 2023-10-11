@@ -1,24 +1,54 @@
-const {listDirectoriesRecursive} = require('./util')
-
 const {readdir, writeFile} = require("fs/promises");
 const React = require("react");
 const {join, resolve} = require("path");
 const {existsSync} = require("fs");
 
+const FILE_NAV_IGNORE = `${process.env.NEXT_PUBLIC_ASSET_NAV_IGNORE_FILE || '.navignore'}`;
+const PATH_ASSETS_ABS = join(resolve(__dirname, '../'), `${process.env.NEXT_PUBLIC_ASSET_PATH || 'app'}`)
+generate()
+
 async function generate() {
-    const projectRoot = resolve(__dirname, '../');
-    const appDir = join(projectRoot, process.env.NEXT_PUBLIC_ASSET_PATH || 'app');
-    for await (const appSubDirectory of listDirectoriesRecursive(appDir)) {
-        await generateDirectory(appSubDirectory)
-
-    }
-
+    await generateAllPages();
+    await generateDirectory();
 }
 
-async function generateDirectory(directoryPath) {
 
-    const imageStyleRight = "w-full sm:max-w-[50vw] md:max-w-[33vw] xl:max-w-md float-right clear-right sm:m-";
-    const imageStyleLeft = "w-full sm:max-w-[50vw] md:max-w-[33vw] xl:max-w-md float-left clear-left sm:m-1";
+async function generateDirectory() {
+    async function getPathsForDirectory(currentPathRelative) {
+        const directories = {};
+        const absPath = join(PATH_ASSETS_ABS, currentPathRelative)
+        const dirents = await readdir(absPath, {withFileTypes: true});
+        // if (dirents.some(dirent => dirent.name === process.env.NEXT_PUBLIC_ASSET_NAV_IGNORE_FILE))
+        //     return null;
+
+        for (const dirent of dirents) {
+            if (dirent.isDirectory()) {
+                const subFolderPathRelative = join(currentPathRelative, dirent.name);
+                const ignoreFile = join(absPath, subFolderPathRelative, FILE_NAV_IGNORE);
+                if (!existsSync(ignoreFile)) {
+                    directories[dirent.name] = await getPathsForDirectory(subFolderPathRelative)
+                }
+            }
+        }
+        return directories;
+    }
+
+    const directories = await getPathsForDirectory('/');
+    const directoryFile = `${PATH_ASSETS_ABS}/directory.json`
+    console.log("Writing directory page: ", directoryFile)
+    await writeFile(directoryFile, JSON.stringify(directories));
+}
+
+async function generateAllPages() {
+    for await (const appSubDirectory of listDirectoriesRecursive(PATH_ASSETS_ABS)) {
+        await generatePages(appSubDirectory)
+    }
+}
+
+async function generatePages(directoryPath) {
+
+    const imageStyleRight = "w-full sm:max-w-[50vw] md:max-w-[33vw] xl:max-w-md float-right sm:m-1";
+    const imageStyleLeft = "w-full sm:max-w-[50vw] md:max-w-[33vw] xl:max-w-md float-left sm:m-1";
     // const imageStyleRight = "w-full sm:max-w-[50vw] md:max-w-md float-right sm:m-1 sm:ml-4";
     // const imageStyleLeft = "w-full sm:max-w-[50vw] md:max-w-md float-left sm:m-1 sm:mr-4";
     const pdfStyleRight = "w-full md:w-[24rem] md:h-[36rem] float-right sm:m-1 sm:ml-4";
@@ -32,7 +62,9 @@ async function generateDirectory(directoryPath) {
         imports: []
     };
     let i = 0;
-    if (existsSync(join(directoryPath, 'page.mdx')) || existsSync(join(directoryPath, 'route.mdx'))) {
+    if (existsSync(join(directoryPath, 'page.mdx'))
+        || existsSync(join(directoryPath, 'route.mdx'))
+        || existsSync(join(directoryPath, FILE_NAV_IGNORE))) {
         console.log("Skipping directory: ", directoryPath)
         return
     }
@@ -129,4 +161,14 @@ ${mdxContent.contentLast.join('\n')}`;
     await writeFile(autoGenPageFile, mdxScriptContent);
 }
 
-generate()
+
+async function* listDirectoriesRecursive(dir) {
+    const dirents = await readdir(dir, {withFileTypes: true});
+    for (const dirent of dirents) {
+        const currentPath = join(dir, dirent.name);
+        if (dirent.isDirectory()) {
+            yield currentPath;
+            yield* listDirectoriesRecursive(currentPath);
+        }
+    }
+}

@@ -62,46 +62,45 @@ export default function ChatRoom({channel, title, className}) {
     }
 
     return (<ErrorBoundary>
-            {error ? <div className={styles.error}>{`${error}`}</div> : (
-                <div className={`${styles.container} ${className}`}>
-                    <div className={styles.channelTitle}>
-                        <a href={`https://chat.paradigmthreat.net/paradigm-threat/channels/${channel}`} target=" _blank"
-                           rel="noreferrer">
-                            {title || channel}
-                        </a>
-                    </div>
-                    <div className={styles.channel}>
-                        {channelInfo?.posts?.map(({username, message}, index) => (
-                            <div key={index} className={styles.post}>
-                                <span className={styles.username}>{username}</span>
-                                <span className={styles.message}><Markdown>{message}</Markdown></span>
-                            </div>
-                        ))}
-                    </div>
-                    <div>
-                        <form className='flex' onSubmit={onSubmit}>
-                            <input type='text' name='username' className={`${styles.input} w-24 text-center italic`}
-                                   placeholder='guest' title='Type your guest name here'/>
-                            <input type='text'
-                                   name='message'
-                                   className={`${styles.input} w-full`}
-                                   onKeyDown={onKeyDown}
-                                   required
-                                   title='Send a message to the channel'
-                                   placeholder="got something to say? type it here and hit the enter key to send to the channel"/>
-                            <button type='submit' className={`${styles.input} ${styles.submit} w-24`} value={'Submit'}
-                            >Send
-                            </button>
-                        </form>
-                    </div>
-                    <div className={styles.channelFooter}>
-                        <a href={`https://chat.paradigmthreat.net/paradigm-threat/channels/${channel}`} target=" _blank"
-                           rel="noreferrer">
-                            Open {title || channel} in new window
-                        </a>
-                    </div>
+            <div className={`${styles.container} ${className}`}>
+                <div className={styles.channelTitle}>
+                    <a href={`https://chat.paradigmthreat.net/paradigm-threat/channels/${channel}`} target=" _blank"
+                       rel="noreferrer">
+                        {title || channel}
+                    </a>
                 </div>
-            )}
+                <div className={styles.channel}>
+                    {channelInfo?.posts?.map(({username, message}, index) => (
+                        <div key={index} className={styles.post}>
+                            <span className={styles.username}>{username}</span>
+                            <span className={styles.message}><Markdown>{message}</Markdown></span>
+                        </div>
+                    ))}
+                    {error && <div className={`${styles.post} ${styles.error}`}>{error}</div>}
+                </div>
+                <div>
+                    <form className='flex' onSubmit={onSubmit}>
+                        <input type='text' name='username' className={`${styles.input} w-24 text-center italic`}
+                               placeholder='guest' title='Type your guest name here'/>
+                        <input type='text'
+                               name='message'
+                               className={`${styles.input} w-full`}
+                               onKeyDown={onKeyDown}
+                               required
+                               title='Send a message to the channel'
+                               placeholder="got something to say? type it here and hit the enter key to send to the channel"/>
+                        <button type='submit' className={`${styles.input} ${styles.submit} w-24`} value={'Submit'}
+                        >Send
+                        </button>
+                    </form>
+                </div>
+                <div className={styles.channelFooter}>
+                    <a href={`https://chat.paradigmthreat.net/paradigm-threat/channels/${channel}`} target=" _blank"
+                       rel="noreferrer">
+                        Open {title || channel} in new window
+                    </a>
+                </div>
+            </div>
         </ErrorBoundary>
     )
 }
