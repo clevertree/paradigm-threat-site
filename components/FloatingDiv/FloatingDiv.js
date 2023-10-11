@@ -39,7 +39,7 @@ export default function FloatingDiv({children, containerElm}) {
     useEffect(() => {
         window.addEventListener('scroll', onScroll)
         return () => window.removeEventListener('scroll', onScroll)
-    })
+    }, [])
 
     const Container = containerElm || 'div';
 

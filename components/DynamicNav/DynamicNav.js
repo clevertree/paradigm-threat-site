@@ -15,7 +15,6 @@ export default function DynamicNav({directory, children}) {
             {children}
             {Object.keys(directory).map(subPathName => {
                 const relativeSubPathName = currentPath + subPathName
-                console.log('relativeSubPathName', relativeSubPathName)
                 return (
                     <Link key={subPathName}
                           className={relativeSubPathName === currentPath ? styles.current : ''}
