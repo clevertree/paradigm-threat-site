@@ -39,6 +39,7 @@ export default function FloatingDiv({children, containerElm}) {
 
     useEffect(() => {
         window.addEventListener('scroll', onScroll)
+        onScroll();
         return () => window.removeEventListener('scroll', onScroll)
     })
 
