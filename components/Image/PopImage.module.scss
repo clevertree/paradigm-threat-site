@@ -29,6 +29,10 @@
   z-index: 9;
   animation: fade 1s linear;
 
+  & > img {
+    max-width: 90vw !important;
+  }
+
   & > p {
     //background-color: #000;
     //border-radius: 1rem;
