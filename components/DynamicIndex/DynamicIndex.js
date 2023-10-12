@@ -2,24 +2,22 @@
 
 import React, {useEffect, useRef} from "react";
 import ReactDOM from "react-dom/client";
-import styles from "./DynamicIndex.module.css"
-import {ErrorBoundary} from "@client";
 
 export default function DynamicIndex(props) {
     const container = useRef();
 
     useEffect(() => {
-        updateHeaderList();
+        const {hash} = window.location;
+        updateHeaderList(hash ? hash.substring(1) : null);
     })
 
-    return <ErrorBoundary>
-        <ul
-            {...props}
-            ref={container}>
-        </ul>
-    </ErrorBoundary>
+    return <ul
+        {...props}
+        ref={container}
+    >
+    </ul>
 
-    function updateHeaderList() {
+    function updateHeaderList(scrollToHash) {
         const current = container.current;
         const articleElm = current.closest('article, section, body');
         const list = articleElm.querySelectorAll('h1, h2, h3, h4, h5, h6');
@@ -48,10 +46,17 @@ export default function DynamicIndex(props) {
             target.children.push(liProps);
             // headerElm.classList.add('header-target');
             headerElm.ondblclick = e => onClick(e, id);
+
+            if (scrollToHash) {
+                if (id === scrollToHash) {
+                    scrollToHeader(headerElm, 'auto');
+                }
+            }
         });
         current.reactContainer = current.reactContainer || ReactDOM.createRoot(current);
         const render = root.children.map((child, i) => renderHeaderChild(child, i));
         current.reactContainer.render(render);
+        console.log('current', current);
     }
 
     function renderHeaderChild({content, id, children, headerElm, level}, key) {
@@ -74,8 +79,16 @@ export default function DynamicIndex(props) {
         const headerElm = articleElm.querySelector(`*[id='${id}']`);
         e.preventDefault();
         window.history.pushState({}, '', hash);
-        headerElm.scrollIntoView({block: "center", behavior: 'smooth'})
-        headerElm.classList.add('highlighted')
-        setTimeout(() => headerElm.classList.remove('highlighted'), 4000);
+        scrollToHeader(headerElm)
+    }
+
+    function scrollToHeader(headerElm, behavior) {
+        headerElm.scrollIntoView({block: "center", behavior})
+        const eventHandler = () => {
+            headerElm.classList.remove('text-highlighted')
+            headerElm.removeEventListener('animationend', eventHandler)
+        }
+        headerElm.addEventListener('animationend', eventHandler)
+        headerElm.classList.add('text-highlighted')
     }
 }

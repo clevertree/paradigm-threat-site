@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import styles from "./ErrorBoundary.module.css"
 import PropTypes from "prop-types";

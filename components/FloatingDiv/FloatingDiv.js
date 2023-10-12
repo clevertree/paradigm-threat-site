@@ -12,15 +12,16 @@ export default function FloatingDiv({children, containerElm}) {
     function onScroll() {
         const navElm = refContainer.current;
         const {top, height} = navElm.getBoundingClientRect();
+        // console.log(top, height, isFloating)
         if (!isFloating) {
             if (top < 0) {
-                // console.log('isFloating', isFloating, top < 0)
+                console.log('isFloating', isFloating, top < 0)
                 setIsFloating(true);
                 setContainerHeight(height);
             }
         } else if (isFloating) {
             if (top > 0) {
-                // console.log('isFloating', isFloating, top, top > 0)
+                console.log('isFloating', isFloating, top, top > 0)
                 setIsFloating(false);
                 setContainerHeight('inherit')
             }
@@ -39,7 +40,7 @@ export default function FloatingDiv({children, containerElm}) {
     useEffect(() => {
         window.addEventListener('scroll', onScroll)
         return () => window.removeEventListener('scroll', onScroll)
-    }, [])
+    })
 
     const Container = containerElm || 'div';
 

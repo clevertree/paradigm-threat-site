@@ -37,7 +37,8 @@ export default function DynamicNav({directory, children}) {
         let directoryPointer = directory;
         let iSubPath = '/'
         for (const subPath of splitPath) {
-            if (directoryPointer[subPath]) {
+            if (directoryPointer[subPath]
+                && Object.keys(directoryPointer[subPath]).length > 0) {
                 directoryPointer = directoryPointer[subPath]
                 iSubPath += subPath + '/';
                 content.push(renderDirectory(directoryPointer, iSubPath))
