@@ -14,14 +14,14 @@ cd /var/www/paradigm-threat-site;
 #git stash;
 git pull || exit;
 #git reset --hard origin/master;
-git submodule update;
+git submodule update || exit;
 #git submodule update --init --recursive;
 #git submodule foreach git reset --hard;
 yarn install;
 
 pm2 stop "Paradigm Threat Server"
 
-npm run build;
+npm run build || exit;
 
 pm2 restart "Paradigm Threat Server"
 

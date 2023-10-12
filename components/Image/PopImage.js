@@ -22,7 +22,7 @@ export default function PopImage({children, className, ...props}) {
     }
 
     const content = (
-        <div className={`${styles.container} ${className}`} onClick={toggleFullscreen}>
+        <div className={`${styles.container} ${className || ''}`} onClick={toggleFullscreen}>
             <Image
                 {...srcProps}
 

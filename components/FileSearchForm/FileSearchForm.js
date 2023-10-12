@@ -90,8 +90,9 @@ export default function FileSearchForm({keywords}) {
             case 'gif':
             case 'svg':
             case 'ppm':
-                return <PopImage src={'/' + filePath} width={300} height={200}
-                                 alt={filePath}>{filePath}</PopImage>
+                return <PopImage src={'/' + filePath}
+                                 fill
+                                 alt={filePath}>{filePath}</PopImage>;
             case 'm4v':
             case 'mp4':
             case 'mkv':

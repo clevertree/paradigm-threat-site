@@ -41,4 +41,16 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-items: center;
+
+  > div {
+    position: relative;
+
+    > img {
+      max-width: 30rem;
+      position: relative !important;
+      width: auto !important;;
+      height: auto !important;
+    }
+  }
 }
