@@ -1,0 +1,44 @@
+.form {
+  max-width: 800px;
+  margin: auto;
+
+  clear: both;
+  border: 1px solid #BFBAB0;
+  border-radius: 0.5em;
+  padding: 0.5em;
+  background-color: var(--bg-color2);
+  color: var(--fg-color);
+
+  & > fieldset {
+    display: flex;
+  }
+
+  & input {
+    flex-grow: 1;
+    color: #000;
+  }
+
+
+  & input,
+  & button {
+    padding: 0.5em;
+    margin: 0.5em;
+  }
+
+  & button {
+    border: outset #FFF 2px;
+    background-color: var(--bg-color-full);
+
+  }
+}
+
+
+.pageContainer p {
+  font-family: "Courier New", serif;
+}
+
+.assetContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}

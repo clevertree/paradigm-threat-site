@@ -12,7 +12,7 @@ echo "Deploying to server"
 ssh ari@paradigmthreat.net << EOF
 cd /var/www/paradigm-threat-site;
 #git stash;
-git pull;
+git pull || exit;
 #git reset --hard origin/master;
 git submodule update;
 #git submodule update --init --recursive;

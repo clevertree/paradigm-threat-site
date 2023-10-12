@@ -4,7 +4,7 @@ import React, {useEffect, useRef, useState} from "react";
 
 import styles from "./FloatingDiv.module.scss"
 
-export default function FloatingDiv({children, containerElm}) {
+export default function FloatingDiv({children, containerElm, className}) {
     const [isFloating, setIsFloating] = useState(false)
     const [containerHeight, setContainerHeight] = useState('inherit')
     const refContainer = useRef();
@@ -49,7 +49,7 @@ export default function FloatingDiv({children, containerElm}) {
         style={{height: containerHeight}}
         ref={refContainer}>
         <div
-            className={isFloating ? styles.floatingDiv : ''}>
+            className={className + (isFloating ? ' ' + styles.floatingDiv : '')}>
             {children}
         </div>
         <div

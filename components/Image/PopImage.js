@@ -8,10 +8,7 @@ import Link from "next/link";
 
 export default function PopImage({children, className, ...props}) {
     const [fullscreen, setFullscreen] = useState(false);
-    // if (props.caption) {
-    //     const Caption = props.caption;
-    //     return <Caption/>;
-    // }
+
     let srcProps = props;
     if (typeof props?.src?.default === "object")
         srcProps = {...props, ...props.src.default};
@@ -21,7 +18,6 @@ export default function PopImage({children, className, ...props}) {
         srcProps = {...props, ...props.default};
 
     function toggleFullscreen(e) {
-        console.log('e', e)
         setFullscreen(!fullscreen)
     }
 

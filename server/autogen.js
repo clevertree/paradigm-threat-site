@@ -78,12 +78,12 @@ async function generatePages(directoryPath) {
                 case 'js':
                 case 'ts':
                     // console.log("Skipping file: ", pFile.name)
-                    continue;
+                    break;
                 case 'md':
                 case 'mdx':
                     if (/page\.auto\.mdx$/i.test(pFile.name)) {
                         // console.log("Skipping file: ", pFile.name)
-                        continue;
+                        break;
                     }
                     if (/(page|route)\.(mdx?|ts|js)$/i.test(pFile.name)) {
                         console.log(`Found index file. Canceling auto generation for ${directoryPath}: `, pFile.name)
