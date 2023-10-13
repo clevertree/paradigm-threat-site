@@ -99,7 +99,10 @@ export default function FileSearchForm({keywords}) {
             case 'json':
             case 'txt':
             default:
-                return "TODO: " + filePath;
+                return (<div>
+                    <embed src={filePath} className={'w-full min-h-[40vh] min-w-[20vw]'}/>
+                    <a href={filePath} target="_blank" rel="noopener noreferrer">{filePath}</a>
+                </div>);
             case 'pdf':
                 return <ClientPDF src={filePath}/>
         }
