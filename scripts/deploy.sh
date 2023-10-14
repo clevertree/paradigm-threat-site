@@ -19,14 +19,15 @@ git submodule update || exit;
 #git submodule foreach git reset --hard;
 yarn install;
 
-pm2 stop "Paradigm Threat Server"
+pm2 stop "Paradigm Threat Server";
 
+free -h;
 npm run build || exit;
 
-pm2 restart "Paradigm Threat Server"
+pm2 restart "Paradigm Threat Server";
 
-echo "Running tests"
+echo "Running tests";
 CYPRESS_BASE_URL=https://paradigmthreat.net npx cypress run --e2e || exit;
-npx cypress run --component
-echo "Deploy complete"
+npx cypress run --component;
+echo "Deploy complete";
 EOF
