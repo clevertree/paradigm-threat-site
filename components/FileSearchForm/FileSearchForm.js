@@ -2,7 +2,7 @@
 
 import React, {useEffect, useRef, useState} from "react";
 import styles from "./FileSearchForm.module.scss"
-import {PopImage, ClientPDF} from "@client";
+import {PopImage, EmbedFile} from "@client";
 
 const FETCH_URL = '/api/fs/search/'
 
@@ -104,7 +104,7 @@ export default function FileSearchForm({keywords}) {
                     <a href={filePath} target="_blank" rel="noopener noreferrer">{filePath}</a>
                 </div>);
             case 'pdf':
-                return <ClientPDF src={filePath}/>
+                return <EmbedFile src={filePath}/>
         }
     }
 

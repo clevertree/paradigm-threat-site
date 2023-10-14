@@ -120,12 +120,15 @@ async function generatePages(directoryPath) {
                     mdxContent.content.push(`\t${pFile.name}`);
                     mdxContent.content.push(`</div>`)
                     break;
+                case 'json':
+                case 'txt':
+                case 'csv':
                 case 'pdf':
-                    componentList['ClientPDF'] = true;
+                    componentList['EmbedFile'] = true;
                     mdxContent.imports.push(`import ${fileNameVariable} from "./${pFile.name}"`);
-                    mdxContent.content.push(`<ClientPDF src={${fileNameVariable}} className="${i++ % 2 === 0 ? pdfStyleRight : pdfStyleLeft}">`)
+                    mdxContent.content.push(`<EmbedFile src={${fileNameVariable}} className="${i++ % 2 === 0 ? pdfStyleRight : pdfStyleLeft}">`)
                     mdxContent.content.push(`\t${pFile.name}`);
-                    mdxContent.content.push(`</ClientPDF>`)
+                    mdxContent.content.push(`</EmbedFile>`)
                     break;
                 case 'css':
                     mdxContent.imports.push(`import ${fileNameVariable} from "./${pFile.name}"`);
@@ -134,8 +137,7 @@ async function generatePages(directoryPath) {
                     mdxContent.content.push(`\t${pFile.name}`);
                     mdxContent.content.push(`</div>`)
                     break;
-                case 'json':
-                case 'txt':
+                case 'html':
                 default:
                     console.log(`TODO:unhandled asset: ${pFile.name}`);
                     break;

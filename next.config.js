@@ -35,7 +35,7 @@ const nextConfig = {
         const nextImageLoader = config.module.rules.find(rule => rule.loader === 'next-image-loader');
         nextImageLoader.loader = path.join(process.cwd(), 'server/image-loader.js');
         config.module.rules.push({
-            test: /\.(pdf)/,
+            test: /\.(pdf|txt|csv)/,
             use: [{
                 loader: path.join(process.cwd(), 'server/file-loader.js')
             }]

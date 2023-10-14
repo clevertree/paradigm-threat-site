@@ -1,10 +1,10 @@
 "use client"
 
 
-import styles from "./ClientPDF.module.scss";
+import styles from "./EmbedFile.module.scss";
 import React from "react";
 
-export default function ClientPDF({children, className, ...props}) {
+export default function EmbedFile({children, className, ...props}) {
 
     let srcProps = props;
     if (typeof props?.src?.default === "object")
