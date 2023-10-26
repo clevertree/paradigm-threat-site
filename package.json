@@ -9,13 +9,15 @@
     "build": "next build",
     "prebuild": "npm run autogen",
     "start": "next start -p 8081",
-    "cypress": "cypress run --component",
+    "cypress:component": "cypress run --component",
     "cypress:e2e": "cypress run --e2e",
     "cypress:e2e:prod": "CYPRESS_BASE_URL=http://localhost:8081 cypress run --e2e",
     "cypress:open": "cypress open",
     "cypress-prod:run": "CYPRESS_BASE_URL=https://paradigmthreat.net cypress run",
     "lint": "next lint",
-    "deploy": "sh scripts/deploy.sh"
+    "deploy": "sh scripts/deploy.sh",
+    "standard": "npx standard --fix",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@mdx-js/loader": "^2.3.0",
@@ -44,6 +46,23 @@
   },
   "devDependencies": {
     "@types/mime": "^3.0.1",
-    "cypress": "^13.3.0"
-  }
+    "cypress": "^13.3.0",
+    "eslint-plugin-cypress": "^2.15.1",
+    "eslint-plugin-chai-friendly": "^0.7.2",
+    "husky": "^8.0.3",
+    "standard": "^17.1.0"
+  },
+  "standard": {
+    "globals": [
+      "fetch",
+      "expect",
+      "describe",
+      "context",
+      "it",
+      "cy"
+    ]
+  },
+  "ignorePatterns": [
+    "**/*.cy.js"
+  ]
 }

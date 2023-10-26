@@ -1,6 +1,3 @@
-[submodule "sources"]
-	path = sources
-	url = ssh://git.pthreat.co:2222/ari/paradigm-threat-sources.git
 [submodule "app"]
 	path = app
-	url = ssh://git.pthreat.co:2222/ari/paradigm-threat-pages.git
+	url = ssh://git-codecommit.us-east-2.amazonaws.com/v1/repos/paradigm-threat-pages

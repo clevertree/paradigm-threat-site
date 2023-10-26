@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
     if (pathname.startsWith('/_next'))
         return;
 
-    if (/\.(gif|jpg|jpeg|tiff|png|ico|xcf|svg|mp4|m4v|mkv|pdf|txt)$/i.test(pathname)) {
+    if (/\.(gif|jpg|jpeg|tiff|png|ico|xcf|svg|mp4|m4v|mkv|webm|avif|pdf|txt)$/i.test(pathname)) {
         let rewriteUrl = new URL(process.env.NEXT_PUBLIC_API_FS_RAW + pathname, origin);
         // console.log('rewrite', `${rewriteUrl}`, pathname);
         return NextResponse.rewrite(rewriteUrl)

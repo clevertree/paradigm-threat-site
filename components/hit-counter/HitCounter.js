@@ -1,48 +1,50 @@
-import React from "react";
-import {resolveAssetURL} from "../../util/ClientUtil.js";
+import React from 'react'
+import { resolveAssetURL } from '../../util/ClientUtil.js'
 
 export default class HitCounter extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            loaded: false,
-            content: null
-        }
-        this.interval = null;
+  constructor (props) {
+    super(props)
+    this.state = {
+      loaded: false,
+      content: null
     }
+    this.interval = null
+  }
 
-    componentDidMount() {
-        this.loadContent().then();
-        this.interval = setInterval(() => this.loadContent(true), 60 * 60 * 1000);
-    }
+  componentDidMount () {
+    this.loadContent().then()
+    this.interval = setInterval(() => this.loadContent(true), 60 * 60 * 1000)
+  }
 
-    componentWillUnmount() {
-        clearInterval(this.interval);
-    }
+  componentWillUnmount () {
+    clearInterval(this.interval)
+  }
 
-    async loadContent(force = false) {
-        if (!asyncCall || force)
-            asyncCall = loadUniqueVisitors()
-        const content = await asyncCall;
-        this.setState({content});
-    }
+  async loadContent (force = false) {
+    if (!asyncCall || force) { asyncCall = loadUniqueVisitors() }
+    const content = await asyncCall
+    this.setState({ content })
+  }
 
-    render() {
-        return <a href={resolveAssetURL('/report.html')}
-                  target="_blank" rel="noreferrer"
-        >
-            {this.state.content} Visitors
-        </a>;
-    }
+  render () {
+    return (
+      <a
+        href={resolveAssetURL('/report.html')}
+        target='_blank' rel='noreferrer'
+      >
+        {this.state.content} Visitors
+      </a>
+    )
+  }
 }
 
-let asyncCall = null;
+let asyncCall = null
 
-async function loadUniqueVisitors() {
-    const assetURL = resolveAssetURL(
-        '/api/hitcounter'
-    );
-    const response = await fetch(assetURL + '?query={report(path:"general.unique_visitors")}');
-    const {data: {report}} = await response.json();
-    return report;
+async function loadUniqueVisitors () {
+  const assetURL = resolveAssetURL(
+    '/api/hitcounter'
+  )
+  const response = await fetch(assetURL + '?query={report(path:"general.unique_visitors")}')
+  const { data: { report } } = await response.json()
+  return report
 }
