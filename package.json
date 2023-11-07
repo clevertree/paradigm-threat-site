@@ -1,6 +1,6 @@
 {
   "name": "paradigm-threat-site",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "private": true,
   "scripts": {
     "autogen": "node server/autogen.js",
