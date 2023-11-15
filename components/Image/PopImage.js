@@ -55,7 +55,7 @@ function PopImage ({ children, className, alt, ...props }) {
 export default function PopImageErrorBoundary (props) {
   return (
     <ErrorBoundary>
-      <PopImage {...props} />.
+      <PopImage {...props} />
     </ErrorBoundary>
   )
 }
