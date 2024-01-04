@@ -1,3 +1,3 @@
 [submodule "app"]
 	path = app
-	url = ssh://git-codecommit.us-east-2.amazonaws.com/v1/repos/paradigm-threat-pages
+	url = git@github.com:clevertree/paradigm-threat-pages.git
