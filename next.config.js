@@ -16,10 +16,11 @@ const withMDX = require('@next/mdx')({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // output: 'export',
   images: {
     formats: ['image/avif', 'image/webp'],
     domains: ['i.ibb.co']
+    // unoptimized: true,
   },
   // Configure pageExtensions to include md and mdx
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx', 'auto.mdx'],
@@ -34,12 +35,20 @@ const nextConfig = {
     //   // config.output.filename = '[path][name].[hash].[ext]';
     //   // config.output.path = path.resolve(__dirname, '.next/')
     //   // config.output.publicPath = '/.next/'
-    // const nextImageLoader = config.module.rules.find(rule => rule.loader === 'next-image-loader')
+    const nextImageLoader = config.module.rules.find(rule => rule.loader === 'next-image-loader')
     // config.module.rules.push({
     //   ...nextImageLoader,
     //   test: /\.(webm|pdf|txt|csv)/,
     // })
-    // nextImageLoader.loader = path.join(process.cwd(), 'server/imageLoader.js')
+    nextImageLoader.loader = path.join(process.cwd(), 'server/imageLoader.js')
+    // config.module.rules.push({
+    //   test: /\.(webm|pdf|txt|csv)/,
+    //   type: 'asset/resource',
+    //   // generator: {
+    //   //   filename: 'out/_next/static/[path][name].[hash].[ext]'
+    //   //   //   filename: `[name][ext]`
+    //   // }
+    // })
     config.module.rules.push({
       test: /\.(webm|pdf|txt|csv)/,
       use: [{

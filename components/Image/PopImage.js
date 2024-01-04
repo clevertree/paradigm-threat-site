@@ -10,37 +10,55 @@ function PopImage ({ children, className, alt, ...props }) {
   const [fullscreen, setFullscreen] = useState(false)
 
   let srcProps = props
-  if (typeof props?.src?.default === 'object') { srcProps = { ...props, ...props.src.default } } else if (typeof props.src === 'object') { srcProps = { ...props, ...props.src } } else if (typeof props.default === 'object') { srcProps = { ...props, ...props.default } }
+  if (typeof props?.src?.default === 'object') {
+    srcProps = { ...props.src.default, ...props }
+  } else if (typeof props.src === 'object') { srcProps = { ...props.src, ...props } } else if (typeof props.default === 'object') { srcProps = { ...props.default, ...props } }
 
   function toggleFullscreen (e) {
     setFullscreen(!fullscreen)
   }
 
-  const content = (
-    <div className={`${styles.container} ${className || ''}`} onClick={toggleFullscreen}>
-      <Image
-        {...srcProps}
-        alt={alt}
-      />
-      {children}
-    </div>
+  const { src, width, height, blurDataURL } = srcProps
+  // const finalProps = { src, width, height }
+  // console.log('finalProps', finalProps)
+  // if (blurDataURL)
+  //   finalProps.style = { backgroundImage: `url('${blurDataURL}')` }
+  let content = (
+    <Image
+      className={`${styles.container} ${className || ''}`}
+      onClick={toggleFullscreen}
+      src={src}
+      width={width}
+      height={height}
+      blurDataURL={blurDataURL}
+      alt={alt}
+    />
   )
+
+  if (children) {
+    content = (
+      <>
+        {content}
+        {children}
+      </>
+    )
+  }
 
   if (fullscreen) {
     return (
       <>
         {content}
         <div className={styles.fullscreen} onClick={toggleFullscreen}>
-          <Image
-            {...srcProps}
+          <img
+            src={src}
             className={styles.fullscreenImage}
             alt={alt}
           />
           {children}
           <Link
-            href={srcProps.src} className='source' target='_blank'
+            href={src} className='source' target='_blank'
             rel='noreferrer'
-          >Source File: {srcProps.src}
+          >Source File: {src}
           </Link>
           <div className={styles.button}>&#10006;</div>
           {/* <div className={styles.button + ' ' + styles.previous} onClick={renderPreviousAsset}>&#8656;</div> */}
