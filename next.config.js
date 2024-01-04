@@ -34,12 +34,12 @@ const nextConfig = {
     //   // config.output.filename = '[path][name].[hash].[ext]';
     //   // config.output.path = path.resolve(__dirname, '.next/')
     //   // config.output.publicPath = '/.next/'
-    const nextImageLoader = config.module.rules.find(rule => rule.loader === 'next-image-loader')
+    // const nextImageLoader = config.module.rules.find(rule => rule.loader === 'next-image-loader')
     // config.module.rules.push({
     //   ...nextImageLoader,
     //   test: /\.(webm|pdf|txt|csv)/,
     // })
-    nextImageLoader.loader = path.join(process.cwd(), 'server/imageLoader.js')
+    // nextImageLoader.loader = path.join(process.cwd(), 'server/imageLoader.js')
     config.module.rules.push({
       test: /\.(webm|pdf|txt|csv)/,
       use: [{
