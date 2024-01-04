@@ -1,0 +1,46 @@
+
+```
+“Trust starts with truth and ends with truth.”
+― Santosh Kalwar
+```
+
+
+Controlled Opposition:  Alice in Conspiracy Land
+If It Sounds Too Good To Be True--It Is.
+
+by Geri Roberts
+
+
+I'm going to tell you a story.  It is absolutely true but of course you have no way of knowing that for sure; and that is a good way to think about what you read and hear--trust no one.  Sprinkle it all with a huge helping of salt.  Run everything through your own inner Truth Detector but be willing to change your mind later on.
+
+This is the story:  When I had been married for twenty years, I felt very secure and smug.  My husband and I had been saving money all those years, doing without many luxuries, to put money into our investment property and savings accounts for our retirement and our son's education. My credit rating was golden.  I commuted two hours a day for the best paying job, often working yet another job on the weekends.  I would look at the homeless people in downtown Philadelphia and feel superior.  They were obviously lazy, weak, stupid junkies or alcoholics and deserved to be sitting on the cold pavement in the pouring rain..  How dare they ask me for money!. They were probably not even homeless; just pretending to be to cheat do-gooders out of their hard earned cash.
+
+And then, fifteen years ago I found out that my entire life was a lie.  My husband had another wife and children (no, we are not Mormons).  There were no savings accounts; the money I had given him to be tucked away had been spent on them.  They had been living rent free in our investment property for years supported largely by my salary.  We had nothing.  I got divorced.  I thought my situation couldn't get any worse.  Then my job was outsourced to India and I went through bankruptcy and my house was foreclosed on. .
+
+The only reason I didn't end up sitting on the cold pavement in the pouring rain was a family member who took me in and my in-laws who helped me and my son out financially.  Today when I walk through the city I try to keep a few dollars handy to give to people who say they need it.  I don't care if they do spend the money on drugs or alcohol.  I have learned not to begrudge people anything that helps them get through the day..
+
+That is how I Woke Up to how the world really is.  I realize that what had happened to me was, to a fairly significant degree, my own fault.  I had taken the easy road and trusted people because I had been weak, lazy and stupid. Neighbors and even my in-laws and son had tried to warn me that something was going on but I refused to listen.  I just laughed and kept on trusting because it was easier.  I never bothered to look both ways and was totally unprepared for the truck that ran me over.
+
+After all this happened, I wandered into Conspiracy Land.  Many people who have had the deck of their ship blown out from under them tend to do that.  We have found out how unreliable our old reality was and we search frantically for a new reality.  And Conspiracy Land was enthralling.  There were lots of people around to tell me what to believe and what not to believe; to give me ready answers to any questions I could think of.. I was like Alice in Wonderland looking to the Cheshire Cat up in the tree to tell her what was going on.  I was strolling down the easy road once again and not looking both ways.
+
+I loved David Icke.  He helped me look at things from a spiritual view point.  I read all his books and watched all his videos.  They made me feel good about myself again and I needed that.  Life was beautiful again; for a while. Then I began to notice that Icke said the same things over and over.  Pages of his books were interchangeable. The things he said were true but I kept finding all sorts of topics he never addressed.   His films appeared on mainstream channels and were as slick and as glossy as the Marvel movies. I was reminded of my marriage, back when all I heard from my husband were the reassuring things I wanted to hear.. The Cheshire Cat smiled a lot but there was nothing behind the grin.  .  .
+
+And thus I made the acquaintance of an insidious phenomenon called "Controlled Opposition."  Basically, it is another trap put in place by the Nefarious Elite  to keep people who start to Wake Up stumbling around in circles inside Conspiracy Land without  discovering anything of importance. In fact, Conspiracy Land was actually built by the Nefarious Elite themselves.  But that doesn't mean it can't be useful.  We just have to be careful who we talk to and remember that nobody is what they seem.  Investigate all; believe none.   ..  .
+
+Certain ideas will pop up over and over in different places and talked up by different people. This can be a clue that the idea is planted for us to find and think we've discovered.  At first glance these ideas might make sense but some deep thinking reveals the nonsense.  One idea that I chewed over for a long time before spitting it out was the theory that the Nefarious Elite adhere to a karmic belief that prevents them from killing.  They can trick or hire others to kill for them but must never be responsible for the deed themselves. But there is evidence that the Nefarious Elite kill each other, including their own families, all the time so why in the name of the nine nether hells would they hesitate to rub a few of us out?  They just want us to believe that they practice some kind of ethics and they probably find that theory absolutely hilarious, in my opinion.  I could be wrong, and I wish I were.
+
+It is also believed that this karmic belief forces the Nefarious Elite to give us warning with things like the Georgia Guidestones of whatever atrocity they say they are preparing for us.. They don't have to do anything of the sort. They just enjoy terrorizing us and making us feel helpless.
+
+An offshoot of this theory is that the Nefarious Elite will go to great lengths to stage events and pretend to kill people instead of actually doing so.  Now, I believe this does happen many, many times when it is easier to pretend people are killed than to actually have to clean up the mess.  And it adds to the amusement factor to trick us into a display of grief and dismay.  There are countless examples of fake bombings and staged mass shootings.  Not to mention the hundreds of thousands of people who are supposed to have died from the faux virus.
+
+There is a well known podcaster who firmly believes that nobody has died in any event.  That they have ALL been staged, including the JFK assassination and the Manson killings.  I am open to this possibility.  There ARE aspects of the JFK murder that are suspicious--the dramatic tableaus of Mrs. Kennedy in her blood stained dress, John-John's salute, the plethora of red herrings and death bed confessions, etc.  And even more in the Manson brouhaha. .
+
+But I remember the JFK assassination and Manson murders very well and I can assure you that IT DOES'T MATTER one iota whether or not they were real or staged. The effects of these happenings are indisputable.  Sinister forces were used to hijack the minds of the American people for sinister purposes..  Quibbling over whether or not the blood and gore were real misses a vital point and shows a great concern to be proved smarter than the rest of us folks.  Our reality is indeed a construct but an unbelievably complicated one.  Deciding that everything in it is fake is as blind as deciding that everything in it is real.
+
+Accepting the presence of Controlled Opposition does not mean we should stop asking questions.  We can always be fooled but it becomes easier to spot trickery as we read and understand more about it.  Some of these people genuinely believe what they tell us and don't realize they are being used.  And many of them might not exist at all and are totally made up.  .
+
+A good rule of thumb that I try to remember is:  If it seems too good to be true, it always is.  Invariably and without fail.  This includes everything from Space Brothers coming in ships to take us off of Earth to QAnon telling us to believe in the Plan.
+
+And anything in the mainstream media that tugs at our emotions of joy, hope, sorrow or fear is being used to manipulate us into believing some lie and should be considered calmly and objectively.  Which is never easy to do.  It becomes discouraging to realize that just when we think we have an answer, it turns into another question.
+
+When we start to Wake Up, the world doesn't change.  Our perception of it changes.  When I lived in a nice house in the suburbs I would have considered the place I live now to be a slum.  Now I consider it home and I am grateful to have it.   During our lifetime we learn to see not just the ugly things around us but the beautiful things we were blind to previously.  Waking Up is a continuing, life time process that continues until our death. And death is not falling asleep, as we have been told all our lives.  It is actually Waking Up into our real selves in the real world. 

@@ -1,0 +1,262 @@
+# Secret Electro-Gravitic Thrusters exist in All Passenger and Cargo Jets
+
+```
+Note: This investigation is **a work in progress**. Check back soon for more updates!
+```
+
+## Q: Why did that Boeing crash? Yet again we don't get an _'ex
+
+plane'_ ation. Turns out [Flying Fortresses](https://en.wikipedia.org/wiki/Boeing_B-17_Flying_Fortress) have a heavy
+secret behind them...
+
+Imagine you're on a Jumbo Jet airplane and suddenly all the engines stop working, what happens next?
+Well .... the next thing that happens is that all these bags drop out of the ceiling, and you are ordered to put them
+on, and they make you calm within seconds or pass you out, depending on the switch hit and air-canister triggered.
+Why is it necessary for an airline to be
+able [sedate](https://www.foxnews.com/travel/air-canada-passenger-dark-empty-plane-alone) airline passengers?
+
+Consider: In all heavier-than-air jet planes (like Jumbo Jets), if one or multiple jet engines
+fail, [only one jet engine](https://simpleflying.com/smartwings-boeing-737-800-engine-shutdown/) is required to stay in
+the air!
+There is no explanation yet from Boeing (or NASA) as to how Jumbo Jets can stay in the air with only a SINGLE ENGINE
+operating on one (not both) wings.
+There are
+many [real life examples](https://www.ny1.com/nyc/all-boroughs/news/2019/01/15/miracle-on-the-hudson-10-year-anniversary-)
+where _all_ engines failed,
+and yet the plane was able to turn 180 degrees and return safely to the ground.
+
+We objectively have to agree after the last few high-profile crashes and accompanying plot-twists that Boeing is not
+being completely honest, right?
+
+## Q: Are the inventors of jumbo jets lying to the world?
+
+Well, _History Repeats!_ So lets take a closer look...
+
+All [technological advances](https://sites.google.com/a/umn.edu/historpedia/home/science-technology/developments-in-airplanes-between-world-war-one-and-world-war-two-fall-2012)
+in Human History have coincided with acts of war. 1914 saw both the makings of a World War and the advent of small
+bombers like the [Voisin III](https://www.historyhit.com/18-key-bomber-aircraft-from-world-war-one/) which was capable
+of carrying up to 60kg of bombs. 1938 saw the introduction of massive air ships like
+the [Boeing B-17 Flying Fortress](https://en.wikipedia.org/wiki/Boeing_B-17_Flying_Fortress#Initial_orders)
+leading up to World War II.
+There should be no doubt that
+[WW1](https://en.wikipedia.org/wiki/Strategic_bombing_during_World_War_I)
+and [WW2](https://en.wikipedia.org/wiki/Strategic_bombing_during_World_War_II)
+were decided in the air, not on the ground.
+
+**Therefore, it is logical to conclude that the Great Wars of the 20th century were
+perpetuated through international conglomerates like the Boeing Corporation.**
+
+The universe is [electric](https://www.electricuniverse.info/pseudoscience-and-the-electric-universe/) in nature.
+Therefore,
+electromagnetic [zero-point-energy](http://www.zpenergy.com/modules.php?name=News&file=article&sid=2938&mode=thread&order=1&thold=0)
+technology is possible.
+The force of electromagnetism
+is [10\^39](https://principia-scientific.org/electromagnetic-gravity-examination-of-the-electric-universe-theory/)
+stronger than the force of Earth's Gravity, making "anti-gravity" technology trivial and easy to design.
+This principle can be easily demonstrated with [electromagnets](https://education.jlab.org/qa/electromagnet_is.html).
+The Great War exposed this technology for the first time, but built it into the planes in such a way that their own
+pilots and engineers could not detect it.
+The planes became automated with all pilot decisions replaced by machines. Thus, the Boeing Bombers could be piloted by
+a child of any age.
+
+## Q: What machines use this flying technology?
+
+Small helicopters, stunt planes and RC model toy planes do _not_ need ZPE technology to fly,
+but all Boeing Bombers (i.e. B17, B24, B29..) absolutely did since they needed to carry a major payload (unlimited
+weight) in bombs.
+**All passenger jets use ZPE electro-gravitic thrusters** to both reduce the effect of gravity upon the plane as well as
+stabilize the flight itself.
+_It is for this reason that a Jumbo Jet can fly with a wing of engines disabled without rotating towards the dragging
+wing (and immediately dropping out of the sky)._
+ZPE / ElectroGravitic technology has both a vertical thrusting effect and a horizontal stabilizing effect on a craft.
+It's a flawless technology that provides any craft with the ability to sustain normal flight in the event of a
+catastrophic multi engine failure (Anyone get that reference?).
+
+## Q: Sooooo.... why did that Boeing Crash then?
+
+If planes cannot ever crash, if they have a secret technology that keeps them from ever crashing, then what about all
+the plane crashes in the news?
+There is only one _Ex-Plane-Ation_ left if you rule out mechanical or pilot failure. The plane crashes are simulated.
+Here's how:
+
+First, your target plane _Flight123_ is chosen for a scheduled crash. The plane takes off and a crash is scheduled for
+right after takeoff, or somewhere within the trip.
+When the moment of the crash comes, Flight123 goes dark. It loses communication with all controllers and the pilots lose
+control of the craft. It becomes fully automated.
+At this exact same moment, Flight123b goes live. What is Flight123b? It is an identical aircraft, completely empty of
+passengers and pilots, flying nearby (within 10-50 miles).
+Get it?
+
+Now, Flight123b does not communicate with the controllers. Instead, it is immediately shot out of the sky, or has a
+scheduled mechanical failure. It crashes. There are videos.
+Finally, Boeing employees arrive to bulldoze the crash site and erase all evidence, crushing victims bones. Right?
+Wrong. Flight123, the REAL flight,
+with the actual passengers and pilots has landed safely in a remote location, an airport you and I have never heard of.
+Classified.
+Now, we all know how this story Ends. Boeing convinces all families to settle for $X,XXX,XXX. But what is the real
+reason these
+families are historically okay with taking money for the lives of their loved ones?
+
+Because they didn't.
+
+The family members are released to their families when, _and only when_, they have all signed their right to discuss the
+crash away for the rest of their lives.
+Cooperative or not, the families have absolutely no way to fight back against a lawless international conglomerate. I
+would imagine the most uncooperative families
+are made aware that only by their own actions would they *actually* have lost someone in the crash. Would you trade your
+son, daughter, wife, husband's life for the truth?
+
+__Yes. Yes you would.__
+
+## Q: Okay so, how does one keep such an obvious secret this whole time?
+
+Lots of ways. Here's some:
+
+* 1\. You _can not_ get an aviators license without _direct approval_ by the FAA, which requires a written and oral test
+  proving that you 'understand' (believe in) aerodynamics heavier-than-air flight. This separation from the public
+  results in people having a church-like faith in airplanes or complete fear in them.
+* 2\. Everyone knows that NASA has always been corrupt and inaccessible to women and minorities; a pseudoscience _boys
+  club_ run like a giga-church, but most people don't know NASA was created entirely in-house
+  by [Lockheed Martin](https://en.wikipedia.org/wiki/Lockheed_Martin_Space_Systems) and Boeing. This martial-religious
+  centralization is designed to keep outsiders (us) from getting too close to the industry secrets.
+* 3\. Jet Propulsion Labs (JPL) insists only jets are capable of propulsion needed for space travel, even though ion (
+  EM) thrusters have been used in space probes since 1964.
+* 4\. Jumbo Jets have not improved in design in over 70 _YEARS_. The identical design shared by all plane manufacturers
+  is a result of their development always being in secret.
+  Example: [AirBus](https://en.wikipedia.org/wiki/History_of_Airbus#Development_of_the_A380).
+* 5\. [Jumbo jet terrorism](https://en.wikipedia.org/wiki/9/11_conspiracy_theories#No-planes_theory) justified further
+  locking airports and flying technology.
+* 6\. Suppressing of technology at the government and media level is the explanation for
+  all [UFO](https://www.publishersweekly.com/978-0-7679-0627-2) sightings.
+  Sorry, [bug-like aliens](https://www.collective-evolution.com/2020/05/28/forced-faked-alien-abductions-were-conducted-by-the-cia-according-to-renowned-researcher/)
+  was a psyop to hide suppressed technology.
+* 7\. Science Fiction movies (like _The Incredibles_) constantly put in references to real suppressed technology to
+  associate that technology with science fiction.
+* 8\. Suppressing of technology explains the ChemTrails phenomenon as no human pilots would be required to pull it off
+  world-wide. **Fully automated unmanned craft are responsible for all ChemTrails**.
+* 9\. Any country that doesn't go along with 'the plan' gets bombed instead of airports. Napalm, specifically. Sometimes
+  Willie Pete. I'm not sure which is scarier.
+
+**By Endless War**. The 20th Century was our darkest century and we were all born in it's shadow. That same darkness and
+fear is felt today, preventing us from finding our way.
+
+# Citations:
+
+## Electro-Gravitic Gyroscope Patent used in cargo planes
+
+"An aircraft according to claim 9, wherein said reactors are symmetrically positioned above and below said gyroscopic
+discs so that a thrust exerted by said reactors is parallel to said gyroscopic discs"  
+[https://patents.google.com/patent/US5259571A/en](https://patents.google.com/patent/US5259571A/en)
+
+## Electro-Gravitic Gyroscope used in large cargo ships
+
+"The World War I transport USS Henderson, completed in 1917, was the first large ship with gyro stabilizers. It had two
+25-ton, 9-foot (2.7 m) diameter flywheels mounted near the center of the ship, spun at 1100 rpm by 75 hp (56 kW) AC
+motors."  
+[https://en.wikipedia.org/wiki/Anti-rolling_gyro](https://en.wikipedia.org/wiki/Anti-rolling_gyro)
+
+## Suppressed Technology in the 20th Century:
+
+"a 'zero point' of gravity exists in the universe and can be replicated here on Earth. The pressure to be the first
+nation to harness gravity is immense, as it means having the ability to build military planes of unlimited speed and
+range, along with the most deadly weaponry the world has ever seen. The ideal shape for a gravity-defying vehicle
+happens to be a perfect disk, making antigravity tests a possible explanation for the numerous UFO sightings of the past
+50 years."  
+[https://publishersweekly.com/978-0-7679-0627-2](https://www.publishersweekly.com/978-0-7679-0627-2)
+
+"We already have the means to travel among the stars, but these technologies are locked up in black projects and it
+would take an Act of God to ever get them out to benefit humanity...Anything you can imagine, we already know how to
+do." -Ben Rich, stated during a 1993, Alumni Speech at UCLA  
+[https://rense.com/general79/among.htm](https://rense.com/general79/among.htm)
+
+"Also known as Electro-Gravitics, the idea is said to be an anti-gravity force created by an electric field’s effect on
+a mass."  
+[https://express.co.uk/news/weird/1236266/mars-mission-nasa-journey-5-days-antigravity-thomas-brown-space-spt](https://www.express.co.uk/news/weird/1236266/mars-mission-nasa-journey-5-days-antigravity-thomas-brown-space-spt)
+
+A Jumbo Jet Aircraft like the 747-400 stores it's fuel in 3-5 tanks within the wings. This of course make no sense, as
+the plane could have been designed with fuel tanks elsewhere. The essential design of any ZPE electrogravitic module is
+a large, circular apparatus with a rotating EM emitter inside which rotates counter to the earth's EM field.
+Such a device can be easily hidden within the body of any plane, however, the most ideal location would be within the
+jet engines themselves which are already designed with a super fast rotating turbine disks.
+[https://en.wikipedia.org/wiki/Components_of_jet_engines](https://en.wikipedia.org/wiki/Components_of_jet_engines)
+
+"Foreign ownership of thousands of U.S. aircraft cloaked in secrecy"  
+[https://wfaa.com/article/news/do-not-publish/287-959247e4-3aba-4c0a-a83b-639145e81a64](https://www.wfaa.com/article/news/do-not-publish/287-959247e4-3aba-4c0a-a83b-639145e81a64)
+
+"Rogue Boeing 737 Max planes ‘with minds of their own’ | 60 Minutes Australia"  
+[https://youtube.com/watch?v=QytfYyHmxtc&feature=youtu.be](https://www.youtube.com/watch?v=QytfYyHmxtc&feature=youtu.be)
+
+## Jumbo jets flying without engines:
+
+"Can The Airbus A380 Fly On One Engine?" Yes, but this article fails to explain how.  
+[https://simpleflying.com/one-engine-a380/](https://simpleflying.com/one-engine-a380/)  
+Here's how: If electro-gravitic thrusters are built horizontally into the wings, then yes, the plane should be able to
+sustain lift with one (or even zero) engines still running.  
+Can hollow metal wings lift a plane using wind alone? **No.**
+
+When jet engines fail, the passengers feel no drop. Just like in LoonyToons! <small>(Fun fact: 6 months after I posted
+this article, the pilot of the Hudson Miracle Landing died. Guess I can't interview him now...)</small>  
+"It was a very foreign feeling - the plane actually shuddered and kind of stopped in mid-air," said one passenger.  
+[https://ny1.com/nyc/all-boroughs/news/2019/01/15/miracle-on-the-hudson-10-year-anniversary-](https://www.ny1.com/nyc/all-boroughs/news/2019/01/15/miracle-on-the-hudson-10-year-anniversary-)
+
+"As the flight was over the Aegean Sea and 100 nautical miles northeast of Athens, Greece, the left-hand engine
+experienced a spontaneous shut down. The crew responded to this occurrence by decreasing its altitude from FL360 to
+FL240\. The flight continued at this altitude until landing without further incident – two hours and 20 minutes
+later."  
+[https://simpleflying.com/smartwings-boeing-737-800-engine-shutdown/](https://simpleflying.com/smartwings-boeing-737-800-engine-shutdown/)
+
+## Unexplainable aerodynamics:
+
+"An unbelievable feature of gliding performance is the effect of airplane gross weight. Since the maximum lift-drag
+ratio of a given airplane is an intrinsic property of the aerodynamic configuration, **gross weight will not affect the
+gliding performance**."  
+[http://code7700.com/aero_l_over_d_max.htm](http://code7700.com/aero_l_over_d_max.htm)
+
+"Roofless Boeing 737"  
+[https://fighterjetsworld.com/historic-aircraft-and-incident/aloha-airlines-flight-243-pilots-managed-to-land-boeing-737-297-that-lost-its-roof/13090/](https://fighterjetsworld.com/historic-aircraft-and-incident/aloha-airlines-flight-243-pilots-managed-to-land-boeing-737-297-that-lost-its-roof/13090/)
+
+"Vertical Takeoff Boeing 737"  
+[https://cnet.com/news/boeing-787-dreamliner-wows-with-near-vertical-takeoff/](https://www.cnet.com/news/boeing-787-dreamliner-wows-with-near-vertical-takeoff/)
+
+It's the pilots fault. No it as a bird strike. No it's the software! Here's a 'patch'!  
+"Deadly crashes raise questions about AI automation"  
+[https://theverge.com/2019/3/15/18267365/boeing-737-max-8-crash-autopilot-automation](https://www.theverge.com/2019/3/15/18267365/boeing-737-max-8-crash-autopilot-automation)
+
+You can have blind faith in aerodynamic engineering, just don't have blind faith in Boeing.  
+"2 deadly crashes raise questions about FAA’s close ties to Boeing"  
+[https://pbs.org/newshour/nation/2-deadly-crashes-raise-questions-about-faas-close-ties-to-boeing](https://www.pbs.org/newshour/nation/2-deadly-crashes-raise-questions-about-faas-close-ties-to-boeing)
+
+"Beginning in late 1965, a number of B-52Ds underwent Big Belly modifications to increase bomb capacity for carpet
+bombings. The modification created enough capacity for a total of 60,000 lb (27,215 kg) using 108 bombs. Thus modified,
+B-52Ds could carry 22,000 lb (9,980 kg) more than B-52Fs"  
+[https://en.wikipedia.org/wiki/Boeing_B-52_Stratofortress](https://en.wikipedia.org/wiki/Boeing_B-52_Stratofortress)
+
+## Criminal activity:
+
+Boeing routinely sedated passengers without their knowledge. Here's an example:  
+[https://foxnews.com/travel/air-canada-passenger-dark-empty-plane-alone](https://www.foxnews.com/travel/air-canada-passenger-dark-empty-plane-alone)
+
+Boeing apparently is covering up dozens of fatal crashes EVERY YEAR. Here's an example:  
+"The Recent Deadly Boeing Crash No One Is Talking About" (3rd crash in the USA last month, but no coverage)  
+[https://nymag.com/intelligencer/2019/03/atlas-air-the-boeing-crash-no-one-is-talking-about.html](http://nymag.com/intelligencer/2019/03/atlas-air-the-boeing-crash-no-one-is-talking-about.html)
+
+'"I will never forget his response which was, ‘The military is not a profit-making organization’," Edward Pierson told a
+congressional committee.'  
+[https://kuow.org/stories/max-crisis-is-greatest-since-the-1970s-says](https://www.kuow.org/stories/max-crisis-is-greatest-since-the-1970s-says)
+
+## Media psy-ops related to electro-gravitic technology:
+
+UFO Psyop: insisting humans could never attain anti-gravity technology without the help of insect-like
+extra-terrestrials.  
+"the origin of the modern UFO story seems to correspond with the establishment of the CIA"  
+[https://winterwatch.net/2018/12/the-ufo-alien-narrative-is-a-psyop/](https://www.winterwatch.net/2018/12/the-ufo-alien-narrative-is-a-psyop/)
+
+Does anyone find it weird they've been trying to sell us Flying Cars for the last 9 years? What's the prob, Bob?  
+"Inside Larry Page’s Turbulent Kitty Hawk: Returned Deposits, Battery Fires And A Boeing Shakeup"  
+[https://forbes.com/sites/jeremybogaisky/2019/12/01/inside-larry-pages-kitty-hawk-returned-deposits-battery-fires-boeing-cora/#112abf1358ab](https://www.forbes.com/sites/jeremybogaisky/2019/12/01/inside-larry-pages-kitty-hawk-returned-deposits-battery-fires-boeing-cora/)
+
+Disney appears to be introducing us to anti-gravity technology through their newly purchased IP: Star Wars!  
+"https://techcrunch.com/2019/12/07/real-x-wings-took-flight-at-disneys-new-star-wars-ride-grand-opening-thanks-to-boeing/"  
+[https://techcrunch.com/2019/12/07/real-x-wings-took-flight-at-disneys-new-star-wars-ride-grand-opening-thanks-to-boeing/](https://techcrunch.com/2019/12/07/real-x-wings-took-flight-at-disneys-new-star-wars-ride-grand-opening-thanks-to-boeing/)
+
+

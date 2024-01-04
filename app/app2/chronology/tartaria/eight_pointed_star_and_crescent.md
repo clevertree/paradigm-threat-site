@@ -1,0 +1,1 @@
+The crescent moon with a star is an old symbol used throughout the Russian Horidan Empire with the star of Bethlehem andsolar eclipse represented with the Nativity of Christ and the crucifixion of Andronicus Christ. 

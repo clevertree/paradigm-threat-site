@@ -1,0 +1,33 @@
+body {
+    animation: flickerAnimation 128s infinite;
+}
+
+@keyframes flickerAnimation {
+    0% {
+        color: #000;
+    }
+    84% {
+        color: #220000;
+    }
+    88% {
+        color: #440000;
+    }
+    89.5% {
+        color: #660000;
+    }
+    90% {
+        color: #220000;
+    }
+    97% {
+        color: #440000;
+    }
+    97.9% {
+        color: #a20000;
+    }
+    98.4% {
+        color: #220000;
+    }
+    100% {
+        color: #440000;
+    }
+}
