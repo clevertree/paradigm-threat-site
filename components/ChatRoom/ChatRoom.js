@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Markdown from 'markdown-to-jsx'
 
 import styles from './ChatRoom.module.scss'
@@ -8,16 +8,19 @@ import { ErrorBoundary } from '@client'
 
 export default function ChatRoom ({ channel, title, className }) {
   const [channelInfo, setChannelInfo] = useState(null)
-  const [error, setError] = useState(null)
+  const [error] = useState('Chatbot is offline')
 
-  useEffect(() => {
-    // Fetch top directory
-    fetch(`/api/chat/channel/${channel}/getPosts`)
-      .then(res => res.json())
-      .then((channelInfo) => {
-        setChannelInfo(channelInfo)
-      }).catch(error => setError(error))
-  }, [channel])
+  // useEffect(() => {
+  //   // Fetch top directory
+  //   fetch(`/api/chat/channel/${channel}/getPosts`)
+  //     .then(res => res.json())
+  //     .then((channelInfo) => {
+  //       setChannelInfo(channelInfo)
+  //     }).catch(error => {
+  //     console.error(error.message)
+  //     setError(error.message)
+  //   })
+  // }, [channel])
 
   async function onKeyDown (event) {
     if (event.key === 'Enter' && event.ctrlKey) {
@@ -63,8 +66,8 @@ export default function ChatRoom ({ channel, title, className }) {
       <div className={`${styles.container} ${className}`}>
         <div className={styles.channelTitle}>
           <a
-            href={`https://chat.paradigmthreat.net/paradigm-threat/channels/${channel}`} target=' _blank'
-            rel='noreferrer'
+            href={`https://chat.paradigmthreat.net/paradigm-threat/channels/${channel}`} target=" _blank"
+            rel="noreferrer"
           >
             {title || channel}
           </a>
@@ -76,33 +79,33 @@ export default function ChatRoom ({ channel, title, className }) {
               <span className={styles.message}><Markdown>{message}</Markdown></span>
             </div>
           ))}
-          {error && <div className={`${styles.post} ${styles.error}`}>{error}</div>}
+          {error && <div className={`${styles.post} ${styles.error}`}>Could not load chatroom: {error}</div>}
         </div>
         <div>
-          <form className='flex' onSubmit={onSubmit}>
+          <form className="flex" onSubmit={onSubmit}>
             <input
-              type='text' name='username' className={`${styles.input} w-24 text-center italic`}
-              placeholder='guest' title='Type your guest name here'
+              type="text" name="username" className={`${styles.input} w-24 text-center italic`}
+              placeholder="guest" title="Type your guest name here"
             />
             <input
-              type='text'
-              name='message'
+              type="text"
+              name="message"
               className={`${styles.input} w-full`}
               onKeyDown={onKeyDown}
               required
-              title='Send a message to the channel'
-              placeholder='got something to say? type it here and hit the enter key to send to the channel'
+              title="Send a message to the channel"
+              placeholder="got something to say? type it here and hit the enter key to send to the channel"
             />
             <button
-              type='submit' className={`${styles.input} ${styles.submit} w-24`} value='Submit'
+              type="submit" className={`${styles.input} ${styles.submit} w-24`} value="Submit"
             >Send
             </button>
           </form>
         </div>
         <div className={styles.channelFooter}>
           <a
-            href={`https://chat.paradigmthreat.net/paradigm-threat/channels/${channel}`} target=' _blank'
-            rel='noreferrer'
+            href={`https://chat.paradigmthreat.net/paradigm-threat/channels/${channel}`} target=" _blank"
+            rel="noreferrer"
           >
             Open {title || channel} in new window
           </a>

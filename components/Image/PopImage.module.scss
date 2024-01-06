@@ -1,13 +1,11 @@
-.container {
+.image {
   cursor: pointer;
+}
 
-  & > img {
-    //width: 100%;
-    //background-repeat: no-repeat;
-    //background-size: cover;
-  }
 
-  & p {
+.imageCaptionContainer {
+  & > p,
+  .caption {
     margin: 0 0 0.5em 0;
     padding: 0;
     font-size: smaller;
@@ -15,7 +13,6 @@
     font-style: italic;
   }
 }
-
 
 .fullscreen {
   cursor: pointer;
@@ -33,16 +30,23 @@
   animation: fade 1s linear;
 
   & > img {
-    max-width: 90vw !important;
   }
-
 
   & > p {
     //background-color: #000;
     //border-radius: 1rem;
     //padding: 1rem;
     margin-top: 0;
+    max-height: 20vh;
+    overflow-y: auto;
   }
+}
+
+.fullscreenImage {
+  min-width: 50vw;
+  max-width: 90vw;
+  max-height: 70vh;
+
 }
 
 .button {
