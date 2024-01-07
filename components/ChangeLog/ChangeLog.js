@@ -1,7 +1,7 @@
 import React from 'react'
 
 import styles from './ChangeLog.module.css'
-import { getGitChangeLog } from '@/server/gitUtil'
+// import { getGitChangeLog } from '@/server/gitUtil'
 
 export default async function ChangeLog ({ target = '_blank' }) {
   // const [changeLog, setChangeLog] = useState([])
@@ -16,8 +16,8 @@ export default async function ChangeLog ({ target = '_blank' }) {
   //         }).catch(error => setError(error))
   // }, [])
 
-  const changeLog = await getGitChangeLog()
-
+  // const changeLog = await getGitChangeLog()
+  const changeLog = [{ hash: '', message: 'returning soon', date: new Date() }]
   const hashUrl = process.env.NEXT_PUBLIC_GIT_HASH_URL
 
   return (

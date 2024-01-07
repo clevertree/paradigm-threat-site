@@ -55,7 +55,6 @@ export default function DynamicIndex (props) {
     current.reactContainer = current.reactContainer || ReactDOM.createRoot(current)
     const render = root.children.map((child, i) => renderHeaderChild(child, i))
     current.reactContainer.render(render)
-    console.log('current', current)
   }
 
   function renderHeaderChild ({ content, id, children, headerElm, level }, key) {

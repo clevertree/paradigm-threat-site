@@ -5,11 +5,11 @@ import Markdown from 'markdown-to-jsx'
 
 import styles from './ChatRoom.module.scss'
 import { ErrorBoundary } from '@client'
+const API_URL = process.env.NEXT_PUBLIC_API
 
 export default function ChatRoom ({ channel, title, className }) {
   const [channelInfo, setChannelInfo] = useState(null)
   const [error, setError] = useState(null)
-  const API_URL = process.env.NEXT_PUBLIC_API
 
   useEffect(() => {
     // Fetch top directory

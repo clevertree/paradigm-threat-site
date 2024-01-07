@@ -1,7 +1,7 @@
 import { PopImage, ChatRoom } from "/components";
 // Page Styles
-export const imageStyleRight = "w-full sm:w-[inherit] float-right clear-right sm:m-1 sm:ml-4";
-export const imageStyleLeft = "w-full sm:w-[inherit] float-left clear-left sm:m-1 sm:mr-4";
+export const imageStyleRight = "float-right clear-right sm:m-1 sm:ml-4";
+export const imageStyleLeft = "float-left clear-left sm:m-1 sm:mr-4";
 export const imageWidth = { width: 384 }
 // Meta Data
 export const metadata = {
@@ -14,9 +14,9 @@ export const metadata = {
 }
 
 <PopImage {...require("./ww2meme.jpg")}
-          {...imageWidth}
+          width={600}
           alt="WW2 Meme"
-          className="w-full sm:max-w-[60rem] rounded-md m-auto"/>
+          className="rounded-md m-auto"/>
 
 # World War II was won BY CHEATING using Child Pilots, Anti-gravity aircraft, and a whole lotta NAPALM
 
@@ -94,9 +94,9 @@ After the victory of WW2, the coalition bombings continued - spanning
 in over 32 countries.
 
 <PopImage {...require("./bombings/lancaster.jpg")} class="left"
-          {...imageWidth}
+          width={600}
           alt="Bombing Lancaster"
-          className="sm:max-w-[60rem] rounded-md m-auto"/>
+          className="rounded-md m-auto"/>
 
 ## Q: Okay, so how did they get Allied pilots to bomb men women and children?
 
@@ -111,9 +111,9 @@ and [Napalm/Phosphorus Munitions](https://cstms.berkeley.edu/current-events/napa
 ## Q: Which suppressed technology?
 
 <PopImage {...require("../conspiracy/anti_gravity/antigrav_research2.jpg")}
-          {...imageWidth}
+          width={600}
           alt="Anti Gravity Research 4"
-          className="sm:max-w-[60rem] rounded-md m-auto"/>
+          className="rounded-md m-auto"/>
 
 
 The universe is [electric](/cosmology/electric_universe) in nature.
