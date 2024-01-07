@@ -9,10 +9,11 @@ import { ErrorBoundary } from '@client'
 export default function ChatRoom ({ channel, title, className }) {
   const [channelInfo, setChannelInfo] = useState(null)
   const [error, setError] = useState(null)
+  const API_URL = process.env.NEXT_PUBLIC_API
 
   useEffect(() => {
     // Fetch top directory
-    fetch(`/api/chat/channel/${channel}/getPosts`)
+    fetch(`${API_URL}/api/chat/channel/${channel}/getPosts`)
       .then(res => res.json())
       .then((channelInfo) => {
         setChannelInfo(channelInfo)

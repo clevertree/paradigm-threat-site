@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import styles from './FileSearchForm.module.scss'
 import { PopImage, EmbedFile } from '@client'
 
+const API_URL = process.env.NEXT_PUBLIC_API
 const FETCH_URL = '/api/fs/search/'
 
 let timeout = null
@@ -16,7 +17,7 @@ export default function FileSearchForm ({ keywords }) {
   useEffect(() => {
     if (keywordsList) {
       setLoading(true)
-      fetch(`${FETCH_URL}${keywordsList}`)
+      fetch(`${API_URL}${FETCH_URL}${keywordsList}`)
         .then(res => res.json())
         .then(response => {
           setSearchResults(response)
