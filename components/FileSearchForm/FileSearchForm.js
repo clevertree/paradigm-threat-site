@@ -88,6 +88,8 @@ export default function FileSearchForm ({ keywords }) {
   function onSubmit (e = null) {
     if (e !== null) e.preventDefault()
     const { value } = refForm.current.elements.search
+    window.history.pushState({}, '', value)
+
     setKeywordsList(value)
   }
 
@@ -113,14 +115,22 @@ export default function FileSearchForm ({ keywords }) {
       case 'ppm':
         return (
           <PopImage
+            key={filePath}
             src={'/' + filePath}
-            fill
+            width={256}
+            height={256}
             alt={filePath}
-          >{filePath}
+          >
+            <a href={filePath} target='_blank' rel='noopener noreferrer'>{filePath}</a>
           </PopImage>
         )
       case 'pdf':
-        return <EmbedFile src={filePath} />
+        return (
+          <EmbedFile
+            key={filePath}
+            src={filePath}
+          />
+        )
       case 'm4v':
       case 'mp4':
       case 'mkv':
@@ -128,7 +138,9 @@ export default function FileSearchForm ({ keywords }) {
       case 'txt':
       default:
         return (
-          <div>
+          <div
+            key={filePath}
+          >
             <embed src={filePath} className='w-full min-h-[40vh] min-w-[20vw]' />
             <a href={filePath} target='_blank' rel='noopener noreferrer'>{filePath}</a>
           </div>

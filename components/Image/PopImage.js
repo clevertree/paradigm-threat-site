@@ -18,16 +18,20 @@ function PopImage ({ children, className, alt, ...props }) {
     setFullscreen(!fullscreen)
   }
 
-  // const { src, width, height, blurDataURL } = srcProps
-  // const finalProps = { src, width, height }
-  // console.log('finalProps', finalProps)
+  let { src, width, height, sourceWidth, sourceHeight, blurDataURL } = srcProps
+  if (sourceWidth && sourceHeight && width !== sourceWidth) {
+    height = Math.round((width / sourceWidth) * sourceHeight)
+  }
+
+  const finalProps = { src, width, height, blurDataURL }
+  // console.log('srcProps', srcProps, height)
   // if (blurDataURL)
   //   finalProps.style = { backgroundImage: `url('${blurDataURL}')` }
   let content = (
     <Image
       className={`${styles.image} ${className || ''}`}
       onClick={toggleFullscreen}
-      {...srcProps}
+      {...finalProps}
       alt={alt}
     />
   )
@@ -38,7 +42,7 @@ function PopImage ({ children, className, alt, ...props }) {
         <Image
           className={styles.image}
           onClick={toggleFullscreen}
-          {...srcProps}
+          {...finalProps}
           alt={alt}
         />
         {children}
@@ -47,7 +51,6 @@ function PopImage ({ children, className, alt, ...props }) {
   }
 
   if (fullscreen) {
-    const { src } = srcProps
     return (
       <>
         {content}

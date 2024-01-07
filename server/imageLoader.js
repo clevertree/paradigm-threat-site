@@ -13,16 +13,19 @@ module.exports = async function (buffer) {
     const sharpOriginal = Sharp(buffer)
 
     const { width, height, format } = await sharpOriginal.metadata()
-    data.width = width
+    data.format = format
     data.height = height
+    data.width = width
+    data.sourceWidth = width
+    data.sourceHeight = height
     const result = await sharpOriginal
       .resize(8)
       .toBuffer()
     data.placeholder = 'blur'
     data.blurDataURL = `data:image/${format};base64,${result.toString('base64')}`
   } catch (e) {
-    data.width = 300
-    data.height = 300
+    // data.width = 300
+    // data.height = 300
     console.error('Could not determine image data for ' + relativePath, e)
   }
   // const response = await getImageSize(source, ext);

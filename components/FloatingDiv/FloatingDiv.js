@@ -46,11 +46,12 @@ export default function FloatingDiv ({ children, containerElm, className }) {
 
   return (
     <Container
+      className={className}
       style={{ height: containerHeight }}
       ref={refContainer}
     >
       <div
-        className={className + (isFloating ? ' ' + styles.floatingDiv : '')}
+        className={(isFloating ? ' ' + styles.floatingDiv : '')}
       >
         {children}
       </div>

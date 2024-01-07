@@ -1,5 +1,7 @@
 .image {
   cursor: pointer;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 
@@ -27,7 +29,7 @@
   justify-content: flex-start;
   flex-direction: column;
   z-index: 9;
-  animation: fade 1s linear;
+  animation: fadeIn 0.3s linear;
 
   & > img {
   }

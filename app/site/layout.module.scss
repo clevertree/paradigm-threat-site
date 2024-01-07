@@ -1,9 +1,12 @@
 .navContainer {
   background-color: var(--nav-bg-color, #999);
-
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .linkContainer {
+  background-color: var(--nav-bg-color, #999);
   /*font-size: 18px;*/
   padding: 2px;
   display: flex;
@@ -25,7 +28,7 @@
 
     //text-decoration: none;
     //display: block;
-    padding: 0.2vw 0.5vw;
+    padding: 0.2vw 0.8vw;
     margin: 0 0.2vw;
   }
 

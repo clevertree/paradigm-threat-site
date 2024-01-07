@@ -38,6 +38,7 @@ body {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    align-items: center;
 }
 
 /** Anchor Links **/
@@ -90,10 +91,9 @@ section {
 /** Article **/
 
 article {
-    min-width: min(70vw, 1600px);
-    margin: 0 auto;
+    min-width: min(80vw, 1600px);
+    margin: 0.25rem;
     /*padding: 1rem;*/
-    /*max-width: 1600px;*/
 }
 
 /** Images **/

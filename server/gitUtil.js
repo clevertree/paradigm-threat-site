@@ -18,7 +18,7 @@ const gitInstance = {}
 
 export async function getGitChangeLog (logCountPerRepo = 6) {
   let changeLog = []
-  const paths = ['', '/app']
+  const paths = ['']
   for (const path of paths) {
     const git = getGitInstance(join(process.cwd(), path))
     const { all } = await git.log({ maxCount: logCountPerRepo })
