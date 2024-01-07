@@ -16,7 +16,11 @@ export default function ChatRoom ({ channel, title, className }) {
     fetch(`${API_URL}/api/chat/channel/${channel}/getPosts`)
       .then(res => res.json())
       .then((channelInfo) => {
-        setChannelInfo(channelInfo)
+        if (channelInfo.error) {
+          setError(JSON.stringify(channelInfo.error))
+        } else {
+          setChannelInfo(channelInfo)
+        }
       }).catch(error => {
         console.error(error.message)
         setError(error.message)
@@ -61,7 +65,7 @@ export default function ChatRoom ({ channel, title, className }) {
     })
     formElm.elements.message.disabled = false
   }
-
+  console.log('error', error)
   return (
     <ErrorBoundary>
       <div className={`${styles.container} ${className}`}>

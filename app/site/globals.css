@@ -55,6 +55,7 @@ a.selected {
 
 p, pre, blockquote, iframe, ul, ol, h1, h2, h3, h4, h5, h6 {
     max-width: 1000px;
+    min-width: 100px;
     margin: 0.7em auto 0.7em auto;
     padding: 0 0.2em;
 }

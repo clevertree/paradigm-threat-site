@@ -1,6 +1,6 @@
 'use client'
 
-// import Image from 'next/image'
+import Image from 'next/image'
 import styles from '@/components/Image/Image.module.scss'
 
 export default function ClientImage ({ children, className, ...props }) {
@@ -9,17 +9,16 @@ export default function ClientImage ({ children, className, ...props }) {
     srcProps = { ...props.src.default, ...props }
   } else if (typeof props.src === 'object') { srcProps = { ...props.src, ...props } } else if (typeof props.default === 'object') { srcProps = { ...props.default, ...props } }
 
-  const { sourceWidth, sourceHeight, blurDataURL, ...finalProps } = srcProps
+  const { sourceWidth, sourceHeight, ...finalProps } = srcProps
   if (sourceWidth && sourceHeight && finalProps.width !== sourceWidth) {
     finalProps.height = Math.round((finalProps.width / sourceWidth) * sourceHeight)
   }
   if (!srcProps.width) { console.error('Invalid image width: ', srcProps) }
   // console.log('finalProps', srcProps, height)
-  if (blurDataURL)
-    finalProps.style = { backgroundImage: `url('${blurDataURL}')` }
-  finalProps.src = getResizedThumbnail(finalProps)
+  // if (blurDataURL) { finalProps.style = { backgroundImage: `url('${blurDataURL}')` } }
+  // finalProps.src = getResizedThumbnail(finalProps)
   let content = (
-    <img
+    <Image
       className={`${styles.image} ${className || ''}`}
       {...finalProps}
     />
@@ -31,7 +30,7 @@ export default function ClientImage ({ children, className, ...props }) {
         className={`${styles.imageCaptionContainer} ${className || ''}`}
         style={{ maxWidth: finalProps.width + 'px' }}
       >
-        <img
+        <Image
           className={styles.image}
           {...finalProps}
         />
@@ -42,7 +41,6 @@ export default function ClientImage ({ children, className, ...props }) {
   return content
 }
 
-
-function getResizedThumbnail({src, width, quality=75}) {
-  return `_next/image?url=${encodeURIComponent(src)}&w=${width}&q=${quality}`
-}
+// function getResizedThumbnail ({ src, width, quality = 75 }) {
+//   return `_next/image?url=${encodeURIComponent(src)}&w=${width}&q=${quality}`
+// }

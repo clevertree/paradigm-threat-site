@@ -15,12 +15,17 @@ function PopImage ({ ...props }) {
 
   const content = (
     <ClientImage
+      onClick={toggleFullscreen}
       {...props}
     />
   )
 
   if (fullscreen) {
-    const { children, alt, src } = props
+    let srcProps = { ...props }
+    if (typeof props?.src?.default === 'object') {
+      srcProps = { ...props.src.default, ...props }
+    } else if (typeof props.src === 'object') { srcProps = { ...props.src, ...props } } else if (typeof props.default === 'object') { srcProps = { ...props.default, ...props } }
+    const { children, alt, src } = srcProps
     return (
       <>
         {content}
