@@ -9,7 +9,7 @@ import { ErrorBoundary } from '@/components/client'
 function PopImage ({ children, className, alt, ...props }) {
   const [fullscreen, setFullscreen] = useState(false)
 
-  let srcProps = props
+  let srcProps = { ...props }
   if (typeof props?.src?.default === 'object') {
     srcProps = { ...props.src.default, ...props }
   } else if (typeof props.src === 'object') { srcProps = { ...props.src, ...props } } else if (typeof props.default === 'object') { srcProps = { ...props.default, ...props } }
@@ -18,13 +18,13 @@ function PopImage ({ children, className, alt, ...props }) {
     setFullscreen(!fullscreen)
   }
 
-  let { src, width, height, sourceWidth, sourceHeight, blurDataURL } = srcProps
+  let { src, width, height, placeholder, sourceWidth, sourceHeight, blurDataURL } = srcProps
   if (sourceWidth && sourceHeight && width !== sourceWidth) {
     height = Math.round((width / sourceWidth) * sourceHeight)
   }
 
-  const finalProps = { src, width, height, blurDataURL }
-  // console.log('srcProps', srcProps, height)
+  const finalProps = { src, width, height, placeholder, blurDataURL }
+  // console.log('finalProps', srcProps, height)
   // if (blurDataURL)
   //   finalProps.style = { backgroundImage: `url('${blurDataURL}')` }
   let content = (
@@ -38,7 +38,10 @@ function PopImage ({ children, className, alt, ...props }) {
 
   if (children) {
     content = (
-      <div className={`${styles.imageCaptionContainer} ${className || ''}`}>
+      <div
+        className={`${styles.imageCaptionContainer} ${className || ''}`}
+        style={{ width: width + 'px' }}
+      >
         <Image
           className={styles.image}
           onClick={toggleFullscreen}

@@ -1,7 +1,8 @@
 import { DynamicIndex, PopImage, ChatRoom } from "/components";
 // Page Styles
-export const imageStyleRight = "w-full sm:max-w-[50vw] md:max-w-[33vw] xl:max-w-md float-right clear-right sm:m-1 sm:ml-4";
-export const imageStyleLeft = "w-full sm:max-w-[50vw] md:max-w-[33vw] xl:max-w-md float-left clear-left sm:m-1 sm:mr-4";
+export const imageStyleRight = "w-full sm:w-[inherit] float-right clear-right sm:m-1 sm:ml-4";
+export const imageStyleLeft = "w-full sm:w-[inherit] float-left clear-left sm:m-1 sm:mr-4";
+export const imageWidth = { width: 384 }
 // Meta Data
 export const metadata = {
   title: 'Earth History Timeline based on Saturnian Cosmology',
@@ -13,6 +14,7 @@ export const metadata = {
 }
 
 <PopImage {...require("./saturn/earth_was_saturns_moon2.jpg")}
+          {...imageWidth}
           priority alt="Earth was Saturn's Moon"
           className={`[&>img]:rounded-md ${imageStyleRight}`}>
   Earth may have been a satellite of planet Saturn in primordial times
@@ -20,7 +22,7 @@ export const metadata = {
 
 # Earth History Timeline Reconstruction
 
-Questioning the 'official' timeline of Earth's history is not a new phenomenon. Since the 16th century historian critics
+Questioning the 'off\cial' timeline of Earth's history is not a new phenomenon. Since the 16th century historian critics
 like
 [Jean Hardouin](https://en.wikipedia.org/wiki/Jean_Hardouin),
 [Robert Baldauf](https://en.wikipedia.org/wiki/Robert_Baldauf),
@@ -55,6 +57,7 @@ In [Saturnian Cosmology](https://saturniancosmology.org/), Earth's recorded 'anc
 the [Golden Age](https://en.wikipedia.org/wiki/Golden_Age#Other_Golden_Ages).
 
 <PopImage {...require("./saturn/saturnian_configuration_north.jpg")}
+          {...imageWidth}
           priority alt="Saturnian Collinear Configuration: North Pole"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   From anywhere on the northern hemisphere of the Earth, one could look northwards and see in order: Mars, Venus, then
@@ -66,6 +69,7 @@ the [Golden Age](https://en.wikipedia.org/wiki/Golden_Age#Other_Golden_Ages).
   the *Triform God*, and as *The Trinity* in Babylonian and Abrahamic religion.
 </PopImage>
 <PopImage {...require("./saturn/saturnian_configuration_south.jpg")}
+          {...imageWidth}
           alt="Saturnian Collinear Configuration: South Pole"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Still there was before a world to the south which was called Muspelheim. It is light and hot, and so bright and
@@ -75,6 +79,7 @@ the [Golden Age](https://en.wikipedia.org/wiki/Golden_Age#Other_Golden_Ages).
   many civilizations as the Phoenix, Burning Man or Wicker Man, and the myth of Quetzalcoatl.
 </PopImage>
 <PopImage {...require("./christ/conjunction.jpg")}
+          {...imageWidth}
           alt="Jupiter Saturn Conjunction occurs every 20 years"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Jupiter and Saturn aligned as the Star of Bethlehem on December 21, 2020, marking the 840-Year Anniversary of the
@@ -83,12 +88,14 @@ the [Golden Age](https://en.wikipedia.org/wiki/Golden_Age#Other_Golden_Ages).
   date went unnoticed by Christianity at large.
 </PopImage>
 <PopImage {...require("./tartaria/israel_fake_history.jpg")}
+          {...imageWidth}
           alt="Israel's history was stolen from Russia and relocated to Palestine"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Throughout history, the Jews (those most loyal to the church's authority) and Israelites (those acting in defiance
   of the church's authority) were often on opposite sides of military and religious conflicts.
 </PopImage>
 <PopImage {...require("./fomenko_books.jpg")}
+          {...imageWidth}
           alt="Anatoly Fomenko's books"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   [USA has Issues](https://www.amazon.com/Issues-British-Maps-century-History-ebook/dp/B013B019Z0) with British Maps
@@ -99,6 +106,7 @@ the [Golden Age](https://en.wikipedia.org/wiki/Golden_Age#Other_Golden_Ages).
   Pougatchev (scare in Russian) was actually the final blow in the destruction of Great Tartary.
 </PopImage>
 <PopImage {...require("./tartaria/tartarian_structures.jpg")}
+          {...imageWidth}
           alt="Tartarian Structures around the world"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Tartarian 'Neo-classic' architecture exists world-wide. This is evidence of a world-empire - the Rus-Horde
@@ -184,6 +192,7 @@ Coming Soon..
 # The Golden Age
 
 <PopImage {...require("./saturn/cosmic_mountain.jpg")}
+          {...imageWidth}
           alt="The Cosmic Mountain artifacts and symbols"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Sumerian Tablets - Cosmic Mountain and Wheel of Heaven: The cosmic mountain celebrated around the world, seen as a
@@ -199,6 +208,7 @@ Coming Soon..
 > -<cite>[ Velikovsky's Worlds in Collision](https://books.google.com/books?id=FJst27kSVBgC&pg=PA299)</cite>
 
 <PopImage {...require("./saturn/saturn_configuration_vortex.jpg")}
+          {...imageWidth}
           alt="Saturnian Collinear Configuration description"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   The discovery that objects from the Neolithic or Early Bronze Age carry patterns associated with high-current
@@ -251,6 +261,7 @@ jump, the Earth becomes part of a smaller configuration and draws in less energy
 *slower* orbit.
 
 <PopImage {...require("./saturn/norse_yggdrasil.jpg")}
+          {...imageWidth}
           alt="Norse Mythology Yggdrasil Tree of Life"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   In ancient Norse mythology and cosmology, Yggdrasil is an immense tree that sprang forth in the primordial void of
@@ -284,6 +295,7 @@ Talbott describes:
 
 
 <PopImage {...require("./saturn/golden_age_absu.jpg")}
+          {...imageWidth}
           alt="Absu layer around Earth in ancient times"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   During the Golden Age, the *Absu* plasma layers of Proto-Saturn surrounded the Planets
@@ -307,6 +319,7 @@ to humans as obscuring equatorial rings of a cosmic 'sea' in the southern sky.
 
 
 <PopImage {...require("./saturn/saturnian_configuration_north.jpg")}
+          {...imageWidth}
           priority alt="Saturnian Configuration: Northern Hemisphere"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   From anywhere on the northern hemisphere of the Earth, one could look northwards and see in order: Mars, Venus, then
@@ -346,6 +359,7 @@ makes eight *descents* to Earth creating the appearance of Osiris,
 the [Triform God](https://en.wikipedia.org/wiki/Triple_deity).
 
 <PopImage {...require("./saturn/saturnian_configuration_south.jpg")}
+          {...imageWidth}
           alt="Saturnian Configuration: Southern Hemisphere"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Still there was before a world to the south which was called Muspelheim. It is light and hot, and so bright and
@@ -394,6 +408,7 @@ citizenry of Poseida escape preserving their knowledge (_and class-system_)
 in the secret places of the world. This was the beginning of the so-called **Deep State**.
 
 <PopImage {...require("./saturn/golden_age_hieronimus_bosch.jpg")}
+          {...imageWidth}
           alt="A painting of the Golden Age by Bosch"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   *The Garden of Earthly Delights*
@@ -426,6 +441,7 @@ this period, each planet in the configuration had become a "fully charged" capac
 grow larger in size. The configuration violently came to an end, and the age of cataclysm began.
 
 <PopImage {...require("./saturn/golden_age_jacobs_ladder.jpg")}
+          {...imageWidth}
           alt="Golden Age: Jacob's Ladder"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   The appearance of Priori-Mars as the Cosmic Mountain during the Golden Age was also remembered as *Jacob's Ladder*
@@ -468,6 +484,7 @@ which [transported Ra between each planet](https://www.reddit.com/r/PastSaturnsR
 and it looks **a lot** like a modern day depiction of a "wormhole":
 
 <PopImage {...require("./pyramids/wormhole.jpg")}
+          {...imageWidth}
           alt="Egyptian Worm-Hole as depicted in egyptian mythology"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   The Egyptian "Boat of Ra" resembles a *quantum wormhole*
@@ -477,6 +494,7 @@ and it looks **a lot** like a modern day depiction of a "wormhole":
 
 
 <PopImage {...require("./atlantis/atlantis_first_jerusalem.jpg")}
+          {...imageWidth}
           alt="Atlantis was the first holy city - First Jerusalem"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Atlantis was the first holy city - First Jerusalem - built on the north poles of Mars
@@ -507,6 +525,7 @@ the [1902 musical](https://en.wikipedia.org/wiki/The_Wizard_of_Oz_\(1902_musical
 
 
 <PopImage {...require("./saturn/golden_age_ends_kronos_devours.jpg")}
+          {...imageWidth}
           alt="Kronos (Saturn) devours its children (planets and moons)"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Kronos (Planet Saturn) consumes his children
@@ -547,6 +566,7 @@ together they would appear as a radiant throne in the sky.
 
 
 <PopImage {...require("./saturn/golden_age_ends_great_deluge.jpg")}
+          {...imageWidth}
           alt="Golden Age Ends in a Great Deluge"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   The Golden Age ends in a Great Deluge
@@ -600,6 +620,7 @@ into war,
 or sell them into [slavery](https://en.wikipedia.org/wiki/Slavery_in_ancient_Egypt#Bonded_laborers).
 
 <PopImage {...require("./pyramids/pyramids_around_the_world.jpg")}
+          {...imageWidth}
           alt="Kronos (Saturn) devours its children (planets and moons)"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Pyramids built around the world in ancient and modern times
@@ -620,6 +641,7 @@ describes the [Titan Cronus](https://en.wikipedia.org/wiki/Cronus), seeing his r
 begins to devour each until Jupiter (Zeus) intervenes.
 
 <PopImage {...require("./saturn/cosmic_thunderbolt.jpg")}
+          {...imageWidth}
           alt="Cosmic Thunderbolt"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   The Cosmic Thunderbolt was a series of electric discharges between Jupiter and other planetary bodies
@@ -648,6 +670,7 @@ visiting Earth as [Horus](https://www.ancient.eu/Horus/)
 10 times over the next 300 years.
 
 <PopImage {...require("./saturn/planet_narnia.jpg")}
+          {...imageWidth}
           alt="Planets and The Narnia Chronicles"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
 </PopImage>
@@ -675,6 +698,7 @@ Treader“. Luna (our Moon): The Silver Chair. Mercury: The Horse and his Boy. V
 Last Battle.
 
 <PopImage {...require("./pyramids/history_pyramid_gates1.jpg")}
+          {...imageWidth}
           alt="Pyramids were Star Gates"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Pyramids were functioning Star Gates during the Dark Ages. They no longer function today.
@@ -709,6 +733,7 @@ built at locations of concentrated cosmic energy (entanglements) between planets
 
 
 <PopImage {...require("./saturn/planet_venus_as_medusa.jpg")}
+          {...imageWidth}
           alt="Planet Venus's Terrible Aspect remembered as **Medusa**"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Planet Venus's Terrible Aspect remembered as **Medusa**
@@ -764,6 +789,7 @@ becomes exposed to the Sun's field, it retreats into the safety of Jupiter's mag
 _consumed into the Gas Giant's interior_.
 
 <PopImage {...require("./saturn/venus_and_mars.jpg")}
+          {...imageWidth}
           alt="Venus and Mars battle in the Earth's Sky"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Venus and Mars battle in the Earth's Sky depicted in old paintings: 'Great Red Dragon and The Woman Clothed with the
@@ -785,6 +811,7 @@ In [Egyptian Myth and Catastrophism](http://firmament-chaos.com/papers/Egyptiana
 > from the equator than when priori-Mars orbited the Earth.
 
 <PopImage {...require("./saturn/mount_sinai.jpg")}
+          {...imageWidth}
           alt="Jupiter as Mount Sinai"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Jupiter was remembered as the Burning Bush on top of Mount Sinai
@@ -810,6 +837,7 @@ the [Mosaic Covenant](https://en.wikipedia.org/wiki/Mosaic_covenant).
 
 
 <PopImage {...require("./saturn/binding_of_isaac.jpg")}
+          {...imageWidth}
           alt="Binding of Isaac is an astrological allegory of the Sun crossing the Zodiac from Taurus to Aries"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Binding of Isaac is an astrological allegory of the Sun crossing the Zodiac from Taurus to Aries
@@ -826,6 +854,7 @@ he may slaughter a ram instead of his child, and he then does so under this new 
 be ordered to sacrifice animals to show their loyalty to the **Deep State** and to it's invisible god.
 
 <PopImage {...require("./saturn/sodom_and_gomorrah.jpg")}
+          {...imageWidth}
           alt="Mars destroys Sodom and Gomorrah"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Close encounters with planet Mars destroyed the cities of Sodom and Gomorrah
@@ -860,6 +889,7 @@ discharge.
 Thunderbolts.info](https://www.thunderbolts.info/wp/2013/10/06/electric-fossils-and-thundercrabs/)</cite>
 
 <PopImage {...require("./saturn/exodus.jpg")}
+          {...imageWidth}
           alt="Exodus from the Pyramidal Empire"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Exodus from the Pyramidal Empire
@@ -907,6 +937,7 @@ In [Worlds in Collision](https://books.google.com/books?id=FJst27kSVBgC&pg=PA189
 > teem with vermin."
 
 <PopImage {...require("./plagues_of_venus.jpg")}
+          {...imageWidth}
           alt="The Ten Plagues of Comet Venus"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   The Ten Plagues were caused by the 'Pass-over' of Planet Venus in Comet form
@@ -926,6 +957,7 @@ focus towards survival and away from systemic control of Earth. It would be many
 influence would be felt on Earth again.
 
 <PopImage {...require("./saturn/chinese_dragon.jpg")}
+          {...imageWidth}
           alt="Venus as the Chinese Dragon / Comet"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Venus as the Chinese Dragon / Comet
@@ -960,6 +992,7 @@ Velikovsky explains how this might work:
 
 
 <PopImage {...require("./saturn/sun_stands_still_joshua_bayeux.jpg")}
+          {...imageWidth}
           alt="Bayeux Tapestry: The Sun Stands Still for Joshua"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Bayeux Tapestry: The Sun Stands Still for Joshua
@@ -1011,6 +1044,7 @@ confusion would begin over the nature of Gods.
 > widespread.
 
 <PopImage {...require("./saturn/cathoderal.jpg")}
+          {...imageWidth}
           alt="Cathedrals are Cathodes"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Cathedrals are Cathodes
@@ -1048,6 +1082,7 @@ describes the Greek myth:
 > no sleep and no respite.
 
 <PopImage {...require("./saturn/prometheus.jpg")}
+          {...imageWidth}
           alt="Prometheus was the planet Mars"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Prometheus was the planet Mars
@@ -1109,6 +1144,7 @@ Mesoamerica as the [Death of Quetzalcoatl](https://pages.ucsd.edu/~dkjordan/nahu
 planets were striking their final electromagnetic balance and fixing their orbits that we know today.
 
 <PopImage {...require("./christ/christ_is_the_sun7.jpg")}
+          {...imageWidth}
           alt="Christ as the Sun"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Christ as the Sun
@@ -1138,6 +1174,7 @@ Therefore, the solution to this problem is to assign a label to each date indica
 the Common Era **(B.C.E.)**, or *afterwards* during the Common Era **(C.E.)**.
 
 <PopImage {...require("./lunar_calendar.jpg")}
+          {...imageWidth}
           alt="Fixed Lunar Calendar"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Fixed Lunar Calendar
@@ -1180,6 +1217,7 @@ the *beginning of modern history* - 1053 C.E.. In other words, the age of catacl
 Galadriel](https://www.goodreads.com/quotes/376870-and-some-things-that-should-not-have-been-forgotten-were)</cite>
 
 <PopImage {...require("./fomenko_new_chronology.jpg")}
+          {...imageWidth}
           alt="New Chronology of Human History"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Anatoly Fomenko's New Chronology complies with the most rigid scientific standards. It gives a coherent explanation
@@ -1216,6 +1254,7 @@ happened to agree that there were no flaws in Scaligarian version of modern hist
 > the XX century considerably” - [History of the New Chronology](https://chronologia.org/en/seven/history.html)
 
 <PopImage {...require("./anatoly_fomenko.jpg")}
+          {...imageWidth}
           alt="Anatoly Timofeevich Fomenko - a Russian historical theorist, mathematician, and professor"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Anatoly Timofeevich Fomenko is a Soviet and Russian historical theorist, mathematician, professor at Moscow State
@@ -1289,6 +1328,7 @@ that the historical Christ must have been born (or even died) around 0 AD.
 
 
 <PopImage {...require("./christ/twelve_tribes_zodiac.jpg")}
+          {...imageWidth}
           alt="12 Tribes of Israel/Disciples of Jesus are based on the 12 signs of the Zodiac"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   12 Tribes of Israel/Disciples of Jesus are based on the 12 signs of the Zodiac
@@ -1317,6 +1357,7 @@ an attempt to regain control (Christ - Son of Yahweh. Thor - Son of Odin etc.). 
 the masses that our Sun was the *son* of some *invisible deity* i.e. Saturn.
 
 <PopImage {...require("./jerusalem/troy_1st_jerusalem.jpg")}
+          {...imageWidth}
           alt="Troy was also called Yoros short for Ierosalim a.k.a. Jerusalem (#1) a.k.a. Tsar-Grad"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Troy was also called Yoros short for Ierosalim a.k.a. Jerusalem (#1) a.k.a. Tsar-Grad
@@ -1345,6 +1386,7 @@ them. The stories fell into mythology, replaced by new stories of the Sun traver
 the [farmer's almanac](https://en.wikipedia.org/wiki/Almanac).
 
 <PopImage {...require("./christ/hairy_mary.jpg")}
+          {...imageWidth}
           alt="According to various paintings, Jesus Christ and Mary Magdalene were hairy giant humans"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Christ was a hairy human giant. Here is a painting of his hairy giant mother
@@ -1393,6 +1435,7 @@ a land of giants that rarely participated in any Deep State religious ceremonies
 world empire since the dark ages and would come to be known as the Kingdom of Tartaria.
 
 <PopImage {...require("../genocide/giants_faeries/giant_books.jpg")}
+          {...imageWidth}
           alt="Books created by giant humans"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Books created by giant humans
@@ -1422,6 +1465,7 @@ giants were fleeing the Istanbul region knowing what the census would mean for t
 were killed en route.
 
 <PopImage {...require("../maps/map_tartaria_hondius.jpg")}
+          {...imageWidth}
           alt="Map of Tartaria: Path of Christ's Family"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Map of Tartaria: Path of Christ's Family
@@ -1452,6 +1496,7 @@ King Herod to Egypt, when in eastern records they were fleeing the persecution i
 to their home in central Asia - what would later become the Rus-Horde Empire.
 
 <PopImage {...require("./christ/hans_bol_crucifixion_1587.jpg")}
+          {...imageWidth}
           alt="Painting by Hans Bol: The Crucifixion 1587"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Painting by Hans Bol: The Crucifixion 1587
@@ -1475,6 +1520,7 @@ designed to end the influence of Giants like Christ by allowing the smaller huma
 giants with impunity while they were bound to the crosses.
 
 <PopImage {...require("./christ/crucifixion_descent_tintoretto_1565.jpg")}
+          {...imageWidth}
           alt="Painting by Tintoretto: The Descent from the Cross"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Painting by Tintoretto: The Descent from the Cross
@@ -1503,6 +1549,7 @@ Church's crucifixion had backfired creating their worst nightmare - a human Savi
 a god by the west. Oops!
 
 <PopImage {...require("./reformation/extraordinary_black_book.jpg")}
+          {...imageWidth}
           alt="The Extraordinary Black Book: An Exposition of Abuses in Church and State, Courts of Law, Representation, Municipal and Corporate Bodies"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   An [extraordinary
@@ -1560,6 +1607,7 @@ the Crusaders to open the gates and allow them into Troy. Swift [vengance](https
 was committed upon anyone associated with the Crucifixion of Christ.
 
 <PopImage {...require("./jerusalem/troy_protected_from_mars_by_antonio_raffaele_calliano_1815.jpg")}
+          {...imageWidth}
           alt="Protected by Ares by Antonio Raffaele Calliano, 1815"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Protected by Ares by Antonio Raffaele Calliano, 1815
@@ -1581,6 +1629,7 @@ David bloodline. This clever ruse played into the Crucifixion lie that Christ ha
 embedded Monotheism deep into Christianity.
 
 <PopImage {...require("./jerusalem/kremlin_2nd_jerusalem_boris_godunov.jpg")}
+          {...imageWidth}
           alt="Jerusalem #2 was the Kremlin in Moscow and was never located in Palestine"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Jerusalem #2 was the Kremlin in Moscow and was never located in Palestine
@@ -1616,6 +1665,7 @@ the Jews (those most loyal to the church's authority) and Israelites (those acti
 authority) were often on *opposite sides* of military and religious conflicts.
 
 <PopImage {...require("./tartaria/map_1754_tartaria.jpg")}
+          {...imageWidth}
           alt="Map of Tartaria"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Map of Tartaria
@@ -1648,6 +1698,7 @@ on [public squares](http://ancientolympics.arts.kuleuven.be/eng/TC013EN.html) ou
 
 
 <PopImage {...require("./tartaria/tartarian_empire_emerges_14th_century.jpg")}
+          {...imageWidth}
           alt="15th Century: The Tartarian Empire Invades Europe, Africa and India"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   15th Century: The Tartarian Empire Invades Europe, Africa and India
@@ -1679,6 +1730,7 @@ of [Protestantism](https://en.wikipedia.org/wiki/Protestantism). The Hordian cam
 leading to a war lasting over [a hundred years](https://en.wikipedia.org/wiki/Hundred_Years%27_War).
 
 <PopImage {...require("./apocalypse/pompeii_painting.jpg")}
+          {...imageWidth}
           alt="Various paintings from Pompeii depicted the use of brothels"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   “There were several brothels located in Pompeii — appearing to be part
@@ -1705,6 +1757,7 @@ In the next 2 centuries the local populations would start publicly
 empire to begin an [Inquisition](https://en.wikipedia.org/wiki/Inquisition) to find a peaceful solution.
 
 <PopImage {...require("./apocalypse/black_death.jpg")}
+          {...imageWidth}
           alt="Late 14th Century illustration from Tuscany: devils shoot down arrows to inflict horror upon a tangled mass of humanity"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   In this illustrated
@@ -1757,6 +1810,7 @@ Rome and Greece, as well as in [modern media](https://conananimated.fandom.com/w
 campaigns the Hordians and Atamans (Ottomans) carried the debris of the Yaroslavl meteor in a holy arcs called Kaaba.
 
 <PopImage {...require("./tartaria/painting_joan_of_arc_stake.jpg")}
+          {...imageWidth}
           alt="Painting of Joan of Arc at the Stake"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Even the supporters of the traditional version admit that the
@@ -1797,6 +1851,7 @@ army to give up the siege. It was clear this French maiden had a bewitching infl
 degree that it threatened the entire war campaign.
 
 <PopImage {...require("./tartaria/painting_samson_and_delilah_by_rubens.jpg")}
+          {...imageWidth}
           alt="Painting of Samson and Delilah by Paul Rubens in 1609"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   When creating the Scaligerian history all of these large-scale campaigns were artificially 'squeezed' into the
@@ -1838,6 +1893,7 @@ no moral reason to conquer others and were easily demoralized. In contrast, the 
 call themselves [Warriors of God](https://en.wikipedia.org/wiki/God%27s_Warriors).
 
 <PopImage {...require("./gutenberg_bible_1455.jpg")}
+          {...imageWidth}
           alt="The Gutenberg Bible 1455"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   Latin is a scientific, authoritarian language with [many rules](https://www.superprof.com/blog/declensions-latin/)
@@ -1908,6 +1964,7 @@ were deployed:
 > still take a special vow to undertake any assignment given to them by the Pope.
 
 <PopImage {...require("./apocalypse/apocalypse_vasnetsov.jpg")}
+          {...imageWidth}
           alt="Four Horsemen of Apocalypse, by Viktor Vasnetsov. Painted in 1887"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   In the apocalyptic imaginary, the great struggle of Horus is reflected in the enterprise of the four horsemen of
@@ -1943,6 +2000,7 @@ Europe and avoid the slaughter would have to give up their ancient traditions an
 Orthodox Church of the Rus-Horde Empire.
 
 <PopImage {...require("./apocalypse/apocalypse_b_west.jpg")}
+          {...imageWidth}
           alt="Death on a Pale Horse by Benjamin West 1796"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   *Death on the Pale Horse,* painted by the
@@ -1983,6 +2041,7 @@ spanish, *Cristóbal Colón* translates literally to *Colony of Christ*.
 # 16th Century C.E. Reformation and Inquisition.
 
 <PopImage {...require("./tartaria/painting_ottoman_invades_vienna_1683.jpg")} className
+          {...imageWidth}
           alt="Painting: Ottomans invade vienna 1683"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   The Ottoman Army surrounds Vienna by Frans Geffels.
@@ -2021,6 +2080,7 @@ control Egypt, as both sides of the war had ancestral ties to the biblical locat
 Deep State control therefrom.
 
 <PopImage {...require("./reformation/painting_german_peasant_war_1525.jpg")}
+          {...imageWidth}
           alt="Painting: Germain Peasant War 1525"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   **The German Peasant’s War (1525)**.
@@ -2062,6 +2122,7 @@ renamed and relocated all the ancient sites in an attempt to subsume the famous 
 Empire.
 
 <PopImage {...require("./tartaria/galileo_facing_the_inquisition.jpg")}
+          {...imageWidth}
           alt="Galileo Facing the Inquisition"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Galileo was called to Bellarmine's residence and ordered, to abstain completely from teaching or defending this
@@ -2095,6 +2156,7 @@ poet [Celestin Douais](https://chronologia.org/en/seven5/empire12_09.html) claim
 > and truly standing guard of social justice and the Christian ideology
 
 <PopImage {...require("./tartaria/jews_vs_gentiles.jpg")}
+          {...imageWidth}
           alt="Illustration: Burning of the Jews"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   The “burning of the Jews” depiction during Europe’s Black Death plague.
@@ -2130,6 +2192,7 @@ and [Gentiles](https://en.wikipedia.org/wiki/Goy) which led to [pogroms](https:/
 
 
 <PopImage {...require("./christ/cathar_suppression.jpg")}
+          {...imageWidth}
           alt="Cathar Suppression and Annihilation"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Catharism was a [dualist gnostic](https://en.wikipedia.org/wiki/Catharism) movement in based on the teachings of
@@ -2174,6 +2237,7 @@ River, Angola and Cape Verde.
 
 
 <PopImage {...require("./tartaria/map_khazar_khagnate.jpg")}
+          {...imageWidth}
           alt="Map of the Khazar Khagnate a.k.a. Khazaria"
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   In the middle of the XVI century the Kazan kingdom – aka the legendary 'ancient' Khazar Khaganate – becomes the
@@ -2208,6 +2272,7 @@ merged their religion with Deep State Monotheism. There was only *one ruling ele
 the Russian aristocracy.
 
 <PopImage {...require("./tartaria/oprichniki_bish.jpg")} className
+          {...imageWidth}
           alt={"The oprichnina 1565 - 1572"}
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   The oprichnina was a state policy implemented by Tsar Ivan the Terrible in Russia between 1565 and 1572.
@@ -2260,6 +2325,7 @@ dynasty. Resistance of the remnants of Russia-Horde to their foreign rulers woul
 of [Pugachev's rebellion](https://en.wikipedia.org/wiki/Pugachev%27s_Rebellion) in 1775.
 
 <PopImage {...require("./reformation/king_james_bible.jpg")}
+          {...imageWidth}
           alt="King James Bible 1611 C.E."
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   The [King James Only](https://en.wikipedia.org/wiki/King_James_Only_movement) movement (also known as King James
@@ -2327,6 +2393,7 @@ Fomenko [describes the redaction](https://chronologia.org/en/how_it_was/07.html#
 > power, which conquered not just Western Europe – now it is only mentioned in passing – but allegedly Russia itself.
 
 <PopImage {...require("./tartaria/eight_pointed_star_and_crescent.jpg")}
+          {...imageWidth}
           alt='Coins with Eight pointed star and crescent symbol'
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   Coins with Eight pointed star and crescent symbol
@@ -2420,6 +2487,7 @@ the [59 Commissioners](https://en.wikipedia.org/wiki/List_of_regicides_of_Charle
 Charles I, 9 were executed and many others died in prison.
 
 <PopImage {...require("./tartaria/1652_massacre_of_polish_captives_at_batih.jpg")}
+          {...imageWidth}
           alt="Massacre of Polish Captives at Batih in 1652"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   The [Batih Massacre](https://en.wikipedia.org/wiki/Batoh_massacre) was a mass ethnic cleansing of Russian captives
@@ -2485,6 +2553,7 @@ successfully mitigated the threat of independent banking and would now be able t
 system (finalized by 1694).
 
 <PopImage {...require("./fomenko_timeline_1633_1725.gif")}
+          {...imageWidth}
           alt='Fomenko New Chronology Reconstruction'
           className={`${imageStyleRight} [&>img]:rounded-md`}>
   [Inter-religious dispute Judaism-Christianity
@@ -2535,6 +2604,7 @@ by the creator god [Jehovah](https://en.wikipedia.org/wiki/Jehovah).
 
 
 <PopImage {...require("./apocalypse/great_comet_of_1665.jpg")}
+          {...imageWidth}
           alt="Great Comet of 1664"
           className={`${imageStyleLeft} [&>img]:rounded-md`}>
   The Polish theologian, historian and astronomer, Stanisław Lubieniecki (1623–1675) observed both comets from his

@@ -45,8 +45,8 @@ async function generateAllPages () {
 }
 
 async function generatePages (directoryPath) {
-  const imageStyleRight = 'w-full sm:max-w-[50vw] md:max-w-[33vw] xl:max-w-md float-right sm:m-1'
-  const imageStyleLeft = 'w-full sm:max-w-[50vw] md:max-w-[33vw] xl:max-w-md float-left sm:m-1'
+  const imageStyleRight = 'w-full sm:w-[inherit] float-right clear-right sm:m-1 sm:ml-4'
+  const imageStyleLeft = 'w-full sm:w-[inherit] float-left clear-left sm:m-1 sm:mr-4'
   // const imageStyleRight = "w-full sm:max-w-[50vw] md:max-w-md float-right sm:m-1 sm:ml-4";
   // const imageStyleLeft = "w-full sm:max-w-[50vw] md:max-w-md float-left sm:m-1 sm:mr-4";
   const pdfStyleRight = 'w-full md:w-[24rem] md:h-[36rem] float-right sm:m-1 sm:ml-4'

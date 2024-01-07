@@ -1,7 +1,8 @@
 import { ChatRoom, DynamicIndex, PopImage } from '/components'
 // Page Styles
-export const imageStyleRight = "w-full sm:max-w-[50vw] md:max-w-[33vw] xl:max-w-md float-right clear-right sm:m-1 sm:ml-4";
-export const imageStyleLeft = "w-full sm:max-w-[50vw] md:max-w-[33vw] xl:max-w-md float-left clear-left sm:m-1 sm:mr-4";
+export const imageStyleRight = "w-full sm:w-[inherit] float-right clear-right sm:m-1 sm:ml-4";
+export const imageStyleLeft = "w-full sm:w-[inherit] float-left clear-left sm:m-1 sm:mr-4";
+export const imageWidth = { width: 384 }
 // Meta Data
 export const metadata = {
   title: 'Q&A: Earth is ruled by Humans on Mars',
@@ -15,7 +16,9 @@ export const metadata = {
 # Q&A: Earth is controlled by Humans on Mars
 
 
-<PopImage priority {...require("./globalist_stranglehold.jpg")} alt="Globalist StrangleHold"
+<PopImage priority {...require("./globalist_stranglehold.jpg")}
+          {...imageWidth}
+          alt="Globalist StrangleHold"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 ```
@@ -40,7 +43,9 @@ in all towns, cities, states and countries within their influence.
 On April 27, 1961 at the Waldorf-Astoria Hotel in New York City,
 [President John F. Kennedy said:](https://www.jfklibrary.org/archives/other-resources/john-f-kennedy-speeches/american-newspaper-publishers-association-19610427)
 
-<PopImage {...require("./history_birth_certificate.jpg")} alt="Birth Certificate"
+<PopImage {...require("./history_birth_certificate.jpg")}
+          {...imageWidth}
+          alt="Birth Certificate"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 > For we are opposed around the world by a monolithic and ruthless conspiracy
@@ -90,6 +95,7 @@ These gates were formed during inter-planetary discharges of electricity, the sa
 [lightning scarring](https://www.thunderbolts.info/tpod/2005/arch05/050408marineris.htm) that carved the Grand Canyons.
 
 <PopImage priority {...require("../chronology/pyramids/history_pyramid_gates1.jpg")}
+          {...imageWidth}
           alt="Pyramids are Star Gates"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
@@ -99,7 +105,9 @@ which spread across the planets converting or killing every indigenous civilizat
 This inland empire still
 dominates [inner solar system](https://science.nasa.gov/solar-system/focus-areas/inner-solar-system) affairs today.
 
-<PopImage {...require("./predictive_programming_stargate.jpg")} alt="StarGate Movie Predictive Programming"
+<PopImage {...require("./predictive_programming_stargate.jpg")}
+          {...imageWidth}
+          alt="StarGate Movie Predictive Programming"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 ## Q: What is 'Quantum Entanglement'?
@@ -131,6 +139,7 @@ Egypt, [Sudan](https://www.sciencealert.com/sorry-egypt-but-sudan-is-the-pyramid
 Mesopotamia, England, China, and in South America Andes.
 
 <PopImage priority {...require("../chronology/pyramids/history_pyramid_gates2.jpg")}
+          {...imageWidth}
           alt="Pyramids are Star Gates 2"
           className="w-full sm:max-w-[60rem] [&>img]:rounded-md m-auto"/>
 
@@ -147,10 +156,12 @@ enabled [quantum teleportation](https://www.reddit.com/r/PastSaturnsRings/commen
 between locations during periods of planetary alignment.
 
 <PopImage priority {...require("./mars_map4.jpg")}
+          {...imageWidth}
           alt="South Polar opening of Mars"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 <PopImage {...require("../cosmology/hollow_earth/hollow_earth_model4.jpg")}
+          {...imageWidth}
           alt="Electric Universe - Hollow Earth Model 4"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -170,6 +181,7 @@ a **contextual evil**, that leaches off of Earth's resources to survive.
 If planets are hollow (and they are), it's time to take a second look at the possibility of life on Mars.
 
 <PopImage {...require("../cosmology/hollow_earth/hollow_earth_EU_model.jpg")}
+          {...imageWidth}
           alt="Electric Universe - Hollow Earth Model"
           className="w-full sm:max-w-[60rem] rounded-md m-auto"/>
 
@@ -184,10 +196,12 @@ Well, maybe you have!
 
 
 <PopImage priority {...require("./mars_life3.jpg")}
+          {...imageWidth}
           alt="Polar melting is Nature's signal to the Martians to embark on their Aeroplanes and Airships"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 <PopImage {...require("./mars_canals5.jpg")}
+          {...imageWidth}
           alt="Mars Canals 4"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -225,6 +239,7 @@ Percival Lowell states in the New York Times in 1907:
 > No other supposition is consonant with all the facts here.”
 
 <PopImage {...require("./mars_life.jpg")}
+          {...imageWidth}
           alt="Electric Universe - Hollow Earth Model" className
           className="w-full sm:max-w-[60rem] rounded-md m-auto"/>
 
@@ -245,10 +260,12 @@ that [nobody could have foreseen](https://www.bbc.co.uk/newsround/45966335).
 ## Q: Okay, why can't we see any signs of civilization on the surface of Mars today?
 
 <PopImage priority {...require("./mars_canals3.jpg")}
+          {...imageWidth}
           alt="Artificial canals flood during Martian wet seasons providing desert cities with water "
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 <PopImage {...require("./mars_life2.jpg")}
+          {...imageWidth}
           alt="Life on Mars 2"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -277,6 +294,7 @@ Mars.
 
 
 <PopImage {...require("./mars_canals.jpg")}
+          {...imageWidth}
           alt="Life Saving Canals" className
           className="w-full sm:max-w-[60rem] rounded-md m-auto"/>
 
@@ -290,10 +308,12 @@ member states.
 
 
 <PopImage priority {...require("./cern_stargate_mars1.jpg")}
+          {...imageWidth}
           alt="CERN Stargate to Mars 1"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 <PopImage {...require("./cern_stargate_mars2.jpg")}
+          {...imageWidth}
           alt="CERN Stargate to Mars 2"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -313,6 +333,7 @@ shouldn't be a [surprise](https://www.nature.com/articles/d41586-019-00173-2) th
 CERN is right now building a facility 6 times larger than the current one.
 
 <PopImage {...require("./cern_stargate_plans.jpg")}
+          {...imageWidth}
           alt="Star Gate CERN Plans" className
           className="w-full sm:max-w-[60rem] rounded-md m-auto"/>
 
@@ -326,6 +347,7 @@ taken above CERN.
 Sure Do!
 
 <PopImage {...require("./cern_religious_ritual_at1.jpg")}
+          {...imageWidth}
           alt="CERN Ritual 1" className
           className="w-full sm:max-w-[60rem] rounded-md m-auto"/>
 
@@ -333,9 +355,11 @@ Sure Do!
 
 
 <PopImage priority {...require("./cern_religious_ritual_at4.jpg")}
+          {...imageWidth}
           alt="CERN Ritual 4" className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 <PopImage {...require("./cern_religious_ritual_at2.jpg")}
+          {...imageWidth}
           alt="CERN Ritual 2"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -353,6 +377,7 @@ Melbourne](https://library.unimelb.edu.au/exhibitions/dark-imaginings/gothicrese
 
 
 <PopImage {...require("./cern_religious_ritual_at6.jpg")}
+          {...imageWidth}
           alt="CERN Ritual 6" className
           className="w-full sm:max-w-[60rem] rounded-md m-auto"/>
 
@@ -370,9 +395,11 @@ history.The purveyors of this ceremony had one clear message for the other side:
 ruled.Ruled by whom ?
 
 <PopImage priority {...require("./cern_religious_ritual_at5.jpg")}
+          {...imageWidth}
           alt="CERN Ritual 5" className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 <PopImage {...require("./cern_religious_ritual_at3.jpg")}
+          {...imageWidth}
           alt="CERN Ritual 3"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -410,6 +437,7 @@ quantum gates that connect Earth and Mars
 for breeding purposes.
 
 <PopImage {...require("./wotw/wotw_redaction_humans.jpg")}
+          {...imageWidth}
           alt="Redaction: Martians are Human" className
           className="w-full sm:max-w-[60rem] rounded-md m-auto"/>
 
@@ -446,9 +474,11 @@ effects developed by psychological warfare”
 ### Predictive programming in Science Fiction / Fantasy Genre:
 
 <PopImage priority {...require("./mars_map2.jpg")}
+          {...imageWidth}
           alt="Mars Map 2" className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 <PopImage {...require("./mars_map.jpg")}
+          {...imageWidth}
           alt="Mars Map"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -476,9 +506,11 @@ from 19th century literature which describes Mars as inhabited by
 advanced humans living on the surface who occasionally visit Earth on friendly terms.Why the shift ?
 
 <PopImage priority {...require("./predictive_programming_doom.jpg")}
+          {...imageWidth}
           alt="Predictive Programming: Doom 2005" className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 <PopImage {...require("./predictive_programming_mars_movies.jpg")}
+          {...imageWidth}
           alt="Predictive Programming: Mars Movies"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -502,9 +534,11 @@ planetary
 purposes by humans from _this_ solar system.
 
 <PopImage priority {...require("./predictive_programming_wotw.jpg")}
+          {...imageWidth}
           alt="Predictive Programming: Mars Movies" className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 <PopImage {...require("./predictive_programming_mars_women.jpg")}
+          {...imageWidth}
           alt="Predictive Programming: Mars Needs Women"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -521,6 +555,7 @@ the
 Martians complain again ?
 
 <PopImage {...require("./predictive_programming_marvin.jpg")}
+          {...imageWidth}
           alt="Predictive Programming: Marvin The Martian" className
           className="w-full sm:max-w-[60rem] rounded-md m-auto"/>
 
@@ -561,9 +596,11 @@ to assume there may be a break-away civilizations of humans living on Mars.
 ### The Fall of Atlantis
 
 <PopImage priority {...require("../chronology/saturn/earth_was_saturns_moon3.jpg")}
+          {...imageWidth}
           alt="Earth was Saturn's Moon 3" className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 <PopImage {...require("../chronology/saturn/tower_of_babel.jpg")}
+          {...imageWidth}
           alt="Tower of Babel"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -618,6 +655,7 @@ __When the Tower of Babel failed, the Deep State was created.__
 ### The Exodus from Egypt
 
 <PopImage {...require("../chronology/saturn/exodus.jpg")}
+          {...imageWidth}
           alt="Exodus from Egypt" className
           className="w-full sm:max-w-[60rem] rounded-md m-auto"/>
 
@@ -672,6 +710,7 @@ nearly
 ### The Roman Empire Emerges
 
 <PopImage priority {...require("../chronology/christ/cathar_suppression.jpg")}
+          {...imageWidth}
           alt="Cathar suppression" className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 
@@ -799,13 +838,16 @@ Note: this section is in need of revision and be rewritten in the near future.
 ```
 
 <PopImage {...require("./wotw/wotw_album_cylinder.jpg")}
+          {...imageWidth}
           alt="Predictive Programming: War of the Worlds - Cylinder on Horsell Common" className
           className="w-full sm:max-w-[60rem] rounded-md m-auto"/>
 
 <PopImage priority {...require("./wotw/wotw_redaction_heatray.jpg")}
+          {...imageWidth}
           alt="War of the Worlds Redaction: The Heat Ray" className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 <PopImage {...require("./wotw/wotw_redaction_eyes.jpg")}
+          {...imageWidth}
           alt="War of the Worlds Redaction: Luminous Disks - like eyes"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -827,6 +869,7 @@ History](https://books.google.com/books?id=v3TDEDfEPdEC&printsec=frontcover#v=on
 ### The Martian Heat Ray
 
 <PopImage {...require("./wotw_technology_heat_ray.jpg")}
+          {...imageWidth}
           alt="The Martian Heat Ray | The U.S. Military Active Denial System" className
           className="w-full sm:max-w-[60rem] rounded-md m-auto"/>
 
@@ -838,13 +881,16 @@ This [crowd control vehicle](https://files.paradigmthreat.net/mars/heat_ray.jpg)
 a heat ray device that looks ** precisely ** like the heat ray described in the book:
 
 <PopImage priority {...require("./wotw/wotw_monuments.jpg")}
+          {...imageWidth}
           alt="War of the Worlds Monuments" className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 <PopImage {...require("./wotw/wotw_real.jpg")}
+          {...imageWidth}
           alt="War of the Worlds Real Event"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 <PopImage priority {...require("./wotw/wotw_monuments2.jpg")}
+          {...imageWidth}
           alt="War of the Worlds Monuments" className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 
@@ -889,6 +935,7 @@ cylinders, but they can send robots through space,
 and remote - control robots on Earth.
 
 <PopImage {...require("./wotw/wotw_true_story.jpg")}
+          {...imageWidth}
           alt="War of the Worlds True Story" className
           className="w-full sm:max-w-[60rem] rounded-md m-auto"/>
 
@@ -919,14 +966,17 @@ leaving absolutely no trace of Tripods ever having been present.The survivors th
 
 
 <PopImage priority {...require("./wotw/wotw_propaganda.jpg")}
+          {...imageWidth}
           alt="WWar of the Worlds Propagandaar of the Worlds Monuments"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 <PopImage {...require("./wotw/wotw_censorship.jpg")}
+          {...imageWidth}
           alt="War of the Worlds Radio Broadcast Censorship"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 <PopImage priority {...require("./wotw/wotw_battle_of_la.jpg")}
+          {...imageWidth}
           alt="Battle of Los Angeles" className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 

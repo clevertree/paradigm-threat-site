@@ -1,27 +1,30 @@
-import {DynamicIndex, PopImage} from "/components";
+import { DynamicIndex, PopImage } from "/components";
 // Page Styles
-
-export const imageStyleRight = "w-full sm:max-w-[50vw] md:max-w-[33vw] xl:max-w-md float-right clear-right sm:m-1 sm:ml-4";
-export const imageStyleLeft = "w-full sm:max-w-[50vw] md:max-w-[33vw] xl:max-w-md float-left clear-left sm:m-1 sm:mr-4";
+export const imageStyleRight = "w-full sm:w-[inherit] float-right clear-right sm:m-1 sm:ml-4";
+export const imageStyleLeft = "w-full sm:w-[inherit] float-left clear-left sm:m-1 sm:mr-4";
+export const imageWidth = { width: 384 }
 // Meta Data
 export const metadata = {
-    title: 'Earth History Timeline based on Saturnian Cosmology',
-    description: "Before the first memories of Earth's history began, the planets of our Solar System were not yet part of our Sun's orbit. Instead, the planets were part of an L-Type Brown Dwarf System that was floating through our galaxy as a positive anode in a neutral galactic environment. As it entered our positively charged Sun's orbit, Saturn would become connected to the Sun's environment as a negatively charged cathode. Saturn's system drew energy from the Sun into itself as a super-capacitor would until it became 'full', at which point the Saturn system exploded stripping it's outer layers and creating the gas planets Jupiter, Neptune, Uranus, and Venus.",
-    keywords: "Saturnian Cosmology, Black Cube of Saturn, Electric Universe, History Redacted, Young Earth, Hollow Earth, Conspiracy Theory",
-    openGraph: {
-        images: "/conspiracy/cosmology/ralph_juergens_murdered.jpg",
-    }
+  title: 'Earth History Timeline based on Saturnian Cosmology',
+  description: "Before the first memories of Earth's history began, the planets of our Solar System were not yet part of our Sun's orbit. Instead, the planets were part of an L-Type Brown Dwarf System that was floating through our galaxy as a positive anode in a neutral galactic environment. As it entered our positively charged Sun's orbit, Saturn would become connected to the Sun's environment as a negatively charged cathode. Saturn's system drew energy from the Sun into itself as a super-capacitor would until it became 'full', at which point the Saturn system exploded stripping it's outer layers and creating the gas planets Jupiter, Neptune, Uranus, and Venus.",
+  keywords: "Saturnian Cosmology, Black Cube of Saturn, Electric Universe, History Redacted, Young Earth, Hollow Earth, Conspiracy Theory",
+  openGraph: {
+    images: "/conspiracy/cosmology/ralph_juergens_murdered.jpg",
+  }
 }
 
 
 <PopImage src={require("../redacted.jpg")} alt="History is Redacted"
+          {...imageWidth}
           className="w-full sm:max-w-[60rem] rounded-md m-auto"/>
 
 # "I never cared much for studying Human History until I realized it was all lies"
 
 <PopImage src={require("../saturn/black_cube_of_saturn3.jpg")} alt="Black Cube of Saturn 3"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 <PopImage src={require("../../conspiracy/books.jpg")} alt="Conspiracy Book Stack"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 ```
@@ -62,6 +65,7 @@ Don't be fooled; Theories of a Big Bang/Bounce/Crunch/Rip were inspired by Creat
 Modern Sciences.
 
 <PopImage src={require("../../cosmology/astronomy/fake_sun_chart.jpg")} alt="Fake Sun Chart"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 ### Q: How is the age of a Sun/Star determined?
@@ -128,8 +132,10 @@ of hollow stars.
 ### Q: Planets and Suns are hollow?
 
 <PopImage src={require("../../cosmology/hollow_earth/hollow_earth_signals2.jpg")} alt="NAZIs in Hollow Earth"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 <PopImage src={require("../../cosmology/hollow_earth/hollow_earth_EU_model.jpg")} alt="Hollow Earth EU Model"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 
@@ -157,6 +163,7 @@ leading many conspiracy theorists to suggest that
 [NAZI Germany was evacuated via submarines to Neu Schwabenland](https://www.liveabout.com/nazis-and-the-hollow-earth-2594410)
 .
 <PopImage src={require("../../cosmology/hollow_earth/hollow_earth_maps.jpg")}
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleLeft}`}
           alt="Hollow Earth Maps"/>
 
@@ -179,6 +186,7 @@ Bruce went on to demonstrate his electric discharge theory over the next 13 year
 _However, his work in this area has been largely ignored by mainstream science._
 
 <PopImage src={require("../../cosmology/ralph_juergens_chart.png")} alt="Ralph Juergens Sun Chart"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 The [Electric Sun Model](https://www.velikovsky.info/electric-sun-model/)
@@ -198,6 +206,7 @@ fusion.
 > but that the sun itself is the focus of a cosmic electric discharge — the probable source of all its radiant energy.”
 
 <PopImage src={require("../../cosmology/ralph_juergens_murdered.jpg")} alt="Ralph Juergens Murdered 1979"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 
@@ -255,8 +264,10 @@ will tend to disagree:
 #### The Electric Universe and Saturnian Cosmology
 
 <PopImage src={require("../saturn/earth_was_saturns_moon3.jpg")} alt="Earth was Saturn's Moon 3"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 <PopImage src={require("../saturn/earth_was_saturns_moon2.jpg")} alt="Earth was Saturn's Moon 2"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 Proponents of the [Electric Universe Theory](https://www.thunderbolts.info/wp/2013/09/16/chapter-1-beginners-guide/)
@@ -269,11 +280,11 @@ The Earth is **young** with only around 6 thousand years of recorded history.
 **It is not 4.5 Billion years old.**
 
 <div className={`${imageStyleRight} text-justify`}>
-    <iframe title="Predictive Programming: The Master 2012" width="560" height="250"
-            src="https://video.paradigmthreat.net/videos/embed/9ac94343-8ea2-4e59-8e43-3fbf7daf94f7"
-            sandbox="allow-same-origin allow-scripts allow-popups"
-            className="m-auto w-full"/>
-    Predictive Programming: The Master 2012
+  <iframe title="Predictive Programming: The Master 2012" width="560" height="250"
+          src="https://video.paradigmthreat.net/videos/embed/9ac94343-8ea2-4e59-8e43-3fbf7daf94f7"
+          sandbox="allow-same-origin allow-scripts allow-popups"
+          className="m-auto w-full"/>
+  Predictive Programming: The Master 2012
 </div>
 
 ### Q: How can we objectively determine the true history of the Earth?
@@ -289,8 +300,10 @@ is to my knowledge the only animated re-creation based on Saturnian Cosmology. C
 ### Q: Don't the existence of dinosaur bones disprove "Young Earth Theory"?
 
 <PopImage src={require("../../genocide/giants_faeries/genocide_giants4.jpg")} alt="Genocide Giants 4"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 <PopImage src={require("../reformation/extraordinary_black_book.jpg")} alt="Genocide Giants 2"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 Dinosaurs existed, and probably still exist somewhere.
@@ -305,6 +318,7 @@ line:
 _[When Giants Roamed the Earth](https://www.americamagazine.org/arts-culture/2019/04/25/review-when-giants-roamed-earth)_
 .
 <PopImage src={require("../../genocide/giants_faeries/giants_america.jpg")} width={640}
+          {...imageWidth}
           height={480}
           className="w-full sm:max-w-[60rem] rounded-md m-auto" alt="Nephilim Giants 3"/>
 
@@ -382,13 +396,15 @@ history.**
 ## Q: So, how did our Solar System form?
 
 <PopImage src={require("../saturn/saturn_was_the_sun1.jpg")}
-          className
+          {...imageWidth}
           className="w-full sm:max-w-[60rem] rounded-md m-auto" alt="Saturn was the Sun 1"/>
 
 
 <PopImage src={require("../saturn/saturnian_configuration_north.jpg")} alt="Saturn Polar Configuration: North"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 <PopImage src={require("../saturn/saturnian_configuration_south.jpg")} alt="Saturn Polar Configuration: South"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 Before the first memories of Earth's history began, the planets of our Solar System were not yet part of our Sun's
@@ -419,8 +435,10 @@ showered them with a safe and powerful energy that promoted life to form in abun
 ### Q: The Planet Saturn was Earth's Sun?
 
 <PopImage src={require("../saturn/golden_age_absu.jpg")} alt="Saturn Polar Configuration: Absu Layer"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 <PopImage src={require("../saturn/norse_yggdrasil.jpg")} alt="Nine Planets or Realms of the Yggdrasil"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 Yep! Earth started out as a proto-planet within the brown-dwarf that later became the planet Saturn.
@@ -435,11 +453,11 @@ throughout all modern religions.
 reconstruction of celestial events in ancient times:
 
 <div className={`${imageStyleRight} text-justify`}>
-    <iframe title="Remembering the End of the World - Abridged" width="560" height="250"
-            src="https://video.paradigmthreat.net/videos/embed/e42d46bb-581d-4a98-aa82-16255b01ca1d"
-            sandbox="allow-same-origin allow-scripts allow-popups"
-            className="m-auto w-full"/>
-    Remembering the End of the World - Abridged
+  <iframe title="Remembering the End of the World - Abridged" width="560" height="250"
+          src="https://video.paradigmthreat.net/videos/embed/e42d46bb-581d-4a98-aa82-16255b01ca1d"
+          sandbox="allow-same-origin allow-scripts allow-popups"
+          className="m-auto w-full"/>
+  Remembering the End of the World - Abridged
 </div>
 
 #### The Garden of Eden
@@ -480,6 +498,7 @@ Physical travel between planets would become impossible until the buildings of t
 #### Tower of Babel
 
 <PopImage src={require("../saturn/tower_of_babel.jpg")} alt="Tower of Babel"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 Sumerian and Assyrian myths remember Saturn's collinear configuration as the
@@ -509,6 +528,7 @@ The **Deep State** would eventually build pyramids to correct for this mistake.
 ### Q: Why were the Pyramids built?
 
 <PopImage src={require("../pyramids/pyramids_around_the_world.jpg")} alt="Pyramidal Empire: Pyramids around the World"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 Between 2624 and 2427 B.C.E., in [less than 200 years](http://www.touregypt.net/featurestories/pyramids.htm),
@@ -551,6 +571,7 @@ until the Exodus event of 1492 B.C.E.**
 ### Q: What was the 'Exodus' event?
 
 <PopImage src={require("../saturn/exodus.jpg")} alt="Exodus from Egypt"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 The **[Plagues of Egypt](https://en.wikipedia.org/wiki/Plagues_of_Egypt)**
@@ -603,6 +624,7 @@ This fictional bloodline would be called the 'Israelites'.
 ### Q: Who are the "Israelites"?
 
 <PopImage src={require("../tartaria/israel_fake_history.jpg")} alt="Black cube of saturn 4"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 The most definitive reason for the invention of the history of 'Israelites' is the **creation of the State of Israel**.
@@ -627,6 +649,7 @@ So the real question is: What is a Jew?
 ### Q: What is a "Jew"?
 
 <PopImage src={require("../saturn/black_cube_of_saturn4.jpg")} alt="Black cube of saturn 4"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 
@@ -687,6 +710,7 @@ fake**](https://www.wsj.com/articles/SB122669909279629451).
 ### Q: What is a Christian?
 
 <PopImage src={require("../christ/cathar_suppression.jpg")} alt="Cathar suppression"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 **The story of [Cathar suppression](https://archive.archaeology.org/9903/abstracts/insight.html) that inspired
@@ -779,6 +803,7 @@ and of course participation in 'forbidden' usury/debt practices.
 
 
 <PopImage src={require("../christ/conjunction.jpg")} alt="Great Conjunction of Jupiter and Saturn - Star of Bethlehem"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 The
@@ -875,12 +900,14 @@ Humans aren't _this_ bad at eating or staying healthy.
 In reality each famine/plague was planned _in advance_ as a means to re-assert control over a population.
 
 <PopImage src={require("../history_fake.jpg")}
-          className
+          {...imageWidth}
           className="w-full sm:max-w-[60rem] rounded-md m-auto" alt="Earth was Saturn's Moon Spires"/>
 
 <PopImage src={require("../pyramids/power_pyramid.png")} alt="Roman Power Pyramid"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 <PopImage src={require("../saturn/saturnian_icons.jpg")} alt="Saturnian Icons"
+          {...imageWidth}
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 
@@ -931,9 +958,11 @@ and where, without exception, peace and revelation always prevail in the end.
 ### [The Humans of Mars who Rule Earth](/mars)
 
 <PopImage src={require("../../mars/wotw/wotw_battle_of_la.jpg")}
+          {...imageWidth}
           className="w-full sm:max-w-[60rem] rounded-md m-auto" alt="Battle of Los Angeles: Mars Rules Earth"/>
 
 ### [World War 2: Children, Cheating, and Napalm](/war)
 
 <PopImage src={require("../../war/ww2meme.jpg")}
+          {...imageWidth}
           className="w-full sm:max-w-[60rem] rounded-md m-auto" alt="WW2 was won by cheating"/>

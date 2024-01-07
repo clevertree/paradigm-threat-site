@@ -6,6 +6,9 @@
 
 
 .imageCaptionContainer {
+  //display: flex;
+  //flex-direction: column;
+
   & > p,
   .caption {
     margin: 0 0 0.5em 0;
