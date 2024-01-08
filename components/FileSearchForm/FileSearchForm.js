@@ -4,23 +4,32 @@ import React, { useEffect, useRef, useState } from 'react'
 import styles from './FileSearchForm.module.scss'
 import { PopImage, EmbedFile } from '@client'
 
-const API_URL = process.env.NEXT_PUBLIC_API
-const FETCH_URL = '/api/fs/search/'
+const FETCH_URL = 'files.json'
 
 let timeout = null
 export default function FileSearchForm ({ keywords }) {
   const [keywordsList, setKeywordsList] = useState(keywords)
-  const [{ pages, files }, setSearchResults] = useState({ pages: [], files: [] })
+  const [files, setSearchResults] = useState({})
   const [loading, setLoading] = useState(true)
   const refForm = useRef()
-
   useEffect(() => {
     if (keywordsList) {
       setLoading(true)
-      fetch(`${API_URL}${FETCH_URL}${keywordsList}`)
+      fetch(FETCH_URL)
         .then(res => res.json())
-        .then(response => {
-          setSearchResults(response)
+        .then(fileList => {
+          const keywordRegexList = keywordsList.map(k => new RegExp(k, 'i'))
+          const files = []
+          for (const path of Object.keys(fileList)) {
+            const directoryFiles = fileList[path]
+            for (const fileName of directoryFiles) {
+              const filePath = path + '/' + fileName
+              if (keywordRegexList.every(regex => regex.test(path) || regex.test(fileName))) {
+                files.push(filePath)
+              }
+            }
+          }
+          setSearchResults(files)
           setLoading(false)
         })
     }
@@ -49,22 +58,22 @@ export default function FileSearchForm ({ keywords }) {
             ? <h2>Searching assets...</h2>
             : (
               <>
-                <h2>Markdown Search Results:</h2>
+                {/* <h2>Markdown Search Results:</h2> */}
 
-                {pages.length > 0
-                  ? (
-                    <ul>
-                      <div className={styles.pageContainer}>
-                        {pages.map(({ path, lines }) => (
-                          <li key={path}>
-                            <a href={path}>{path}</a>
-                            <p>{lines.join('\n')}</p>
-                          </li>
-                        ))}
-                      </div>
-                    </ul>
-                    )
-                  : <h3>No pages found</h3>}
+                {/* {pages.length > 0 */}
+                {/*  ? ( */}
+                {/*    <ul> */}
+                {/*      <div className={styles.pageContainer}> */}
+                {/*        {pages.map(({ path, lines }) => ( */}
+                {/*          <li key={path}> */}
+                {/*            <a href={path}>{path}</a> */}
+                {/*            <p>{lines.join('\n')}</p> */}
+                {/*          </li> */}
+                {/*        ))} */}
+                {/*      </div> */}
+                {/*    </ul> */}
+                {/*    ) */}
+                {/*  : <h3>No pages found</h3>} */}
 
                 <h2>Asset Search Results:</h2>
 
@@ -117,7 +126,7 @@ export default function FileSearchForm ({ keywords }) {
         return (
           <PopImage
             key={filePath}
-            src={'/' + filePath}
+            src={filePath}
             width={256}
             height={256}
             alt={filePath}

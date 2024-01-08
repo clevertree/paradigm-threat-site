@@ -13,6 +13,7 @@ async function generate () {
 }
 
 async function generateDirectory () {
+  const files = {}
   async function getPathsForDirectory (currentPathRelative) {
     const directories = {}
     const absPath = join(PATH_ASSETS_ABS, currentPathRelative)
@@ -27,6 +28,9 @@ async function generateDirectory () {
         if (!existsSync(ignoreFile)) {
           directories[dirent.name] = await getPathsForDirectory(subFolderPathRelative)
         }
+      } else {
+        if (!files[currentPathRelative]) { files[currentPathRelative] = [] }
+        files[currentPathRelative].push(dirent.name)
       }
     }
     return directories
@@ -36,6 +40,9 @@ async function generateDirectory () {
   const directoryFile = `${PATH_ASSETS_ABS}/directory.json`
   // console.log("Writing directory file: ", directoryFile)
   await writeOrIgnoreFile(directoryFile, JSON.stringify(directories))
+  const filesFile = `${PATH_ASSETS_ABS}/files.json`
+  // console.log("Writing directory file: ", directoryFile)
+  await writeOrIgnoreFile(filesFile, JSON.stringify(files))
 }
 
 async function generateAllPages () {

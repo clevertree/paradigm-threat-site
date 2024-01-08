@@ -8,8 +8,9 @@ export default function EmbedFile ({ children, className, ...props }) {
   if (typeof props?.src?.default === 'object') { srcProps = { ...props, ...props.src.default } } else if (typeof props.src === 'object') { srcProps = { ...props, ...props.src } }
 
   return (
-    <div className={`${styles.container} ${className}`}>
+    <div className={`${styles.embedContainer} ${className}`}>
       <embed
+        className={styles.embed}
         {...srcProps}
       />
       {children}
