@@ -11,7 +11,7 @@ import LoadingScreen from "./site/loading"
 /** Styles **/
 import './site/globals.css'
 import styles from './site/layout.module.scss';
-
+import { Analytics } from '@vercel/analytics/react';
 export const metadata: Metadata = {
     title: 'Paradigm Threat',
     description: 'Conspiracy Repository',
@@ -57,6 +57,8 @@ export default async function RootLayout(
             [<a href="https://git.pthreat.co/ari/paradigm-threat-site">git repository</a>]
         </div>
     </footer>
+
+    <Analytics />
     </body>
     </html>)
 }
