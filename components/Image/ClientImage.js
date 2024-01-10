@@ -14,12 +14,13 @@ export default function ClientImage ({ children, className, ...props }) {
     finalProps.height = Math.round((finalProps.width / sourceWidth) * sourceHeight)
   }
   if (!srcProps.width) { console.error('Invalid image width: ', srcProps) }
-  // console.log('finalProps', srcProps, height)
+  // console.log('finalProps', finalProps)
   // if (blurDataURL) { finalProps.style = { backgroundImage: `url('${blurDataURL}')` } }
   // finalProps.src = getResizedThumbnail(finalProps)
   let content = (
     <Image
       className={`${styles.image} ${className || ''}`}
+      unoptimized={process.env.NEXT_PUBLIC_UNOPTIMIZE_IMAGES}
       {...finalProps}
     />
   )
@@ -32,6 +33,7 @@ export default function ClientImage ({ children, className, ...props }) {
       >
         <Image
           className={styles.image}
+          unoptimized={process.env.NEXT_PUBLIC_UNOPTIMIZE_IMAGES}
           {...finalProps}
         />
         {children}
