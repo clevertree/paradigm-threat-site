@@ -10,13 +10,14 @@
   //display: flex;
   //flex-direction: column;
 
-  & > p,
-  .caption {
-    margin: 0 0 0.5em 0;
-    padding: 0;
-    font-size: smaller;
-    line-height: 1.3em;
-    font-style: italic;
+  figcaption {
+    & > p {
+      margin: 0 0 0.5em 0;
+      padding: 0;
+      font-size: smaller;
+      line-height: 1.3em;
+      font-style: italic;
+    }
   }
 }
 

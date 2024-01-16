@@ -27,7 +27,7 @@ export default function ClientImage ({ children, className, ...props }) {
 
   if (children) {
     content = (
-      <div
+      <figure
         className={`${styles.imageCaptionContainer} ${className || ''}`}
         style={{ maxWidth: finalProps.width + 'px' }}
       >
@@ -36,8 +36,8 @@ export default function ClientImage ({ children, className, ...props }) {
           unoptimized={process.env.NEXT_PUBLIC_UNOPTIMIZE_IMAGES}
           {...finalProps}
         />
-        {children}
-      </div>
+        <figcaption>{children}</figcaption>
+      </figure>
     )
   }
   return content
