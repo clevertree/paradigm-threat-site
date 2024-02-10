@@ -4,34 +4,29 @@ import React, { useEffect, useRef, useState } from 'react'
 import styles from './FileSearchForm.module.scss'
 import { PopImage, EmbedFile } from '@client'
 
-const FETCH_URL = 'files.json'
 
 let timeout = null
-export default function FileSearchForm ({ keywords }) {
-  const [keywordsList, setKeywordsList] = useState(keywords)
+export default function FileSearchForm ({ keywords, directory }) {
+  const [keywordsList, setKeywordsList] = useState(keywords || [])
   const [files, setSearchResults] = useState({})
   const [loading, setLoading] = useState(true)
   const refForm = useRef()
   useEffect(() => {
     if (keywordsList) {
       setLoading(true)
-      fetch(FETCH_URL)
-        .then(res => res.json())
-        .then(fileList => {
-          const keywordRegexList = keywordsList.map(k => new RegExp(k, 'i'))
-          const files = []
-          for (const path of Object.keys(fileList)) {
-            const directoryFiles = fileList[path]
-            for (const fileName of directoryFiles) {
-              const filePath = path + '/' + fileName
-              if (keywordRegexList.every(regex => regex.test(path) || regex.test(fileName))) {
-                files.push(filePath)
-              }
-            }
+      const keywordRegexList = keywordsList.map(k => new RegExp(k, 'i'))
+      const files = []
+      for (const path of Object.keys(directory)) {
+        const directoryFiles = directory[path]
+        for (const fileName of directoryFiles) {
+          const filePath = path + '/' + fileName
+          if (keywordRegexList.every(regex => regex.test(path) || regex.test(fileName))) {
+            files.push(filePath)
           }
-          setSearchResults(files)
-          setLoading(false)
-        })
+        }
+      }
+      setSearchResults(files)
+      setLoading(false)
     }
   }, [keywordsList])
 

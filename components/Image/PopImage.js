@@ -21,9 +21,9 @@ function PopImage ({ ...props }) {
   )
 
   if (fullscreen) {
-    let { src: defaultSrc1, default: defaultSrc2, ...srcProps } = props
-    if (typeof defaultSrc1 === 'object' || typeof defaultSrc2 === 'object') {
-      srcProps = { ...(defaultSrc2 || (defaultSrc1.default || defaultSrc1)), ...srcProps }
+    let { default: defaultSrc, ...srcProps } = props
+    if (typeof props.src === 'object' || typeof defaultSrc === 'object') {
+      srcProps = { ...(defaultSrc || (props?.src?.default || props?.src)), ...srcProps }
     }
     const { children, alt, src } = srcProps
     return (

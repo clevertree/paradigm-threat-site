@@ -4,9 +4,9 @@
 import styles from '@/components/Image/Image.module.scss'
 
 export default function ClientImage ({ children, className, ...props }) {
-  let { src: defaultSrc1, default: defaultSrc2, ...srcProps } = props
-  if (typeof defaultSrc1 === 'object' || typeof defaultSrc2 === 'object') {
-    srcProps = { ...(defaultSrc2 || (defaultSrc1.default || defaultSrc1)), ...srcProps }
+  let { default: defaultSrc, ...srcProps } = props
+  if (typeof props.src === 'object' || typeof defaultSrc === 'object') {
+    srcProps = { ...(defaultSrc || (props?.src?.default || props?.src)), ...srcProps }
   }
 
   const { alt, priority, sourceWidth, sourceHeight, blurDataURL, placeholder, ...finalProps } = srcProps
