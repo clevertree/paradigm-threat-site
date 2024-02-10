@@ -1,4 +1,5 @@
-import { PopImage, ClientImage, ChangeLog, ChatRoom } from "/components";
+import { PopImage, ClientImage, ChangeLog, ChatRoom } from "../components";
+import GIT_LOG from './git-log.json'
 // Page Styles
 export const imageStyleRight = "sm:float-right clear-right m-auto sm:m-1 sm:ml-4";
 export const imageStyleLeft = "sm:float-left clear-left m-auto sm:m-1 sm:mr-4";
@@ -27,7 +28,7 @@ feel free to join our investigation on our [MatterMost Chat Server](https://chat
 
 ## Change Log
 
-<ChangeLog></ChangeLog>
+<ChangeLog changeLog={GIT_LOG}></ChangeLog>
 
 ## Not another Controlled Opposition Conspiracy Website
 

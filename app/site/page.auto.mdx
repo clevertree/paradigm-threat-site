@@ -1,6 +1,8 @@
 import PNG_banner_video_png from "./banner-video.png";
 import PNG_banner_png from "./banner.png";
+import SVG_fade_stagger_squares_svg from "./fade-stagger-squares.svg";
 import SVG_favicon_svg from "./favicon.svg";
+import CSS_globals_css from "./globals.css";
 import PNG_header_png from "./header.png";
 import PNG_icon_png from "./icon.png";
 import PNG_logo_chat_png from "./logo-chat.png";
@@ -9,30 +11,37 @@ import PNG_logo426x118_png from "./logo426x118.png";
 import PNG_logo512_png from "./logo512.png";
 import {PopImage} from "@components"
     
-<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-right sm:m-1 sm:ml-4" src={PNG_banner_video_png} alt="banner-video.png">
+<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-right sm:m-1 sm:ml-4" src={PNG_banner_video_png} width={384} alt="banner-video.png">
 	banner-video.png
 </PopImage>
-<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-left sm:m-1 sm:mr-4" src={PNG_banner_png} alt="banner.png">
+<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-left sm:m-1 sm:mr-4" src={PNG_banner_png} width={384} alt="banner.png">
 	banner.png
 </PopImage>
-<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-right sm:m-1 sm:ml-4" src={SVG_favicon_svg} alt="favicon.svg">
+<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-right sm:m-1 sm:ml-4" src={SVG_fade_stagger_squares_svg} width={384} alt="fade-stagger-squares.svg">
+	fade-stagger-squares.svg
+</PopImage>
+<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-left sm:m-1 sm:mr-4" src={SVG_favicon_svg} width={384} alt="favicon.svg">
 	favicon.svg
 </PopImage>
-<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-left sm:m-1 sm:mr-4" src={PNG_header_png} alt="header.png">
+<div className="w-full sm:max-w-[50vw] md:max-w-md float-right sm:m-1 sm:ml-4">
+	<Link rel='stylesheet' href={CSS_globals_css.src}/>
+	globals.css
+</div>
+<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-left sm:m-1 sm:mr-4" src={PNG_header_png} width={384} alt="header.png">
 	header.png
 </PopImage>
-<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-right sm:m-1 sm:ml-4" src={PNG_icon_png} alt="icon.png">
+<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-right sm:m-1 sm:ml-4" src={PNG_icon_png} width={384} alt="icon.png">
 	icon.png
 </PopImage>
-<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-left sm:m-1 sm:mr-4" src={PNG_logo_chat_png} alt="logo-chat.png">
+<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-left sm:m-1 sm:mr-4" src={PNG_logo_chat_png} width={384} alt="logo-chat.png">
 	logo-chat.png
 </PopImage>
-<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-right sm:m-1 sm:ml-4" src={PNG_logo192_png} alt="logo192.png">
+<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-right sm:m-1 sm:ml-4" src={PNG_logo192_png} width={384} alt="logo192.png">
 	logo192.png
 </PopImage>
-<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-left sm:m-1 sm:mr-4" src={PNG_logo426x118_png} alt="logo426x118.png">
+<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-left sm:m-1 sm:mr-4" src={PNG_logo426x118_png} width={384} alt="logo426x118.png">
 	logo426x118.png
 </PopImage>
-<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-right sm:m-1 sm:ml-4" src={PNG_logo512_png} alt="logo512.png">
+<PopImage className="w-full sm:max-w-[50vw] md:max-w-md float-right sm:m-1 sm:ml-4" src={PNG_logo512_png} width={384} alt="logo512.png">
 	logo512.png
 </PopImage>

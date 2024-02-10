@@ -21,10 +21,10 @@ function PopImage ({ ...props }) {
   )
 
   if (fullscreen) {
-    let srcProps = { ...props }
-    if (typeof props?.src?.default === 'object') {
-      srcProps = { ...props.src.default, ...props }
-    } else if (typeof props.src === 'object') { srcProps = { ...props.src, ...props } } else if (typeof props.default === 'object') { srcProps = { ...props.default, ...props } }
+    let { src: defaultSrc1, default: defaultSrc2, ...srcProps } = props
+    if (typeof defaultSrc1 === 'object' || typeof defaultSrc2 === 'object') {
+      srcProps = { ...(defaultSrc2 || (defaultSrc1.default || defaultSrc1)), ...srcProps }
+    }
     const { children, alt, src } = srcProps
     return (
       <>

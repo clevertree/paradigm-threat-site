@@ -16,7 +16,6 @@
     "cypress:open": "cypress open",
     "cypress-prod:run": "CYPRESS_BASE_URL=https://paradigmthreat.net cypress run",
     "lint": "next lint",
-    "deploy": "sh scripts/deploy.sh",
     "standard": "npx standard --fix",
     "prepare": "husky install"
   },

@@ -1,31 +1,28 @@
-import { join } from 'path'
-import { simpleGit } from 'simple-git'
+const { simpleGit } = require('simple-git')
+module.exports = {
+  getGitChangeLog
+  // getGitInstance
+}
 
-export function getGitInstance (baseDir = '') {
-  if (typeof gitInstance[baseDir] === 'undefined') {
+function getGitInstance () {
+  if (!gitInstance) {
     const options = {
-      baseDir,
+      baseDir: process.cwd() + '/app',
       binary: 'git',
       maxConcurrentProcesses: 6,
       trimmed: false
     }
-    gitInstance[baseDir] = simpleGit(options)
+    gitInstance = simpleGit(options)
   }
-  return gitInstance[baseDir]
+  return gitInstance
 }
 
-const gitInstance = {}
+let gitInstance
 
-export async function getGitChangeLog (logCountPerRepo = 6) {
-  let changeLog = []
-  const paths = ['']
-  for (const path of paths) {
-    const git = getGitInstance(join(process.cwd(), path))
-    const { all } = await git.log({ maxCount: logCountPerRepo })
-    const pathChangeLog = all.map(e => ({
-      hash: e.hash, date: e.date, message: e.message, authorName: e.author_name
-    }))
-    changeLog = [...changeLog, ...pathChangeLog]
-  }
-  return changeLog.sort((a, b) => +new Date(b.date) - +new Date(a.date))
+async function getGitChangeLog (maxCount = 15) {
+  const git = getGitInstance()
+  const { all } = await git.log({ maxCount: parseInt(`${maxCount}`) })
+  return all.map(({ hash, date, message }) => ({
+    hash, date, message
+  })).sort((a, b) => +new Date(b.date) - +new Date(a.date))
 }

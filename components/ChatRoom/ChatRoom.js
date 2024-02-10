@@ -65,7 +65,7 @@ export default function ChatRoom ({ channel, title, className }) {
     })
     formElm.elements.message.disabled = false
   }
-  console.log('error', error)
+  // console.log('error', error)
   return (
     <ErrorBoundary>
       <div className={`${styles.container} ${className}`}>
