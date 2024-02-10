@@ -20,7 +20,7 @@ export default function FloatingDiv ({ children, containerElm, className }) {
       }
     } else if (isFloating) {
       if (top > 0) {
-        console.log('isFloating', isFloating, top, top > 0)
+        // console.log('isFloating', isFloating, top, top > 0)
         setIsFloating(false)
         setContainerHeight('inherit')
       }

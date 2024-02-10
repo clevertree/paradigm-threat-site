@@ -4,18 +4,19 @@
 import styles from '@/components/Image/Image.module.scss'
 
 export default function ClientImage ({ children, className, ...props }) {
-  let { src, default: defaultSrc, ...srcProps } = props
-  if (typeof src === 'object' || typeof defaultSrc === 'object') {
-    srcProps = { ...(defaultSrc || (src.default || src)), ...srcProps }
+  let { src: defaultSrc1, default: defaultSrc2, ...srcProps } = props
+  if (typeof defaultSrc1 === 'object' || typeof defaultSrc2 === 'object') {
+    srcProps = { ...(defaultSrc2 || (defaultSrc1.default || defaultSrc1)), ...srcProps }
   }
 
-  const { alt, sourceWidth, sourceHeight, blurDataURL, placeholder, ...finalProps } = srcProps
+  const { alt, priority, sourceWidth, sourceHeight, blurDataURL, placeholder, ...finalProps } = srcProps
   if (sourceWidth && sourceHeight && finalProps.width !== sourceWidth) {
     finalProps.height = Math.round((finalProps.width / sourceWidth) * sourceHeight)
   }
   // if (!srcProps.width) { console.error('Invalid image width: ', srcProps) }
   // console.log('finalProps', finalProps)
   if (blurDataURL) { finalProps.style = { backgroundImage: `url('${blurDataURL}')` } }
+
   finalProps.src = getResizedThumbnail(finalProps)
   let content = (
     <img

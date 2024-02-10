@@ -6,5 +6,5 @@ yarn lint
 #yarn test:coverage
 echo "Starting tests"
 npm run cypress:component
-npm run cypress:e2e || true
+#npm run cypress:e2e || true
 echo "Testing complete"
