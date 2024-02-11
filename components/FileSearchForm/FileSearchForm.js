@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import styles from './FileSearchForm.module.scss'
 import { PopImage, EmbedFile } from '@client'
 
-
 let timeout = null
 export default function FileSearchForm ({ keywords, directory }) {
   const [keywordsList, setKeywordsList] = useState(keywords || [])

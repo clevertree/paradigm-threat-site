@@ -5,6 +5,7 @@ import styles from './Image.module.scss'
 import Link from 'next/link'
 import { ErrorBoundary } from '@/components/client'
 import { ClientImage } from '@/components'
+import { processImageProps } from '@/components/Image/imgUtil'
 
 function PopImage ({ ...props }) {
   const [fullscreen, setFullscreen] = useState(false)
@@ -21,10 +22,7 @@ function PopImage ({ ...props }) {
   )
 
   if (fullscreen) {
-    let { default: defaultSrc, ...srcProps } = props
-    if (typeof props.src === 'object' || typeof defaultSrc === 'object') {
-      srcProps = { ...(defaultSrc || (props?.src?.default || props?.src)), ...srcProps }
-    }
+    const srcProps = processImageProps(props)
     const { children, alt, src } = srcProps
     return (
       <>
