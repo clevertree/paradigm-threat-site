@@ -94,7 +94,7 @@ export default function FileSearchForm ({ keywords, directory }) {
     const { value } = refForm.current.elements.search
     window.history.pushState({}, '', value)
 
-    setKeywordsList(value)
+    setKeywordsList(value.split(/[;, ]+/g).filter(i => i) )
   }
 
   function onFocus (e) {
