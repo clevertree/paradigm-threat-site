@@ -55,7 +55,7 @@ export default async function RootLayout(
         <div>created by <a href="https://clevertree.net/">Ari Asulin</a></div>
         {/*<hitCounter></hitCounter>*/}
         <div>
-            [<a href="https://git.pthreat.co/ari/paradigm-threat-site">git repository</a>]
+            [<a href="https://github.com/clevertree/paradigm-threat-site">git repository</a>]
         </div>
     </footer>
 

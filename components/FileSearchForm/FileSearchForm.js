@@ -94,7 +94,7 @@ export default function FileSearchForm ({ keywords, directory }) {
     const { value } = refForm.current.elements.search
     window.history.pushState({}, '', value)
 
-    setKeywordsList(processKeywordList(value) )
+    setKeywordsList(processKeywordList(value))
   }
 
   function onFocus (e) {
@@ -153,9 +153,7 @@ export default function FileSearchForm ({ keywords, directory }) {
   }
 }
 
-
-function processKeywordList(keywordString) {
-  if(typeof keywordString === 'string')
-    keywordString = keywordString.split(/[;, /]+/g).filter(i => !!i)
+function processKeywordList (keywordString) {
+  if (typeof keywordString === 'string') { keywordString = keywordString.split(/[;, /]+/g).filter(i => !!i) }
   return keywordString || []
 }
