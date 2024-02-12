@@ -19,7 +19,7 @@ function getGitInstance () {
 
 let gitInstance
 
-async function getGitChangeLog (maxCount = 15) {
+async function getGitChangeLog (maxCount = 8) {
   const git = getGitInstance()
   const { all } = await git.log({ maxCount: parseInt(`${maxCount}`) })
   return all.map(({ hash, date, message }) => ({

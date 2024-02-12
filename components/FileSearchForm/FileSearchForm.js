@@ -6,7 +6,7 @@ import { PopImage, EmbedFile } from '@client'
 
 let timeout = null
 export default function FileSearchForm ({ keywords, directory }) {
-  const [keywordsList, setKeywordsList] = useState(keywords || [])
+  const [keywordsList, setKeywordsList] = useState(processKeywordList(keywords))
   const [files, setSearchResults] = useState({})
   const [loading, setLoading] = useState(true)
   const refForm = useRef()
@@ -94,7 +94,7 @@ export default function FileSearchForm ({ keywords, directory }) {
     const { value } = refForm.current.elements.search
     window.history.pushState({}, '', value)
 
-    setKeywordsList(value.split(/[;, ]+/g).filter(i => i) )
+    setKeywordsList(processKeywordList(value) )
   }
 
   function onFocus (e) {
@@ -151,4 +151,11 @@ export default function FileSearchForm ({ keywords, directory }) {
         )
     }
   }
+}
+
+
+function processKeywordList(keywordString) {
+  if(typeof keywordString === 'string')
+    keywordString = keywordString.split(/[;, /]+/g).filter(i => !!i)
+  return keywordString || []
 }
