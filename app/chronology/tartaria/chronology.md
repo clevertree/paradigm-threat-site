@@ -35,9 +35,9 @@ political ideology or something.
 
 ## Roman Jesus Narrative
 
-* why in the F would Pilate free the 'insurrectionary' Barabbas feared by the Roman Empire? This really unravels the
+* why would Pilate free the insurrectionary Barabbas feared by the Roman Empire? This really unravels the
   narrative.
-* decrypts into a Zodiac story
+* what parts of the NT decrypt into a Zodiac story?
 
 ## Sources
 
