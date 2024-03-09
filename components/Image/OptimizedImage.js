@@ -2,23 +2,19 @@
 
 // import Image from 'next/image'
 import styles from '@/components/Image/Image.module.scss'
-import { getResizedThumbnail, processImageProps } from '@/components/Image/imgUtil'
+import { processImageProps } from '@/components/Image/imgUtil'
 
-export default function ClientImage ({ children, className, ...props }) {
+export default function OptimizedImage ({ children, className, ...props }) {
   const srcProps = processImageProps(props)
 
-  const { alt, priority, sourceWidth, sourceHeight, blurDataURL, placeholder, ...finalProps } = srcProps
-  if (sourceWidth && sourceHeight && finalProps.width !== sourceWidth) {
-    finalProps.height = Math.round((finalProps.width / sourceWidth) * sourceHeight)
-  }
-  // if (!srcProps.width) { console.error('Invalid image width: ', srcProps) }
-  // console.log('finalProps', finalProps)
-  if (blurDataURL) { finalProps.style = { backgroundImage: `url('${blurDataURL}')` } }
+  const { alt, priority, blurDataURL, optimizedSrc, ...finalProps } = srcProps
 
-  finalProps.src = getResizedThumbnail(finalProps)
+  if (blurDataURL) { finalProps.style = { backgroundImage: `url('${blurDataURL}')` } }
+  if (typeof finalProps.loading === 'undefined') { finalProps.loading = 'lazy' }
+  if (optimizedSrc) { finalProps.src = optimizedSrc }
+
   let content = (
     <img
-      loading='lazy'
       alt={alt}
       className={`${styles.image} ${className || ''}`}
       {...finalProps}
@@ -32,7 +28,6 @@ export default function ClientImage ({ children, className, ...props }) {
         style={{ maxWidth: finalProps.width + 'px' }}
       >
         <img
-          loading='lazy'
           alt={alt}
           className={styles.image}
           {...finalProps}

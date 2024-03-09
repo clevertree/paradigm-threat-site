@@ -4,7 +4,7 @@ import { useState } from 'react'
 import styles from './Image.module.scss'
 import Link from 'next/link'
 import { ErrorBoundary } from '@/components/client'
-import { ClientImage } from '@/components'
+import { OptimizedImage } from '@/components'
 import { processImageProps } from '@/components/Image/imgUtil'
 
 function PopImage ({ ...props }) {
@@ -15,7 +15,7 @@ function PopImage ({ ...props }) {
   }
 
   const content = (
-    <ClientImage
+    <OptimizedImage
       onClick={toggleFullscreen}
       {...props}
     />

@@ -1,9 +1,8 @@
-import { PopImage, ClientImage, ChangeLog, ChatRoom } from "../components";
+import { PopImage, OptimizedImage, ChangeLog, ChatRoom } from "../components";
 import GIT_LOG from './git-log.json'
 // Page Styles
 export const imageStyleRight = "sm:float-right clear-right m-auto sm:m-1 sm:ml-4";
 export const imageStyleLeft = "sm:float-left clear-left m-auto sm:m-1 sm:mr-4";
-export const imageWidth = { width: 384 }
 // Meta Data
 export const metadata = {
   title: 'Welcome to Paradigm Threat',
@@ -14,8 +13,7 @@ export const metadata = {
   }
 }
 
-<PopImage priority {...require('./conspiracy/embedding.jpg')}
-          {...imageWidth}
+<PopImage priority {...require('./conspiracy/embedding.jpg?w=384')}
           alt="Embedding"
           className={`rounded-md ${imageStyleRight}`}/>
 
@@ -32,8 +30,7 @@ feel free to join our investigation on our [MatterMost Chat Server](https://chat
 
 ## Not another Controlled Opposition Conspiracy Website
 
-<PopImage priority {...require('./conspiracy/scientific_truth.jpg')}
-          {...imageWidth}
+<PopImage priority {...require('./conspiracy/scientific_truth.jpg?w=384')}
           alt="Scientific Truth"
           className={`rounded-md ${imageStyleLeft}`}/>
 
@@ -70,10 +67,9 @@ to **every** conspiracy theory. Right? Why not. Here's what I have so far:
 # Investigation Categories
 
 <a href={'https://americanfreepress.net/dhs-fishing-on-the-internet-for-dissidents-truthseekers/'} target={"_blank"}>
-  <ClientImage {...require('./conspiracy/suppressed_speech.jpg')}
-               {...imageWidth}
-               alt="Suppressed Speech"
-               className={`rounded-md ${imageStyleRight}`}/></a>
+  <OptimizedImage {...require('./conspiracy/suppressed_speech.jpg?w=384')}
+                  alt="Suppressed Speech"
+                  className={`rounded-md ${imageStyleRight}`}/></a>
 
 ## [Category: Suppressed](conspiracy)
 
@@ -105,8 +101,7 @@ These things we were instructed to believe, but are actually fake.
 * [False Flags](/conspiracy/falseflag)
 
 
-<PopImage {...require("./chronology/saturn/earth_was_saturns_moon3.jpg")}
-          {...imageWidth}
+<PopImage {...require("./chronology/saturn/earth_was_saturns_moon3.jpg?w=384")}
           alt="Earth was Saturn's Moon 3"
           className={`rounded-md ${imageStyleLeft}`}/>
 
@@ -136,8 +131,7 @@ How many humans?
 * [Holodomor to Holocaust](/genocide/holocaust)
 * [Palestine Genocide](/genocide/palestine)
 
-<PopImage {...require("./mars/wotw/wotw_redaction_humans.jpg")}
-          {...imageWidth}
+<PopImage {...require("./mars/wotw/wotw_redaction_humans.jpg?w=384")}
           alt="Martians are Human"
           className={`rounded-md ${imageStyleRight}`}/>
 

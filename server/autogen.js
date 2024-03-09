@@ -1,9 +1,10 @@
 const { readdir, writeFile, readFile } = require('fs/promises')
 const { join, resolve } = require('path')
 const { existsSync } = require('fs')
-const { fileExists } = require('next/dist/lib/file-exists')
+// const { fileExists } = require('next/dist/lib/file-exists')
 const { getGitChangeLog } = require('./gitUtil')
-const AUTOGEN_DEFAULT_WIDTH = 384
+const imageLoader = require('./imageLoader')
+const AUTOGEN_DEFAULT_WIDTH = process.env.NEXT_PUBLIC_AUTOGEN_IMAGE_WIDTH || 384
 const FILE_NAV_IGNORE = `${process.env.NEXT_PUBLIC_ASSET_NAV_IGNORE_FILE || '.navignore'}`
 const PATH_ASSETS_ABS = join(resolve(__dirname, '../'), `${process.env.NEXT_PUBLIC_ASSET_PATH || 'app'}`)
 generate()
@@ -16,6 +17,7 @@ async function generate () {
 
 async function generateDirectory () {
   const files = {}
+
   async function getPathsForDirectory (currentPathRelative) {
     const directories = {}
     const absPath = join(PATH_ASSETS_ABS, currentPathRelative)
@@ -51,6 +53,15 @@ async function generateAllPages () {
   for await (const appSubDirectory of listDirectoriesRecursive(PATH_ASSETS_ABS)) {
     await generatePages(appSubDirectory)
   }
+}
+
+async function optimizeImage (pFile, width = AUTOGEN_DEFAULT_WIDTH) {
+  const resourcePath = join(pFile.path, pFile.name)
+  const buffer = await readFile(resourcePath)
+  await imageLoader.bind({
+    resourcePath,
+    resourceQuery: '?w=' + width
+  })(buffer)
 }
 
 async function generatePages (directoryPath) {
@@ -110,10 +121,11 @@ async function generatePages (directoryPath) {
         case 'ppm':
         case 'avif':
           componentList.PopImage = true
-          mdxContent.imports.push(`import ${fileNameVariable} from "./${pFile.name}"`)
-          mdxContent.content.push(`<PopImage className="${i++ % 2 === 0 ? imageStyleRight : imageStyleLeft}" src={${fileNameVariable}} width={${AUTOGEN_DEFAULT_WIDTH}} alt="${pFile.name}">`)
+          mdxContent.imports.push(`import ${fileNameVariable} from "./${pFile.name}?w=${AUTOGEN_DEFAULT_WIDTH}"`)
+          mdxContent.content.push(`<PopImage className="${i++ % 2 === 0 ? imageStyleRight : imageStyleLeft}" src={${fileNameVariable}} alt="${pFile.name}">`)
           mdxContent.content.push(`\t${pFile.name}`)
           mdxContent.content.push('</PopImage>')
+          // optimizeImage(pFile).then()
           break
         case 'svg':
           mdxContent.imports.push(`import ${fileNameVariable} from "./${pFile.name}"`)
@@ -195,7 +207,7 @@ async function generateGitLog () {
 }
 
 async function writeOrIgnoreFile (filePath, fileContent) {
-  if (await fileExists(filePath)) {
+  if (existsSync(filePath)) {
     const existingFileContent = await readFile(filePath, 'utf8')
     if (existingFileContent === fileContent) {
       // console.log("Directory file was not updated:", filePath)

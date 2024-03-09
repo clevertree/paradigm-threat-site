@@ -1,4 +1,4 @@
-export {default as ClientImage} from './Image/ClientImage'
+export {default as OptimizedImage} from './Image/OptimizedImage'
 export {default as PopImage} from './Image/PopImage'
 export {default as EmbedFile} from '@/components/embed/EmbedFile'
 export {default as ChatRoom} from './ChatRoom/ChatRoom'

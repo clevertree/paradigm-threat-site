@@ -5,14 +5,15 @@ import Image from "next/image";
 import {DynamicNav, FloatingDiv} from "@/components";
 import HeaderImg from "./site/header.png";
 import Directory from "./directory.json"
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import {Analytics} from '@vercel/analytics/react';
+import {SpeedInsights} from "@vercel/speed-insights/next"
 
 import LoadingScreen from "./site/loading"
 
 /** Styles **/
 import './site/globals.css'
 import styles from './site/layout.module.scss';
+
 export const metadata: Metadata = {
     title: 'Paradigm Threat',
     description: 'Conspiracy Repository',
@@ -31,7 +32,7 @@ export default async function RootLayout(
     <body>
     <header>
         <Link href="/">
-            <Image priority src={HeaderImg} alt="Header Logo"/>
+            <img src={HeaderImg.src} alt="Header Logo"/>
         </Link>
     </header>
 
@@ -59,8 +60,8 @@ export default async function RootLayout(
         </div>
     </footer>
 
-    <Analytics />
-    <SpeedInsights />
+    <Analytics/>
+    <SpeedInsights/>
     </body>
     </html>)
 }
