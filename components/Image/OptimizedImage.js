@@ -1,5 +1,3 @@
-'use client'
-
 // import Image from 'next/image'
 import styles from '@/components/Image/Image.module.scss'
 import { processImageProps } from '@/components/Image/imgUtil'

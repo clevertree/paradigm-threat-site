@@ -32,7 +32,7 @@ module.exports = async function imageLoader (buffer) {
     if (paramWidth) {
       const paramHeight = queryParams.h || queryParams.height || Math.round((paramWidth / width) * height)
 
-      const optimizedImageFileName = `${paramWidth}${relativePath.replace(/[/.]/g, '_')}.webp`
+      const optimizedImageFileName = `${paramWidth}${relativePath.replace(/[/. ]/g, '_')}.webp`
       const optimizedImageRelativeDirectoryPath = '/_opt/img'
       const optimizedImageRelativePath = join(optimizedImageRelativeDirectoryPath, optimizedImageFileName)
       const optimizedImageAbsPath = join(appPath, optimizedImageRelativePath)

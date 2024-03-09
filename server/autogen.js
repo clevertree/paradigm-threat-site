@@ -3,7 +3,6 @@ const { join, resolve } = require('path')
 const { existsSync } = require('fs')
 // const { fileExists } = require('next/dist/lib/file-exists')
 const { getGitChangeLog } = require('./gitUtil')
-const imageLoader = require('./imageLoader')
 const AUTOGEN_DEFAULT_WIDTH = process.env.NEXT_PUBLIC_AUTOGEN_IMAGE_WIDTH || 384
 const FILE_NAV_IGNORE = `${process.env.NEXT_PUBLIC_ASSET_NAV_IGNORE_FILE || '.navignore'}`
 const PATH_ASSETS_ABS = join(resolve(__dirname, '../'), `${process.env.NEXT_PUBLIC_ASSET_PATH || 'app'}`)
@@ -53,15 +52,6 @@ async function generateAllPages () {
   for await (const appSubDirectory of listDirectoriesRecursive(PATH_ASSETS_ABS)) {
     await generatePages(appSubDirectory)
   }
-}
-
-async function optimizeImage (pFile, width = AUTOGEN_DEFAULT_WIDTH) {
-  const resourcePath = join(pFile.path, pFile.name)
-  const buffer = await readFile(resourcePath)
-  await imageLoader.bind({
-    resourcePath,
-    resourceQuery: '?w=' + width
-  })(buffer)
 }
 
 async function generatePages (directoryPath) {
