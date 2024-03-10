@@ -4,7 +4,7 @@
   margin: 1rem auto;
   padding: 0.4rem;
   background-color: var(--bg-color2);
-  max-width: 1600px;
+  max-width: min(80vw, 1600px);
   //display: flex;
   //flex-direction: column;
 }
