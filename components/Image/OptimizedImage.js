@@ -13,7 +13,7 @@ export default function OptimizedImage ({ children, className, ...props }) {
 
   let content = (
     <img
-      loading="lazy"
+      loading='lazy'
       alt={alt}
       className={`${styles.image} ${className || ''}`}
       {...finalProps}
@@ -27,7 +27,7 @@ export default function OptimizedImage ({ children, className, ...props }) {
         style={{ maxWidth: finalProps.width + 'px' }}
       >
         <img
-          loading="lazy"
+          loading='lazy'
           alt={alt}
           className={styles.image}
           {...finalProps}

@@ -44,7 +44,7 @@ module.exports = async function imageLoader (buffer) {
         // console.info(info)
         console.log('Optimizing image created: ', optimizedImageRelativePath)
       } else {
-        console.log('Optimizing image already exists: ', optimizedImageRelativePath)
+        // console.log('Optimizing image already exists: ', optimizedImageRelativePath)
       }
       data.optimizedSrc = optimizedImageRelativePath
       data.width = paramWidth
