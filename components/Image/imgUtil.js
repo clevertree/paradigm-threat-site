@@ -13,14 +13,14 @@ export function processImageProps (props) {
   return props
 }
 
-const imageSizes = [16, 32, 48, 64, 96, 128, 256, 384]
+// const imageSizes = [16, 32, 48, 64, 96, 128, 256, 384]
 
-export function getResizedThumbnail ({ src, width, quality = 75 }) {
-  if (process.env.NEXT_PUBLIC_OPTIMIZE_IMAGES !== 'true') { return src }
-  for (const imageSize of imageSizes) {
-    if (width <= imageSize) {
-      return `/_next/image?url=${encodeURIComponent(src)}&w=${imageSize}&q=${quality}`
-    }
-  }
-  return src
-}
+// export function getResizedThumbnail ({ src, width, quality = 75 }) {
+//   if (process.env.NEXT_PUBLIC_OPTIMIZE_IMAGES !== 'true') { return src }
+//   for (const imageSize of imageSizes) {
+//     if (width <= imageSize) {
+//       return `/_next/image?url=${encodeURIComponent(src)}&w=${imageSize}&q=${quality}`
+//     }
+//   }
+//   return src
+// }

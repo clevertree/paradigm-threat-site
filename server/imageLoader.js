@@ -33,7 +33,7 @@ module.exports = async function imageLoader (buffer) {
       const paramHeight = queryParams.h || queryParams.height || Math.round((paramWidth / width) * height)
 
       const optimizedImageFileName = `${paramWidth}${relativePath.replace(/[/. ]/g, '_')}.webp`
-      const optimizedImageRelativeDirectoryPath = '/_opt/img'
+      const optimizedImageRelativeDirectoryPath = process.env.NEXT_PUBLIC_OPTIMIZE_IMAGE_PATH || '/site/thumb'
       const optimizedImageRelativePath = join(optimizedImageRelativeDirectoryPath, optimizedImageFileName)
       const optimizedImageAbsPath = join(appPath, optimizedImageRelativePath)
       if (!existsSync(optimizedImageAbsPath)) {
@@ -44,7 +44,7 @@ module.exports = async function imageLoader (buffer) {
         // console.info(info)
         console.log('Optimizing image created: ', optimizedImageRelativePath)
       } else {
-        console.log('Optimizing image already exists: ', optimizedImageRelativePath)
+        // console.log('Optimizing image already exists: ', optimizedImageRelativePath)
       }
       data.optimizedSrc = optimizedImageRelativePath
       data.width = paramWidth

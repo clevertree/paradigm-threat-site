@@ -27,7 +27,7 @@ export default function FileSearchForm ({ keywords, directory }) {
       setSearchResults(files)
       setLoading(false)
     }
-  }, [keywordsList])
+  }, [directory, keywordsList])
 
   return (
     <>
@@ -35,14 +35,14 @@ export default function FileSearchForm ({ keywords, directory }) {
         onSubmit={onSubmit} className={styles.form}
         ref={refForm}
       >
-        <fieldset className='asset-search'>
+        <fieldset className="asset-search">
           <input
-            name='search'
+            name="search"
             onFocus={onFocus}
             onChange={onChange}
             defaultValue={keywordsList}
           />
-          <button type='submit'>Search</button>
+          <button type="submit">Search</button>
         </fieldset>
 
       </form>
@@ -76,11 +76,11 @@ export default function FileSearchForm ({ keywords, directory }) {
                     <div className={styles.assetContainer}>
                       {files.map((filePath) => renderAsset(filePath))}
                     </div>
-                    )
+                  )
                   : <h3>No assets found</h3>}
               </>
-              )
-          )}
+            )
+        )}
     </>
   )
 
@@ -125,7 +125,7 @@ export default function FileSearchForm ({ keywords, directory }) {
             height={256}
             alt={filePath}
           >
-            <a href={filePath} target='_blank' rel='noopener noreferrer'>{filePath}</a>
+            <a href={filePath} target="_blank" rel="noopener noreferrer">{filePath}</a>
           </PopImage>
         )
       case 'pdf':
@@ -145,8 +145,8 @@ export default function FileSearchForm ({ keywords, directory }) {
           <div
             key={filePath}
           >
-            <embed src={filePath} className='w-full min-h-[40vh] min-w-[20vw]' />
-            <a href={filePath} target='_blank' rel='noopener noreferrer'>{filePath}</a>
+            <embed src={filePath} className="w-full min-h-[40vh] min-w-[20vw]"/>
+            <a href={filePath} target="_blank" rel="noopener noreferrer">{filePath}</a>
           </div>
         )
     }

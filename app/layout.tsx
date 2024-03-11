@@ -15,6 +15,7 @@ import './site/globals.css'
 import styles from './site/layout.module.scss';
 
 export const metadata: Metadata = {
+    metadataBase: new URL(`${process.env.NEXT_PUBLIC_METADATA_URL}`),
     title: 'Paradigm Threat',
     description: 'Conspiracy Repository',
 }
