@@ -1,9 +1,7 @@
 const { readdir, writeFile, readFile } = require('fs/promises')
 const { join, resolve } = require('path')
 const { existsSync } = require('fs')
-// const { fileExists } = require('next/dist/lib/file-exists')
 const { getGitChangeLog } = require('./gitUtil')
-const imageLoader = require('./imageLoader')
 const AUTOGEN_DEFAULT_WIDTH = process.env.NEXT_PUBLIC_AUTOGEN_IMAGE_WIDTH || 384
 const FILE_NAV_IGNORE = `${process.env.NEXT_PUBLIC_ASSET_NAV_IGNORE_FILE || '.navignore'}`
 const PATH_ASSETS_ABS = join(resolve(__dirname, '../'), `${process.env.NEXT_PUBLIC_ASSET_PATH || 'app'}`)
@@ -50,18 +48,9 @@ async function generateDirectory () {
 }
 
 async function generateAllPages () {
-  for await (const appSubDirectory of listDirectoriesRecursive(PATH_ASSETS_ABS)) {
+  for await (const appSubDirectory of listDirectoriesRecursive(PATH_ASSETS_ABS, FILE_NAV_IGNORE)) {
     await generatePages(appSubDirectory)
   }
-}
-
-async function optimizeImage (pFile, width = AUTOGEN_DEFAULT_WIDTH) {
-  const resourcePath = join(pFile.path, pFile.name)
-  const buffer = await readFile(resourcePath)
-  await imageLoader.bind({
-    resourcePath,
-    resourceQuery: '?w=' + width
-  })(buffer)
 }
 
 async function generatePages (directoryPath) {
@@ -80,12 +69,6 @@ async function generatePages (directoryPath) {
     imports: []
   }
   let i = 0
-  if (existsSync(join(directoryPath, 'page.mdx')) ||
-    existsSync(join(directoryPath, 'route.mdx'))) {
-    // existsSync(join(directoryPath, FILE_NAV_IGNORE))) {
-    // console.log("Skipping directory: ", directoryPath)
-    return
-  }
 
   const pDir = await readdir(directoryPath, { withFileTypes: true })
   for (const pFile of pDir) {
@@ -104,8 +87,7 @@ async function generatePages (directoryPath) {
             break
           }
           if (/(page|route)\.(mdx?|ts|js)$/i.test(pFile.name)) {
-            console.log(`Found index file. Canceling auto generation for ${directoryPath}: `, pFile.name)
-            return
+            break
           }
           mdxContent.imports.push(`import ${fileNameVariable} from "./${pFile.name}"`)
           mdxContent.content.push(`<div className="${mdStyle}">`)
@@ -125,7 +107,6 @@ async function generatePages (directoryPath) {
           mdxContent.content.push(`<PopImage className="${i++ % 2 === 0 ? imageStyleRight : imageStyleLeft}" src={${fileNameVariable}} alt="${pFile.name}">`)
           mdxContent.content.push(`\t${pFile.name}`)
           mdxContent.content.push('</PopImage>')
-          optimizeImage(pFile).then()
           break
         case 'svg':
           mdxContent.imports.push(`import ${fileNameVariable} from "./${pFile.name}"`)
@@ -176,6 +157,13 @@ async function generatePages (directoryPath) {
       }
     }
   }
+
+  if (existsSync(join(directoryPath, 'page.mdx')) ||
+    existsSync(join(directoryPath, 'route.mdx'))) {
+    // existsSync(join(directoryPath, FILE_NAV_IGNORE))) {
+    console.log(`Found index file. Canceling auto generation for ${directoryPath}.`)
+    return
+  }
   const componentListKeys = Object.keys(componentList)
   if (componentListKeys.length > 0) {
     mdxContent.imports.push(`import {${componentListKeys.join(',')}} from "@components"`)
@@ -218,18 +206,18 @@ async function writeOrIgnoreFile (filePath, fileContent) {
   await writeFile(filePath, fileContent)
 }
 
-async function * listDirectoriesRecursive (dir) {
+async function * listDirectoriesRecursive (dir, ignoreFile = FILE_NAV_IGNORE) {
   const dirents = await readdir(dir, { withFileTypes: true })
   for (const dirent of dirents) {
     const currentPath = join(dir, dirent.name)
     if (dirent.isDirectory()) {
       // const ignoreFile = join(currentPath, FILE_NAV_IGNORE)
-      // if (!existsSync(ignoreFile)) {
-      yield currentPath
-      yield * listDirectoriesRecursive(currentPath)
-      // } else {
-      // console.log("Ignoring path: ", currentPath)
-      // }
+      if (!ignoreFile || !existsSync(join(currentPath, ignoreFile))) {
+        yield currentPath
+        yield * listDirectoriesRecursive(currentPath)
+      } else {
+        console.log('Ignoring recursive path: ', currentPath)
+      }
     }
   }
 }
