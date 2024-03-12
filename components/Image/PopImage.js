@@ -36,8 +36,8 @@ function PopImage ({ ...props }) {
           />
           {children}
           <Link
-            href={src} className="source" target="_blank"
-            rel="noreferrer"
+            href={src} className='source' target='_blank'
+            rel='noreferrer'
           >Source File: {src}
           </Link>
           <div className={styles.button}>&#10006;</div>

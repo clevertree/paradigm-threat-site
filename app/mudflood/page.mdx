@@ -1,5 +1,4 @@
 import { DynamicIndex, PopImage, ChatRoom } from "/components";
-import Head from "next/head";
 // Page Styles
 export const imageStyleRight = "sm:float-right clear-right m-auto sm:m-1 sm:ml-4";
 export const imageStyleLeft = "sm:float-left clear-left m-auto sm:m-1 sm:mr-4";
@@ -14,14 +13,14 @@ export const metadata = {
 }
 
 
-<PopImage src={require("./mudflood_energetic_event_hypothesis.png")}
+<PopImage {...require("./mudflood_energetic_event_hypothesis.png")}
           className="sm:max-w-[60rem] rounded-md m-auto"
           alt="MudFlood Energetic Event Hypothesis"/>
-<PopImage src={require("./map_fomenko.jpg?w=384")}
+<PopImage {...require("./map_fomenko.jpg?w=384")}
           alt="MudFlood Evidence: World Maps changed significantly after the 18th Century"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
-<PopImage src={require("./mudflood_turkey.jpg?w=384")}
+<PopImage {...require("./mudflood_turkey.jpg?w=384")}
           alt="MudFlood Evidence: Buried Great Temple of Artemis"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -74,7 +73,7 @@ strategy that promotes discreditation of MudFlood Research.
 Note: This investigation is a work in progress. Check back soon for more updates!
 ```
 
-<PopImage src={require("../chronology/pyramids/history_buried_pyramid.jpg?w=384")}
+<PopImage {...require("../chronology/pyramids/history_buried_pyramid.jpg?w=384")}
           alt="MudFlood Evidence: Buried Pyramids in Bosnia"
           className={`[&>img]:rounded-md ${imageStyleRight}`}>
   These pyramids are entirely covered by soil and vegetation. The only way this could happen is if all the pyramids
@@ -83,7 +82,7 @@ Note: This investigation is a work in progress. Check back soon for more updates
   of [mass hysteria](https://en.wikipedia.org/wiki/Bosnian_pyramid_claims).
 </PopImage>
 
-<PopImage src={require("./mudflood_buried_buildings_deepfake.jpg?w=384")}
+<PopImage {...require("./mudflood_buried_buildings_deepfake.jpg?w=384")}
           alt="MudFlood DeepFake"
           className={`[&>img]:rounded-md ${imageStyleRight}`}>
   This popular image is shared in videos, books, internet threads, and articles as evidence of 19th Century buildings
@@ -94,7 +93,7 @@ Note: This investigation is a work in progress. Check back soon for more updates
   is purposefully and perpetually net-boosted and designed to be easily debunked.
 </PopImage>
 
-<PopImage src={require("./mudflood_tartaria_meme.jpg?w=384")}
+<PopImage {...require("./mudflood_tartaria_meme.jpg?w=384")}
           alt="MudFlood Evidence"
           className={`[&>img]:rounded-md ${imageStyleRight}`}>
   Tartarian Buildings exist all over the world and are designed to harness natural earth energy
@@ -115,7 +114,7 @@ Note: This investigation is a work in progress. Check back soon for more updates
 
 # Hypothesis
 
-<PopImage src={require("./blood_rain2.jpg?w=384")} alt="MudFlood Evidence: Bloodrain Paintings"
+<PopImage {...require("./blood_rain2.jpg?w=384")} alt="MudFlood Evidence: Bloodrain Paintings"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 The collection of memories known as the “MudFlood” may have come from a series of catastrophic events that occurred
@@ -136,7 +135,7 @@ human historical record - by identifying biases inscribed by those who would ben
 eclectic world history should emerge, *linking events by causality*, telling us where we all came from and how things
 may have led up to the disturbing MudFlood Event.
 
-<PopImage src={require("./mudflood_buried_buildings7.jpg?w=384")} alt="MudFlood Evidence: Buried City Architecture"
+<PopImage {...require("./mudflood_buried_buildings7.jpg?w=384")} alt="MudFlood Evidence: Buried City Architecture"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 # Dependent Proofs & Concepts
@@ -163,7 +162,7 @@ Here are a list of **verifiable concepts** this hypothesis relies on:
 
 ## The Phantom Time Hypothesis
 
-<PopImage src={require("./../chronology/fomenko_new_chronology.jpg?w=384")} alt="Phantom Time Hypothesis" width={450}
+<PopImage {...require("./../chronology/fomenko_new_chronology.jpg?w=384")} alt="Phantom Time Hypothesis" width={450}
           height={300}
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
@@ -189,7 +188,7 @@ crime, the criminal will change the date of the events, the locations, even the 
 causality of events intact. The worst crimes of history were pushed into deep antiquity or blamed on something else -
 like a natural occurrence, or _terrorism_.
 
-<PopImage src={require("./../cosmology/electric_universe/electric_universe.jpg?w=384")} alt="Electric Universe Theory"
+<PopImage {...require("./../cosmology/electric_universe/electric_universe.jpg?w=384")} alt="Electric Universe Theory"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 ## The Electric Universe Theory
@@ -213,7 +212,7 @@ narrative we know today.
 
 ## Human Activity on Mars
 
-<PopImage src={require("./../mars/mars_life.jpg?w=384")} alt="Life on Mars"
+<PopImage {...require("./../mars/mars_life.jpg?w=384")} alt="Life on Mars"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 Martians have been described for centuries by religious authors such as Jesuit Athanasius Kircher who testified to
@@ -230,7 +229,7 @@ channels using a precision observatory he built in Flagstaff. At that same time,
 faked his own death on the Titanic, published testimony where he visited each planet, and yet again, traveled inside our
 Sun.
 
-<PopImage src={require("./../mars/mars_life2.jpg?w=384")} alt="Life on Mars"
+<PopImage {...require("./../mars/mars_life2.jpg?w=384")} alt="Life on Mars"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 If these narratives are considered redacted from their original versions and posited as fiction, the possibility emerges
@@ -240,7 +239,7 @@ that our inner-solar system affairs were exploited by any visiting lifeforms fro
 Golden Age was described as a time of high technology and advanced primordial life, so _any visiting aliens_ wouldn’t
 have stood out back then.
 
-<PopImage src={require("./../mars/predictive_programming_marvin.jpg?w=384")} alt="Predictive Programming: Mars Media"
+<PopImage {...require("./../mars/predictive_programming_marvin.jpg?w=384")} alt="Predictive Programming: Mars Media"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 
@@ -257,7 +256,7 @@ Mars centuries before they appeared on Earth.
 
 ## Giants Roamed the Earth
 
-<PopImage src={require("./../genocide/giants_faeries/giants_news.jpg?w=384")} alt="Giants roamed the earth"
+<PopImage {...require("./../genocide/giants_faeries/giants_news.jpg?w=384")} alt="Giants roamed the earth"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 In America, Europe, Africa, and Asia, the expurgation of our large-scale human brethren is today known as the
@@ -269,7 +268,7 @@ there was nowhere to hide. As they were struck down, their bones became instanta
 mounds. Petrification by electricity has been demonstrated in a laboratory by the Safire project. Dinosaur fossils
 therefore may not be millions of years old, but misidentified Giant fossils created recently in the MudFlood Apocalypse.
 
-<PopImage src={require("./../genocide/giants_faeries/genocide_giants9.jpg?w=384")} alt="Genocide of the Giants"
+<PopImage {...require("./../genocide/giants_faeries/genocide_giants9.jpg?w=384")} alt="Genocide of the Giants"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 To the Deep State, Giants of Earth represented one of the few remaining unconquered races, and an existential threat.
@@ -286,7 +285,7 @@ have Giant entrance doors?
 
 ## The Deep State
 
-<PopImage src={require("./../chronology/redacted.jpg?w=384")} alt="History was Redacted"
+<PopImage {...require("./../chronology/redacted.jpg?w=384")} alt="History was Redacted"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 *Whom then are the beneficiaries of global conspiracy?*
@@ -297,7 +296,7 @@ You'll see conspirator accusations thrown at 'The British', 'The Jews', non-huma
 Devil' himself. It's important to understand the **Deep State** is loyal to no race, religion, or creed, but rather only
 to their *family*.
 
-<PopImage src={require("./../chronology/saturn/cosmic_mountain.jpg?w=384")} alt="Saturnian Cosmology: Cosmic Mountain"
+<PopImage {...require("./../chronology/saturn/cosmic_mountain.jpg?w=384")} alt="Saturnian Cosmology: Cosmic Mountain"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 Atlantis represents the first human empire still remembered today. In Saturnian Cosmology, it was located on the highest
@@ -322,9 +321,9 @@ luring them with the promise of food, safety, and civilization.
 
 ### The Pyramidal Empire
 
-<PopImage src={require("./../chronology/pyramids/pyramids_around_the_world.jpg?w=640")} alt="Atlantis"
+<PopImage {...require("./../chronology/pyramids/pyramids_around_the_world.jpg?w=640")} alt="Atlantis"
           className="sm:max-w-[60rem] rounded-md m-auto"/>
-<PopImage src={require("./../chronology/saturn/cathoderal.jpg?w=384")} alt="Saturnian Cosmology: Cathoderal"
+<PopImage {...require("./../chronology/saturn/cathoderal.jpg?w=384")} alt="Saturnian Cosmology: Cathoderal"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 This Pyramidal Empire was remembered as Ancient First Rome in the Nile Valley and in the Old Testament as the Egyptian,
@@ -339,7 +338,7 @@ Osiris.
 
 [More: The Second Rome or the Romaic Tsar-Grad Empire](https://chronologia.org/en/how_it_was/02.html)
 
-<PopImage src={require("./../mars/wotw/wotw_redaction_humans.jpg?w=384")} alt="Redacted Media: The War of the Worlds"
+<PopImage {...require("./../mars/wotw/wotw_redaction_humans.jpg?w=384")} alt="Redacted Media: The War of the Worlds"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 ### Breakaway Civilization on Mars playing God on Earth
@@ -353,7 +352,7 @@ Name”). This allowed the Deep State to communicate the will of God through cat
 even special artifacts. Using its simulated God, the Deep State ordered humanity to commit endless religious warfare
 against itself, dividing civilizations, and always benefiting from the conquest.
 
-<PopImage src={require("./../conspiracy/vatican_suppressed_documents.jpg?w=384")} alt="Life on Mars"
+<PopImage {...require("./../conspiracy/vatican_suppressed_documents.jpg?w=384")} alt="Life on Mars"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 According to Fomenko’s New Chronology, the starting date for modern civilization, Year Zero, was shifted forward in time
@@ -366,7 +365,7 @@ made available to the public allowing us to complete the story that was hidden.
 
 ## No Supernatural Influence
 
-<PopImage src={require("./../cosmology/hollow_earth/flat_earth_controlled_opposition2.jpg?w=384")}
+<PopImage {...require("./../cosmology/hollow_earth/flat_earth_controlled_opposition2.jpg?w=384")}
           alt="Controlled Opposition: Flat Earth"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -387,10 +386,10 @@ invisible Gods, devils, bug-like / octopus-like / or otherwise repulsive-looking
 
 ## Predictive Programming
 
-<PopImage src={require("./../mars/predictive_programming_marvin.jpg?w=384")}
+<PopImage {...require("./../mars/predictive_programming_marvin.jpg?w=384")}
           alt="Predictive Programming in TV, Movies, Books, and Video Games"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
-<PopImage src={require("./../conspiracy/revelation_of_method.jpg?w=384")}
+<PopImage {...require("./../conspiracy/revelation_of_method.jpg?w=384")}
           alt="Predictive Programming: Revelation of the Method"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -419,13 +418,13 @@ systematically dismissing mountains of testimony from our ancestors, as historia
 allow the hi-story to tell itself. We owe it to our *ancestors and our descendents both* to find the answers to these
 questions.
 
-<PopImage src={require("./mudflood_journalistic_six.jpg?w=640")}
+<PopImage {...require("./mudflood_journalistic_six.jpg?w=640")}
           alt="MudFlood Energy Event Journalistic Six: Who What Where When How, and Why?"
           className="sm:max-w-[60rem] rounded-md m-auto"/>
 
 ## What is the MFEE?
 
-<PopImage src={require("./mudflood_buried_buildings.jpg?w=384")} alt="MudFlood Evidence: Buried & Shifted Statues"
+<PopImage {...require("./mudflood_buried_buildings.jpg?w=384")} alt="MudFlood Evidence: Buried & Shifted Statues"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 The *MudFlood Energetic Event Hypothesis* proposes that the unexplained MudFlood memories collected from around the
@@ -436,7 +435,7 @@ land masses and the covering up of cities across the planet with mud. Entire mou
 ground in dendritic patterns by positive electric discharge while negative discharge tore canyons out of the earth -
 identical to the lightning scarring seen across the surface of Mars.
 
-<PopImage src={require("./mudflood_burried_statues.jpg?w=384")} alt="MudFlood Evidence: Buried & Shifted Statues"
+<PopImage {...require("./mudflood_burried_statues.jpg?w=384")} alt="MudFlood Evidence: Buried & Shifted Statues"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 The emptied buildings of the “reset areas”, recently cleared of life, were then repopulated by orphan trains forming the
@@ -454,7 +453,7 @@ known as “lahars” being transported over 27 km. So,
 
 ## How did the MFEE Happen?
 
-<PopImage src={require("./predictive_programming_simpsons_space_laser.jpg?w=384")}
+<PopImage {...require("./predictive_programming_simpsons_space_laser.jpg?w=384")}
           alt="Predictive Programming: Interplanetary Space Laser in The Simpsons"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -479,7 +478,7 @@ the Deep State’s hand, requiring a correction of the most extreme nature - a c
 Deep State chose not to reveal itself or its technology in this event, knowing the survivors would defer to the church’s
 conclusion - that the defeat of Napoleon was a divine intervention by an angry creator god.
 
-<PopImage src={require("./../chronology/tartaria/tartarian_structures.jpg?w=384")} alt="MudFlood Evidence: Tartaria"
+<PopImage {...require("./../chronology/tartaria/tartarian_structures.jpg?w=384")} alt="MudFlood Evidence: Tartaria"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 ## Where was the MFEE?
@@ -491,7 +490,7 @@ State’s plans and prevent a human empire from ever reorganizing on Earth again
 churches and mosques of the Rus-Horde Empire, stealing its history, redacting its indigenous Hoardian languages into
 Latin Root, splintering it’s religious icons, and rebranding it as the “Holy” Roman Empire.
 
-<PopImage src={require("./secondary_negative_discharge.jpg?w=384")}
+<PopImage {...require("./secondary_negative_discharge.jpg?w=384")}
           alt="MudFlood Evidence: Secondary Negative Discharge"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -508,7 +507,7 @@ and the Middle East. Mountains melted in Australia. Alchemic electrical scarring
 and Tibet. Many Tartarian cathedrals like in St Petersburg and Salt Lake City harnessed the electric onslaught and
 survived.
 
-<PopImage src={require("./grand_canyon_criscross_lightning_scar.jpg?w=384")}
+<PopImage {...require("./grand_canyon_criscross_lightning_scar.jpg?w=384")}
           alt="MudFlood Evidence: Grand Canyon CrisCross Scaring"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
@@ -545,7 +544,7 @@ Note: This investigation is a work in progress. Check back soon for more updates
 ```
 
 <PopImage
-  src={require("./napoleon_defaced_sphinx.jpg?w=384")} className="rounded-md"
+  {...require("./napoleon_defaced_sphinx.jpg?w=384")} className="rounded-md"
   alt="Anatoly Timofeevich Fomenko - a Russian historical theorist, mathematician, and professor"
   className={`[&>img]:rounded-md ${imageStyleRight}`}>
   MudFlood Evidence:
@@ -562,7 +561,7 @@ Note: This investigation is a work in progress. Check back soon for more updates
   their ancient God OSIRIS had not returned and that the Jesuits spoke for no Gods.
 </PopImage>
 
-<PopImage src={require("./napoleon_in_burning_moscow_-_Adam_Albrecht_(1841).jpg?w=384")} alt="War of 1812"
+<PopImage {...require("./napoleon_in_burning_moscow_-_Adam_Albrecht_(1841).jpg?w=384")} alt="War of 1812"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 By 1812, Napoleon had invaded Moscow with an army of half a million soldiers and burned the Kremlin to the ground,
@@ -584,7 +583,7 @@ Intervention would preempt Napoleon’s victory and the Deep State’s destructi
 
 ## Who caused the MFEE?
 
-<PopImage src={require("./1557_lycosthenes_rain_of_stones_meteorite.jpg?w=384")} alt="MudFlood Evidence: A deadly rain of stones. Woodcut with
+<PopImage {...require("./1557_lycosthenes_rain_of_stones_meteorite.jpg?w=384")} alt="MudFlood Evidence: A deadly rain of stones. Woodcut with
 early handcolouring from Conrad Lycosthenes' (Chronicle of Prodigies and Omens) - 'Prodigiorum ac Ostentorum Chronicon'
 Published Hendricus Petri, Basel, allegedly 1557. This image appears to show a shower of meteorites - Lycosthenes notes
 they are **stones** and not hail."
@@ -598,7 +597,7 @@ the Mars DEWs eliminated all threats to the Deep State on Earth and set the stag
 this way, the Deep State covered up it’s own involvement while striking the fear of God into the survivors who had
 little choice but to accept the Church’s conclusion - that Napoleon’s defeat was Divine Retribution by God.
 
-<PopImage src={require("./1844_blood_rain.jpg?w=384")} alt="MudFlood Evidence: Buried Cities"
+<PopImage {...require("./1844_blood_rain.jpg?w=384")} alt="MudFlood Evidence: Buried Cities"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 During the 40+ years of the MudFlood Event, the Earth became an unlivable desert. If the Deep State was the cause of the
@@ -615,7 +614,7 @@ perished, either denied cargo and starved, or were slaughtered by their peers in
 Events of the Mudflood were then further redacted into the ‘Old Testament’, merged with ancient stories, and mass
 distributed.
 
-<PopImage src={require("./YorkRetreat.jpg?w=384")} alt="MudFlood Evidence: *The York Retreat* Insane Asylum"
+<PopImage {...require("./YorkRetreat.jpg?w=384")} alt="MudFlood Evidence: *The York Retreat* Insane Asylum"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 With the defeat of Napoleon came another **Great Reset** and a return of Babylonian-style Deep
@@ -637,7 +636,7 @@ referred to as [*lunatics*](https://en.wikipedia.org/wiki/Lunatic).
 
 ## When was the MFEE?
 
-<PopImage src={require("./map_california_island.jpg?w=384")}
+<PopImage {...require("./map_california_island.jpg?w=384")}
           alt="MudFlood Evidence: California as an Island, and No Grand Canyon!"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
@@ -653,7 +652,7 @@ majestic balance of water, trees, and natural boundaries - nothing like the unin
 Siberia. The dating of early photos and old maps suggest the likelihood that the Reset was triggered early in the 19th
 century. But in what year?
 
-<PopImage src={require("./map_1812_war.jpg?w=384")} alt="MudFlood Evidence: World War of 1812"
+<PopImage {...require("./map_1812_war.jpg?w=384")} alt="MudFlood Evidence: World War of 1812"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
 The most significant recorded event to occur in the 19th century was the War of 1812. Modern historians split it into 2
@@ -663,7 +662,7 @@ Similarly, on the European front, England joined forces with Russia against Fran
 Coalition.
 
 
-<PopImage src={require("./map_1812_napoleon_defeat.jpg?w=384")} alt="MudFlood Evidence: Napoleon's Unexplainable Defeat"
+<PopImage {...require("./map_1812_napoleon_defeat.jpg?w=384")} alt="MudFlood Evidence: Napoleon's Unexplainable Defeat"
           className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
 
 The World War of 1812 split the world in half and battle was joined in every continent. Napoleon’s advanced army failed
@@ -676,10 +675,10 @@ military failure to extreme negligence and a hypothetical Napoleon “complex”
 inscribed by the victorious [Sixth Coalition](https://en.wikipedia.org/wiki/War_of_the_Sixth_Coalition) and fails to
 take into account a great deal of 19th century testimony following the war.
 
-<PopImage src={require("./blood_rain_priest_1888.jpg?w=384")} alt="MudFlood Event: BloodRain & Priest
+<PopImage {...require("./blood_rain_priest_1888.jpg?w=384")} alt="MudFlood Event: BloodRain & Priest
 A Jesuit Priest takes advantage of the frightened and confused population as the MudRain pours
 
-                                                                                                                                                                                                                                                        ## `“God is punishing you”`
+                                                                                                                                                                                                                                                            ## `“God is punishing you”`
 
 "
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
@@ -698,7 +697,7 @@ remembered as a “divine“ intervention.
 
 ## Conclusion
 
-<PopImage src={require("./napoleon_burning_of_washington_1812.jpg?w=384")}
+<PopImage {...require("./napoleon_burning_of_washington_1812.jpg?w=384")}
           alt="MudFlood Evidence: Napoleon Burn Washington Church to the ground"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
@@ -816,7 +815,7 @@ describes these events as "murderous ethnic cleansing on a stupendous scale not 
 
 ## Negative Lightning scar
 
-<PopImage src={require("./melted_rocks_utah.jpg?w=384")} alt="MudFlood Evidence: Melted Rocks in Utah
+<PopImage {...require("./melted_rocks_utah.jpg?w=384")} alt="MudFlood Evidence: Melted Rocks in Utah
 are said to have been caused by millions of years of erosion  
 but may instead have been **actually melted** by electric discharge strikes
 during the MudFlood Energy Event
@@ -1111,15 +1110,15 @@ MudFlood Event Redacted Dates:
 
 # Controlled Opposition Agents
 
-<PopImage src={require("./mudflood_buried_russian_winter_palace_deepfake.jpg?w=384")} alt="MudFlood Controlled Opposition Deep Fake by
+<PopImage {...require("./mudflood_buried_russian_winter_palace_deepfake.jpg?w=384")} alt="MudFlood Controlled Opposition Deep Fake by
 KorbenDallas from StolenHistory.net
 
-                                                                                                                                                Controlled Opposition agent KorbenDallas deliberately misled MudFlood investigators by claiming engravings by
-                                                                                                                                                G. Piranesi illustrate a 'Pre-MudFlooded' view of the Russian Winter Palace when compared to modern photos of the same
-                                                                                                                                                palace.
-                                                                                                                                                However, the featured engraving shows the Konstantin Palace from the rear, not the Winter Palace from the front.
-                                                                                                                                                This example of Revelation of the Method promotes discreditation of MudFlood Research as the StolenHistory.net
-                                                                                                                                                thread is purposefully and perpetually net-boosted and designed to be easily debunked.
+                                                                                                                                                    Controlled Opposition agent KorbenDallas deliberately misled MudFlood investigators by claiming engravings by
+                                                                                                                                                    G. Piranesi illustrate a 'Pre-MudFlooded' view of the Russian Winter Palace when compared to modern photos of the same
+                                                                                                                                                    palace.
+                                                                                                                                                    However, the featured engraving shows the Konstantin Palace from the rear, not the Winter Palace from the front.
+                                                                                                                                                    This example of Revelation of the Method promotes discreditation of MudFlood Research as the StolenHistory.net
+                                                                                                                                                    thread is purposefully and perpetually net-boosted and designed to be easily debunked.
 "
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
