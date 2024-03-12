@@ -10,6 +10,7 @@ describe('template spec', () => {
         function visitPathsInDirectory(path: string, directory: DirectoryType) {
             Object.keys(directory).forEach(subPath => {
                 const currentPath = `${path}/${subPath}`;
+                // cy.log("Visiting " + currentPath)
                 cy.visit(currentPath)
                 visitPathsInDirectory(currentPath, directory[subPath])
             })

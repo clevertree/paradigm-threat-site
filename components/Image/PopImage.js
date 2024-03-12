@@ -10,19 +10,20 @@ import { processImageProps } from '@/components/Image/imgUtil'
 function PopImage ({ ...props }) {
   const [fullscreen, setFullscreen] = useState(false)
 
-  function toggleFullscreen (e) {
+  function toggleFullscreen () {
     setFullscreen(!fullscreen)
   }
+
+  const srcProps = processImageProps(props)
 
   const content = (
     <OptimizedImage
       onClick={toggleFullscreen}
-      {...props}
+      {...srcProps}
     />
   )
 
   if (fullscreen) {
-    const srcProps = processImageProps(props)
     const { children, alt, src } = srcProps
     return (
       <>
@@ -35,8 +36,8 @@ function PopImage ({ ...props }) {
           />
           {children}
           <Link
-            href={src} className='source' target='_blank'
-            rel='noreferrer'
+            href={src} className="source" target="_blank"
+            rel="noreferrer"
           >Source File: {src}
           </Link>
           <div className={styles.button}>&#10006;</div>
