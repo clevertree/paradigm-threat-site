@@ -23,9 +23,9 @@ export default function ChatRoom ({ channel, title, className }) {
           setChannelInfo(channelInfo)
         }
       }).catch(error => {
-      console.error(error)
-      setError(error.message)
-    })
+        console.error(error)
+        setError(error.message)
+      })
   }, [channel])
 
   async function onKeyDown (event) {
@@ -38,7 +38,6 @@ export default function ChatRoom ({ channel, title, className }) {
   async function onSubmit (event) {
     event.preventDefault()
     try {
-
       const formElm = event.target.form || event.target
       const formData = new FormData(formElm)
       const formDataObject = Object.fromEntries(formData.entries())
@@ -79,8 +78,8 @@ export default function ChatRoom ({ channel, title, className }) {
       <div className={`${styles.container} ${className}`}>
         <div className={styles.channelTitle}>
           <a
-            href={`https://chat.paradigmthreat.net/paradigm-threat/channels/${channel}`} target=" _blank"
-            rel="noreferrer"
+            href={`https://chat.paradigmthreat.net/paradigm-threat/channels/${channel}`} target=' _blank'
+            rel='noreferrer'
           >
             {title || channel}
           </a>
@@ -95,30 +94,30 @@ export default function ChatRoom ({ channel, title, className }) {
           {error && <div className={`${styles.post} ${styles.error}`}>Could not load chatroom: {error}</div>}
         </div>
         <div>
-          <form className="flex" onSubmit={onSubmit}>
+          <form className='flex' onSubmit={onSubmit}>
             <input
-              type="text" name="username" className={`${styles.input} w-24 text-center italic`}
-              placeholder="guest" title="Type your guest name here"
+              type='text' name='username' className={`${styles.input} w-24 text-center italic`}
+              placeholder='guest' title='Type your guest name here'
             />
             <input
-              type="text"
-              name="message"
+              type='text'
+              name='message'
               className={`${styles.input} w-full`}
               onKeyDown={onKeyDown}
               required
-              title="Send a message to the channel"
-              placeholder="got something to say? type it here and hit the enter key to send to the channel"
+              title='Send a message to the channel'
+              placeholder='got something to say? type it here and hit the enter key to send to the channel'
             />
             <button
-              type="submit" className={`${styles.input} ${styles.submit} w-24`} value="Submit"
+              type='submit' className={`${styles.input} ${styles.submit} w-24`} value='Submit'
             >Send
             </button>
           </form>
         </div>
         <div className={styles.channelFooter}>
           <a
-            href={`https://chat.paradigmthreat.net/paradigm-threat/channels/${channel}`} target=" _blank"
-            rel="noreferrer"
+            href={`https://chat.paradigmthreat.net/paradigm-threat/channels/${channel}`} target=' _blank'
+            rel='noreferrer'
           >
             Visit {title || channel} in new window
           </a>

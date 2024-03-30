@@ -19,8 +19,8 @@ const nextConfig = {
   // output: 'export',
   images: {
     formats: ['image/avif', 'image/webp'],
-    domains: ['i.ibb.co']
-    // unoptimized: true,
+    domains: ['i.ibb.co'],
+    unoptimized: true
   },
   // Configure pageExtensions to include md and mdx
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx', 'auto.mdx'],
