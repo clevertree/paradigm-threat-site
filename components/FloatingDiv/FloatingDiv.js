@@ -33,6 +33,7 @@ export default function FloatingDiv ({ children, containerElm, className }) {
       left: 0,
       behavior: 'smooth'
     })
+    window.history.pushState('', document.title, window.location.pathname)
   }
 
   useEffect(() => {
