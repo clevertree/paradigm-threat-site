@@ -21,7 +21,7 @@ Note: This section is **a work in progress**. Check back soon for more updates!
 
 ### [SpaceTime is Fake. That should be obvious](/cosmology/astronomy)
 
-### [List of Fake FalseFlag attacks in History](/conspiracy/falseflagseflag)
+### [List of Fake FalseFlag attacks in History](/controlled_opposition/false_flag)
 
 ### [List of Controlled Opposition Agents in the Media](/conspiracy/controlled_oppositionsition)
 

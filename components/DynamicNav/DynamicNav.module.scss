@@ -1,0 +1,25 @@
+.container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  a {
+    color: var(--fg-color);
+
+    &:hover {
+      color: var(--fg-color-link);
+    }
+
+    &.current {
+      font-weight: bold;
+      //color: #1c1cd4;
+    }
+
+
+    //text-decoration: none;
+    //display: block;
+    padding: 0.2vw 0.8vw;
+    margin: 0 0.2vw;
+  }
+
+}

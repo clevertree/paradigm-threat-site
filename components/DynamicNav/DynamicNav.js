@@ -4,24 +4,25 @@ import React from 'react'
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import styles from './DynamicNav.module.scss'
 
 export default function DynamicNav ({ directory, children, className }) {
   const currentPath = usePathname()
 
-  function renderDirectory (directory, currentPath, children = null) {
+  function renderDirectory (directoryList, directoryPath, children = null) {
     return (
-      <div key={currentPath} className={className}>
+      <div key={directoryPath} className={styles.container + ' ' + className}>
         {children}
-        {Object.keys(directory).map(subPathName => {
-          const relativeSubPathName = currentPath + subPathName
+        {Object.keys(directoryList).map(subPathName => {
+          const relativeSubPathName = directoryPath + subPathName
+          // console.log('currentPath', currentPath, relativeSubPathName, currentPath.startsWith(relativeSubPathName))
           return (
             <Link
               key={subPathName}
-              className={relativeSubPathName === currentPath ? 'current' : ''}
+              className={currentPath.startsWith(relativeSubPathName) ? styles.current : ''}
               href={relativeSubPathName}
-            >{subPathName.split('/').pop()}
+            >{subPathName.split('/').pop().replace('_', ' ')}
             </Link>
-
           )
         })}
       </div>
