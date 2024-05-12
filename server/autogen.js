@@ -60,7 +60,7 @@ async function generatePages (directoryPath) {
   // const imageStyleLeft = "w-full sm:max-w-[50vw] md:max-w-md float-left sm:m-1 sm:mr-4";
   const pdfStyleRight = 'w-full md:w-[24rem] md:h-[36rem] float-right sm:m-1 sm:ml-4'
   const pdfStyleLeft = 'w-full md:w-[24rem] md:h-[36rem] float-left sm:m-1 sm:mr-4'
-  const mdStyle = 'w-full md:max-w-[80rem] float-right italic'
+  const mdStyle = 'w-full md:max-w-[80rem] float-right'
 
   const componentList = {}
   const mdxContent = {
