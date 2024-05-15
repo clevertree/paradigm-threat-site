@@ -8,6 +8,15 @@ Note: This investigation is **a work in progress**. Check back soon for more upd
 This section is in need of revision and be rewritten in the near future.
 ```
 
+Recorded incursions from the other planet in our solar system with lots of humans - Mars - has been recorded in London,
+Spain, and America. They occurred roughly around the turn of the century in order to prepare these locations for WW1.
+The same event was necessary in the East Coast to prepare America for WW2. Tens of thousands of people fled the cities.
+Those who remained behind were gassed. Due to the spread of technology in America at the time, we were able to record it
+and broadcast it live via radio. Typically, leaks should not happen like this, but since it did, they had no choice but
+to use their `Revelation Of The Method` strategy and claim the whole radio broadcast was 'science fiction' nothing more
+than a Halloween episode of the radio series The Mercury Theatre on the Air directed and narrated by Orson Welles about
+a martian invasion.
+
 ## Differences between "The War of the Worlds" the book/movie/album and the real event:
 
 The story "The War of the Worlds" was a real event that occurred on earth many times,
@@ -18,7 +27,8 @@ regarded Martians as 1\. Human men (and women) and 2\. Benign.
 fantasies but as a scourge to human complacency resulted in 1898 in a path-breaking novel of interplanetary invasion.
 The War of the Worlds, the first literary masterpiece in the tradition of Martian fiction,
 upends the sentimental icon of the man from Mars and replaces him with monstrous would-be
-conquerors who give British imperialists a taste of their own medi-cine."  
+conquerors who give British imperialists a taste of their own medi-cine."
+
 - [Imagining Mars: A Literary History](https://books.google.com/books?id=v3TDEDfEPdEC&printsec=frontcover#v=onepage&q&f=false)
 
 ### The Martian Heat Ray
