@@ -43,7 +43,7 @@ export default async function RootLayout(
             <Link href="/search">🔍</Link>
             <Link href="/">home</Link>
             <Link href="https://chat.paradigmthreat.net">chat</Link>
-            <Link href="https://video.paradigmthreat.net">videos</Link>
+            <Link href="https://rumble.com/c/c-6470791">videos</Link>
         </DynamicNav>
     </FloatingDiv>
 
