@@ -11,7 +11,7 @@ import {SpeedInsights} from "@vercel/speed-insights/next"
 import LoadingScreen from "./site/loading"
 
 /** Styles **/
-import './site/globals.css'
+import './site/globals.scss'
 import styles from './site/layout.module.scss';
 
 export const metadata: Metadata = {
@@ -43,7 +43,7 @@ export default async function RootLayout(
             <Link href="/search">🔍</Link>
             <Link href="/">home</Link>
             <Link href="https://chat.paradigmthreat.net">chat</Link>
-            <Link href="https://rumble.com/c/c-6470791">videos</Link>
+            <Link href="https://www.bitchute.com/channel/paradigmthreat">videos</Link>
         </DynamicNav>
     </FloatingDiv>
 
