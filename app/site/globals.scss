@@ -108,11 +108,14 @@ article {
   figure {
     figcaption {
       //max-width: 50%
-      > p {
-        font-size: x-small;
-        font-style: italic;
+      > * {
+        text-indent: 0;
+        text-align: justify;
+        font-size: 10px;
+        line-height: 12px;
+        //font-style: italic;
         padding-top: 0;
-        margin-top: 0
+        margin: 2px
       }
     }
   }
