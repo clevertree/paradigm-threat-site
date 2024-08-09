@@ -23,6 +23,6 @@ Note: This section is **a work in progress**. Check back soon for more updates!
 
 ### [List of Fake FalseFlag attacks in History](/controlled_opposition/false_flag)
 
-### [List of Controlled Opposition Agents in the Media](/conspiracy/controlled_oppositionsition)
+### [List of Controlled Opposition Agents in the Media](/controlled_oppositionsition)
 
 ### [Rise of the Global Police State](https://articles.mercola.com/sites/articles/archive/2023/10/17/rise-of-the-global-police-state.aspx)
