@@ -63,6 +63,9 @@
       "cy"
     ]
   },
+  "resolutions": {
+    "string-width": "4.2.3"
+  },
   "ignorePatterns": [
     "**/*.cy.js"
   ]
