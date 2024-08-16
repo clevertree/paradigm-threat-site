@@ -38,7 +38,7 @@ export default async function RootLayout(
     </header>
 
 
-    <FloatingDiv containerElm='nav' className={styles.navContainer}>
+    <FloatingDiv containerTag='nav' className={styles.navContainer}>
         <DynamicNav directory={Directory} className={styles.linkContainer}>
             <Link href="/search">🔍</Link>
             <Link href="/">home</Link>

@@ -1,6 +1,7 @@
 {
   "plugins": [
     "cypress",
+    "jsx-a11y",
     "chai-friendly"
   ],
   "rules": {
@@ -17,6 +18,7 @@
   },
   "extends": [
     "next/core-web-vitals",
+    "plugin:jsx-a11y/recommended",
     "plugin:cypress/recommended"
   ],
   "env": {
