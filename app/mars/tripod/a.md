@@ -1,7 +1,7 @@
 # Martian Tripod Investigation
 
 ```
-Note: This investigation is **a work in progress**. Check back soon for more updates!
+Note: This investigation is a work in progress. Check back soon for more updates!
 ```
 
 * Remote Controlled 'Super Cockpit'

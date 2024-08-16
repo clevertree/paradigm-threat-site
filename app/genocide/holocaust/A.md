@@ -1,43 +1,79 @@
 # Was Holocaust really Holodomor #3?
 
 ```
-Note: This investigation is **a work in progress**. Check back soon for more updates!
+Note: This investigation is a work in progress. Check back soon for more updates!
 ```
-
 
 ## [10 Facts about the Holodomor Genocide](https://borgenproject.org/holodomor-genocide/)
 
 ### The Soviet Union
-Ukraine became a republic of the Soviet Union in 1922 and their agriculture became a major part of the Soviet economy. As Stalin took power he capitalized on Ukraine’s agricultural prosperity and created collective farms to spread grain and other products throughout the member nations. From 1932 to 1933, Stalin increased the quotas required by Ukrainian farmers and severely punished those who resisted.
+
+Ukraine became a republic of the Soviet Union in 1922 and their agriculture became a major part of the Soviet economy.
+As Stalin took power he capitalized on Ukraine’s agricultural prosperity and created collective farms to spread grain
+and other products throughout the member nations. From 1932 to 1933, Stalin increased the quotas required by Ukrainian
+farmers and severely punished those who resisted.
 
 ### The Resistance
-Many Ukrainians resisted Stalin’s rule over their farms. As a result of their resistance, these Ukrainians came to be considered enemies of the state and were shipped away to remote areas such as Siberia. Many died in transit or else starved to death due to the harsh conditions.
+
+Many Ukrainians resisted Stalin’s rule over their farms. As a result of their resistance, these Ukrainians came to be
+considered enemies of the state and were shipped away to remote areas such as Siberia. Many died in transit or else
+starved to death due to the harsh conditions.
 
 ### The Policies
-The mass expulsions of Ukrainian farmers meant that Stalin had access to all of their resources. For those that remained Stalin increased their quotas to impossible standards. Food and livestock were confiscated, and those caught stealing from the farms in which they worked were arrested. The heart of the famine saw the deaths of 25,000 people every day due to malnutrition and starvation.
+
+The mass expulsions of Ukrainian farmers meant that Stalin had access to all of their resources. For those that remained
+Stalin increased their quotas to impossible standards. Food and livestock were confiscated, and those caught stealing
+from the farms in which they worked were arrested. The heart of the famine saw the deaths of 25,000 people every day due
+to malnutrition and starvation.
 
 ### The Eyewitness Accounts
-The lens through which the world sees famine is often abstract. For victims of the Holodomor, the experience is far more personal. According to surviving eyewitness accounts, Ukrainians survived on anything they could find. From the blossoms of acacia trees to the rotting flesh of cats and dogs, they tried to survive by any means possible. Despite the decreasing number of dogs and abounding malnutrition, denial of the Holodomor Genocide was, and, is still today abundant.
+
+The lens through which the world sees famine is often abstract. For victims of the Holodomor, the experience is far more
+personal. According to surviving eyewitness accounts, Ukrainians survived on anything they could find. From the blossoms
+of acacia trees to the rotting flesh of cats and dogs, they tried to survive by any means possible. Despite the
+decreasing number of dogs and abounding malnutrition, denial of the Holodomor Genocide was, and, is still today
+abundant.
 
 ### Refusal of Assistance
-The international community was by no means ignorant to the famine in Ukraine, however, Stalin refused assistance. The Soviet Union did not acknowledge the widespread problem and suppressed censuses that would help prove the genocide. Visitors to the Soviet Union were likewise confined to Moscow and denied entry to Ukraine.
+
+The international community was by no means ignorant to the famine in Ukraine, however, Stalin refused assistance. The
+Soviet Union did not acknowledge the widespread problem and suppressed censuses that would help prove the genocide.
+Visitors to the Soviet Union were likewise confined to Moscow and denied entry to Ukraine.
 
 ### The Actual Number of Dead is Unknown
-While the consensus is that the number of Holodomor victims is around ten million, there are a number of factors that skew the true number. Stalin’s suppression of the Ukrainian census and the large number of people exiled abroad distort the calculations. Denials of the famine both by the Soviet Union and Western publications further alter the number.
+
+While the consensus is that the number of Holodomor victims is around ten million, there are a number of factors that
+skew the true number. Stalin’s suppression of the Ukrainian census and the large number of people exiled abroad distort
+the calculations. Denials of the famine both by the Soviet Union and Western publications further alter the number.
 
 ### Denial of the Famine
-The Soviet Union was steadfast in their denial of the Ukrainian famine. Throughout the Holodomor, the USSR released propaganda material under-emphasizing the situation in Ukraine. Soviet official Maxim Litvinov went so far as to say, “there is no famine… You must take a longer view. The present hunger is temporary. In writing books, you must have a longer view. It would be difficult to describe hunger.” This view was by no means eradicated by the passage of time; since 1932 Russia has continued to deny its role in the Holodomor Genocide.
+
+The Soviet Union was steadfast in their denial of the Ukrainian famine. Throughout the Holodomor, the USSR released
+propaganda material under-emphasizing the situation in Ukraine. Soviet official Maxim Litvinov went so far as to say,
+“there is no famine… You must take a longer view. The present hunger is temporary. In writing books, you must have a
+longer view. It would be difficult to describe hunger.” This view was by no means eradicated by the passage of time;
+since 1932 Russia has continued to deny its role in the Holodomor Genocide.
 
 ### Walter Duranty
-Denial of the Holodomor was not isolated to Soviet propaganda. Walter Duranty, a Pulitzer Prize-winning journalist for The New York Times, wrote articles that conformed to Stalin’s agenda. This included suppression of the famine in Ukraine, writing that “conditions are bad, but there is no famine.” Duranty’s misleading writing and the denial of the famine by the Soviet Union combined to mask the full extent of the Holodomor. The New York Times has since publicly acknowledged Duranty’s failures and called for his Pulitzer Prize to be canceled.
+
+Denial of the Holodomor was not isolated to Soviet propaganda. Walter Duranty, a Pulitzer Prize-winning journalist for
+The New York Times, wrote articles that conformed to Stalin’s agenda. This included suppression of the famine in
+Ukraine, writing that “conditions are bad, but there is no famine.” Duranty’s misleading writing and the denial of the
+famine by the Soviet Union combined to mask the full extent of the Holodomor. The New York Times has since publicly
+acknowledged Duranty’s failures and called for his Pulitzer Prize to be canceled.
 
 ### Recognizing Genocide
-In 2016, Ukrainian President Petro Poroshenko officially called for the Holodomor to be acknowledged as a genocide orchestrated by the Soviet Union, which, for decades, Soviet rule prevented Ukraine from doing. Now, memorials stand all over the world that honor the victims and officially acknowledge the Holodomor.
+
+In 2016, Ukrainian President Petro Poroshenko officially called for the Holodomor to be acknowledged as a genocide
+orchestrated by the Soviet Union, which, for decades, Soviet rule prevented Ukraine from doing. Now, memorials stand all
+over the world that honor the victims and officially acknowledge the Holodomor.
 
 ### Russia Still Denies Genocide
-Despite overwhelming evidence to the contrary, Russia has maintained its innocence. Discussion regarding the famine was banned and falsification of evidence took place and Russia, to this day, continues to deny their role in the genocide. Russian officials regard evidence of the genocide as “falsifications of history,” and claim that the famine was due to a natural disaster that affected the entirety of the Soviet Union.
 
-
+Despite overwhelming evidence to the contrary, Russia has maintained its innocence. Discussion regarding the famine was
+banned and falsification of evidence took place and Russia, to this day, continues to deny their role in the genocide.
+Russian officials regard evidence of the genocide as “falsifications of history,” and claim that the famine was due to a
+natural disaster that affected the entirety of the Soviet Union.
 
 # [Holocaust Revisionism](http://holocaustrevisionism.com/)
 
@@ -58,9 +94,7 @@ by Mark R. Elsis
 > repudiating every major facet of the Jewish "Holocaust "
 > myth.
 
-
 ## 50 Sections Of Evidence
-
 
 I well know that this is the third rail of all third rail topics to discuss or write about, so before
 anyone takes this piece the wrong way, please fully hear me out. Thank you very much for
@@ -69,7 +103,6 @@ Revisionism has hundreds of researched links to scholarly articles, news article
 films, so that you may acquire truthful knowledge and let your preconceived cognitive dissidence
 evaporate. After you have thoroughly read my piece, I ask you to share it with many friends, so
 they also may become enlightened.
-
 
 First of all, let me state that if there were enough virtuous Jews who looked into this historical
 subject and who stood up and told the Truth, this monstrous story called the Holocaust would
@@ -125,6 +158,7 @@ Cross. As a Christian, I have no duty to allow myself to be cheated, but I have 
 fighter for truth and justice."
 Adolf Hitler
 ```
+
 # History Of The Jews
 
 "The followers of the [National-Socialist] movement, and indeed the whole nation, must be
@@ -164,7 +198,6 @@ radiation, electromagnetic fields (cell phone towers, wi-fi, cellphones), geoeng
 dentistry (mercury fillings and root canals) industrial foods, etc. etc. I believe this is not an
 accident, but done on purpose for depopulation of the World. I will be publishing an article
 about this on the website: [http://Depopulation.org.](http://Depopulation.org.)
-
 
 The Jews are only two tenths of one percent of the population of the Earth. The Christians,
 Muslims, Hindus, Buddhists and Atheists are ninety nine point eight percent of the population. It
@@ -218,7 +251,6 @@ Written In The Light Of The Present Day.
 by David Astle
 [http://www.gnosticliberationfront.com/babylonian_woe.htm](http://www.gnosticliberationfront.com/babylonian_woe.htm)
 
-
 Small Network Of Corporations Run The Global Economy
 A University Of Zurich Study Reported That A Small Group Of Companies - Mainly Banks -
 Wields Huge Power Over The Global Economy. The Study Is The First To Look At All 43,
@@ -231,7 +263,8 @@ global-economy
 Who Runs The World?
 Solid Proof That A Core Group Of Wealthy Elitists Is Pulling The Strings
 by Michael Snyder
-[http://theeconomiccollapseblog.com/archives/who-runs-the-world-solid-proof-that-a-](http://theeconomiccollapseblog.com/archives/who-runs-the-world-solid-proof-that-a-) core-group-
+[http://theeconomiccollapseblog.com/archives/who-runs-the-world-solid-proof-that-a-](http://theeconomiccollapseblog.com/archives/who-runs-the-world-solid-proof-that-a-)
+core-group-
 of-wealthy-elitists-is-pulling-the-strings
 
 The Jews Run The World
@@ -271,7 +304,6 @@ Ellen Brown - Public Banks And Why We Need Them
 Escape From Pottersville:
 The North Dakota Model For Capitalizing Community Banks
 
-
 by Ellen Brown
 [http://www.webofdebt.com/articles/pottersville.php](http://www.webofdebt.com/articles/pottersville.php)
 
@@ -306,7 +338,8 @@ by Mark Weber
 
 These 6 Corporations Control 90% Of The Media In America
 by Ashley Lutz
-[http://www.businessinsider.com/these-6-](http://www.businessinsider.com/these-6-) corporations-control-90-of-the-media-in-america-2012-
+[http://www.businessinsider.com/these-6-](http://www.businessinsider.com/these-6-)
+corporations-control-90-of-the-media-in-america-2012-
 
 CNN Goldman Sachs And the Zio Matrix
 https://www.youtube.com/watch?v=Zw9EhjyU3JU
@@ -324,7 +357,6 @@ Hollywood Jewish Control
 https://www.youtube.com/watch?v=DtJQlw-ZjT
 
 Zionists Strictly Control Western, US Media: Scott Rickard (Video and Text)
-
 
 [http://presstv.com/detail/2013/02/20/289998/zionists-control-western-us-media](http://presstv.com/detail/2013/02/20/289998/zionists-control-western-us-media)
 
@@ -384,6 +416,7 @@ of intelligence and, by robbing the peoples of their natural spiritual leadershi
 ripe for the slavish lot of a permanent subjugation. The most terrible example of this is Russia."
 Adolf Hitler
 ```
+
 The real Holocaust was what the Jews in the former Soviet Union did to the Christians after they
 overthrew the Tsarist autocracy in their 1917 revolution. On July 17, 1918, the Jews butchered
 the Russian Imperial family of Tsar Nicholas II, his wife Alexandra, and his daughters, Olga,
@@ -428,7 +461,6 @@ Probably 61,911,000 People, 54,769,000 Of Them Citizens,
 Have Been Murdered By The Communist Party -- The Government Of The Soviet Union.
 by R.J. Rummel
 https://www.hawaii.edu/powerkills/USSR.CHAP.1.HTM
-
 
 The Rulers Of Russia
 Reverend Denis Fahey
@@ -483,7 +515,6 @@ by Brother Nathanael
 
 Who Financed Lenin And Trotsky?
 
-
 by G. Edward Griffin
 [http://www.wildboar.net/multilingual/easterneuropean/russian/literature/articles/whofinanced/w](http://www.wildboar.net/multilingual/easterneuropean/russian/literature/articles/whofinanced/w)
 hofinancedleninandtrotsky.html
@@ -509,6 +540,7 @@ the Lower East Side of New York."
 Reverend Denis Fahey
 (The Rulers Of Russia)
 ```
+
 Holodomor: The Ukrainian Holocaust Of 1933 (Film)
 [http://undergrounddocumentaries.com/holodomor-the-ukrainian-holocaust-of-](http://undergrounddocumentaries.com/holodomor-the-ukrainian-holocaust-of-)
 
@@ -528,13 +560,13 @@ ruinous revolution that swallowed up some 60 million of our people, I could not 
 accurately than to repeat: 'Men had forgotten God; that is why all this has happened.' ”
 Aleksandr I. Solzhenitsyn
 ```
+
 The Armenian Genocide of 1,500,000 people was perpetrated, not by the Turks, but by Turkish
 Jewry known as Crypto-Jews, Marranos, or Donmeh. For political reasons Jews in many
 countries throughout history have pretended to convert to other religions in order to rise up
 again and regain influential political positions to adopt Jewish policies. Those crypto-Jews
 formed the “Committee for Union and Progress” that led the Young Turk Revolution into
 overthrowing the Turkish Empire.
-
 
 The Armenians were running the businesses and professions in the Turkish Empire. They
 formed the rich class; an intelligentsia that gained influential political positions in the Empire.
@@ -590,6 +622,7 @@ Mustafa "Ataturk" Kemal
 in an interview published on August 1, 1926 in The Los Angeles Examiner,
 talking about former Young Turks in his country)
 ```
+
 Why is it almost no one knows of these barbaric Twentieth Century genocides of the Russians,
 the Ukrainians and the Armenian that were all committed by the Jews? Why do we let the Jews
 use their Holocaust story as a impenetrable shield so they can get away with their subjugation
@@ -637,7 +670,6 @@ To Judaism And Created Empire That Lasted Half A Millennium
 
 Globalists Created Wahhabi Terrorism To Destroy Islam And Justify A Global State
 
-
 The House Of Saud - No More Islamic Than Billy Graham
 by David Livingstone
 [http://wakeupfromyourslumber.com/node/](http://wakeupfromyourslumber.com/node/)
@@ -682,7 +714,6 @@ Benjamin Franklin (in a chit chat around the table during intermission at the Ph
 Constitutional Convention of 1787. This statement was recorded in the dairy of Charles
 Cotesworth Pinckney, a delegate from South Carolina)
 
-
 The Talmud consists of 63 tractates, and in standard print is over 6,200 pages long. It is written
 in Tannaitic Hebrew and Aramaic. It contains the opinions of thousands of rabbis on a variety of
 subjects, including law, ethics, philosophy, customs, history, theology, lore and many other topics
@@ -711,7 +742,6 @@ by Reverend I. B. Pranaitis
 
 Sick Evil Jewish Talmud
 
-
 https://www.youtube.com/watch?v=o-7sxOg1aXE
 
 Pedophilia: The Talmud's Dirty Secret
@@ -729,6 +759,7 @@ appeal to your higher sense of morality while possessing none of their own. In a
 million ways, this will be the cause of your premature death, if the Jews are allowed to continue
 their homicidal rampage unimpeded." – John Kaminski
 ```
+
 The Jews have been expelled from at least 79 countries (sometimes two, three, four or five times)
 over the last four thousand years of recorded history. The first know occurrence of this expulsion
 was with Abraham, who originally hailed from Ur in Babylonia and fled from there circa 2,
@@ -751,7 +782,6 @@ not be bonds: and our oaths shall not be oaths."
 
 Expulsion Of The Jews Where When And Why They Have Been Thrown Out
 [http://www.youtube.com/watch?v=Mk0j5GvUPsk](http://www.youtube.com/watch?v=Mk0j5GvUPsk)
-
 
 The Kol Nidre
 by J. B. Campbell
@@ -801,7 +831,6 @@ Leading Up To The Edict Of Expulsion By King Edward I
 by Geoffrey H. Smith and Arnold S. Leese
 [http://www.heretical.com/British/jews1290.html](http://www.heretical.com/British/jews1290.html)
 
-
 The Nameless War
 by Captain Archibald Maule Ramsay
 [http://thetruthnews.info/The_Nameless_War.pdf](http://thetruthnews.info/The_Nameless_War.pdf)
@@ -824,6 +853,7 @@ look-out-Luxembourg.html
 “Let me issue and control a Nation’s money and I care not who writes the laws.”
 Amschel Rothchild
 ```
+
 The Jews were the ruthless and cunning parasites behind the French revolution of 1789 (as well
 as most other revolutions since). They also took over the United States on December 23, 1913,
 when the Federal Reserve Bank was created. The Jewish Usury bankers have financed both sides
@@ -851,11 +881,11 @@ The Federal Reserve Is Neither Federal Nor A Reserve, It Stole Our Currency In 1
 compounded by interest" [he cancelled the debt and interest in France - hence the Battle of
 Waterloo.]
 
-
 ```
 Napoleon Bonaparte
 (Emperor of France)
 ```
+
 The Jews have always controlled the slave trade (including about 90% of the “Middle Passage”),
 prostitution and the drug trade throughout history. By running both the worldwide banking and
 the drugs cartels it sure does make it convenient to launder the hundreds of billions in illegal
@@ -899,7 +929,6 @@ Dr. Tony Martin
 Monsanto Family Were Jewish Slave Dealers And Owners
 [http://rense.com/general76/ssje.htm](http://rense.com/general76/ssje.htm)
 
-
 Jews Selling Blacks (Videos)
 [http://noirg.org/video](http://noirg.org/video)
 
@@ -929,6 +958,7 @@ prestige the Negroes will be able to intermarry with the whites and begin a proc
 deliver America into our hands."
 Israel Cohen
 ```
+
 Teen Prostitution Ring Exposed In Tel Aviv
 Police Uncover Prostitution Ring Which Exploited Teenage Girls Ages 14-16.
 Investigators Believe Ring Operated For Years
@@ -950,7 +980,6 @@ article-1.
 
 Senior British Rabbi Filmed Telling Alleged Child Abuse Victim Not To Go To The Police
 by Tom Peck
-
 
 [http://www.independent.co.uk/news/uk/home-news/senior-british-rabbi-filmed-telling-alleged-](http://www.independent.co.uk/news/uk/home-news/senior-british-rabbi-filmed-telling-alleged-)
 child-abuse-victim-not-to-go-to-the-police-8471779.html
@@ -1005,7 +1034,6 @@ Jews And Crime
 
 Crime And Punishment:
 
-
 Sex/Prostitution/Pornography Department
 [http://www.radioislam.org/thetruth/criporn.htm](http://www.radioislam.org/thetruth/criporn.htm)
 
@@ -1059,7 +1087,6 @@ human-organ-trafficking-black-market
 
 Jewish Illegal Organ Harvesting Continues:
 
-
 Israel Involved In Kosovo Organ Trade
 [http://northerntruthseeker.blogspot.com/2010/12/zionist-jewish-illegal-organ-harvesting.html](http://northerntruthseeker.blogspot.com/2010/12/zionist-jewish-illegal-organ-harvesting.html)
 
@@ -1071,6 +1098,7 @@ Jew Organ Harvesting – Where Do The Organs Go?
 even today they display the same activity in the same field, in southern California, where I live."
 Upton Sinclair
 ```
+
 The Protocols of the Learned Elders of Zion is one of the most important documents ever to
 come to light in the world. It can be described as the blueprint for the domination of the world
 by Jews. It is graphic in its contempt for those who will be its victims, in its profound
@@ -1109,7 +1137,6 @@ by L. Fry
 Edited and Revised by Reverend Denis Fahey
 [http://zioncrimefactory.com/wp-content/uploads/2011/09/WatersFlowingEastward.pdf](http://zioncrimefactory.com/wp-content/uploads/2011/09/WatersFlowingEastward.pdf)
 
-
 ```
 "For we are opposed around the world by a monolithic and ruthless conspiracy that relies on
 covert means for expanding its sphere of influence - on infiltration instead of invasion, on
@@ -1119,6 +1146,7 @@ into the building of a tightly knit, highly efficient machine that combines mili
 intelligence, economic, scientific and political operations."
 John Fitzgerald Kennedy
 ```
+
 Because of their Holocaust story, and their total control of the central banks of the world, they
 were allowed to steal Palestine on May 14, 1948. The United States under President Harry S.
 Truman was the first country that recognized the State of Israel on May 14, 1948, eleven minutes
@@ -1169,6 +1197,7 @@ into war..."
 James V. Forrestal
 (assassinated on May 22, 1949, for his adamant opposition to Israel and Jews)
 ```
+
 The Jews used the British government to claim Palestine as theirs by telling them they could
 draw the United States into World War I. “We will get the Americans into the war and you sign
 over Palestine to us”, was the essence of the deal. This was done even though the British did not
@@ -1214,7 +1243,6 @@ Britain's Great War Pledge To Lord Rothschild
 by Robert John
 [http://www.ihr.org/jhr/v06/v06p389_John.html](http://www.ihr.org/jhr/v06/v06p389_John.html)
 
-
 The Balfour Declaration
 by Vladimir Moss
 [http://www.orthodoxchristianbooks.com/articles/439/-balfour-declaration](http://www.orthodoxchristianbooks.com/articles/439/-balfour-declaration)
@@ -1240,6 +1268,7 @@ war&catid=180
 If it happened, you can bet it was planned that way.”
 Franklin Delano Roosevelt
 ```
+
 After the 1920 Arab riots and 1921 Jaffa riots, the Jewish leadership in Palestine believed that
 the British, to whom the League of Nations had given a mandate over Palestine in 1920, had no
 desire to confront local Arab gangs that frequently attacked Palestinian Jews. Believing that they
@@ -1264,7 +1293,6 @@ disaster, catastrophe or cataclysm.
 The Founding Myths Of Modern Israel
 by Roger Garaudy
 [http://www.radioislam.org/islam/english/books/garaudy/main.htm](http://www.radioislam.org/islam/english/books/garaudy/main.htm)
-
 
 Deir Yassin: History Of The Massacre
 [http://www.deiryassin.org/mas.html](http://www.deiryassin.org/mas.html)
@@ -1318,7 +1346,6 @@ Palestinian Refugees From 1948 And Their Descendents Comprise The Bulk Of The Pa
 Refugee Population Today Numbering Over 5 Million Persons And Constituting Nearly Two-
 Thirds Of The Palestinian People.
 
-
 [http://www.salaam.co.uk/themeofthemonth/may02_index.php?l=5](http://www.salaam.co.uk/themeofthemonth/may02_index.php?l=5)
 
 The Palestinian Initiative For The Promotion Of Global Dialogue And Democracy
@@ -1371,8 +1398,8 @@ Services In The Territory, According To a UN Report.
 On Earth: You’re Either A Superior Jew Or An Inferior Gentile Anti-Semite
 by Mohamed Khodr
 
-
-[http://sabbah.biz/mt/archives/2013/01/22/on-earth-youre-either-a-](http://sabbah.biz/mt/archives/2013/01/22/on-earth-youre-either-a-) superior-jew-or-an-inferior-
+[http://sabbah.biz/mt/archives/2013/01/22/on-earth-youre-either-a-](http://sabbah.biz/mt/archives/2013/01/22/on-earth-youre-either-a-)
+superior-jew-or-an-inferior-
 gentile-anti-semite-gas
 
 Instead Of Stealing Palestine Why Didn't The Jews Go To Their First Jewish Homeland --
@@ -1419,11 +1446,11 @@ in the place of Tal al-Shuman. There is not a single place built in this country
 former Arab population."
 David Ben Gurion
 ```
+
 The Changing Map Of Israel From 1946 To 2000
 Since the last map update, the 20 foot high wall and hundreds of illegal settlements have been
 built. There is no freedom of movement for Palestinians to travel from one partitioned area to all
 other areas of their territory. Since the building of the wall, many more families have been
-
 
 divided, their land is inaccessible to farm, all goods and services controlled by Israel. Essentially
 Palestine is now a series of walled prisons.
@@ -1473,7 +1500,6 @@ by Donald Macintyre
 of-count-bernadotte--and-the-death-of-peace-934094.html
 
 65 Years Later The Jews Are Still Stealing Land In East Jerusalem And The West Bank:
-
 
 Israel’s Doomsday E-1 Settlement
 by Nicola Nasser
@@ -1528,7 +1554,6 @@ by Mazin Qumsiyeh, PhD
 Settlements Scam: 'Israel Bulldozers Won't Stop, No Prospects For Peace'
 https://www.youtube.com/watch?v=yxgnDSNbEIA
 
-
 Israeli Settlements Leave U.S. Odd Man Out At U.N. Security Council
 In A Rare Move On Wednesday (December 19, 2012), All But One Of The 15 Members Of The
 U.N. Security Council Made Statements At The United Nations Opposing Israeli Plans To
@@ -1580,7 +1605,6 @@ Palestinian People Throughout The Occupied Palestinian Territory, Including East
 [http://www.ohchr.org/Documents/HRBodies/HRCouncil/RegularSession/Session19/FFM/FFMSe](http://www.ohchr.org/Documents/HRBodies/HRCouncil/RegularSession/Session19/FFM/FFMSe)
 ttlements.pdf
 
-
 UN: Israeli Settlements 'Violate Palestinian Rights' (Video and Text)
 Israeli Settlements In The Occupied Territories Violate Palestinians'
 Human Rights In Ways Designed To Drive Them Off The Land, A UN Report States.
@@ -1598,6 +1622,7 @@ And Called For The Withdrawal Of 500,000 Settlers.
 Folke Bernadotte
 September 17, 1948, the same day he was assassinated by the Jews
 ```
+
 On November 6, 1944, the Jew terrorist group Lehi assassinated Lord Moyne (Walter Edward
 Guinness, 1st Baron Moyne), the British Minister Resident in the Middle East, in Cairo. Moyne
 was the highest ranking British official in the region. Yitzhak Shamir claimed later that Moyne
@@ -1637,6 +1662,7 @@ how can you escape the damnation of hell?”
 Jesus Christ
 (To the Jews; in Matthew 23:33)
 ```
+
 Israel has started many wars in the Middle-East since announcing to the world that it was
 becoming a country on May 14, 1948. Six of the worst wars were; The Six-Day War Of 1967, The
 Yom Kippur War Of 1973, The Lebanon War Of 1982, The Lebanon War Of 2006 , The 2008- 9
@@ -1682,7 +1708,6 @@ Yom Kippur War 1973: The Egyptian Revenge - (4/4)
 [http://www.youtube.com/watch?v=2-9uZQs5dZA](http://www.youtube.com/watch?v=2-9uZQs5dZA)
 
 The Lebanon War Of 1982
-
 
 What Was The 1982 Lebanon War?
 [http://israelipalestinian.procon.org/view.answers.php?questionID=407](http://israelipalestinian.procon.org/view.answers.php?questionID=407)
@@ -1734,8 +1759,8 @@ ICC Denying Victims Of Israel’s’ War On Gaza Justice
 A Different War In Gaza, And The War Ahead
 by Ramzy Baroud
 
-
-[http://www.tehrantimes.com/opinion/103601-a-](http://www.tehrantimes.com/opinion/103601-a-) different-war-in-gaza-and-the-war-ahead
+[http://www.tehrantimes.com/opinion/103601-a-](http://www.tehrantimes.com/opinion/103601-a-)
+different-war-in-gaza-and-the-war-ahead
 
 Carnage And Devastaton In Gaza Strip: Israel's War On Palestine
 [http://www.youtube.com/watch?v=IXS_A701fUs](http://www.youtube.com/watch?v=IXS_A701fUs)
@@ -1787,7 +1812,6 @@ Undermining Peace In Gaza And Israel In One Minute Flat
 How The House Defeated The Democratic Process “Unanimously”
 by Rep. Dennis Kucinich
 
-
 [http://kucinich.house.gov/news/email/show.aspx?ID=I26NBQEMIP3ISRLAO7PNHGCA6A](http://kucinich.house.gov/news/email/show.aspx?ID=I26NBQEMIP3ISRLAO7PNHGCA6A)
 
 US Congress Unanimously Supports Israel's Gaza Assault
@@ -1826,6 +1850,7 @@ group called "Jews" without a creating a firestorm. There are exceptions. We can
 and totally awesome this group is."
 Robert Lindsay
 ```
+
 Between September 16 and September 18, 1982, under the pretext of curbing attacks on Israeli
 troops by the Palestine Liberation Organization (PLO) in Lebanon, Israeli Prime Minister
 Menachem Begin ordered the Israeli army to invade. In an orgy of bloodletting, then Defense
@@ -1838,7 +1863,6 @@ Christian Lebanese President-elect Bashir Gemayel.
 Massacre Of Sabra And Shatila
 by Shia Truth
 [http://www.youtube.com/watch?v=-qMqESzfaBA](http://www.youtube.com/watch?v=-qMqESzfaBA)
-
 
 US Gave Israel Green Light For Sabra, Shatila Genocide
 [http://www.presstv.ir/detail/2012/09/19/262446/israels-american-license-for-genocide](http://www.presstv.ir/detail/2012/09/19/262446/israels-american-license-for-genocide)
@@ -1887,11 +1911,11 @@ Fact Sheet: The Sabra And Shatila Massacre: 30 Years Later
 
 The Sabra And Shatila Massacre: 30 Years Later
 by Ellen Siegel
-[http://www.wrmea.org/action-alert-archives/11457-the-sabra-shatila-massacre-](http://www.wrmea.org/action-alert-archives/11457-the-sabra-shatila-massacre-) 30 -years-
+[http://www.wrmea.org/action-alert-archives/11457-the-sabra-shatila-massacre-](http://www.wrmea.org/action-alert-archives/11457-the-sabra-shatila-massacre-)
+30 -years-
 later.html
 
 Israel Leaves Behind Traces Of Genocidal Crimes In Lebanon
-
 
 [http://www.presstv.ir/detail/2013/01/10/282809/israels-traces-of-crimes-in-lebanon](http://www.presstv.ir/detail/2013/01/10/282809/israels-traces-of-crimes-in-lebanon)
 
@@ -1900,6 +1924,7 @@ Israel Leaves Behind Traces Of Genocidal Crimes In Lebanon
 Jewish people control America, and the Americans know it."
 Israeli Prime Minister Ariel Sharon to cabinet member Shimon Peres
 ```
+
 From 1948 through until today the United States has given these ruthless barbaric Jews the
 military cover they have needed. Since President John F. Kennedy was assassinated (by Israel
 with help from our controlled lackeys and all of the Jew media) on November 22, 1963, the
@@ -1913,7 +1938,8 @@ Pentagon Reports 2.3 Trillion Dollars Missing On 9/10/01
 [http://www.youtube.com/watch?v=JLqUIsgkh3Q](http://www.youtube.com/watch?v=JLqUIsgkh3Q)
 
 $43 Trillion + $36.5 Trillion + 1 Computer Virus = 1 Big Fraud
-[http://vidrebel.wordpress.com/2012/11/07/43-trillion-36-5-](http://vidrebel.wordpress.com/2012/11/07/43-trillion-36-5-) trillion-1- computer-virus-1- big-fraud
+[http://vidrebel.wordpress.com/2012/11/07/43-trillion-36-5-](http://vidrebel.wordpress.com/2012/11/07/43-trillion-36-5-)
+trillion-1- computer-virus-1- big-fraud
 
 9/11 Suspects - Dov Zakheim
 [http://www.youtube.com/watch?v=ENSpEbiJ1PA](http://www.youtube.com/watch?v=ENSpEbiJ1PA)
@@ -1941,6 +1967,7 @@ joined the most sordid avarice to the most detestable superstition and to the mo
 hatred of all peoples which tolerate and enrich them."
 Voltaire
 ```
+
 ```
 “Every time anyone says that Israel is our only friend in the Middle East,
 ```
@@ -1949,6 +1976,7 @@ Voltaire
 I can’t help but think that before Israel, we had no enemies in the Middle East.”
 Father John Sheehan, S. J.
 ```
+
 Nihilistic Israel is in violation of 79 United Nations Security Council resolutions, far more than
 any other country. The United States Government has protected Israel by vetoing these United
 Nations Security Resolutions 29 times. On many of these occasions we were the only country to
@@ -1995,7 +2023,6 @@ Jewish Traitors
 
 Nozette: Just Another Traitor Jew Spy
 [http://incogman.net/10/2009/nozette-just-another-traitor-jew-spy](http://incogman.net/10/2009/nozette-just-another-traitor-jew-spy)
-
 
 US Sees Israel, Tight Mideast Ally, As Spy Threat
 [http://seattletimes.com/html/politics/2018795490_apususisraelspying.html](http://seattletimes.com/html/politics/2018795490_apususisraelspying.html)
@@ -2049,7 +2076,6 @@ The Israel Lobby
 by John Mearsheimer and Stephen Walt
 [http://ziomania.com/articles5/The%20Lobby.htm](http://ziomania.com/articles5/The%20Lobby.htm)
 
-
 How (Not) To Hide The Elephant In The Room
 by Stephen M. Walt
 [http://walt.foreignpolicy.com/posts/2012/09/20/how_not_to_hide_the_elephant_in_the_room](http://walt.foreignpolicy.com/posts/2012/09/20/how_not_to_hide_the_elephant_in_the_room)
@@ -2078,7 +2104,8 @@ by Philip Giraldi
 
 America Shamed Again: A Colonized People
 by Paul Craig Roberts
-[http://www.paulcraigroberts.org/2013/02/17/america-shamed-again-a-](http://www.paulcraigroberts.org/2013/02/17/america-shamed-again-a-) colonized-people-paul-
+[http://www.paulcraigroberts.org/2013/02/17/america-shamed-again-a-](http://www.paulcraigroberts.org/2013/02/17/america-shamed-again-a-)
+colonized-people-paul-
 craig-roberts
 
 US Experts Comment On US Policy Towards Israel
@@ -2101,7 +2128,6 @@ Former Congressman Cynthia McKinney, On Iranian TV, Says Members Are Assaulted B
 Pro-Israel Lobby "To Such An Extent That My Father Had To Ask The Question 'What Does
 Stone Mountain, Georgia Have To Do With Israel?'"
 [http://www.wrko.com/blog/todd/former-rep-complains-iran-about-israel-lobby](http://www.wrko.com/blog/todd/former-rep-complains-iran-about-israel-lobby)
-
 
 American Jewish Fantasies Of Israel:
 Coping With Cognitive Dissonance
@@ -2156,7 +2182,6 @@ https://www.youtube.com/watch?v=4IgkO7ir-s4
 
 The Jewish Lobby
 
-
 https://www.youtube.com/watch?v=vuKHkUDCVno
 
 Liberating America From Israel
@@ -2183,6 +2208,7 @@ practically dictating to the congress through influential Jewish people in the c
 J. William Fulbright
 (Senate Foreign Relations Committee Chairman, October 7, 1973)
 ```
+
 "It's so strong you wouldn't believe now. We have the Israelis coming to us for equipment. We
 can say we can't possibly get the Congress to support a program like this. They say, 'Don't worry
 about the Congress. We will take care of the Congress.' This is somebody from another country,
@@ -2216,6 +2242,7 @@ secretly and unknown in the night to undermine the pillars of the city, he infec
 so that it can no longer resist. A murderer is less to fear.”
 Marcus Tullius Cicero
 ```
+
 Dual Citizenship -- Loyal To Whom?
 by Dan Eden
 [http://www.viewzone.com/dualcitizen.html](http://www.viewzone.com/dualcitizen.html)
@@ -2256,16 +2283,17 @@ got on our government, they would rise up in arms."
 Admiral Thomas Moorer
 (former Chairman of the U.S. Joint Chiefs of Staff, 1984)
 ```
+
 The people from the United States have been taken in every which way by the Jews through their
 total ownership of all the Mass Media. So much so, that even today most believe that the Jews
 are victims of the Palestinian “terrorists”. Of course the truth is the exact opposite, the
 Ashkenazi Jews are the ones who have stolen the land and are enslaving the true people of
 
-
 Palestine. But this obvious contraction shows the strength of their relentless propaganda to
 indoctrinate everyone with their distorted lies. So, earlier this year (2012) I was happy to see
 Rick Steves,
-( [http://RickSteves.com](http://RickSteves.com) ) the wonderful tour guide of Europe, write a very brave article stating
+( [http://RickSteves.com](http://RickSteves.com) ) the wonderful tour guide of Europe, write a very brave article
+stating
 to the world that; “I’ve been duped” about how Israel has in fact been subjugating the
 Palestinians using the media to do so. The film “Peace, Propaganda, And The Promised Land”
 opened his eyes to the truth. The full documentary and Rick’s article are linked just below.
@@ -2285,6 +2313,7 @@ afraid to let its people judge truth and falsehood in an open market is a nation
 people."
 John Fitzgerald Kennedy
 ```
+
 Former President Jimmy Carter realizes the brutality done by the Jews in Israel to the
 Palestinians. He wrote a book back in 2007, “Palestine, Peace Not Apartheid”, which outlines
 many of these injustices. I saw a few interviews while he was promoting this book, and I have
@@ -2310,7 +2339,6 @@ Israel, Palestine, Peace And Apartheid
 Americans Need To Know The Facts About The Abominable Oppression Of The Palestinians
 by Jimmy Carter
 [http://www.guardian.co.uk/commentisfree/2006/dec/12/israel.politicsphilosophyandsociety](http://www.guardian.co.uk/commentisfree/2006/dec/12/israel.politicsphilosophyandsociety)
-
 
 President Jimmy Carter On US Violating Human Rights And Israel, Palestine
 Interviewed by Abby Martin
@@ -2362,7 +2390,6 @@ Pink Floyd’s Roger Waters Announces Palestine Solidarity Forum In Brazil
 [http://electronicintifada.net/blogs/ali-abunimah/we-stand-you-pink-floyds-roger-waters-](http://electronicintifada.net/blogs/ali-abunimah/we-stand-you-pink-floyds-roger-waters-)
 announces-palestine-solidarity-forum-brazil
 
-
 Roger Waters Endorses BDS And Speaks Against Israeli Anti-Boycott Law
 https://www.youtube.com/watch?v=ICrIDP6tVZM
 
@@ -2392,6 +2419,7 @@ Palestinian people from achievement their inalienable rights, especially the rig
 determination."
 Roger Waters
 ```
+
 Israel possess somewhere between 500 and 800 nuclear weapons and they have the capability of
 launching them via submarines, ICBMs and aircraft. They have openly stated that they will use
 the “Samson Option”, yet they have never officially admitted to having nuclear weapons. They
@@ -2412,7 +2440,6 @@ by Seymour Hersh
 [http://archive.org/details/Sampson_Option](http://archive.org/details/Sampson_Option)
 
 Israeli Political Insanity. The Samson Option:
-
 
 Israeli Letter-Poem To Grass: If We Go, Everyone Goes
 [http://www.globalresearch.ca/israeli-political-insanity-the-samson-option-israeli-letter-poem-to-](http://www.globalresearch.ca/israeli-political-insanity-the-samson-option-israeli-letter-poem-to-)
@@ -2466,7 +2493,6 @@ Plot To Use U.S. Technology For Israel’s Nuclear Program.
 
 Israel's Deployment Of Nuclear Missiles On Subs From Germany
 
-
 Many Have Wondered For Years About The Exact Capabilities Of The Submarines Germany
 Exports To Israel. Now, Experts In Germany And Israel Have Confirmed That Nuclear-Tipped
 Missiles Have Been Deployed On The Vessels. And The German Government Has Long Known
@@ -2507,6 +2533,7 @@ before Israel goes under.”
 Martin Van Creveld
 (Israeli military historian)
 ```
+
 We know that Israel processes nuclear weapons thanks to Mordechai Vanunu who had worked
 on the Israeli nuclear weapons program for many years. In 1986 he approached the London
 Sunday Times and handed them sixty photographs proving Israel’s possession of nuclear
@@ -2518,7 +2545,6 @@ approached rival paper the Sunday Mirror with his story. At this point the paper
 Robert Maxwell tipped off the Mossad who decided to arrest Vanunu, but decided to do it off
 British soil to avoid embarrassing Israel’s ally, then Prime Minister Margaret Thatcher.
 American born Israeli Cheryl Hanin was given the cover name "Cindy" and dispatched to
-
 
 London to pick up Vanunu in a classic honey trap. After a short affair in London “Cindy”
 persuaded Vanunu to accompany her to Rome, where he was drugged by Israeli intelligence
@@ -2549,6 +2575,7 @@ emid=156
 William "Bill" Kristol
 (Warmongering Jew)
 ```
+
 The Jews are also well known for their false flag operations. False flags are covert operations
 designed to deceive in such a way that the operations appear as though they are being carried
 out by other entities. The Israeli intelligence agency the Mossad is masterful at pulling off false
@@ -2567,7 +2594,6 @@ The Lavon Affair: When Israel Firebombed U.S. Installations
 by Richard H. Curtiss
 [http://www.wrmea.org/wrmea-archives/141-washington-report-archives-1988-1993/july-](http://www.wrmea.org/wrmea-archives/141-washington-report-archives-1988-1993/july-)
 1992/6852-the-lavon-affair-when-israel-firebombed-us-installations.html
-
 
 The Lavon Affair
 Is History Repeating Itself?
@@ -2620,7 +2646,6 @@ https://www.youtube.com/watch?v=fFQrsdj7BLs
 by Mark R. Elsis
 [http://911Timeline.net](http://911Timeline.net)
 
-
 9/11: Explosive Evidence - Experts Speak Out (Film)
 by Architects and Engineers for 9/11 Truth
 https://www.youtube.com/watch?v=4tTMMNTisBM
@@ -2671,7 +2696,6 @@ by Christopher Bollyn
 
 Solving 9/11: The Deception That Changed The World
 by Christopher Bollyn
-
 
 [http://zioncrimefactory.com/wp-content/uploads/2012/07/911-Deception-That-Changed-the-](http://zioncrimefactory.com/wp-content/uploads/2012/07/911-Deception-That-Changed-the-)
 World-by-Chris-Bollyn.pdf
@@ -2724,7 +2748,6 @@ to make the present century a century of conflict between Islam and Christianity
 government must be asked as to who carried out the attacks. ... The American system is totally in
 control of the Jews, whose first priority is Israel, not the United States."
 Usama bin Laden
-
 
 History Of Jewish Terrorism
 
@@ -2780,6 +2803,7 @@ In America you can criticize God, but you can't criticize Israel."
 ```
 Tzipora Menache
 ```
+
 A Few Other Recent False Flag Events Of History Brought To Us By The Mossad
 
 Israeli Foreknowledge Of The Bombing Of US Marines In Beirut, 1983
@@ -2827,7 +2851,6 @@ by Adam Curtis
 
 Did Israel Bomb The U.S.S. Cole? It Looks Like It
 
-
 [http://www.rumormillnews.com/cgi-bin/archive.cgi?read=23860](http://www.rumormillnews.com/cgi-bin/archive.cgi?read=23860)
 
 The USS Cole Bombing
@@ -2845,6 +2868,7 @@ https://www.youtube.com/watch?v=M84l19H68mk
 “By way of deception, thou shall do war”
 Mossad
 ```
+
 The Katyn forest massacre cover-up is a perfect example of how the Jewish forces in the United
 States and Britain tried to blame the Germans, all the while knowing it was the Jews of the
 Soviet Union. The Katyn Forest is near the village of Gneizdovo, a short distance from Smolensk
@@ -2879,7 +2903,6 @@ famine and starvation in the Ukraine.
 
 Katyn Forest Massacre Documents Kept Under Wraps By US: Report
 
-
 The Russians' Katyn Forest Massacre Of Polish Officials Was Covered Up At The Highest
 Levels Of US Government, Documents Released Monday Show.
 by Talia Ralph
@@ -2890,6 +2913,7 @@ massacre-kept-secret-american-government
 "There is none so blind as he who will not see."
 Jesus Christ
 ```
+
 The Jewish holiday of Purim commemorates the Old Testament's Book of Esther, which hails
 the genocide of 75,000 Persians as a result of the scheming of Esther, the Jewish bride of the
 Persian king. No other Jewish holiday, all of which in one form or another celebrate the defeat
@@ -2921,13 +2945,13 @@ Purim - The Jew Cannibal Feast
 non-Jews, blessed be all Jews."
 The Jew says Purim (Orach Chaim, 660, 16.)
 ```
+
 Out of the almost 200 countries on our planet, Israel was just ranked as world's most militarized
 nation. Israel has topped the list of the world’s most militarized countries, according to the latest
 Global Miniaturization Index released on November 14, 2012, by the Bonn International Centre
 for Conversion (BICC). In 2009 Israel’s military spending accounted for 15.1% of the country’s
 budget. It was the biggest defense spender as a percentage of gross domestic product (GDP out of
 all developed countries. I am sure by now that you are beginning to realize everything you have
-
 
 been taught (brainwashed from birth) about the Jews and their “Promised Land” is a gigantic
 lie.
@@ -2949,6 +2973,7 @@ We Jews are today nothing else but the World's seducers, its destroyers, its inc
 executioners.'
 Oscar Ludwig Levy
 ```
+
 There is a myth that has been propagated that Germany has been an aggressive nation
 throughout its history. The documented facts however prove otherwise. A Study of War by
 Professor Quincy Wright, shows that during the years from 1480 to 1940 there were 278 wars
@@ -2977,7 +3002,6 @@ the Jews and started to issue usury free Reichsmarks. This is what created the e
 Within three years during the Great Depression, Germany under Adolf Hitler went from 30%
 unemployed to full employment. But the Jews needed a lie for the history books, so you have
 been told she armed her way out of it.
-
 
 Pretty much everything you ever learned about Germany was a lie to deceive you. One of the
 biggest lies was that Adolf Hiltler wanted to take over the world. It is prosperous brainwashing
@@ -3028,7 +3052,6 @@ https://www.youtube.com/watch?v=TVU3I8dRtto
 Ernst Zundel Interviews Professor Roger Dommergue In France Part 3
 https://www.youtube.com/watch?v=FqR0SHMsEMA
 
-
 The anti-German and anti-Hitler brainwashing propaganda by the Jewish owned media sources
 is quite relentless and very thorough. If you ask the question, who is the most evil person in
 history? The answer almost always is Adolf Hitler. Or, when people try to describe evil, they say
@@ -3048,6 +3071,7 @@ Christian wars. Over 100 million Christians have been swept off the face of the 
 and the end is not yet."
 Rabbi Reichorn
 ```
+
 Kristallnacht or Night of Broken Glass occurred after German diplomat Ernst vom Rath was
 gunned down by a German-born Polish Jew assassin Herschel Grynszpan in Paris in 1938. The
 German people finally had it with the Jews and this assassination was the straw that broke the
@@ -3087,6 +3111,7 @@ Destroy their holy sites.
 Kill men, women and children (and cattle)."
 Chabad Lubavitch Rabbi Manis Friedman
 ```
+
 This timeline from the Jew-created Wikipedia lists most of the justified backlash against the
 Jews throughout the last 2,500 years. It speaks volumes and should open one’s eyes about how
 every country and culture has tried to limit these savages time and time again. Just two from the
@@ -3105,6 +3130,7 @@ https://en.wikipedia.org/wiki/Timeline_of_antisemitism
 Now it means a man who is hated by Jews."
 Joseph Sobran
 ```
+
 The following links illuminate why the Jews have been scorned. It is because of their
 misanthropy (that is, hatred of mankind in general) throughout history. After reading the truth
 one ceases to wonder why this one group of people have been relentlessly ostracized and one soon
@@ -3129,7 +3155,6 @@ by Dr. Kevin MacDonald
 Understanding Jewish Influence II:
 Zionism And The Internal Dynamics Of Judaism
 by Dr. Kevin MacDonald
-
 
 [http://www.toqonline.com/archives/v3n3/TOQv3n3MacDonald.pdf](http://www.toqonline.com/archives/v3n3/TOQv3n3MacDonald.pdf)
 
@@ -3183,7 +3208,6 @@ https://www.youtube.com/watch?v=3AaXFeRtR58
 "I still remember old Jews spitting while passing by a church, and cursing while passing by a
 Christian cemetery. Last year in Jerusalem, a Jew decided to refresh the tradition. He spat at the
 
-
 ```
 Holy Cross carried in the procession in the city. Last year, the biggest Israeli tabloid Yedioth
 Aharonoth reprinted in its library the Jewish anti-Gospel, "Toledoth Eshu." It is the book of
@@ -3195,6 +3219,7 @@ Testament Gospel [sic] is called Avon Gilaion, "the booklet of sin." These are t
 feelings that the friends of Christian Zionists maintain toward Christ."
 Israel Shamir
 ```
+
 The following peace activists all went to Palestine to try and help a people that almost the whole
 world has turned their backs on. The Jews murdered five out of the six of these brave heroes.
 The sixth was shot in the head but lived. Only one Jew was ever bought to any kind of justice (a
@@ -3235,7 +3260,6 @@ by Donald Macintyre
 [http://www.independent.co.uk/news/world/middle-east/israels-inquiry-into-death-of-activist-](http://www.independent.co.uk/news/world/middle-east/israels-inquiry-into-death-of-activist-)
 rachel-corrie-not-credible-says-us-8076876.html
 
-
 The Murder Of Rachel Corrie And The Israeli Court Coverup
 by Anthony Lawson
 [http://rense.com/general95/murderofrachel.html](http://rense.com/general95/murderofrachel.html)
@@ -3268,6 +3292,7 @@ Rachel-Corrie.com - Articles, Photos, Writings On Israel's Murder Of Rachel Corr
 beautiful, strong - even in the most difficult circumstances."
 Rachel Corrie
 ```
+
 On April 5, 2003, Brian Avery, an American volunteering for the International Solidarity
 Movement in the West Bank town of Jenin, was shot in the face by Israel Defense Forces. The
 shooting, which according to Human Rights Watch was "unprovoked and did not occur in the
@@ -3286,7 +3311,6 @@ The Brian Avery Shooting: When Will We Realise
 That There Can’t Be This Many "Accidents"?
 by Nigel Parry
 
-
 [http://electronicintifada.net/content/brian-avery-shooting-when-will-we-realise-there-cant-be-](http://electronicintifada.net/content/brian-avery-shooting-when-will-we-realise-there-cant-be-)
 many-accidents/4510
 
@@ -3301,6 +3325,7 @@ I can safely promise you that before ten years have passed, our race will take i
 the world, with every Jew a king and every Gentile a slave."
 Rabbi Rabbinovitch
 ```
+
 On April 11, 2003, Tom Hurndall, a British photography student, a volunteer for the
 International Solidarity Movement (ISM), and an activist against the Israeli occupation of the
 Palestinian territories was shot in the head in the Gaza Strip by an Israel Defense Forces sniper,
@@ -3330,13 +3355,13 @@ As His Journey Became More Difficult, Are Published In A New Book
 “The prerequisite for action is the will and the courage to be truthful.”
 Adolf Hitler
 ```
+
 On May 2, 2003, James Miller, a Welsh cameraman, producer, and director, and recipient of
 numerous awards, including five Emmy Awards was killed by a single shot fired by a soldier
 from the Israel Defense Forces while filming a documentary in Rafah. The soldier who shot him
 was identified in the press as Captain Hib al-Heib, a Bedouin Arab in the IDF. The Israeli
 Military Police investigation into Miller's death closed on March 9, 2005 with an announcement
 that the soldier suspected of firing the shot would not be indicted, as they could not establish that
-
 
 his shot was responsible. On April 6, 2006, the inquest jury at Saint Pancras Coroner's Court in
 London returned a verdict of unlawful killing, finding that Miller had been "murdered." After
@@ -3359,6 +3384,7 @@ James Miller Murdered By Jews
 One can hardly prove to a Jew that one has the duty to render him harmless."
 Dr. Joseph Goebbels
 ```
+
 Iain John Hook was working for the United Nations Relief and Works Agency for Palestine
 Refugees in the Near East as project manager in the rebuilding of Jenin Refugee Camp in West
 Bank, which was home to 13,000 Palestinian refugees. He was shot and killed by an Israel
@@ -3388,7 +3414,6 @@ by Chris McGreal
 Heart Of Jenin (Film)
 [http://www.pbs.org/wnet/wideangle/episodes/heart-of-jenin/videofull-episode/5120](http://www.pbs.org/wnet/wideangle/episodes/heart-of-jenin/videofull-episode/5120)
 
-
 ```
 "It is the duty of Israeli leaders to explain to public opinion,
 clearly and courageously, a certain number of facts that are forgotten with time.
@@ -3396,18 +3421,19 @@ The first of these is that there is no Zionism, colonialization, or Jewish State
 without the eviction of the Arabs and the expropriation of their lands."
 Ariel Sharon
 ```
+
 Vittorio Arrigoni worked with the pro-Palestinian International Solidarity Movement in the
 Gaza Strip, from 2008 until his death. Arrigoni maintained a website, Guerrilla Radio, and
 published a book (Gaza: Stay Human) of his experiences in Gaza during the 2008-09 Gaza War
 between Hamas and Israel. He was kidnapped on April 14, 2011 and murdered on April 15,
 
 2011. Although Arrigoni was killed by suspected members of the Palestinian Salafist group
-Jahafil Al-Tawhid Wal-Jihad fi Filastin, some blamed Israel for the murder. In spite of the fact
-that Hamas identified the perpetrators with a Palestinian group affiliated with al Qaeda, Hamas
-spokesman Fawzi Barhoum said he suspected Israel might be responsible since the death
-appeared to be timed to deter foreign activists from joining a flotilla due to sail to Gaza in May
-to break Israel's naval blockade of the area. Only Israel would want this loving and peaceful
-man killed.
+      Jahafil Al-Tawhid Wal-Jihad fi Filastin, some blamed Israel for the murder. In spite of the fact
+      that Hamas identified the perpetrators with a Palestinian group affiliated with al Qaeda, Hamas
+      spokesman Fawzi Barhoum said he suspected Israel might be responsible since the death
+      appeared to be timed to deter foreign activists from joining a flotilla due to sail to Gaza in May
+      to break Israel's naval blockade of the area. Only Israel would want this loving and peaceful
+      man killed.
 
 Staying Human
 A Documentary About Vittorio Arrigoni, The Italian Peace Activist
@@ -3429,7 +3455,8 @@ Mossad Killed - Vik Vittorio Arrigoni
 [http://www.youtube.com/watch?v=mSxiQZ6iaNs](http://www.youtube.com/watch?v=mSxiQZ6iaNs)
 
 Vik: A Friend, A Brother, A Humanist
-[http://ingaza.wordpress.com/2011/04/15/vik-a-](http://ingaza.wordpress.com/2011/04/15/vik-a-) friend-a- brother-a-humanist
+[http://ingaza.wordpress.com/2011/04/15/vik-a-](http://ingaza.wordpress.com/2011/04/15/vik-a-) friend-a-
+brother-a-humanist
 
 Israeli Mossad Assassinated Vittorio Arrigoni
 [http://www.youtube.com/watch?v=_b6TR2KMT3Q](http://www.youtube.com/watch?v=_b6TR2KMT3Q)
@@ -3438,7 +3465,6 @@ Vittorio Arrigoni, The Man Who Saw Too Much .... Knew Too Much
 So.... The Mossad Had No Other Choice But To Kill Him
 [http://desertpeace.wordpress.com/2011/04/17/vittorio-arrigoni-the-man-who-saw-too-much-](http://desertpeace.wordpress.com/2011/04/17/vittorio-arrigoni-the-man-who-saw-too-much-)
 knew-too-much
-
 
 Vittorio Arrigoni Kidnapping, Who Benefits? Israel - Ken O'Keefe
 [http://www.youtube.com/watch?v=5pVb9b0uO90](http://www.youtube.com/watch?v=5pVb9b0uO90)
@@ -3455,6 +3481,7 @@ Arrigoni%20Stay%20Human&link_code=qs&tag=celebritywebsi05
 “I have seen my brother Vik’s body and his death certificate, but Vik is not dead.”
 Ken O’Keefe
 ```
+
 The Gaza Freedom Flotilla Massacre was committed under the cover darkness in International
 waters on May 31, 2010, by ruthless Israel Defense Force pirates. These Jews forced themselves
 on board the Turkish ship the MV Mavi Marmara, where they proceeded to murder nine
@@ -3489,7 +3516,6 @@ Gaza Flotilla Massacre: Israeli Pirates Of The Mediterranean
 Turkey Resumes Gaza Flotilla Trial For Ex-IDF Heads
 by Yonah Jeremy Bob
 [http://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=304027](http://www.jpost.com/DiplomacyAndPolitics/Article.aspx?id=304027)
-
 
 Ship To Gaza
 [http://shiptogaza.se](http://shiptogaza.se)
@@ -3574,6 +3600,7 @@ Nothing you can do will meet our demands and needs.
 We will forever destroy because we want a world of our own."
 Maurice Samuels
 ```
+
 The Gaza beach blast was an incident on June 9, 2006 in which eight Palestinians were killed and
 at least thirty others injured in an explosion on a beach near the municipality of Beit Lahia in the
 Gaza Strip. The aftermath of the incident was captured on video and showed a distressed eleven-
@@ -3593,7 +3620,6 @@ Israeli Navy Fires On Family Picnicing On Beach
 Huda Ghalia - Tears Of Hope In A Sea Of Grief
 by Hiyam Noir
 
-
 [http://www.uruknet.de/?p=41345](http://www.uruknet.de/?p=41345)
 
 ```
@@ -3601,6 +3627,7 @@ by Hiyam Noir
 for it was false through and through."
 Adolf Hitler
 ```
+
 The Samouni Family Massacre - According to accounts by family members, on January 4, 2009,
 the first day of the Israeli incursion, the Samouni family were ordered out of their houses (most
 of them were later demolished) by Israeli soldiers and told to gather in a nearby home. They
@@ -3637,12 +3664,12 @@ This tiny community have become a world power.”
 Dr. Mahathir Mohamed
 (Former Malaysian Prime Minister)
 ```
+
 Over the years Israel has murdered thousands of Palestinian children and adults with total
 impunity. Why does the world let these Jews keep killing innocent people?
 
 'Israel Killed 1,335 Palestinian Kids' (Video and Text)
 A Recent UN Report Confirms That At Least 1,300 Palestinian Children
-
 
 Have Been Killed By Israeli Forces Since The Outset Of The al-Aqsa Uprising In 2000.
 [http://www.presstv.ir/detail/178789.html](http://www.presstv.ir/detail/178789.html)
@@ -3697,7 +3724,6 @@ In What They Can Bring Into And Send Out Of Their Land,
 Even How Far Off Their Shores They Can Fish.
 Words, Though, Know No Borders.
 
-
 by Jamal Mahjoub
 [http://www.guernicamag.com/features/life-under-lockdown](http://www.guernicamag.com/features/life-under-lockdown)
 
@@ -3747,9 +3773,9 @@ Two IDF Soldiers Charged With Using 9-Year-Old 'Human Shield' In Gaza War
 IDF Court Free Soldier Convicted Of Beating Palestinian,
 Rejects Demand To Return Officer To The Ranks.
 by Anshel Pfeffer
-[http://www.haaretz.com/news/two-idf-soldiers-charged-with-using-9-](http://www.haaretz.com/news/two-idf-soldiers-charged-with-using-9-) year-old-human-shield-in-
+[http://www.haaretz.com/news/two-idf-soldiers-charged-with-using-9-](http://www.haaretz.com/news/two-idf-soldiers-charged-with-using-9-)
+year-old-human-shield-in-
 gaza-war-1.264652
-
 
 Israel Soldier Palestine Girl
 https://www.youtube.com/watch?v=SQyIKyd2gqA
@@ -3763,6 +3789,7 @@ https://www.youtube.com/watch?v=4vprhpeLI5Y
 World Government will be achieved by conquest or consent.”
 James P. Warburg
 ```
+
 Israel now uses what is known as game theory warfare to create havoc anywhere it wants
 throughout the world. Like a chess champion thinking many steps ahead, this sophisticated
 strategy uses mathematical models to ensure an intended response to their manipulated staged
@@ -3801,7 +3828,6 @@ A Closer Look At Israel's Role In Terrorism
 
 Criminal State - Part 2 of 3:
 A Closer Look At Israel's Role In Terrorism
-
 
 [http://www.youtube.com/watch?v=GxhMmjDlIC0](http://www.youtube.com/watch?v=GxhMmjDlIC0)
 
@@ -3851,7 +3877,6 @@ Mossad's Murder Machine Claims Another Scientist's Life
 In Israeli Bid To Stop Iran Building A Nuclear Bomb
 by Michael Burleigh
 
-
 [http://www.dailymail.co.uk/news/article-2022641/Mossads-murder-machine-claims-scientists-](http://www.dailymail.co.uk/news/article-2022641/Mossads-murder-machine-claims-scientists-)
 life-Israeli-bid-stop-Iran-building-nuclear-bomb.html
 
@@ -3875,6 +3900,7 @@ Abducted Iranian Diplomats In Israeli Jails: Envoy
 and what is hidden will become clear to you."
 Jesus Christ
 ```
+
 The final nail in our coffin may very well be the Jews stealing the faith from the Christians from
 right out under them. The Jews subverted the Roman Catholic Church at the Second Vatican
 Council. The council, through the Holy See, formally opened under the pontificate of Pope John
@@ -3902,7 +3928,6 @@ Declaration On The Jews
 
 Converts Who Changed The Church
 Jewish-Born Clerics Helped Push Vatican II Reforms
-
 
 by John Connelly
 [http://forward.com/articles/159955/converts-who-changed-the-church/?p=all](http://forward.com/articles/159955/converts-who-changed-the-church/?p=all)
@@ -3944,6 +3969,7 @@ and to be guided by truth as one sees it. But no one has a right
 to coerce others to act according to his own view of truth."
 Mohandas K. Gandhi
 ```
+
 Can the Jews trace integral components of their heritage to the famed and mysterious
 Neanderthal? This theory may sound preposterous on first hearing about it, yet there are many
 interesting aspects that ring true. Keep an open mind, take a look through the links provided
@@ -3955,7 +3981,6 @@ Chosen People From The Caucasus:
 Jewish Origins, Delusions, Deceptions And Historical Role In The Slave Trade,
 Genocide And Cultural Colonization
 Michael Anderson Bradley
-
 
 [http://www.amazon.com/gp/product/0883781476/ref=ox_sc_act_title_5?ie=UTF8&smid=A18BE](http://www.amazon.com/gp/product/0883781476/ref=ox_sc_act_title_5?ie=UTF8&smid=A18BE)
 LNG8RCECA
@@ -4014,6 +4039,7 @@ However, I will warn everyone that it may well be too late.”
 ```
 Michael Anderson Bradley
 ```
+
 The ringworm affair shows the utter contempt the Ashkenazi Jews have for the Sephardim Jews.
 In the late 1940s and the 1950s tens of thousands of immigrant Sephardim Jew children (mostly
 Moroccan) underwent radiation against ringworm. Every Sephardim child was to be given
@@ -4061,13 +4087,13 @@ scourge of scalpal ringworm. 6,000 of the children died shortly after their dose
 many of the rest developed cancers that killed thousands over time and are still killing them now.
 While living, the victims suffered from disorders such as epilepsy, amnesia, Alzheimer's disease,
 
-
 ```
 chronic headaches and psychosis. ...The film presents a historian who first gives a potted history
 of the eugenics movement. In a later sound bite, he declares that the ringworm operation was a
 eugenics program aimed at weeding out the perceived weak strains of society.”
 Barry Chamish
 ```
+
 There is a worldwide blowback against Israel. It is the movement called; Boycott, Divestment
 and Sanctions. The following is their statement of purpose: For decades, Israel has denied
 Palestinians their fundamental rights of freedom, equality, and self-determination through
@@ -4109,7 +4135,6 @@ US Campaign For The Academic and Cultural Boycott of Israel
 [http://www.usacbi.org](http://www.usacbi.org)
 
 BDS Campaigner Omar Barghouti Lecture (Video and Text)
-
 
 [http://electronicintifada.net/blogs/ali-abunimah/watch-bds-campaigner-omar-barghouti-lecture-](http://electronicintifada.net/blogs/ali-abunimah/watch-bds-campaigner-omar-barghouti-lecture-)
 and-conversation-amy-goodman-santa-fe
@@ -4163,7 +4188,6 @@ Boycott '729' Barcode
 
 Boycott Apartheid Israel 729 Is Spreading: George Galloway
 
-
 https://www.youtube.com/watch?v=bhM8xOp7R18
 
 ```
@@ -4175,6 +4199,7 @@ Over the past six months, a similar movement has taken shape,
 this time aiming at an end to the Israeli occupation".
 Bishop Desmond Tutu
 ```
+
 Sayanim are Jewish spies. They could be your doctor, dentist, CPA, lawyer or your next-door
 neighbor. They are working everywhere and all the time to steal important information, and if
 we say or do anything against the Jews or Israel they will inform on us back to their handlers,
@@ -4190,7 +4215,7 @@ agent but part of a “rogue” operation. That was a lie. Only 12 years later d
 that he was an Israeli spy the entire time he was stealing U.S. military top secrets. That espionage
 
 - by a purported ally - damaged our national security more than any operation in U.S. history. In
-short, Israel played us for the fool."
+  short, Israel played us for the fool."
 
 Sayanim - Israeli Operatives In The U.S
 by Jeff Gates
@@ -4217,13 +4242,13 @@ one__
 The Making Of A Sayanim
 The Secret Jewish Network
 
-
 [http://blockyourid.com/~gbpprorg/judicial-inc/Sayanim.htm](http://blockyourid.com/~gbpprorg/judicial-inc/Sayanim.htm)
 
 ```
 "Anti-Semitism is a disease - you catch it from Jews."
 Edgar Steele
 ```
+
 The Kosher Tax is yet another shakedown to the Jew mafia. As Geraldo Fuentes writes: "Jews
 that observe traditions of the Torah and Talmud adhere to strict dietary laws that prohibit
 certain food combinations, methods of slaughter and eating certain "unclean" animals, such as
@@ -4259,6 +4284,7 @@ We are disturbers. We are subverters. We have taken your natural world, your ide
 destiny, and played havoc with them.”
 Marcus Eli Ravage
 ```
+
 The Jews have been assassins throughout history. If they have not themselves carried out the
 assassinations, they were almost always the people who paid the assassins to do so. Assassinations
 are just another nefarious weapon in the Jewish arsenal meant to destabilize a country or its
@@ -4266,7 +4292,6 @@ people so they can gain control or completely take over.
 
 Another way the Jews take total control of a host country is to disarm the citizens. This has
 occurred many times throughout history, most notable in the former Soviet Union after the 1917
-
 
 Jewish Communist Revolution. The guns were taken away and then upwards of 66 million
 mostly Christian people were systematically murdered. The same modus operandi is now
@@ -4320,7 +4345,6 @@ by Joseph Sobran
 Assassination Of President McKinley Was By Jews!
 by Brother Nathanael
 
-
 [http://www.realjewnews.com/?p=169](http://www.realjewnews.com/?p=169)
 
 American Citizen [Alex Odeh] Killed In California by Zionist Terrorists (Video and Text)
@@ -4373,7 +4397,6 @@ by Dr. Eowyn
 https://fellowshipofminds.wordpress.com/2013/01/16/guide-for-how-to-talk-to-children-about-
 sandy-hook-pre-dated-the-massacre
 
-
 The Sandy Hook Shooting - Fully Exposed
 https://www.youtube.com/watch?v=Wx9GxXYKx_8
 
@@ -4425,7 +4448,6 @@ Massacre Survivor Defends Gun Rights (Video)
 
 Senate To Go For Handguns
 Feinstein Bill Will Require ‘Grandfathered Weapons Be Registered’;
-
 
 Calls For Owners To Be Fingerprinted.
 [http://conservativebyte.com/2012/12/senate-to-go-for-handguns/#ixzz2GIyKGplq](http://conservativebyte.com/2012/12/senate-to-go-for-handguns/#ixzz2GIyKGplq)
@@ -4480,7 +4502,6 @@ https://www.youtube.com/watch?v=jc7glvJ1gEo
 
 The Newtown School Tragedy: More Than One Gunman?
 
-
 Sandy Hook's Disappearing Shooter Suspects
 by Professor James F. Tracy
 [http://www.globalresearch.ca/the-newtown-school-tragedy-more-than-one-gunman/5316313](http://www.globalresearch.ca/the-newtown-school-tragedy-more-than-one-gunman/5316313)
@@ -4511,6 +4532,7 @@ https://www.youtube.com/watch?v=-zy227hN5B0
 their own understanding of their history."
 George Orwell
 ```
+
 It is little known that when one searches for information on the Internet, perhaps the
 information is actually disinformation put there on purpose by an Israeli being paid to do just
 that. This is done to create and shape the reality with a positive spin for Israel and a negative
@@ -4530,7 +4552,6 @@ Israeli Students To Get $2,000 To Spread State Propaganda On Facebook
 propaganda-facebook
 
 Israel's Cyber Warriors Knock Duke Off YouTube
-
 
 by Reverend Ted Pike
 [http://rense.com/general92/oscu.htm](http://rense.com/general92/oscu.htm)
@@ -4585,7 +4606,6 @@ https://www.youtube.com/watch?v=agFikke6lhk
 
 Christian Zionism Choose War, Not Peace
 
-
 [http://charlesecarlson.com](http://charlesecarlson.com)
 
 We Hold These Truths -- A Strait Gate Ministry
@@ -4598,6 +4618,7 @@ necessary element in the higher development of mankind.
 Therefore, the Jewish intellect will never be constructive, but always destructive."
 Adolf Hitler
 ```
+
 The Jews murdered General George S. Patton. Why? He finally figured out that they must have
 been the perpetrators behind starting World War II; and he was about to go public to the
 American people and the world with this groundbreaking information.
@@ -4637,7 +4658,6 @@ Patton On Communism And The Khazar Jews
 General Patton's Warning
 Edited by Raquel Baranow
 
-
 [http://rense.com/general85/pats.htm](http://rense.com/general85/pats.htm)
 
 General Patton Was Murdered Because He Found Out The Truth
@@ -4661,6 +4681,7 @@ Harrison and his ilk believe that the Displaced Person is a human being, which h
 applies particularly to the Jews, who are lower than animals."
 General George Patton’s diary entry for September 17, 1945
 ```
+
 One last piece of important history you should know about the self called “Chosen People”.
 When Abraham Lincoln created the usury free Greenbacks instead of the 24% to 36% usury the
 Wall Street Jewish bankers wanted to charge, he was assassinated on April 14, 1865, which was
@@ -4688,7 +4709,6 @@ assassination-mossadjewish-connections
 
 Opium Lords
 Israel, The Golden Triangle And The Kennedy Assassination
-
 
 by Salvador Astucia
 [http://www.jfkmontreal.com/jfkpage.h](http://www.jfkmontreal.com/jfkpage.h)
@@ -4718,6 +4738,7 @@ The brains and wealth of all countries will go to North America. That government
 destroyed or it will destroy every monarchy on the globe.
 A 1865 London Times editorial directed against Lincoln's usury free Greenbacks
 ```
+
 ```
 "We were not foolish enough to try to make a currency [backed by] gold of which we had none,
 but for every Mark that was issued we required the equivalent of a mark's worth of work done
@@ -4725,11 +4746,13 @@ or goods produced... .We laugh at the time our national financiers held the view
 of a currency is regulated by the gold and securities lying in the vaults of a state bank."
 Adolf Hitler
 ```
+
 ```
 “There’s a plot in this county to enslave every man, woman and child.
 Before I leave this high and noble office, I intend to expose this plot.”
 John Fitzgerald Kennedy
 ```
+
 The following essay was published in Der Angriff, January 21, 1929. Joseph Goebbels founded
 the newspaper in Berlin in 1927 shortly after taking over as the party’s leader.
 
@@ -4765,30 +4788,30 @@ That is what would happen to us as well were we not fully aware of his nature, a
 the courage to draw the following radical conclusions:
 
 1. One cannot fight the Jew by positive means. He is a negative, and this negative must be erased
-from the German system, or he will forever corrupt it.
+   from the German system, or he will forever corrupt it.
 2. One cannot discuss the Jewish question with the Jews. One can hardly prove to a person that
-one has the duty to render him harmless.
+   one has the duty to render him harmless.
 3. One cannot allow the Jew the same means one would give an honest opponent, for he is no
-honorable opponent. He will use generosity and nobility only to trap his enemy.
+   honorable opponent. He will use generosity and nobility only to trap his enemy.
 4. The Jew has nothing to say about German questions. He is a foreigner, an alien, who only
-enjoys the rights of a guest, rights that he always abuses.
+   enjoys the rights of a guest, rights that he always abuses.
 5. The so-called religious morality of the Jews is no morality at all, rather an encouragement to
-betrayal. Therefore, they have no claim to protection from the state.
+   betrayal. Therefore, they have no claim to protection from the state.
 6. The Jew is not smarter than we are, rather only cleverer and craftier. His system cannot be
-defeated economically — he follows entirely different moral principles than we do. It can only be
-broken through political means.
+   defeated economically — he follows entirely different moral principles than we do. It can only be
+   broken through political means.
 7. A Jew cannot insult a German. Jewish slanders are but badges of honor for a German
-opponent of the Jews.
+   opponent of the Jews.
 8. The more a German person or a German movement opposes the Jew, the more valuable it is.
-If someone is attacked by the Jews, that is a sure sign of his virtue. He who is not persecuted by
-the Jews, or who is praised by them, is useless and dangerous.
+   If someone is attacked by the Jews, that is a sure sign of his virtue. He who is not persecuted by
+   the Jews, or who is praised by them, is useless and dangerous.
 
 
 9. The Jew evaluates German questions from the Jewish standpoint. As a result, the opposite of
-what he says must be true.
+   what he says must be true.
 10. One must either affirm or reject anti-Semitism. He who defends the Jews harms his own
-people. One can only be a Jewish lackey or a Jewish opponent. Opposing the Jews is a matter of
-personal hygiene.
+    people. One can only be a Jewish lackey or a Jewish opponent. Opposing the Jews is a matter of
+    personal hygiene.
 
 These principles give the anti-Jewish movement a chance of success. Only such a movement will
 be taken seriously by the Jews, only such a movement will be feared by them.
@@ -4831,8 +4854,8 @@ would not some day become deadly to the human race."
 Voltaire
 (1771)
 ```
-### -------------------------------------------------------
 
+### -------------------------------------------------------
 
 # 50 Sections Of Evidence
 
@@ -4851,12 +4874,13 @@ Adolf Hitler
 Hitler Discovers Holocaust Denial And Revisionism
 https://www.youtube.com/watch?v=mOQO0DQkJ0E
 ```
+
 1) Today There Is No Free Speech Or Debate Allowed On The So Called Holocaust In 17
-Countries And The Jews Are Desperately Trying To Get Similar Laws In Every Other Country
-Under The Thinly Veiled Cunning Pretext Of Hate Speech - The Brave People Who Have
-Published, Written Or Spoken Out Have Been Ostracized, Vilified, Reticulated, Set Up,
-Threatened, Lost Their Jobs, Bankrupted, Beaten Up, Fire Bombed, Imprisoned And Killed Just
-For Telling The Truth On This Historical Subject
+   Countries And The Jews Are Desperately Trying To Get Similar Laws In Every Other Country
+   Under The Thinly Veiled Cunning Pretext Of Hate Speech - The Brave People Who Have
+   Published, Written Or Spoken Out Have Been Ostracized, Vilified, Reticulated, Set Up,
+   Threatened, Lost Their Jobs, Bankrupted, Beaten Up, Fire Bombed, Imprisoned And Killed Just
+   For Telling The Truth On This Historical Subject
 
 The only subject in the world you are not allowed to debate is the 6,000,000 Jew figure.
 Questioning the magic six million figure is now a “thought crime” which can get you sent to
@@ -4878,7 +4902,6 @@ The Universal Declaration Of Human Rights - Article 19
 hold opinions without interference and to seek, receive and impart information and ideas
 through any media and regardless of frontiers."
 Adopted by the United Nations General Assembly on December 10, 1948, in Paris.
-
 
 [http://www.un.org/en/documents/udhr/index.shtml#a19](http://www.un.org/en/documents/udhr/index.shtml#a19)
 
@@ -4933,7 +4956,6 @@ Who Was Murdered In 1978, Is Apparently The First Person To Be Killed
 Because Of His Support For Holocaust Revisionism.
 [http://www.revisionists.com/revisionists/duprat.html](http://www.revisionists.com/revisionists/duprat.html)
 
-
 Testing The Limits Of Freedom Of Speech:
 Ernst Zundel Speaks Out After Suffering Innocently In Prison For Seven Years
 An Exclusive Interview With One Of Europe's Most Well-Known Political Prisoners
@@ -4984,7 +5006,6 @@ by Michael Hoffman
 The Stone In The Synagogue's Shoe
 by Michael Hoffman
 
-
 [http://revisionistreview.blogspot.com/2012/10/the-stone-in-synagogues-shoe.html](http://revisionistreview.blogspot.com/2012/10/the-stone-in-synagogues-shoe.html)
 
 Gutsy Bishop Refuses To Recant Beliefs
@@ -5023,7 +5044,9 @@ Jewish Groups Demand Ban On Revisionist Writings
 Horst Mahler Jailed
 The revisionist, political activist and lawyer Horst Mahler has been sentenced to six years in a
 German prison. This is his final statement before verdict and imprisonment on February 25,
+
 2009.
+
 [http://www.jailingopinions.com/mahler-last.htm](http://www.jailingopinions.com/mahler-last.htm)
 
 Canadian Patriot Arthur Topham Arrested
@@ -5037,7 +5060,6 @@ by Michael Hoffman
 Holocaust Denier Extradited To Germany For Prison Term
 Gerhard Ittner Spent Seven Years On The Run Before His April Capture In Portugal
 [http://www.timesofisrael.com/holocaust-denier-extradited-to-germany-for-prison-term](http://www.timesofisrael.com/holocaust-denier-extradited-to-germany-for-prison-term)
-
 
 No More Respite For Günter Deckert Who Is Set To Enter Prison On January 2nd
 [http://carolynyeager.net/node/1090](http://carolynyeager.net/node/1090)
@@ -5069,6 +5091,7 @@ And if you can live amid injustice without anger,
 you are immoral as well as unjust."
 Saint Thomas Aquinas
 ```
+
 2) Holocaust Survivors
 
 If the Germans wanted to murder all the Jews, there wouldn't have been any survivors.
@@ -5086,7 +5109,6 @@ The Number Of Holocaust Survivors
 [http://thisiszionism.blogspot.com/2007/11/number-of-holocaust-survivors.html](http://thisiszionism.blogspot.com/2007/11/number-of-holocaust-survivors.html)
 
 Five Million "Holocaust Survivors"
-
 
 [http://forum.codoh.info/viewtopic.php?t=7207](http://forum.codoh.info/viewtopic.php?t=7207)
 
@@ -5127,6 +5149,7 @@ Survival Rates In Japanese And German WWII Camps
 the number one weapon in Israel's propaganda armoury would disappear."
 Professor William Rubinstein
 ```
+
 3) Number Of Jews Who Applied For Survivor Pensions And All The Frauds
 
 The Six Million Swindle
@@ -5135,7 +5158,6 @@ by Dr. Austin J. App
 
 West Germany's Holocaust Payoff To Israel And World Jewry
 by Mark Weber
-
 
 [http://www.ihr.org/jhr/v08/v08p243_Weber.html](http://www.ihr.org/jhr/v08/v08p243_Weber.html)
 
@@ -5172,7 +5194,8 @@ Billions Paid By Germany In Holocaust Restitution
 Swindler’s List:
 A Brief Look At The Holocaust Reparations Racket
 by Richard Edmondson
-[http://leftwing-christian.net/2012/08/29/swindlers-list-a-](http://leftwing-christian.net/2012/08/29/swindlers-list-a-) brief-look-at-the-holocaust-reparations-
+[http://leftwing-christian.net/2012/08/29/swindlers-list-a-](http://leftwing-christian.net/2012/08/29/swindlers-list-a-)
+brief-look-at-the-holocaust-reparations-
 racket.aspx
 
 German FM To Netanyahu At Berlin Holocaust Memorial:
@@ -5184,8 +5207,8 @@ by Shari Ryness
 "A Jew is someone cries out in pain while he is stabbing you in the back."
 Old Polish Proverb
 ```
-4) Auschwitz Death Plaque Changed From 4,000,000 To 1,500,000
 
+4) Auschwitz Death Plaque Changed From 4,000,000 To 1,500,000
 
 It is interesting how this plaque was quietly changed from 4,000,000 deaths to 1,500,000 deaths
 yet the number of supposed Holocaust deaths has remained at the same sacrosanct 6,000,000
@@ -5215,6 +5238,7 @@ disappear in "burning ovens", which the judicial version of Holocaust now authen
 matter of fact, Robert B. Goldmann writes: "... without the Holocaust, there would be no
 Jewish State."
 ```
+
 5) Death Numbers
 
 How Many Deaths At Auschwitz?
@@ -5236,7 +5260,6 @@ by Dr. Harrell Rhome
 
 Chapter Fourteen: Statistics: Six Million Or ...
 by Paul Rassinier
-
 
 [http://www.ihr.org/books/rassinier/debunking2-14.html](http://www.ihr.org/books/rassinier/debunking2-14.html)
 
@@ -5282,11 +5305,11 @@ Six Million Swindle
 "Nothing strengthens authority so much as silence."
 Leonardo da Vinci
 ```
+
 6) The International Red Cross January 16, 1984 Audit Records A Total 282,077 Deaths Of All
-Internees In All German Camps From All Causes
+   Internees In All German Camps From All Causes
 
 Esau/Edom, And The Trail Of The Serpent - XII
-
 
 [http://www.biblebelievers.org.au/bb981128.htm](http://www.biblebelievers.org.au/bb981128.htm)
 
@@ -5304,6 +5327,7 @@ and are content to rely upon authority,
 there is no end to our troubles."
 Bertrand Russell
 ```
+
 7) The International Red Cross Records Total Camp Deaths 271,301
 
 Official International Red Cross Records: Total Camp Deaths; 271,301
@@ -5335,7 +5359,6 @@ to abolish private property, and everywhere to make use of the resources of the 
 the promise of the Talmud be fulfilled, in which is said that when the Messianic time is come the
 Jews will have all the property of the whole world in their hands."
 Baruch Levy, from a letter written to Karl Marx
-
 
 8) The International Red Cross The Jews And The Camps Visits
 
@@ -5369,8 +5392,8 @@ Edward Bernays
 (father of propaganda and public relations, and the nephew of Sigmund Freud)
 
 9) Camps Had A Post Office, Hospital, Maternity Ward, Library, Cinema, Theater, Jail, School,
-Swimming Pool, Sauna, Brothel, Orchestra, Choir, Soccer Field, Weddings, Their Own Money,
-Passports, Photographed, Death Certificates, Punishment Reports, etc.
+   Swimming Pool, Sauna, Brothel, Orchestra, Choir, Soccer Field, Weddings, Their Own Money,
+   Passports, Photographed, Death Certificates, Punishment Reports, etc.
 
 Auschwitz
 [http://www.qsc.cc/auschwitz.htm](http://www.qsc.cc/auschwitz.htm)
@@ -5385,7 +5408,6 @@ Auschwitz-Birkenau Quotes
 
 Lets Stop With The Auschwitz lies
 [http://abundanthope.net/pages/Political_Information_43/Lets-stop-with-the-Auschwitz-lies.shtml](http://abundanthope.net/pages/Political_Information_43/Lets-stop-with-the-Auschwitz-lies.shtml)
-
 
 Truth For NS Germany
 [http://www.dailymotion.com/video/xvql76_truth-for-ns-germany_creation](http://www.dailymotion.com/video/xvql76_truth-for-ns-germany_creation)
@@ -5403,6 +5425,7 @@ only was an economic preventive measure."
 James Baker
 (Secretary of the Treasury and Secretary of State)
 ```
+
 10) References To 6,000,000 Jews Killed Prior To The Nuremberg Announcement
 
 The First Holocaust
@@ -5436,7 +5459,6 @@ How The Zionists Created The Holocaust - 10 Questions For The Zionists
 by Rabbi Michael Dov Weismandl
 [http://www.nkusa.org/Historical_Documents/tenquestions.cfm](http://www.nkusa.org/Historical_Documents/tenquestions.cfm)
 
-
 History And Scriptural Origin Of The Six Million Number
 by John "Birdman" Bryant
 [http://www.thebirdman.org/Index/Jews/Jews-](http://www.thebirdman.org/Index/Jews/Jews-)
@@ -5454,6 +5476,7 @@ Ilya Ehrenberg - The Man Who Invented The 'Six Million'
 and he who controls the present controls the past."
 George Orwell
 ```
+
 11) There Were Never 6,000,000 Jews Under German Occupation
 
 'The Dissolution Of Eastern European Jewry': An Exchange
@@ -5535,9 +5558,8 @@ I ever wished that after the appalling first World War, there would ever be a se
 either England or America."
 Adolf Hitler
 
-
 13) The British Broke The German Enigma Code - The Camp Commandants Reported All
-Pertinent Facts Every Day To Berlin And Never Once Mentioned Any Mass Killings
+    Pertinent Facts Every Day To Berlin And Never Once Mentioned Any Mass Killings
 
 German SS And Police Unit Radio Messages In British Archives
 [http://www.fpp.co.uk/Auschwitz/docs/PoliceDecodes.html](http://www.fpp.co.uk/Auschwitz/docs/PoliceDecodes.html)
@@ -5560,8 +5582,9 @@ they stick together and what power they exercise through their unions.
 They are a nation of rascals and deceivers."
 Marcus Tullius Cicero
 ```
+
 14) Not One German Government Extermination Order Was Ever Found - Not One Letter
-From A German Soldier About Gas Chambers Or Mass Killings Was Ever Found
+    From A German Soldier About Gas Chambers Or Mass Killings Was Ever Found
 
 David Irving - The Biggest Lie (Start at 1:00:50)
 [http://www.youtube.com/watch?v=jgGP_evkvOk](http://www.youtube.com/watch?v=jgGP_evkvOk)
@@ -5584,7 +5607,6 @@ Mark Weber Quotes
 
 Hitler's Extermination Orders
 [http://www.stormfront.org/revision/ff2hitlerorder.html](http://www.stormfront.org/revision/ff2hitlerorder.html)
-
 
 The Orders Of Hitler For The Extermination Of The Jews
 [http://www.biblebelievers.org.au/zionmyth4.htm](http://www.biblebelievers.org.au/zionmyth4.htm)
@@ -5618,6 +5640,7 @@ enemy's fortress. Thousands of Jews living in Europe constitute the principal fa
 destruction of our enemy. There, our front is a fact and the most valuable aid for victory."
 Chaim Weizman
 ```
+
 15) Who Started World War II? Judea Declares War On Germany (March 24, 1933)
 
 Over 70,000,000 Christians died during World War II; a war started by the Jews.
@@ -5635,7 +5658,6 @@ by Michael Walsh
 [http://www.sweetliberty.org/issues/wars/witness2history/1.html](http://www.sweetliberty.org/issues/wars/witness2history/1.html)
 
 Adolf Hitler - The Greatest Story Never Told!
-
 
 https://www.youtube.com/watch?v=vzdqRY3zNIY
 
@@ -5690,7 +5712,6 @@ Germany Must Perish!
 by Theodore N. Kaufman
 [http://www.ihr.org/books/kaufman/perish.html](http://www.ihr.org/books/kaufman/perish.html)
 
-
 She Survived Hitler And Wants To Warn America
 by Rob Kerby
 [http://blog.beliefnet.com/on_the_front_lines_of_the_culture_wars/2011/04/she-survived-hitler-](http://blog.beliefnet.com/on_the_front_lines_of_the_culture_wars/2011/04/she-survived-hitler-)
@@ -5739,7 +5760,6 @@ The Myths Of The 20th Century
 
 Goebbels On The Jews, Part 1
 
-
 by Dr. Thomas Dalton
 [http://www.inconvenienthistory.com/archive/2010/volume_2/number_1/goebbels_on_the_jews.p](http://www.inconvenienthistory.com/archive/2010/volume_2/number_1/goebbels_on_the_jews.p)
 hp
@@ -5761,7 +5781,7 @@ Faurisson, "final solution" meant that "they wanted to solve what they called th
 problem by emigration, if possible; by evacuation or deportation, if necessary."
 
 17) The Transfer Agreement - Germany Helped Transport Jews To Palestine
-Hitler Let German Jews Leave Even After World Jewry Declared War On Germany
+    Hitler Let German Jews Leave Even After World Jewry Declared War On Germany
 
 The Third Reich And The Palestine Question
 Reviewed by John M. Ries
@@ -5787,8 +5807,8 @@ During the war Jews of various nationalities were being moved east, as one stage
 Solution. The legend claims that the motion was mainly for extermination purposes."
 Arthur R. Butz
 ```
-18) No Gas Chambers Were Ever Found (Except For Those To Delouse)
 
+18) No Gas Chambers Were Ever Found (Except For Those To Delouse)
 
 Not One Plan, Order, Photo, Budget Or Blueprint For Gas Chambers Was Ever Found
 Not One Single Autopsied Body At Any Camp Has Been Shown To Have Been Gassed
@@ -5842,7 +5862,6 @@ by Arthur R. Butz
 Proof Of "Gas Chambers?"
 by Bradley R. Smith
 
-
 [http://codoh.com/library/document/1073](http://codoh.com/library/document/1073)
 
 The Gas Chambers Problem
@@ -5871,6 +5890,7 @@ subsequently their ethical and moral doctrines as well as their deeds rightly de
 exposed to criticism in whatever country they happen to live."
 Pope Clement VIII
 ```
+
 19) Camp Propaganda
 
 The Director Of The Holocau$t - Khazar Expatriate Billy Wilder (Video)
@@ -5894,7 +5914,6 @@ Die Akte Sobibor - Holocaust - Propaganda und Wirklichkeit
 by Juergen Graf, Carlo Mattogno and Thomas Kues
 [http://archive.org/details/DieAkteSobibor-Holocaust-PropagandaUndWirklichkeit](http://archive.org/details/DieAkteSobibor-Holocaust-PropagandaUndWirklichkeit)
 
-
 The Facts About the Origin Of The Camps And Their Administration
 [http://www.wintersonnenwende.com/scriptorium/english/archives/articles/ccfacts.html](http://www.wintersonnenwende.com/scriptorium/english/archives/articles/ccfacts.html)
 
@@ -5908,9 +5927,10 @@ by John "Birdman" Bryant
 for he would not walk in Jewry because the Jews sought to kill him."
 St. John, Gospel Of St. John VII:1
 ```
+
 20) The Leuchter Report, The Rudolf Report And The Lüftl Report
-Their Chemical Analysis Proves Gas Was Not Used In The So Called Gas Chambers, And
-Physically There Was No Way The Air Raid Shelters Could Have Been Used As Gas Chambers
+    Their Chemical Analysis Proves Gas Was Not Used In The So Called Gas Chambers, And
+    Physically There Was No Way The Air Raid Shelters Could Have Been Used As Gas Chambers
 
 The Leuchter Report
 Fred A. Leuchter is America's leading specialist on the design and fabrication of execution
@@ -5944,7 +5964,6 @@ by Fred A. Leuchter, Dr. Robert Faurisson and Germar Rudolf
 [http://www.barnesreview.org/the-leuchter-reports-critical-edition-p-240.html](http://www.barnesreview.org/the-leuchter-reports-critical-edition-p-240.html)
 
 The Leuchter Reports - Critical Edition
-
 
 by Fred A. Leuchter, Dr. Robert Faurisson and Germar Rudolf
 [http://www.barnesreview.org/pdf/16-tlr-intro.pdf](http://www.barnesreview.org/pdf/16-tlr-intro.pdf)
@@ -6036,6 +6055,7 @@ mean people. The Jews have wandered from divine religion. You must not relent in
 which must show up Jewish deceit."
 Mohammed, in the Koran
 ```
+
 22) Russians Built The Show Gas Chamber After The War From An Air Raid Shelter
 
 Wartime Germany’s Anti-Gas Air Raid Shelters:
@@ -6047,7 +6067,6 @@ David Cole Interviews Dr. Franciszek Piper, Director, Auschwitz State Museum
 [http://www.vho.org/GB/c/DC/gcgvcole.html](http://www.vho.org/GB/c/DC/gcgvcole.html)
 
 The Museum's Evidence For Gas Chambers
-
 
 by Theodore J. O'Keefe
 [http://vho.org/tr/2000/2/tr02evidence.html](http://vho.org/tr/2000/2/tr02evidence.html)
@@ -6064,6 +6083,7 @@ lamented that each state, long ago, has not hunted them down as pest to society 
 enemies we have to the happiness of America."
 George Washington
 ```
+
 23) The Capacity Of The Crematories In The German Camps
 
 The Crematoria Ovens Of Auschwitz And Birkenau
@@ -6099,7 +6119,6 @@ each body using a large amount of coal. Cremation was used in the camps for thos
 away in order to prevent epidemics. No large supplies of coal were ever stored at the camps for
 cremations. A very interesting note appears only in the German edition of William L. Shirer's
 
-
 book, "The Rise and Fall of the Third Reich." It seems the Didler-Werke Company, which built
 the crematory ovens, sued Shirer who previously wrote that millions of people were gassed and
 then burned in this company's ovens. In an out-of-court settlement of the suit Shirer agreed to
@@ -6120,9 +6139,10 @@ We must ever keep on guard against them."
 Reverend Martin Luther
 (assassinated by the Jews on February 18, 1546)
 ```
+
 24) Coke (Coal) Deliveries To The German Camps Were Well Documented And They Were
-Nowhere Near The Amount That Would Have Been Needed If Millions Of Bodies Were To Be
-Cremated Or Burned To Ashes In Open Air Pits
+    Nowhere Near The Amount That Would Have Been Needed If Millions Of Bodies Were To Be
+    Cremated Or Burned To Ashes In Open Air Pits
 
 Auschwitz: Open Air Incinerations
 by Carlo Mattogno
@@ -6141,13 +6161,13 @@ by Carlo Mattogno
 assumes the living shape of the Jew.
 Adolf Hitler
 ```
+
 25) No Bodily Remains Were Ever Found In Or Around Any Of The German Camps
 
 As Arthur R. Butz states: "The claim of the legend is that there were no technical means
 provided for the specific task of extermination, and that means originally provided for other
 purposes did double duty in improvised arrangements. Thus the Jews were allegedly gassed with
 the pesticide Zyklon, and their corpses disappeared into the crematoria along with the deaths
-
 
 from "ordinary" causes (the ashes or other remains of millions of victims never having been
 found)."
@@ -6191,6 +6211,7 @@ responsible for Bolshevism in Russia, and Germany too. I was far too indulgent w
 during my reign, and I bitterly regret the favors I showed the prominent Jewish bankers."
 Wilhelm II
 ```
+
 26) Heinrich Himmler - "Reduce Deaths At All Costs" Ordered On December 28, 1942
 
 Was There Really A Holocaust?
@@ -6198,7 +6219,6 @@ Heinrich Himmler, chief of the Concentration Camps issued orders on December 28,
 "The death rate in the concentration camps must be reduced at all costs"
 by Dr. E. R. Fields
 [http://www.biblebelievers.org.au/wasthere.htm](http://www.biblebelievers.org.au/wasthere.htm)
-
 
 Himmler's Order To Reduce Death Rates
 [http://winstonsmithministryoftruth.blogspot.com/2011/01/himmlers-order-to-reduce-death-](http://winstonsmithministryoftruth.blogspot.com/2011/01/himmlers-order-to-reduce-death-)
@@ -6227,6 +6247,7 @@ the British agents who are allowed free rein, the international financial intere
 others."
 Charles Lindbergh
 ```
+
 27) Rudolf Höss (The Auschwitz Commandant)
 
 How The British Obtained The Confessions Of Rudolf Höss
@@ -6250,7 +6271,6 @@ The Torture Of Rudolph Höss
 Holocaust, Hate Speech And Were The Germans So Stupid?
 by Anthony Lawson
 
-
 [http://codoh.com/library/document/1530](http://codoh.com/library/document/1530)
 
 ```
@@ -6258,6 +6278,7 @@ by Anthony Lawson
 are accustomed to wearing warm clothes."
 Adolf Hitler
 ```
+
 28) Auschwitz
 
 Auschwitz Sign Says: Work Sets You Free (They Were Of Course Work Camps)
@@ -6300,7 +6321,6 @@ by Dr. Robert Faurisson
 [http://www.vho.org/GB/Books/dth/fndwitness.html](http://www.vho.org/GB/Books/dth/fndwitness.html)
 
 Auschwitz (Videos and Text)
-
 
 [http://ccfiile.com/Auschwitz.html](http://ccfiile.com/Auschwitz.html)
 
@@ -6355,7 +6375,6 @@ by Mark Weber
 
 A Brief History Of Forensic Examinations Of Auschwitz
 
-
 by Germar Rudolf
 [http://www.ihr.org/jhr/v20/v20n2p-3_Rudolf.html](http://www.ihr.org/jhr/v20/v20n2p-3_Rudolf.html)
 
@@ -6371,6 +6390,7 @@ by Shari Ryness
 "Even the best of the goyim should be killed."
 Jew Talmud
 ```
+
 29) Other German Camps And The Liberation Of The Camps
 
 Buchenwald: Legend And Reality
@@ -6401,12 +6421,12 @@ by Mark Weber
 
 Cover Of Survivor’s Book Features Buchenwald Lie-Beration Photo Without Standing Man
 by Carolyn Yeager
-[http://www.eliewieseltattoo.com/cover-of-survivors-book-features-buchenwald-lie](http://www.eliewieseltattoo.com/cover-of-survivors-book-features-buchenwald-lie) -beration-
+[http://www.eliewieseltattoo.com/cover-of-survivors-book-features-buchenwald-lie](http://www.eliewieseltattoo.com/cover-of-survivors-book-features-buchenwald-lie)
+-beration-
 photo-without-standing-man
 
 The Facts About The Origin Of The Concentration Camps And Their Administration
 [http://www.wintersonnenwende.com/scriptorium/english/archives/articles/ccfacts.html](http://www.wintersonnenwende.com/scriptorium/english/archives/articles/ccfacts.html)
-
 
 Ernst Zundel Interviews Russel Barton Part 1
 The Truth About The Infamous Bergen-Belsen Camp By A British Eyewitness
@@ -6429,6 +6449,7 @@ the world of rational discourse, but to the realm of imprecations and maledictio
 ostracisms."
 Joseph Sobran
 ```
+
 30) Now There Were No Gas Chambers In Germany, Austria Or Alsace Lorraine Camps
 
 The allied propaganda stating that jews were made into shrunken heads, soap and lampshade
@@ -6455,13 +6476,13 @@ Dachau - The Fraudulent Stories Of "Extermination" And "Homicidal Gas Chambers"
 [http://abundanthope.net/pages/Political_Information_43/Dachau_-](http://abundanthope.net/pages/Political_Information_43/Dachau_-)
 _The_fraudulent_stories_of_extermination_a_3963.shtml
 
-
 ```
 "Jewry has so deeply infected the Anglo-Saxon states both spiritually and politically that they no
 longer have the ability to see the danger. It conceals itself as Bolshevism in the Soviet Union, and
 plutocratic-capitalism in the Anglo-Saxon states."
 Dr. Joseph Goebbels
 ```
+
 31) The Nuremberg Trials
 
 As Arthur R. Butz states: "What we are offered in evidence was gathered after the war, in trials.
@@ -6507,7 +6528,6 @@ The Nuremberg Trials Were A Crock Of Jewish Lies
 2,400 Were Jews.”
 Louis Marschalko
 
-
 [http://groups.yahoo.com/group/aplacefortruth/message/38130](http://groups.yahoo.com/group/aplacefortruth/message/38130)
 
 The Farce Of Nuremberg Trials
@@ -6527,6 +6547,7 @@ running a court and proceeding according to common law.
 This is a little too sanctimonious a fraud to meet my old-fashioned ideas."
 Harlan Fiske Stone (US Supreme Court Chief Justice)
 ```
+
 32) Nuremberg Confessions - Germans Were Severely Tortured And Testicles Crushed
 
 The Value Of Testimony And Confessions Concerning The Holocaust
@@ -6558,7 +6579,6 @@ by Eric Martinson
 [http://www.thebirdman.org/Index/Others/Others-Doc-Jews/+Doc-Jews-Holocaust-](http://www.thebirdman.org/Index/Others/Others-Doc-Jews/+Doc-Jews-Holocaust-)
 DebunkingLies&Liars/FabricationOfTheNurembergTrials.htm
 
-
 The Case Against The Jews:
 A Documented Critique Of Contemporary And Recent Historical Jewish Behavior
 by John "Birdman" Bryant
@@ -6569,8 +6589,9 @@ by John "Birdman" Bryant
 Law was created ex post facto to suit the passion and clamor of the time."
 William O. Douglas (Supreme Court Justice)
 ```
+
 33) Did The Extremely Efficient Germans Round Up, Transport, Tattoo, Shave Heads, Delouse,
-Then Murder Jews By Gassing, Then Cremate, Then Bury Their Remains?
+    Then Murder Jews By Gassing, Then Cremate, Then Bury Their Remains?
 
 Of course this just doesn’t make any logical sense. It would have been a monumental waste of
 time and resources in the middle of a war. If the Germans wanted the Jews dead, they would
@@ -6590,6 +6611,7 @@ be this inefficient.
 "They besmirched every race on Earth"
 Marlon Brando
 ```
+
 34) Jews Were Not Made Into Soap, Lampshades, Shrunken Heads etc.
 
 'Human Skin' Lampshades And Nazi Shrunken Heads Psyop
@@ -6606,7 +6628,6 @@ The "Human Skin Lampshades" And "Nazi Shrunken Heads" Psyop -
 [http://exposing-the-holocaust-hoax-archive.blogspot.com/2009/10/human-skin-lampshades-and-](http://exposing-the-holocaust-hoax-archive.blogspot.com/2009/10/human-skin-lampshades-and-)
 nazi-shrunken.html
 
-
 Soap, Skin, Bones, Heads
 Did The Nazis Make Soap From The Fat From Jewish Corpses? Did They Use The Tattooed
 Skin Of Murdered Camp Inmates To Make Lampshades, Gloves And Other Wares? Did They
@@ -6620,6 +6641,7 @@ All True, While Others Contest That These Claims Are A Mere Emanation Of Sick Mi
 then the danger is great."
 Nietzsche
 ```
+
 35) The Diary Of Anne Frank
 
 Is The Diary Of Anne Frank Genuine?
@@ -6698,15 +6720,15 @@ introductory parts), published from 1948 to 1959, one will find no mention eithe
 chambers,' a 'genocide' of the Jews, or of 'six million' Jewish victims of the war."
 Richard Lynn (Professor Emeritus University of Ulster, December 5, 2005)
 ```
+
 37) On January 27, 1945 When The USSR Overruns Auschwitz, Hitler Is Told In A Meeting - He
-Is Not Alarmed And Goes Right On To The Next Topic - There Was Never Any Reference To
-Mass Killing At Any Of The German Camps At The Headquarters
+    Is Not Alarmed And Goes Right On To The Next Topic - There Was Never Any Reference To
+    Mass Killing At Any Of The German Camps At The Headquarters
 
 Index To Papers Of And About Dr. Karl Thöt, Adolf Hitler - Stenographer
 These fragments do however record vital evidence - e.g. on January 27, 1945 when
 Generaloberst Heinz Guderian informs him [Adolf Hitler] that the Red Army has just overrun
 Auschwitz, Hitler's only reply is just: okay, "Jawohl" -- he seems to have no idea that Auschwitz
-
 
 was anything other than a slave-labour camp built for the nearby synthetic chemicals plant.
 Informed by the general in these words, "The attacks along a continuous line from the Tichau
@@ -6726,10 +6748,11 @@ and does not find himself vilified therein, then he has spent the previous day t
 had he achieved something, he would have been threatened, slandered, derided and abused."
 Adolf Hitler
 ```
+
 38) Just Before The January 27, 1945 Soviet Overtake Of Auschwitz Most Jews Choose To
-Retreated With The Germans Instead Of Staying To Be Liberated By The Soviets - The First
-Reported Article Mentions That The Jews Were Murdered By Electric Conveyor Belt Of Which
-Hundreds Of Persons Could Be Electrocuted Simultaneously
+    Retreated With The Germans Instead Of Staying To Be Liberated By The Soviets - The First
+    Reported Article Mentions That The Jews Were Murdered By Electric Conveyor Belt Of Which
+    Hundreds Of Persons Could Be Electrocuted Simultaneously
 
 Was Auschwitz Liberated Or Merely Occupied By The Red Army?
 When the Russians were about to overrun Auschwitz in January 1945, both Elie and his father
@@ -6759,7 +6782,6 @@ indicated that at least 1,500,000 persons were slaughtered at Oswiecim, Polevoy 
 Jews, Czechs, French and Yugoslavs jammed in sealed cars. The trains always left empty. "The
 first shock of Oswiecim is its enormous size," Polevoy said. "Dozens of square miles are
 
-
 saturated with human blood and literally blanketed with human ashes. This was a great industry
 with many wings and sections, each specializing in a certain function." "There were offices for
 sorting the victims each according to his age, strength and ability to perform labor before
@@ -6788,12 +6810,14 @@ of his death that will live and grow after him. He had in him the stuff of which
 made."
 John Fitzgerald Kennedy
 ```
+
 ```
 JFK Praises Adolf Hitler
 http://www.youtube.com/watch?v=H3ei9ycAOdQ
 ```
+
 39) Elie Wiesel And Other Survivors Eyewitness Testimony Rebuked, And The Falsely Accused
-Saga Of John Demjanjuk
+    Saga Of John Demjanjuk
 
 A Prominent False Witness: Elie Wiesel
 by Dr. Robert Faurisson
@@ -6810,7 +6834,6 @@ Elie Wiesel: “The Most Authoritative Living Witness” Of The Shoah?
 by Carlo Mattogno
 https://ironlight.wordpress.com/2010/04/14/elie-wiesel-%E2%80%9Cthe-most-authoritative-
 living-witness%E2%80%9D-of-the-shoah
-
 
 Documents On Elie Wiesel
 [http://www.fpp.co.uk/Auschwitz/Wiesel/index.html](http://www.fpp.co.uk/Auschwitz/Wiesel/index.html)
@@ -6864,7 +6887,6 @@ Professional Witness Of Auschwitz-Birkenau
 by Maria Temmer
 [http://www.whale.to/b/temmer.html](http://www.whale.to/b/temmer.html)
 
-
 The Holocaust Testimonies You Didn't Hear
 [http://www.youtube.com/watch?v=dtlPlZGvgY0](http://www.youtube.com/watch?v=dtlPlZGvgY0)
 
@@ -6917,7 +6939,6 @@ Holocaust Faker Explains Himself
 More On The Holocaust Deception
 [http://www.youtube.com/watch?v=6w3v-rJMo44](http://www.youtube.com/watch?v=6w3v-rJMo44)
 
-
 Holocaust “Survivors” Reveal The Truth; (Video and Text)
 Brave White Women; Margaret Huffstickler Returns
 To Help The Eternal Solutrean Agency
@@ -6948,9 +6969,10 @@ by Paul Eisen
 "They are, simply, the biggest scoundrels who have ever dirtied the face of the earth."
 Voltaire
 ```
+
 40) The Jews Accused The Germans Of Killing Them By These Different Methods:
-Diesel, Electrocution, Gas, Pressed To Death, Boiling Water And Steam -
-Every One Of These Outlandish Accusations Have Been Proven To Be Lies
+    Diesel, Electrocution, Gas, Pressed To Death, Boiling Water And Steam -
+    Every One Of These Outlandish Accusations Have Been Proven To Be Lies
 
 Absurd "Evidence" Presented At Nuremberg -
 The "Steam And Electrocution Death Chambers" At Treblinka
@@ -6967,7 +6989,6 @@ The Killing Centers
 Simon Wiesenthal: Fraudulent 'Nazi Hunter'
 by Mark Weber
 [http://www.ihr.org/leaflets/wiesenthal.shtml](http://www.ihr.org/leaflets/wiesenthal.shtml)
-
 
 "Eyewitnesses To Dachau Gas Chamber"
 [http://exposing-the-holocaust-hoax-archive.blogspot.com/2010/04/eyewitnesses-to-dachau-gas-](http://exposing-the-holocaust-hoax-archive.blogspot.com/2010/04/eyewitnesses-to-dachau-gas-)
@@ -6987,14 +7008,15 @@ men who desired peace calling them weaklings and traitors to denounce opposition
 "fifth column" in order to eliminate internal resistance to their criminal policy of war"
 Adolf Hitler
 ```
+
 41) Allied Bombings And Scraffings Cut Off The Supply Routes To The Camps From Mid 1944
-On - So It Became More And More Difficult To Transport All The Needed Food, Medicine And
-Supplies To The Camps - Especially In The Last Few Months - Hence You Have The
-Photographs And Allied Testimony Of All The Dead And Emaciated People When The Work
-Camps Are Liberated (The Dead Were Piled Up For Propaganda Purposes And Some Of These
-Photographs Are Actually Forgeries From Soviet POW Camps - Also Most Died From Typhus) -
-At The Same Time This Was Also Happening To The German Civilians - All Of These Deaths
-Were Caused By The Allies
+    On - So It Became More And More Difficult To Transport All The Needed Food, Medicine And
+    Supplies To The Camps - Especially In The Last Few Months - Hence You Have The
+    Photographs And Allied Testimony Of All The Dead And Emaciated People When The Work
+    Camps Are Liberated (The Dead Were Piled Up For Propaganda Purposes And Some Of These
+    Photographs Are Actually Forgeries From Soviet POW Camps - Also Most Died From Typhus) -
+    At The Same Time This Was Also Happening To The German Civilians - All Of These Deaths
+    Were Caused By The Allies
 
 The Lethal Liberation Of Bergen-Belsen
 by Joseph Bellinger
@@ -7019,7 +7041,6 @@ German work camps.
 by Victor Thorn
 [http://zionistjewfedreserve.com/favorite_links_7.html](http://zionistjewfedreserve.com/favorite_links_7.html)
 
-
 ```
 "We Jews, we, the destroyers, will remain the destroyers for ever.
 Nothing that you will do will meet our needs and demands.
@@ -7027,6 +7048,7 @@ We will for ever destroy because we need a world of our own,
 a God-world, which it is not in your nature to build."
 Maurice Samuels
 ```
+
 42) Holocaust Religion
 
 This Daily Reminder Of The Holocaust Is Making Many People Begin To Question It
@@ -7068,7 +7090,6 @@ by Mark Weber
 
 Zionist Propaganda: Study Of Holocaust Mandatory For Australian Schools
 
-
 [http://www.hangthebankers.com/zionist-propaganda-study-of-holocaust-mandatory-for-](http://www.hangthebankers.com/zionist-propaganda-study-of-holocaust-mandatory-for-)
 australian-schools
 
@@ -7093,6 +7114,7 @@ is to rule over the inferior races. Our earthly kingdom will be ruled by our lea
 iron. The masses will lick our feet and serve us as our slaves."
 Menechem Begin
 ```
+
 43) Questions And Answers On The Holocaust And The Victories Of Revisionism
 
 66 Questions And Answers On The Holocaust
@@ -7119,7 +7141,6 @@ The Holocaust Conspiracy
 
 The "Holohoax"
 by Professor Revilo P. Oliver
-
 
 [http://karws.gso.uri.edu/JFK/the_critics/oliver/The_holohoax.html](http://karws.gso.uri.edu/JFK/the_critics/oliver/The_holohoax.html)
 
@@ -7173,7 +7194,6 @@ by John Kaminski
 
 The Decalogue Of Inconvenient Facts About The World War II Holocaust
 
-
 [http://newsfromthewest.blogspot.com/2009/02/decalogue-of-inconvenient-facts-](http://newsfromthewest.blogspot.com/2009/02/decalogue-of-inconvenient-facts-)
 about.html?zx=cd71f057ed4b0d56
 
@@ -7183,7 +7203,8 @@ by Jason Collett
 [http://rense.com/general91/incred.htm](http://rense.com/general91/incred.htm)
 
 The Holocaust In A Nutshell
-[http://abundanthope.net/pages/Political_Information_43/The-Holocaust-in-a-](http://abundanthope.net/pages/Political_Information_43/The-Holocaust-in-a-) nutshell.shtml
+[http://abundanthope.net/pages/Political_Information_43/The-Holocaust-in-a-](http://abundanthope.net/pages/Political_Information_43/The-Holocaust-in-a-)
+nutshell.shtml
 
 Jew Zionists
 [http://theunjustmedia.com/Jewish%20Zionists/Homepage%20Jew%20Zionists.htm](http://theunjustmedia.com/Jewish%20Zionists/Homepage%20Jew%20Zionists.htm)
@@ -7227,7 +7248,6 @@ Two New Studies, Both Out Of Israel, Have The World Spinning.
 One, Released By The Holocaust Memorial Museum,
 Places Europe’s Jewish Population In 1939 At Between 40 And 50 Million,
 
-
 With Up To 20 Million Holocaust Dead.
 [http://www.presstv.ir/detail/2013/03/04/291802/the-holocaust-bomb-a-rerevisionist-myth](http://www.presstv.ir/detail/2013/03/04/291802/the-holocaust-bomb-a-rerevisionist-myth)
 
@@ -7247,6 +7267,7 @@ by Willis A. Carto
 for their own profit. Control them, and you will put an end to it all.'
 Henry Ford
 ```
+
 44) The Holocaust Is Used As An Elaborate Shield To Protect The Jews And Israel
 
 Without the Holocaust story as a protective shield Israel would been seen as the racist country it
@@ -7276,7 +7297,6 @@ Previous Treasury Secretary, Timothy Geithner, Jew
 Before Timothy Geithner, Treasury Secretary, Henry Paulson, Jew
 Before Henry Paulson, Treasury Secretary, Robert Rubin, Jew
 Head of the Security and Exchange Commission, Elisse Walter, Jew
-
 
 Previous Head of the Security and Exchange Commission, Mary Schapiro, Jew
 JPMorgan Chase & Co. (Largest Bank in the US) CEO, James Dimon, Jew
@@ -7326,7 +7346,6 @@ with the help from the warmongering Jew Bernard Baruch: March 11, 1941 - Colonel
 3, 1941 - Brigadier General (1 Star), March 28, 1942 - Major General (2 Stars), July 9, 1942 -
 Lieutenant General (3 Stars), February 11, 1943 - General (4 Stars) and December 20, 1944 -
 
-
 General of the Army (5 Stars). Eisenhower was a 1915 West Point graduate, while there he was
 known as, The Terrible Swedish Jew. Ike sure did live up to his first nickname.
 
@@ -7374,7 +7393,6 @@ Defamation League both in 1913.
 America's Most Powerful Racist Hate Group
 The Anti-Defamation League is the longest running and most powerful hate group in the United
 States with 28 offices domestically and 3 offices abroad. They bring in nearly $60 million a year
-
 
 to combat free speech and the right of minorities to defend themselves from bigotry (including
 Black Muslims, Arabs, and Euro-Americans).
@@ -7428,7 +7446,6 @@ by Dr. Kevin MacDonald
 [http://www.vdare.com/articles/heidi-does-long-beach-the-splc-vs-academic-freedom](http://www.vdare.com/articles/heidi-does-long-beach-the-splc-vs-academic-freedom)
 
 Southern Poverty Law Center: Wellspring Of Manufactured Hate
-
 
 by James Simpson
 [http://www.capitalresearch.org/2012/09/southern-poverty-law-center-wellspring-of-](http://www.capitalresearch.org/2012/09/southern-poverty-law-center-wellspring-of-)
@@ -7489,10 +7506,12 @@ Because they are cut off from the creative life, because they are cut off from t
 nation by the Jewish parasite, their lives are empty and pointless."
 Eustace Mullins (The Biological Jew, 1967)
 ```
+
 ```
 The Definition Of A Parasite
 https://www.youtube.com/watch?v=ald-3YlwIyc
 ```
+
 47) Holocaust Revisionism Videos And Audios (For Sale And For Free)
 
 For Sale
@@ -7535,7 +7554,6 @@ https://www.youtube.com/watch?v=ykd-syzZ4ZY
 Holocaust Revisionism For Beginners (Film)
 by David McCalden
 https://www.youtube.com/watch?v=t0eHRQpZ0dw
-
 
 HoloCost Revisionism
 https://www.youtube.com/watch?v=ptDVpYw2suY
@@ -7588,7 +7606,6 @@ by Dr. William Pierce
 [http://vimeo.com/39244141](http://vimeo.com/39244141)
 
 Understanding Anti-Jewism: Why Are The Jews Disliked? (Video)
-
 
 [http://zioncrimefactory.com/2012/10/15/understanding-anti-jewism-why-are-the-jews-disliked](http://zioncrimefactory.com/2012/10/15/understanding-anti-jewism-why-are-the-jews-disliked)
 
@@ -7693,7 +7710,6 @@ Holocaust Handbooks And Movies
 Presented by The Barnes Review
 [http://holocausthandbooks.com](http://holocausthandbooks.com)
 
-
 The Magnificent Revisionist Writings Of Dr. Robert Faurisson
 [http://www.zundelsite.org/faurisson/articles/faurissontoc.html](http://www.zundelsite.org/faurisson/articles/faurissontoc.html)
 
@@ -7745,7 +7761,6 @@ by Shakespeare
 Did Six Million Really Die?
 Truth At Last - Exposed:
 by Richard Verrall
-
 
 [http://www.zundelsite.org/english/harwood/Didsix01.html](http://www.zundelsite.org/english/harwood/Didsix01.html)
 
@@ -7800,7 +7815,6 @@ Britton.pdf
 
 None Dare Call It Conspiracy
 
-
 by Gary Allen with Larry Abraham
 [http://www.whale.to/b/allen_b1.html](http://www.whale.to/b/allen_b1.html)
 
@@ -7853,7 +7867,6 @@ by Samuel Roth
 Kill The Best Of Gentiles
 by James W. Von Brunn
 
-
 [http://ia600507.us.archive.org/5/items/killTheBestGentiles/KillTheBestGentiles.pdf](http://ia600507.us.archive.org/5/items/killTheBestGentiles/KillTheBestGentiles.pdf)
 
 Exposing The Holocaust Hoax Archive
@@ -7870,6 +7883,7 @@ Deanna Spingola's Suggested Reading List
 simply learn who you are not allowed to criticize."
 Voltaire
 ```
+
 49) Quotes
 
 What World Famous Men Said About Jews (Full Movie)
@@ -7906,7 +7920,6 @@ https://www.youtube.com/watch?v=gsjM1vyJFhk
 
 Interesting Talmud Quotes
 
-
 [http://www.liveleak.com/view?i=865_1241573990](http://www.liveleak.com/view?i=865_1241573990)
 
 Rabbi Quotes
@@ -7925,6 +7938,7 @@ need to prove the obvious! It only remained for them to strike blows at the nonc
 strike they did."
 Dr. Robert Faurisson
 ```
+
 50) Links
 
 Robert Faurisson
@@ -7957,7 +7971,6 @@ Arthur R. Butz
 
 Carlos Whitlock Porter
 [http://www.cwporter.com/two2.htm](http://www.cwporter.com/two2.htm)
-
 
 John C. Ball
 [http://www.air-photo.com](http://www.air-photo.com)
@@ -8011,7 +8024,6 @@ Michael A. Hoffman II
 
 Dr. Kevin MacDonald
 
-
 [http://kevinmacdonald.net](http://kevinmacdonald.net)
 
 Institute For Historical Review
@@ -8062,7 +8074,6 @@ Jürgen Graf
 Arthur Topham
 The Radical Press
 Canada's Radical News Network
-
 
 [http://www.radicalpress.com](http://www.radicalpress.com)
 
@@ -8115,7 +8126,6 @@ Real Jew News
 [http://realjewnews.com](http://realjewnews.com)
 
 John Friend's Blog
-
 
 [http://www.john-friend.net](http://www.john-friend.net)
 
@@ -8175,6 +8185,7 @@ Great Master of Lies." Those who do not realize the truth of that statement, or 
 believe it, will never be able to lend a hand in helping Truth to prevail."
 Adolf Hitler
 ```
+
 ### -------------------------------------------------------
 
 # Solutions For The Survival Of Humanity (The Jewish Problem)
@@ -8196,46 +8207,45 @@ with the following humanitarian options to deal with the jewish problem, and for
 survival of our species.
 
 1) For all of the good Jews to finally come out in overwhelming numbers and totally renounce
-what their fellow Jews and Israel have done and continue to do. They must also renounce the
-Talmud. If this happens number two will also have to be employed because of their horrendous
-record throughout history of cunning, deceit and lying.
+   what their fellow Jews and Israel have done and continue to do. They must also renounce the
+   Talmud. If this happens number two will also have to be employed because of their horrendous
+   record throughout history of cunning, deceit and lying.
 
 Myth Of The Good Jew
 https://www.youtube.com/watch?v=spwvVyhOCRM
 
 2) Forever keep Jews out of banking / finance, politics, medicine, law, education, media, military,
-intelligence and religion. This will be done by DNA testing for all job applicants in these nine
-fields. Inter-marriages between Jews and anyone else will be highly discouraged (because anyone
-with more than 25% of Jewish DNA will not be allowed in any of the nine fields of work). There
-will be no more synagogues or Jewish services and the Talmud will be outlawed. If number one is
-not done peacefully by the good Jews, this number two will have to implemented by the use of
-force.
+   intelligence and religion. This will be done by DNA testing for all job applicants in these nine
+   fields. Inter-marriages between Jews and anyone else will be highly discouraged (because anyone
+   with more than 25% of Jewish DNA will not be allowed in any of the nine fields of work). There
+   will be no more synagogues or Jewish services and the Talmud will be outlawed. If number one is
+   not done peacefully by the good Jews, this number two will have to implemented by the use of
+   force.
 
 3) Build a very tall impenetrable wall around Palestine. Round up every Jew on Earth and bring
-them there to live. Relocate every Palestinian and pay them a more than fair compensation. Give
-the Jews all they will need to live by themselves. Surveillance by satellites and from atop the wall
-
+   them there to live. Relocate every Palestinian and pay them a more than fair compensation. Give
+   the Jews all they will need to live by themselves. Surveillance by satellites and from atop the wall
 
 so there will be no escaping. Anyone who is caught leaving will be sterilized and brought back.
 Anyone caught escaping for a second time, and their whole immediate family will be sterilized.
 
 4) Implemented the German Madagascar Plan. Round up every Jew on Earth and bring them to
-Madagascar to live (Madagascar off the southeastern coast of Africa is the fourth largest island
-on Earth). Relocate every person on Madagascar and pay them a more than fair compensation.
-Give the Jews all they will need to live on this island by themselves. Surveillance by satellites so
-there will be no boat nor plane building or escaping. Anyone who is caught leaving will be
-sterilized and brought back. Anyone caught escaping for a second time, and their whole
-immediate family will be sterilized.
+   Madagascar to live (Madagascar off the southeastern coast of Africa is the fourth largest island
+   on Earth). Relocate every person on Madagascar and pay them a more than fair compensation.
+   Give the Jews all they will need to live on this island by themselves. Surveillance by satellites so
+   there will be no boat nor plane building or escaping. Anyone who is caught leaving will be
+   sterilized and brought back. Anyone caught escaping for a second time, and their whole
+   immediate family will be sterilized.
 
 5) Perhaps there is one more way to deal with the Jewish problem. The is something known as
-the Maharishi Effect or The Square Root Of One Percent Solution. What this postulates is that
-through group meditation with enough numbers of people we can change our world for the
-positive. I do believe this works, and it has been documented to work in reducing crime many
-times. Today the square root of one percent of the population of Earth is 8,410. This would be
-the minimum number of people meditating to start and bring about a change. There are people
-already trying this, but not yet enough to create change, and they are not meditating on the root
-of our problem, the Jews and their evil usury. This method would be the least confrontational
-and is worth a try. Below are some links to learn more about this wonderful phenomena.
+   the Maharishi Effect or The Square Root Of One Percent Solution. What this postulates is that
+   through group meditation with enough numbers of people we can change our world for the
+   positive. I do believe this works, and it has been documented to work in reducing crime many
+   times. Today the square root of one percent of the population of Earth is 8,410. This would be
+   the minimum number of people meditating to start and bring about a change. There are people
+   already trying this, but not yet enough to create change, and they are not meditating on the root
+   of our problem, the Jews and their evil usury. This method would be the least confrontational
+   and is worth a try. Below are some links to learn more about this wonderful phenomena.
 
 Group Meditation Reduces Terrorism
 A New Research Report
@@ -8264,9 +8274,8 @@ https://www.youtube.com/watch?v=lNZXimxJ1qM
 Vision 2012 Plan
 [http://www.vision2012plan.com](http://www.vision2012plan.com)
 
-
 6) If none of the above are implemented, I fear that a real Jewish Holocaust will become
-inevitable. Is that what you good Jews want? If not, you had better wake up quickly.
+   inevitable. Is that what you good Jews want? If not, you had better wake up quickly.
 
 ```
 "In keeping silent about evil, in burying it so deep within us that no sign of it appears on the
@@ -8275,6 +8284,7 @@ punish nor reproach evildoers, we are not simply protecting their trivial old ag
 ripping the foundations of justice from beneath new generations."
 Aleksandr I. Solzhenitsyn
 ```
+
 Finally, if anyone or any group would like to debate me on Holocaust Revisionism, I am open to
 the challenge. I well know this is the last thing the Jews would want to do, because the
 overwhelming amount of truth will be shown. I realize they would much rather slander or attack
@@ -8302,6 +8312,7 @@ Mark R. Elsis
 'There are 1000 hacking at the branches of evil, but just 1 hacking at the root'
 Henry David Thoreau
 ```
+
 Holocaust Revisionism will be published on:
 [http://HolocaustRevisionism.com](http://HolocaustRevisionism.com)
 

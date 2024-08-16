@@ -8,7 +8,7 @@
 # Astronomy: The Simulated Universe.
 
 ```
-Note: This investigation is **a work in progress**. Check back soon for more updates!
+Note: This investigation is a work in progress. Check back soon for more updates!
 ```
 
 ## Johannes Kepler's Laws of Planetary Motion were correct

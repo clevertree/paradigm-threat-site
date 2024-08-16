@@ -1,7 +1,7 @@
 # Secret Electro-Gravitic Thrusters exist in All Passenger and Cargo Jets
 
 ```
-Note: This investigation is **a work in progress**. Check back soon for more updates!
+Note: This investigation is a work in progress. Check back soon for more updates!
 ```
 
 ## Q: Why did that Boeing crash? Yet again we don't get an _'ex

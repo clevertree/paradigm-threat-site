@@ -3,7 +3,7 @@
 import React, {useEffect, useRef, useState} from 'react'
 
 import styles from './FloatingDiv.module.scss'
-import {onToggle} from '@/components/helpers/input'
+import {onToggle} from '@/components/helpers/inputHelper'
 
 interface FloatingDivProps {
     children: React.ReactNode,
@@ -68,7 +68,7 @@ export default function FloatingDiv({children, containerTag, className}: Floatin
             <button
                 className={`${styles.bottomText} ${!isFloating ? styles.bottomTextHidden : ''}`}
                 {...onToggle(scrollToTop)}
-                tabIndex={isFloating ? 0 : -1} // TODO: move  to own component
+                tabIndex={isFloating ? 0 : -1} // TODO: move to own component
             >Back to top
             </button>
         </Container>

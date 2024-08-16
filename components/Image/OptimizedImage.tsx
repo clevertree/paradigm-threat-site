@@ -1,5 +1,5 @@
 import styles from '@/components/Image/Image.module.scss'
-import {processImageProps} from '@/components/Image/imgUtil'
+import {processImageProps} from '@/components/helpers/imageHelper'
 import React from "react";
 
 interface OptimizedImageProps {

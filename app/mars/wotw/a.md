@@ -4,7 +4,7 @@
 [Earth is ruled by Humans on Mars](/mars)
 
 ```
-Note: This investigation is **a work in progress**. Check back soon for more updates!
+Note: This investigation is a work in progress. Check back soon for more updates!
 This section is in need of revision and be rewritten in the near future.
 ```
 

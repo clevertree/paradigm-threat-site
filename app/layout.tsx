@@ -1,7 +1,6 @@
 import type {Metadata} from 'next'
 import React, {Suspense} from "react";
 import Link from "next/link";
-import Image from "next/image";
 import {DynamicNav, FloatingDiv} from "@/components";
 import HeaderImg from "./site/header.png";
 import Directory from "./directory.json"

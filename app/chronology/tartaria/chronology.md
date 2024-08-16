@@ -1,7 +1,7 @@
 # Reasons the Roman Empire never existed
 
 ```
-Note: This investigation is **a work in progress**. Check back soon for more updates!
+Note: This investigation is a work in progress. Check back soon for more updates!
 ```
 
 * Romulus kills Remus, because they were fighting over where to put “Rome”. So Romulus gets to pick the place and name

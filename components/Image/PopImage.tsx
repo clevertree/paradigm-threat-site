@@ -5,8 +5,8 @@ import styles from './Image.module.scss'
 import Link from 'next/link'
 import {ErrorBoundary} from '@/components/client'
 import {OptimizedImage} from '@/components'
-import {processImageProps} from '@/components/Image/imgUtil'
-import {onToggle} from '@/components/helpers/input'
+import {processImageProps} from '@/components/helpers/imageHelper'
+import {onToggle} from '@/components/helpers/inputHelper'
 
 interface PopImageProps {
     children?: React.ReactNode,
@@ -19,6 +19,7 @@ function PopImage({...props}: PopImageProps) {
     const [fullscreen, setFullscreen] = useState(false)
 
     function toggleFullscreen() {
+        // TODO: fix modal keyboard navigation
         setFullscreen(!fullscreen)
     }
 
@@ -62,7 +63,7 @@ function PopImage({...props}: PopImageProps) {
 
 export default function PopImageErrorBoundary(props: PopImageProps) {
     return (
-        <ErrorBoundary>
+        <ErrorBoundary assetName="PopImage">
             <PopImage {...props} />
         </ErrorBoundary>
     )

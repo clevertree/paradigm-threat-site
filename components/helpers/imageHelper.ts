@@ -1,5 +1,7 @@
 interface ImagePropsFormatted {
     src: string,
+
+    [key: string]: any
 }
 
 export function processImageProps(props: any): ImagePropsFormatted {

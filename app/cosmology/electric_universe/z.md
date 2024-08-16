@@ -3,7 +3,7 @@
 ##### by: Ken Lee Wheeler (neoplatonist@icloud.com)
 
 ```
-Note: This investigation is **a work in progress**. Check back soon for more updates!
+Note: This investigation is a work in progress. Check back soon for more updates!
 ```
 
 [Download PDF](http://argos.vu/wp-content/uploads/2017/02/magnetism1small.pdf)

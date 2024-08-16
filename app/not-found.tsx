@@ -5,5 +5,5 @@ import { usePathname } from 'next/navigation'
 
 export default function AutoGeneratePage () {
   const currentPath = usePathname()
-  return <FileSearchForm directory={DIRECTORY} keywords={currentPath} />
+  return <FileSearchForm fileDirectory={DIRECTORY} keywords={currentPath}/>
 }
