@@ -41,7 +41,7 @@ export default async function RootLayout(
         <DynamicNav directory={Directory} className={styles.linkContainer}>
             <Link href="/search">🔍</Link>
             <Link href="/">home</Link>
-            <Link href="https://chat.paradigmthreat.net">chat</Link>
+            <Link href="/chat">chat</Link>
             <Link href="https://www.bitchute.com/channel/paradigmthreat">videos</Link>
         </DynamicNav>
     </FloatingDiv>
