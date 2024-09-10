@@ -221,3 +221,11 @@ ul ul {
     text-shadow: none;
   }
 }
+
+/** Input **/
+
+button, input, optgroup, select, textarea {
+  background: var(--bg-color);
+  color: var(--fg-color);
+
+}
