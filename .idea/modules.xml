@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/../paradigm-threat-api/.idea/paradigm-threat-api.iml" filepath="$PROJECT_DIR$/../paradigm-threat-api/.idea/paradigm-threat-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/paradigm-threat-site.iml" filepath="$PROJECT_DIR$/.idea/paradigm-threat-site.iml" />
     </modules>
   </component>

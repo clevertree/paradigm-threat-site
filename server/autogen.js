@@ -1,10 +1,23 @@
 const { readdir, writeFile, readFile } = require('fs/promises')
-const { join, resolve } = require('path')
-const { existsSync } = require('fs')
+const {
+  join,
+  resolve,
+  dirname
+} = require('path')
+require('dotenv').config({ path: resolve(__dirname, '../.env.development.local') })
+const CRC32 = require('crc-32')
+const { existsSync, createReadStream } = require('fs')
 const { getGitChangeLog } = require('./gitUtil')
+const { createInterface } = require('node:readline/promises')
 const AUTOGEN_DEFAULT_WIDTH = process.env.NEXT_PUBLIC_AUTOGEN_IMAGE_WIDTH || 384
 const FILE_NAV_IGNORE = `${process.env.NEXT_PUBLIC_ASSET_NAV_IGNORE_FILE || '.navignore'}`
 const PATH_ASSETS_ABS = join(resolve(__dirname, '../'), `${process.env.NEXT_PUBLIC_ASSET_PATH || 'app'}`)
+const TEXT_FILE_PATTERN = /\.(txt|mdx?)$/i
+const TEXT_LINE_IGNORE_PATTERN = /(^import .*$|<([^>]+)>)/igm
+const TEXT_KEYWORD_PATTERN = /[a-zA-Z]{3,}/g
+const TEXT_KEYWORD_IGNORE_PATTERN = /^(https?|com|net|org|const|metadata|export|description|keywords|title|jpg|png|gif|mdx?)$/i
+// const TEXT_FILE_IGNORE_PATTERN = /.auto.mdx$/
+const { sql } = require('@vercel/postgres')
 generate()
 
 async function generate () {
@@ -14,7 +27,7 @@ async function generate () {
 }
 
 async function generateDirectory () {
-  const files = {}
+  // const files = {}
 
   async function getPathsForDirectory (currentPathRelative) {
     const directories = {}
@@ -23,18 +36,36 @@ async function generateDirectory () {
     // if (dirents.some(dirent => dirent.name === process.env.NEXT_PUBLIC_ASSET_NAV_IGNORE_FILE))
     //     return null;
 
+    let keywordCount = []
     for (const dirent of dirents) {
+      const subPathRelative = join(currentPathRelative, dirent.name)
       if (dirent.isDirectory()) {
-        const subFolderPathRelative = join(currentPathRelative, dirent.name)
-        const ignoreFile = join(absPath, subFolderPathRelative, FILE_NAV_IGNORE)
+        const ignoreFile = join(absPath, subPathRelative, FILE_NAV_IGNORE)
         if (!existsSync(ignoreFile)) {
-          directories[dirent.name] = await getPathsForDirectory(subFolderPathRelative)
+          directories[dirent.name] = await getPathsForDirectory(subPathRelative)
         }
       } else {
-        if (!files[currentPathRelative]) { files[currentPathRelative] = [] }
-        files[currentPathRelative].push(dirent.name)
+        // if (!files[currentPathRelative]) { files[currentPathRelative] = [] }
+        // files[currentPathRelative].push(dirent.name)
+        // console.log('indexing file: ', subPathRelative)
+        if (TEXT_FILE_PATTERN.test(subPathRelative)) {
+          const fileKeywordObj = await readTextFileKeywords(subPathRelative)
+          for (const keyword of Object.keys(fileKeywordObj))
+            keywordCount[keyword] = (keywordCount.hasOwnProperty(keyword) ? keywordCount[keyword] : 0)
+              + fileKeywordObj[keyword]
+        }
       }
     }
+    const keywordList = Object.keys(keywordCount)
+    const pairListString = keywordList.sort().map(keyword => `${keyword}:${keywordCount[keyword]}`).join(',')
+    // var uniqueAndSortedKeywordString = keywordList.sort().join(',')
+
+    const crc32 = CRC32.str(pairListString) // keywordList.reduce((crc32, keyword) => CRC32.str(keyword), 0)
+    if (crc32 !== 0 && !await pathHasCRC(currentPathRelative, crc32)) {
+      console.log('indexing path: ', currentPathRelative)
+      await sql`SELECT search_add_keywords_to_path(${currentPathRelative}, ${crc32}, ${pairListString});`
+    }
+
     return directories
   }
 
@@ -42,15 +73,48 @@ async function generateDirectory () {
   const directoryFile = `${PATH_ASSETS_ABS}/directory.json`
   // console.log("Writing directory file: ", directoryFile)
   await writeOrIgnoreFile(directoryFile, JSON.stringify(directories))
-  const filesFile = `${PATH_ASSETS_ABS}/files.json`
-  // console.log("Writing directory file: ", directoryFile)
-  await writeOrIgnoreFile(filesFile, JSON.stringify(files))
+  // const filesFile = `${PATH_ASSETS_ABS}/files.json`
+  // await writeOrIgnoreFile(filesFile, JSON.stringify(files))
 }
 
 async function generateAllPages () {
   for await (const appSubDirectory of listDirectoriesRecursive(PATH_ASSETS_ABS, FILE_NAV_IGNORE)) {
     await generatePages(appSubDirectory)
   }
+}
+
+async function readTextFileKeywords (relativeFilePath) {
+  const absFilePath = PATH_ASSETS_ABS + relativeFilePath
+  // const directoryPath = dirname(relativeFilePath)
+  const fileContent = await readFile(absFilePath, 'utf8')
+  const strippedFileContent = fileContent.replace(TEXT_LINE_IGNORE_PATTERN, '')
+
+  let match, keywordObj = {}
+  while (match = TEXT_KEYWORD_PATTERN.exec(strippedFileContent)) {
+    const keyword = match[0].toLowerCase()
+    if (!TEXT_KEYWORD_IGNORE_PATTERN.test(keyword)) {
+      keywordObj[keyword] = keywordObj[keyword] ? (keywordObj[keyword] + 1) : 1
+    }
+  }
+  return keywordObj
+}
+
+let cachedPathCRCs = null
+
+async function getPathCRCs () {
+  if (!cachedPathCRCs) {
+    const { rows } = await sql`SELECT path, crc32
+                               FROM search_paths;`
+    cachedPathCRCs = {}
+    for (const row of rows)
+      cachedPathCRCs[row.path] = row.crc32
+  }
+  return cachedPathCRCs
+}
+
+async function pathHasCRC (path, crc32) {
+  const paths = await getPathCRCs()
+  return (paths[path] === crc32)
 }
 
 async function generatePages (directoryPath) {
