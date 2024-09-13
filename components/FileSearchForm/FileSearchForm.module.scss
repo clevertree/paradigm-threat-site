@@ -1,8 +1,12 @@
-.form {
+.container {
   max-width: 800px;
   margin: auto;
 
   clear: both;
+
+}
+
+.form {
   border: 1px solid #BFBAB0;
   border-radius: 0.5em;
   padding: 0.5em;
@@ -15,7 +19,7 @@
 
   & input {
     flex-grow: 1;
-    color: #000;
+    color: var(--fg-color);
   }
 
 
@@ -53,4 +57,10 @@
       height: auto !important;
     }
   }
+}
+
+
+.error {
+  font-weight: bold;
+  color: #D8000C;
 }

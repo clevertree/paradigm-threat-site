@@ -108,6 +108,7 @@ async function getPathCRCs () {
     cachedPathCRCs = {}
     for (const row of rows)
       cachedPathCRCs[row.path] = row.crc32
+    console.log(`Found ${rows.length} path entries in database`)
   }
   return cachedPathCRCs
 }

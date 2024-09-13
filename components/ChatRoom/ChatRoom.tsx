@@ -89,6 +89,7 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
                 setError(error.message)
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode])
 
     async function onKeyDown(event: React.KeyboardEvent) {

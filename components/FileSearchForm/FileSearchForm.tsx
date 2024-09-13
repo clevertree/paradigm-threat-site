@@ -1,47 +1,50 @@
 'use client'
 
-import React, {FocusEvent, FormEvent, FormEventHandler, useEffect, useRef, useState} from 'react'
+import React, {FocusEvent, useEffect, useRef, useState} from 'react'
 import styles from './FileSearchForm.module.scss'
-import {PopImage, EmbedFile} from '@client'
+import {FileSearchFormResult} from "@/components/FileSearchForm/FileSearchFormResult";
 
 interface FileSearchFormProps {
-    keywords: string,
-    fileDirectory: FileDirectoryObject
+    keywords?: string,
 }
 
-interface FileDirectoryObject {
-    [key: string]: Array<string>
-}
-
+const API_URL = process.env.NEXT_PUBLIC_API
 let timeout: number = -1
-export default function FileSearchForm({keywords, fileDirectory}: FileSearchFormProps) {
-    const [keywordsList, setKeywordsList] = useState(processKeywordList(keywords))
-    const [files, setSearchResults] = useState<Array<string>>([])
+export default function FileSearchForm({keywords = ""}: FileSearchFormProps) {
+    const [keywordString, setKeywordString] = useState<string>(processKeywordList(keywords).join(','))
+    const [error, setError] = useState<string | null>()
     const [loading, setLoading] = useState(true)
+    const [searchResults, setSearchResults] = useState([])
     const refForm = useRef<HTMLFormElement>(null)
     useEffect(() => {
-        if (keywordsList) {
+        if (keywordString) {
+            const keywordList = processKeywordList(keywordString)
+            setError(null)
             setLoading(true)
-            const keywordRegexList = keywordsList.map(k => new RegExp(k, 'i'))
-            const files: Array<string> = []
-            for (const path of Object.keys(fileDirectory)) {
-                const pathFiles = fileDirectory[path]
-                for (const fileName of pathFiles) {
-                    const filePath = path + '/' + fileName
-                    if (keywordRegexList.every(regex => regex.test(path) || regex.test(fileName))) {
-                        files.push(filePath)
+            fetch(`${API_URL}/api/search/${keywordList.join('/')}`)
+                .then(res => res.json())
+                .then((searchContent) => {
+                    if (searchContent.error) {
+                        setError(JSON.stringify(searchContent.error))
+                    } else {
+                        setSearchResults(searchContent)
                     }
-                }
-            }
-            setSearchResults(files)
+                }).catch(error => {
+                console.error(error)
+                setError(error.message)
+            })
+
             setLoading(false)
         }
-    }, [fileDirectory, keywordsList])
+    }, [keywordString])
 
     return (
-        <>
+        <div className={styles.container}>
             <form
-                onSubmit={onSubmit} className={styles.form}
+                onSubmit={(e) => {
+                    e.preventDefault()
+                    onSubmit();
+                }} className={styles.form}
                 ref={refForm}
             >
                 <fieldset className='asset-search'>
@@ -49,63 +52,43 @@ export default function FileSearchForm({keywords, fileDirectory}: FileSearchForm
                         name='search'
                         onFocus={onFocus}
                         onChange={onChange}
-                        defaultValue={keywordsList}
+                        defaultValue={keywordString}
                     />
                     <button type='submit'>Search</button>
                 </fieldset>
-
+                {error &&
+                  <div className={styles.error}>Could not perform search: {error}</div>}
             </form>
-            {!keywordsList
-                ? <h2>Enter keywords to search...</h2>
-                : (loading
-                        ? <h2>Searching assets...</h2>
-                        : (
-                            <>
-                                {/* <h2>Markdown Search Results:</h2> */}
-
-                                {/* {pages.length > 0 */}
-                                {/*  ? ( */}
-                                {/*    <ul> */}
-                                {/*      <div className={styles.pageContainer}> */}
-                                {/*        {pages.map(({ path, lines }) => ( */}
-                                {/*          <li key={path}> */}
-                                {/*            <a href={path}>{path}</a> */}
-                                {/*            <p>{lines.join('\n')}</p> */}
-                                {/*          </li> */}
-                                {/*        ))} */}
-                                {/*      </div> */}
-                                {/*    </ul> */}
-                                {/*    ) */}
-                                {/*  : <h3>No pages found</h3>} */}
-
-                                <h2>Asset Search Results:</h2>
-
-                                {files.length > 0
-                                    ? (
-                                        <div className={styles.assetContainer}>
-                                            {files.map((filePath) => renderAsset(filePath))}
-                                        </div>
-                                    )
-                                    : <h3>No assets found</h3>}
-                            </>
-                        )
-                )}
-        </>
+            <div className={styles.results}>
+                {!keywordString
+                    ? <h2>Enter keywords to search...</h2>
+                    : (loading
+                            ? <h2>Searching assets...</h2>
+                            : (
+                                <>
+                                    <h2>Search Results:</h2>
+                                    <div>
+                                        {searchResults.map(result => renderSearchResult(result))}
+                                    </div>
+                                </>
+                            )
+                    )}
+            </div>
+        </div>
     )
 
     function onChange() {
-        clearTimeout(timeout)
-        timeout = setTimeout(onSubmit, 250)
+        window.clearTimeout(timeout)
+        timeout = window.setTimeout(onSubmit, 250)
     }
 
-    function onSubmit(e: FormEvent) {
-        e.preventDefault()
+    function onSubmit() {
         if (refForm.current) {
             // @ts-ignore TODO: find a typescript solution
             const {value} = refForm.current.elements?.search
             window.history.pushState({}, '', value)
 
-            setKeywordsList(processKeywordList(value))
+            setKeywordString(value)
         }
     }
 
@@ -114,59 +97,16 @@ export default function FileSearchForm({keywords, fileDirectory}: FileSearchForm
         e.target.setSelectionRange(0, e.target.value.length)
     }
 
-    function renderAsset(filePath: string) {
-        const ext = filePath.toLowerCase().split('.').pop()
-        switch (ext) {
-            case 'css':
-            case 'js':
-            case 'ts':
-            case 'md':
-            case 'mdx':
-                break
-            case 'img':
-            case 'jpg':
-            case 'jpeg':
-            case 'png':
-            case 'gif':
-            case 'svg':
-            case 'ppm':
-                return (
-                    <PopImage
-                        key={filePath}
-                        src={filePath}
-                        width={256}
-                        height={256}
-                        alt={filePath}
-                    >
-                        <a href={filePath} target='_blank' rel='noopener noreferrer'>{filePath}</a>
-                    </PopImage>
-                )
-            case 'pdf':
-                return (
-                    // @ts-ignore TODO: resolve typescript issue
-                    <EmbedFile
-                        key={filePath}
-                        src={filePath}
-                    />
-                )
-            case 'm4v':
-            case 'mp4':
-            case 'mkv':
-            case 'json':
-            case 'txt':
-            default:
-                return (
-                    <div
-                        key={filePath}
-                    >
-                        <embed src={filePath} className='w-full min-h-[40vh] min-w-[20vw]'/>
-                        <a href={filePath} target='_blank' rel='noopener noreferrer'>{filePath}</a>
-                    </div>
-                )
-        }
+    function renderSearchResult(filePath: string) {
+        return <div key={filePath}>
+            <FileSearchFormResult keywordList={processKeywordList(keywordString)} url={filePath}/>
+        </div>
     }
 }
 
 function processKeywordList(keywordString: string) {
-    return (keywordString || '').split(/[;, /]+/g).filter(i => !!i)
+    return (keywordString || '').split(/[;, /]+/g)
+        .map(s => s.replace(/[^a-zA-Z]+/g, ''))
+        .filter(i => !!i)
 }
+
