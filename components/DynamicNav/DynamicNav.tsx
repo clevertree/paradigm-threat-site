@@ -30,6 +30,7 @@ export default function DynamicNav({directory, children, className}: DynamicNavP
                     // console.log('currentPath', currentPath, relativeSubPathName, currentPath.startsWith(relativeSubPathName))
                     return (
                         <Link
+                            prefetch={false}
                             key={subPathName}
                             className={currentPath.startsWith(relativeSubPathName) ? styles.current : ''}
                             href={relativeSubPathName}

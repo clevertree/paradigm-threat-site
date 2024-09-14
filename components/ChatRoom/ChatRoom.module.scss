@@ -1,10 +1,11 @@
 .container {
+  position: relative;
   border-radius: 0.4em;
   border: 2px ridge var(--fg-color);
   margin: 1rem auto;
   padding: 0.4rem;
   background-color: var(--bg-color2);
-  max-width: min(95vw, 1600px);
+  width: min(95vw, 1600px);
   //display: flex;
   //flex-direction: row;
 }

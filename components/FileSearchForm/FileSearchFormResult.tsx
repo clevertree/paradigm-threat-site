@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from "react";
 import styles from './FileSearchFormResult.module.scss'
-import LoadingScreen from "@/app/site/loading";
-import {PopImage} from "@client";
+import {PopImage, SuspenseLoader} from "@client";
 
 const MAX_RESULT_LENGTH = 1024;
 
@@ -78,7 +77,7 @@ export const FileSearchFormResult = ({url, keywordList}: FileSearchFormResultPro
 
     return <div className={styles.result}>
         <div className={styles.title}>
-            {loading && <LoadingScreen/>}
+            {loading && <SuspenseLoader/>}
             <a href={url + '?searchKeyword=' + keywordList}>{resultTitle ? `${url} (${resultTitle})` : url}</a>
             {error &&
               <div className={styles.error}>Could not query result: {error}</div>}

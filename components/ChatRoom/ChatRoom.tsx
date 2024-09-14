@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react'
 
 import styles from './ChatRoom.module.scss'
-import {ErrorBoundary} from '@client'
+import {ErrorBoundary, SuspenseLoader} from '@client'
 import Markdown from 'markdown-to-jsx'
 
 const API_URL = process.env.NEXT_PUBLIC_API
@@ -45,6 +45,7 @@ interface FormElements extends HTMLFormControlsCollection {
 export default function ChatRoom({channel, title, className, mode}: ChatRoomProps) {
     const [channelContent, setChannelContent] = useState<ChannelContent | null>()
     const [channelList, setChannelList] = useState<ChannelList>([])
+    const [loading, setLoading] = useState(true)
     const [disabled, setDisabled] = useState<boolean>(false)
     const [error, setError] = useState<string | null>()
     const [postCount, setPostCount] = useState<number>(0)
@@ -53,6 +54,7 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
     useEffect(() => {
         if (currentChannelName) {
             // Fetch top directory
+            setLoading(true);
             fetch(`${API_URL}/api/chat/channel/${currentChannelName}/getPosts?postCount=${postCount}`)
                 .then(res => res.json())
                 .then((channelContent) => {
@@ -64,13 +66,17 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
                     }
                 }).catch(error => {
                 console.error(error)
+                setDisabled(true)
                 setError(error.message)
+            }).finally(() => {
+                setLoading(false);
             })
         }
     }, [currentChannelName, postCount])
 
     useEffect(() => {
         // Fetch channel list
+        setLoading(true);
         if (mode === "full") {
             fetch(`${API_URL}/api/chat/getChannels`)
                 .then(res => res.json())
@@ -86,7 +92,10 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
                     }
                 }).catch(error => {
                 console.error(error)
+                setDisabled(true)
                 setError(error.message)
+            }).finally(() => {
+                setLoading(false);
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -127,9 +136,8 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
             setPostCount(postCount + 1);
         } catch (error) {
             if (error instanceof Error) {
-                const errorMessage = `Error submitting message: ${error.message}`
                 console.error(error)
-                setError(errorMessage)
+                setError(`Error submitting message: ${error.message} (`)
             }
         }
     }
@@ -155,10 +163,11 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
 
     let renderedMarkup = (
         <div className={`${styles.container} ${className || ''}`}>
+            {loading ? <SuspenseLoader/> : null}
             <div className={styles.channelTitle}>
-                {title || `Channel: ${currentChannelName}`}
+                {title || loading ? "Loading..." : `Channel '${currentChannelName}'`}
             </div>
-            <div className='flex flex-col sm:flex-row h-[80vh]'>
+            <div className='flex flex-col sm:flex-row h-[60vh]'>
                 {channelSelectionMarkup}
                 <div className={styles.channel + ' sm:w-[80%] flex-grow overflow-y-auto'}>
                     {channelContent?.posts?.map(({username, content, created}, index) => (
@@ -174,7 +183,7 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
             </div>
             <div>
                 <form onSubmit={onSubmit}>
-                    <fieldset disabled={disabled} className="flex">
+                    <fieldset disabled={disabled || loading} className="flex">
                         <input
                             type="text" name="username" className={`${styles.input} w-24 text-center italic`}
                             placeholder="guest" title="Type your guest name here"

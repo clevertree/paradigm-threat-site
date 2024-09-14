@@ -7,11 +7,11 @@ import Directory from "./directory.json"
 import {Analytics} from '@vercel/analytics/react';
 import {SpeedInsights} from "@vercel/speed-insights/next"
 
-import LoadingScreen from "./site/loading"
 
 /** Styles **/
 import './site/globals.scss'
 import styles from './site/layout.module.scss';
+import {SuspenseLoader} from "@client";
 
 export const metadata: Metadata = {
     metadataBase: new URL(`${process.env.NEXT_PUBLIC_METADATA_URL}`),
@@ -46,7 +46,7 @@ export default async function RootLayout(
         </DynamicNav>
     </FloatingDiv>
 
-    <Suspense fallback={<LoadingScreen/>}>
+    <Suspense fallback={<SuspenseLoader/>}>
         <article>
             {children}
         </article>
