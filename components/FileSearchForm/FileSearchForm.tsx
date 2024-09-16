@@ -68,7 +68,7 @@ export default function FileSearchForm({keywords = ""}: FileSearchFormProps) {
                                 <>
                                     <h2>Search Results:</h2>
                                     <div>
-                                        {searchResults.map(result => renderSearchResult(result))}
+                                        {searchResults.map(((result, i) => renderSearchResult(result, i)))}
                                     </div>
                                 </>
                             )
@@ -97,10 +97,12 @@ export default function FileSearchForm({keywords = ""}: FileSearchFormProps) {
         e.target.setSelectionRange(0, e.target.value.length)
     }
 
-    function renderSearchResult(filePath: string) {
-        return <div key={filePath}>
-            <FileSearchFormResult keywordList={processKeywordList(keywordString)} url={filePath}/>
-        </div>
+    function renderSearchResult(filePath: string, index: number) {
+        return <FileSearchFormResult
+            odd={index % 2 === 1}
+            key={filePath}
+            keywordList={processKeywordList(keywordString)}
+            url={filePath}/>
     }
 }
 

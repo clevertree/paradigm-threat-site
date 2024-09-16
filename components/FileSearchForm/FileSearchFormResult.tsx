@@ -6,7 +6,8 @@ const MAX_RESULT_LENGTH = 1024;
 
 interface FileSearchFormResultProps {
     url: string,
-    keywordList: string[]
+    keywordList: string[],
+    odd: boolean
 }
 
 interface FileSearchFormResultURL {
@@ -16,7 +17,7 @@ interface FileSearchFormResultURL {
 
 let PreviewDocument: Document;
 let PreviewHTMLElement: HTMLElement;
-export const FileSearchFormResult = ({url, keywordList}: FileSearchFormResultProps) => {
+export const FileSearchFormResult = ({url, keywordList, odd}: FileSearchFormResultProps) => {
     const [error, setError] = useState<string | null>()
     const [loading, setLoading] = useState(true)
     const [resultTitle, setResultTitle] = useState('')
@@ -75,7 +76,7 @@ export const FileSearchFormResult = ({url, keywordList}: FileSearchFormResultPro
     }, [keywordList, url])
 
 
-    return <div className={styles.result}>
+    return <div className={`${styles.result} ${odd ? styles.odd : styles.even}`}>
         <div className={styles.title}>
             {loading && <SuspenseLoader/>}
             <a href={url + '?searchKeyword=' + keywordList}>{resultTitle ? `${url} (${resultTitle})` : url}</a>

@@ -1,7 +1,16 @@
 .result {
   position: relative;
   font-size: smaller;
+  border-radius: 0.5rem;
+  padding: 0.4rem;
+}
 
+.odd {
+  background-color: var(--bg-color2);
+}
+
+.even {
+  background-color: var(--bg-color);
 }
 
 .images {
@@ -18,7 +27,7 @@
 }
 
 .summary {
-  font-size: xx-small;
+  font-size: smaller;
   //max-height: 10em;
   //overflow-y: auto
   padding-bottom: 4px;
