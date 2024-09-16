@@ -50,6 +50,13 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
     const [error, setError] = useState<string | null>()
     const [postCount, setPostCount] = useState<number>(0)
     const [currentChannelName, setCurrentChannelName] = useState<string>(channel)
+    const [currentUserName, setCurrentUserName] = useState<string>('')
+
+    useEffect(() => {
+        const username = localStorage.getItem('ChatRoom:username');
+        if (username)
+            setCurrentUserName(username);
+    }, [])
 
     useEffect(() => {
         if (currentChannelName) {
@@ -61,12 +68,11 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
                     if (channelContent.error) {
                         setError(JSON.stringify(channelContent.error))
                     } else {
-                        channelContent.posts = channelContent.posts.slice(0).reverse()
+                        // channelContent.posts = channelContent.posts.slice(0).reverse()
                         setChannelContent(channelContent)
                     }
                 }).catch(error => {
                 console.error(error)
-                setDisabled(true)
                 setError(error.message)
             }).finally(() => {
                 setLoading(false);
@@ -92,7 +98,6 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
                     }
                 }).catch(error => {
                 console.error(error)
-                setDisabled(true)
                 setError(error.message)
             }).finally(() => {
                 setLoading(false);
@@ -117,14 +122,16 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
     async function submitForm(formElm: HTMLFormElement) {
         try {
             const formData = new FormData(formElm)
-            const formDataObject = Object.fromEntries(formData.entries())
-            if (!formDataObject.username) {
+            const formDataObject = Object.fromEntries(formData.entries()) as { [key: string]: string }
+            if (!formDataObject?.username) {
                 formDataObject.username = 'guest'
+            } else {
+                localStorage.setItem("ChatRoom:username", formDataObject.username);
             }
             const {content: contentElm} = (formElm.elements as FormElements)
             contentElm.value = ''
             setDisabled(true)
-            const response = await fetch(`${API_URL}/api/chat/channel/${currentChannelName}/createGuestPost`, {
+            await fetch(`${API_URL}/api/chat/channel/${currentChannelName}/createGuestPost`, {
                 headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json'
@@ -132,13 +139,14 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
                 method: 'POST',
                 body: JSON.stringify(formDataObject)
             })
-            setDisabled(false)
             setPostCount(postCount + 1);
         } catch (error) {
             if (error instanceof Error) {
                 console.error(error)
                 setError(`Error submitting message: ${error.message} (`)
             }
+        } finally {
+            setDisabled(false)
         }
     }
 
@@ -167,9 +175,9 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
             <div className={styles.channelTitle}>
                 {title || loading ? "Loading..." : `Channel '${currentChannelName}'`}
             </div>
-            <div className='flex flex-col sm:flex-row h-[60vh]'>
+            <div className='flex flex-col sm:flex-row sm:h-[60vh]'>
                 {channelSelectionMarkup}
-                <div className={styles.channel + ' sm:w-[80%] flex-grow overflow-y-auto'}>
+                <div className={styles.channel + ' max-h-[80vh] sm:w-[80%] flex-grow overflow-y-auto'}>
                     {channelContent?.posts?.map(({username, content, created}, index) => (
                         <div key={index} className={styles.post}
                              title={`Created at ${new Date(created).toLocaleString()}`}>
@@ -185,8 +193,11 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
                 <form onSubmit={onSubmit}>
                     <fieldset disabled={disabled || loading} className="flex">
                         <input
-                            type="text" name="username" className={`${styles.input} w-24 text-center italic`}
-                            placeholder="guest" title="Type your guest name here"
+                            type="text" name="username"
+                            className={`${styles.input} w-24 text-center italic`}
+                            defaultValue={currentUserName}
+                            placeholder="guest"
+                            title="Type your guest name here"
                         />
                         <input
                             type="text"
