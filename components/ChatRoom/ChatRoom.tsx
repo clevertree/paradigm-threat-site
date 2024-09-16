@@ -5,6 +5,7 @@ import React, {useEffect, useState} from 'react'
 import styles from './ChatRoom.module.scss'
 import {ErrorBoundary, SuspenseLoader} from '@client'
 import Markdown from 'markdown-to-jsx'
+import ReactShadowRoot from 'react-shadow-root';
 
 const API_URL = process.env.NEXT_PUBLIC_API
 
