@@ -12,6 +12,7 @@ interface FileSearchFormResultProps {
 
 interface FileSearchFormResultURL {
     src: string,
+    optimizedSrc?: string,
     alt: string
 }
 
@@ -56,9 +57,12 @@ export const FileSearchFormResult = ({url, keywordList, odd}: FileSearchFormResu
                     const resultURLs: Array<FileSearchFormResultURL> = [];
                     for (let i = 0; i < imageElms.length; i++) {
                         const imageElm = imageElms[i];
-                        if (regexKeywordList.test(imageElm.src)
+                        // @ts-ignore
+                        const optimizedSrc = imageElm.src;
+                        const src = imageElm.getAttribute('data-original-src') || imageElm.src;
+                        if (regexKeywordList.test(src)
                             || regexKeywordList.test(imageElm.alt)) {
-                            resultURLs.push({src: imageElm.src, alt: imageElm.alt})
+                            resultURLs.push({src, optimizedSrc, alt: imageElm.alt})
                         }
                     }
                     setImageURLs(resultURLs)
@@ -87,9 +91,10 @@ export const FileSearchFormResult = ({url, keywordList, odd}: FileSearchFormResu
             __html: textContent
         }}/>
         {imageURLs.length > 0 ? <div className={styles.images}>
-            {imageURLs.map(({src, alt}) => <PopImage
+            {imageURLs.map(({src, optimizedSrc, alt}) => <PopImage
                 key={src}
                 src={src}
+                optimizedSrc={optimizedSrc}
                 alt={alt}
             />)}
         </div> : null}

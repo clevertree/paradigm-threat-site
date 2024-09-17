@@ -19,6 +19,7 @@ export default function OptimizedImage({children, className, ...props}: Optimize
     }
     // if (typeof finalProps.loading === 'undefined') { finalProps.loading = 'lazy' }
     if (optimizedSrc) {
+        finalProps['data-original-src'] = finalProps.src;
         finalProps.src = optimizedSrc
     }
 
