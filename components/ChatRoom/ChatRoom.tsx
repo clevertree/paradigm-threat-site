@@ -183,7 +183,11 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
                         <div key={index} className={styles.post}
                              title={`Created at ${new Date(created).toLocaleString()}`}>
                             <span className={styles.username}>{username}</span>
-                            <span className={styles.content}><Markdown>{content}</Markdown></span>
+                            <span className={styles.content}>
+                                <Markdown options={ChannelMarkdownOptions}>
+                                    {content}
+                                </Markdown>
+                            </span>
                         </div>
                     ))}
                     {error &&
@@ -232,4 +236,13 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
             {renderedMarkup}
         </ErrorBoundary>
     )
+}
+
+
+const ChannelMarkdownOptions = {
+    overrides: {
+        p: {
+            component: 'div'
+        }
+    }
 }
