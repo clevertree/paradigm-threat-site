@@ -4,7 +4,7 @@ import React, {useEffect, useState} from 'react'
 
 import styles from './ChatRoom.module.scss'
 import {ErrorBoundary, SuspenseLoader} from '@client'
-import Markdown from 'markdown-to-jsx'
+import Markdown, {MarkdownToJSX} from 'markdown-to-jsx'
 
 const API_URL = process.env.NEXT_PUBLIC_API
 
@@ -239,7 +239,7 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
 }
 
 
-const ChannelMarkdownOptions = {
+const ChannelMarkdownOptions: MarkdownToJSX.Options = {
     overrides: {
         p: {
             component: 'div'

@@ -1,0 +1,16 @@
+name: Cypress E2E Tests
+
+on:
+  deployment_status:
+jobs:
+  run-e2es:
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: npm install
+      - name: Run E2E tests
+        run: npx cypress run --e2e
+        env:
+          CYPRESS_BASE_URL: https://paradigmthreat.net
