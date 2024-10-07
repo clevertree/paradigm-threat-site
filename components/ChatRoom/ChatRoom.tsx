@@ -12,7 +12,7 @@ interface ChatRoomProps {
     channel: string,
     title?: string,
     className?: string,
-    mode: 'full' | undefined
+    mode?: 'full'
 }
 
 interface ChannelPost {
@@ -169,7 +169,7 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
         )
     }
 
-    // TODO: Shadow DOM
+    // TODO: Shadow DOM?
     let renderedMarkup = (
         <div className={`${styles.container} ${className || ''}`}>
             {loading ? <SuspenseLoader/> : null}

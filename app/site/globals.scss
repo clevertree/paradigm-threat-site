@@ -84,14 +84,16 @@ section {
 /** Article **/
 
 article {
-  min-width: min(80vw, 1600px);
-  max-width: 100vw;
+  //min-width: min(80vw, 1600px);
+  //max-width: 100vw;
+  max-width: 1600px;
   margin: 0.25rem;
   /*padding: 1rem;*/
 
   /** Paragraphs and Blocks **/
 
   > p, > blockquote, > iframe, > ul, > ol, > h1, > h2, > h3, > h4, > h5, > h6 {
+    //> * {
     max-width: 1000px;
     min-width: 100px;
     margin: 0.7em auto 0.7em auto;
@@ -108,13 +110,13 @@ article {
     figcaption {
       //max-width: 50%
       > * {
+        font-size: 12px;
+        line-height: 14px;
         text-indent: 0;
         text-align: justify;
-        font-size: 10px;
-        line-height: 12px;
-        //font-style: italic;
-        padding-top: 0;
-        margin: 2px
+        font-style: italic;
+        padding: 0;
+        margin: 4px 2px 2px 2px
       }
     }
   }
