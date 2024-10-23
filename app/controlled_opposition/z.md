@@ -41,38 +41,44 @@ pole-dancing fiance to fly to Russia and marry him.
 
 #### Donald Trump
 
-My take on the Great Reset we're currently in. This isn't the first Reset caused by the Deep State. First Great Reset
-was the Ottoman invasion of Europe 1492. With a pandemic as cover Christians were wiped out or fled to America. Next
-Great Reset was possibly the Reformation 1516, Christian Cathars (from Russia) were catherized in fire. After that the
-next Great Reset was the defeat of Napoleon in World War Zero 1812. Anyone not catholic, copy-catholic (protestant), or
-otherwise converted to monotheism was slaughtered leading to orphan trains. 1912 sinking of the Titanic triggered yet
-another Great Reset with a world war and a pandemic. Just like 1812, 1912 had a 40 year genocide follow it called the
-Great Depression (120 million Americans) the Holodomor (66 million euroasian Christians) and other genocides, and more
-orphan trains. 1812 and 1912 gave the Deep State a roadmap of how to do another reset around 2012. If you still don't
-think the 'Great Reset' is a real thing, you aren't aware of what was said at DAVOS June 2020.
+”NOW IS THE TIME FOR A GREAT RESET”
+This is the name of an initiative launched by the World Economic Forum (WEF) in June 2020 by Klaus Shwab. They had a
+plan to crash the world economies, inflame war tensions, and unleash pandemics in order to hurry along what they thought
+the world needed - a major population reduction (below 1 billion). So, they took us to the edge of a Great Reset, but
+the plan was thwarted from within.
 
-George W Bush was taken out on 9-11-2001 if you hadn't noticed. All appearances after that date were staged. Today he
-appears quite brain-dead. Obama was then scheduled to win to enable the race war as race would be blamed for 8 years of
-economic/human rights deterioration. Hillary was supposed to beat Trump in 2016 to enable a gender war and start the
-pandemic. After 4 years of poverty and death, Trump was supposed to beat Hillary in 2020 to 'put a man in charge', and
-then oversee another 4 years of America's destruction. We would then be back on the Agenda 2030 schedule and ready for a
-New World Order government to supplant our Federal and State.
+Here was the plan: These days more people know that all of our US Presidents were pre-selected throughout history by the
+Jesuit/Illuminati/Freemason Federalists who hijacked our country early on and formed the “Federal” government. They
+started wars to obtain the nearly absolute power over the Republic they wield today. No president in history (except
+one!) was able to prevent the wars, even as our country continued to suffer from them. Essentially the Great Reset plan
+was predetermined before any of us were born, and it was unstoppable and completely fool-proof, and yet it was THWARTED.
+Trump and Hillary were both part of a long line of pre-selected presidents. Trump was supposed to lose to Hillary in
+2016 who would have become the first woman president. She would surprise the liberals by continuing the proxy wars
+against Russia like any male president would have done. 2016 was also the original date for the planned release of
+covid19. Trump was then supposed to win in 2020 to ‘put a man in charge’, but by then our military would be
+vaccine-injured and hopelessly compromised around the world, and Trump would have been powerless to stop the wars by
+then.
 
-So the Deep State was planning a Great Reset on Feb 14th 2016 (Valentines day, bummer...) under the cover of war and
-another pandemic. The 9/11 COUP of the United States Government triggered 2 new wars and the rise of ISIS. Pressure on
-Russia triggered another in 2008, 2014, and 2022. After Crimea, the Russian intel community began a defensive campaign
-informing the world on the CCP planned zombie virus and 5G rollout, jadeHELM (Homeland Elimination of Local Militia)
-2015 invasion of Texas, and other ways our government has been hijacked since 9/11. Our US Generals finally took it
-seriously and plan was formulated to save our country.
+Here’s how it was thwarted: Our US military - fearing this inevitable, unstoppable doom (which would have destroyed
+America) - offered Trump a way out of his predicament - TURN THE PLAN ON ITSELF. They realized back then that this would
+be the only way to mitigate a fool-proof plan; essentially the world needed to get safely through all phases of the
+Great Reset without losing our populations or sovereignty. Thus, Trump easily defeated Hilary in 2016 and started the
+MAGA movement. Within 4 years, the administration set in motion the key steps that would neutralize the threat of the
+Great Reset; The Abraham Accords prevented a Holy War in Palestine. Operation Warp Speed prevented a MANDATORY VACCINE
+ROLLOUT which never happened in this country (and we should all be very grateful for that). What we are now witnessing
+is the spectacular fallout of the Great Reset plan as it collapses on itself forcing the Deep State’s little schemes
+into reverse world-wide. They are panicking. They don’t know how to right the Deep State ship anymore. They tried twice
+to kill our President because they know he will be the final nail in their coffin.
 
-The Great Reset was then executed prematurely by the US Army and their candidate, Trump, which is why we're seeing it
-fail completely. The "Trump Plan" as executed has been 100% successful, regardless of what the controlled opposition
-agents like qanon or Mike (Pillow) Lindell have to say. Under Trump the US Army was rebuilt, has avoided WW3, defeated
-ISIS caliphate which covered 17,520 square miles in 2017 (everyone forgot), exposed the Federal Government a.k.a. Deep
-State, and saved America. Trump is not running again - he is a Deep State Creation that turned on it's creator. Happens
-all the time. Hitler. Napoleon. We can't ever elect anyone like that again. Vote Ron DeSantis in 24 (or Marjorie Taylor
-Greene). From here on out Trump will do whatever he needs to do to take the Deep State down with his personal sinking
-ship. That was the plan, and he was happy to do it.
+2024 is the worst year in all of human history; choose any other year - it’s not even close! Today, we have the most
+slaves in actual bondage and forced labor - over 50 million worldwide. Today, we have the greatest scale of poverty -
+over 40 million in the US alone. We have the most wars - over 110 conflicts going on today (including World War 3). We
+have a dysfunctional health care system run on for-profit science (pills and vaccines). We have an education system that
+operates entirely on a neo-colonial mindset teaching children little else than pure propaganda and no real skills. We
+have the most people in prison (over 11 million). The Nov 5th election is not a vote between two candidates. It is a
+vote between two REALITIES. If you disagree with all of the above, and maybe you think that things aren’t that bad -
+that America isn’t suffering and does not need to be made Great again - then vote Kamala. It’s our responsibility as
+adults to determine which is the “real” reality, and not burden the next generation with our failure to do so. MAGA!
 
 #### Bernie Sanders
 
