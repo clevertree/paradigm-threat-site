@@ -60,10 +60,12 @@ async function generateDirectory () {
     const pairListString = keywordList.sort().map(keyword => `${keyword}:${keywordCount[keyword]}`).join(',')
     // var uniqueAndSortedKeywordString = keywordList.sort().join(',')
 
-    const crc32 = CRC32.str(pairListString) // keywordList.reduce((crc32, keyword) => CRC32.str(keyword), 0)
-    if (crc32 !== 0 && !await pathHasCRC(currentPathRelative, crc32)) {
-      console.log('indexing path: ', currentPathRelative)
-      await sql`SELECT search_add_keywords_to_path(${currentPathRelative}, ${crc32}, ${pairListString});`
+    if(await isConnected()) {
+      const crc32 = CRC32.str(pairListString) // keywordList.reduce((crc32, keyword) => CRC32.str(keyword), 0)
+      if (crc32 !== 0 && !await pathHasCRC(currentPathRelative, crc32)) {
+        console.log('indexing path: ', currentPathRelative)
+        await sql`SELECT search_add_keywords_to_path(${currentPathRelative}, ${crc32}, ${pairListString});`
+      }
     }
 
     return directories
@@ -100,6 +102,18 @@ async function readTextFileKeywords (relativeFilePath) {
 }
 
 let cachedPathCRCs = null
+let connectionFailed = false
+
+async function isConnected () {
+  if(connectionFailed)
+    return false;
+  try {
+    await getPathCRCs();
+  } catch (e) {
+    connectionFailed = true;
+    console.log("Error connecting to database", e);
+  }
+}
 
 async function getPathCRCs () {
   if (!cachedPathCRCs) {
