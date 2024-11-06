@@ -54,12 +54,16 @@
     max-height: 20vh;
     overflow-y: auto;
   }
+  @media screen and (min-aspect-ratio: 3/4) {
+    //flex-direction: row;
+  }
+
 }
 
 .fullscreenImage {
   min-width: 50vw;
   max-width: 90vw;
-  max-height: 50vh;
+  max-height: 70vh;
 
 }
 

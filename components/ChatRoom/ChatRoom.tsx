@@ -5,6 +5,7 @@ import React, {useEffect, useState} from 'react'
 import styles from './ChatRoom.module.scss'
 import {ErrorBoundary, SuspenseLoader} from '@client'
 import Markdown, {MarkdownToJSX} from 'markdown-to-jsx'
+import debug from "debug";
 
 const API_URL = process.env.NEXT_PUBLIC_API
 
@@ -15,18 +16,19 @@ interface ChatRoomProps {
     mode?: 'full'
 }
 
-interface ChannelPost {
+interface ChannelEntry {
     id: number,
     user_id: number,
     username: string,
     channel_id: number,
     created: Date,
-    content: string
+    content: string,
+    isError?: true
 }
 
 interface ChannelContent {
     channel: string,
-    posts: Array<ChannelPost>
+    posts: Array<ChannelEntry>
 }
 
 interface ChannelInfo {
@@ -47,10 +49,27 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
     const [channelList, setChannelList] = useState<ChannelList>([])
     const [loading, setLoading] = useState(true)
     const [disabled, setDisabled] = useState<boolean>(false)
-    const [error, setError] = useState<string | null>()
+    // const [error, setError] = useState<string | null>()
     const [postCount, setPostCount] = useState<number>(0)
     const [currentChannelName, setCurrentChannelName] = useState<string>(channel)
     const [currentUserName, setCurrentUserName] = useState<string>('')
+
+    function addError(error:string) {
+        setChannelContent(channelContent => {
+            const newContent = channelContent ? {...channelContent} : {posts: []}
+            const newEntry: ChannelEntry = {
+                username: 'system',
+                id: -1,
+                user_id: -1,
+                channel_id: -1,
+                created: new Date(),
+                content: error,
+                isError: true
+            }
+            newContent.posts = [newEntry, ...newContent.posts]
+            return newContent as ChannelContent
+        })
+    }
 
     useEffect(() => {
         const username = localStorage.getItem('ChatRoom:username');
@@ -66,17 +85,18 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
                 .then(res => res.json())
                 .then((channelContent) => {
                     if (channelContent.error) {
-                        setError(JSON.stringify(channelContent.error))
+                        addError(JSON.stringify(channelContent.error))
                     } else {
                         // channelContent.posts = channelContent.posts.slice(0).reverse()
                         setChannelContent(channelContent)
                     }
-                }).catch(error => {
-                console.error(error)
-                setError(error.message)
-            }).finally(() => {
-                setLoading(false);
-            })
+                })
+                .catch(error => {
+                    console.error(error)
+                    addError(error.message)
+                }).finally(() => {
+                    setLoading(false);
+                })
         }
     }, [currentChannelName, postCount])
 
@@ -88,7 +108,7 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
                 .then(res => res.json())
                 .then((channelList) => {
                     if (channelList.error) {
-                        setError(JSON.stringify(channelList.error))
+                        addError(JSON.stringify(channelList.error))
                     } else {
                         if (!currentChannelName) {
                             const randomChannel = channelList[Math.floor(Math.random() * channelList.length)].name;
@@ -98,7 +118,7 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
                     }
                 }).catch(error => {
                 console.error(error)
-                setError(error.message)
+                addError(error.message)
             }).finally(() => {
                 setLoading(false);
             })
@@ -120,7 +140,6 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
 
 
     async function submitForm(formElm: HTMLFormElement) {
-        try {
             const formData = new FormData(formElm)
             const formDataObject = Object.fromEntries(formData.entries()) as { [key: string]: string }
             if (!formDataObject?.username) {
@@ -131,7 +150,7 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
             const {content: contentElm} = (formElm.elements as FormElements)
             contentElm.value = ''
             setDisabled(true)
-            await fetch(`${API_URL}/api/chat/channel/${currentChannelName}/createGuestPost`, {
+            fetch(`${API_URL}/api/chat/channel/${currentChannelName}/createGuestPost`, {
                 headers: {
                     'Content-Type': 'application/json',
                     Accept: 'application/json'
@@ -139,15 +158,23 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
                 method: 'POST',
                 body: JSON.stringify(formDataObject)
             })
-            setPostCount(postCount + 1);
-        } catch (error) {
-            if (error instanceof Error) {
-                console.error(error)
-                setError(`Error submitting message: ${error.message} (`)
-            }
-        } finally {
-            setDisabled(false)
-        }
+                .then((response) => {
+                    if(!response.ok) {
+                        response.json().then(json => {
+                            addError(`HTTP error! status: ${response.status}, message: ${JSON.stringify(json?.error?.message || json?.error || json)}`);
+                        });
+                    } else {
+                        setPostCount(postCount + 1);
+                    }
+                })
+                .catch(error => {
+                    console.error(error)
+                    addError(`Error submitting message: ${error.message} (`)
+                })
+                .finally(() => {
+                    setDisabled(false)
+
+                })
     }
 
     let channelSelectionMarkup = null;
@@ -179,8 +206,8 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
             <div className='flex flex-col sm:flex-row sm:h-[60vh]'>
                 {channelSelectionMarkup}
                 <div className={styles.channel + ' max-h-[80vh] sm:w-[80%] flex-grow overflow-y-auto'}>
-                    {channelContent?.posts?.map(({username, content, created}, index) => (
-                        <div key={index} className={styles.post}
+                    {channelContent?.posts?.map(({username, content, created, isError}, index) => (
+                        <div key={index} className={styles.post + (isError ? ' ' + styles.error : '')}
                              title={`Created at ${new Date(created).toLocaleString()}`}>
                             <span className={styles.username}>{username}</span>
                             <span className={styles.content}>
@@ -190,8 +217,6 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
                             </span>
                         </div>
                     ))}
-                    {error &&
-                      <div className={`${styles.post} ${styles.error}`}>Could not load chatroom: {error}</div>}
                 </div>
             </div>
             <div>
@@ -210,6 +235,7 @@ export default function ChatRoom({channel, title, className, mode}: ChatRoomProp
                             className={`${styles.input} w-full`}
                             onKeyDown={onKeyDown}
                             required
+                            maxLength={1024}
                             title="Send a message to the channel"
                             placeholder="got something to say? type it here and hit the enter key to send to the channel"
                         />
