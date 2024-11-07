@@ -37,7 +37,7 @@ attacked the central banks, BIS or World Bank.
 He told us that the NSA spies us - didn't we already know this? Snowden doesn't talk about, or release documents on
 western state sponsored terror, illegal wars and occupations, torture, 9/11 or even a corrupt politican or banker - if
 he did have top-level clearance he should have been able to find some evidence. The US Gov't even allowed his
-pole-dancing fiance to fly to Russia and marry him.
+pole-dancing fiancé to fly to Russia and marry him.
 
 #### Donald Trump
 
@@ -53,7 +53,7 @@ started wars to obtain the nearly absolute power over the Republic they wield to
 one!) was able to prevent the wars, even as our country continued to suffer from them. Essentially the Great Reset plan
 was predetermined before any of us were born, and it was unstoppable and completely fool-proof, and yet it was THWARTED.
 Trump and Hillary were both part of a long line of pre-selected presidents. Trump was supposed to lose to Hillary in
-2016 who would have become the first woman president. She would surprise the liberals by continuing the proxy wars
+2016 who would have become the first lady president. She would surprise the liberals by continuing the proxy wars
 against Russia like any male president would have done. 2016 was also the original date for the planned release of
 covid19. Trump was then supposed to win in 2020 to ‘put a man in charge’, but by then our military would be
 vaccine-injured and hopelessly compromised around the world, and Trump would have been powerless to stop the wars by
@@ -82,8 +82,8 @@ adults to determine which is the “real” reality, and not burden the next gen
 
 #### Bernie Sanders
 
-His campaign was sabotaged by the DNC and manipulated by the super delegates and Bernie didn't speak up about it and
-demand change. He played his role becasue his job was simply to ensure that Hillary won the nomination. He was also used
+His campaign was sabotaged by the DNC and manipulated by the superdelegates and Bernie didn't speak up about it and
+demand change. He played his role because his job was simply to ensure that Hillary won the nomination. He was also used
 to open up the debate about socialism which is where the US and world is headed (see point 1 about Communism).
 
 #### Alex Jones
