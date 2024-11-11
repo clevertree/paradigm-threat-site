@@ -27,41 +27,43 @@ export default async function RootLayout(
         children: React.ReactNode
     }) {
 
-    return (<html lang="en">
-    <head/>
-    <body>
-    <header>
-        <Link href="/">
-            <img src={HeaderImg.src} alt="Header Logo"/>
-        </Link>
-    </header>
+    return (
+        <html lang="en">
+        <head/>
+        <body>
+        <header className={styles.headerContainer}>
+            <Link href="/">
+                <img src={HeaderImg.src} alt="Header Logo"/>
+            </Link>
+        </header>
 
 
-    <FloatingDiv containerTag='nav' className={styles.navContainer}>
-        <DynamicNav directory={Directory} className={styles.linkContainer}>
-            <Link href="/search">🔍</Link>
-            <Link href="/">home</Link>
-            <Link href="/chat">chat</Link>
-            <Link href="https://www.bitchute.com/channel/paradigmthreat">videos</Link>
-        </DynamicNav>
-    </FloatingDiv>
+        <FloatingDiv containerTag='nav' className={styles.navContainer}>
+            <DynamicNav directory={Directory} className={styles.linkContainer}>
+                <Link href="/search">🔍</Link>
+                <Link href="/">home</Link>
+                <Link href="/chat">chat</Link>
+                <Link href="https://www.bitchute.com/channel/paradigmthreat">videos</Link>
+            </DynamicNav>
+        </FloatingDiv>
 
-    <Suspense fallback={<SuspenseLoader/>}>
-        <article>
-            {children}
-        </article>
-    </Suspense>
+        <Suspense fallback={<SuspenseLoader/>}>
+            <article>
+                {children}
+            </article>
+        </Suspense>
 
-    <footer>
-        <div>created by <a href="https://clevertree.net/">Ari Asulin</a></div>
-        {/*<hitCounter></hitCounter>*/}
-        <div>
-            [<a href="https://github.com/clevertree/paradigm-threat-site">git repository</a>]
-        </div>
-    </footer>
+        <footer>
+            <div>created by <a href="https://clevertree.net/">Ari Asulin</a></div>
+            {/*<hitCounter></hitCounter>*/}
+            <div>
+                [<a href="https://github.com/clevertree/paradigm-threat-site">git repository</a>]
+            </div>
+        </footer>
 
-    <Analytics/>
-    <SpeedInsights/>
-    </body>
-    </html>)
+        <Analytics/>
+        <SpeedInsights/>
+        </body>
+        </html>
+    )
 }
