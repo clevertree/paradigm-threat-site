@@ -13,7 +13,7 @@ story of human Andronicus Christ of the Crimea
 **Comparative Religion** — The basic plot of the Jesus Story, including the motif of a crucified savior, already existed
 in many other religions long prior to the alleged time of Jesus. This also has been thoroughly covered elsewhere by
 other people (click [here](../cr.htm) for more information).
-**Solar Mythology** — The Jesus Story is actually an _allegory_ for what would naturally be the oldest and most
+**Solar Mythology** — The Jesus Story is actually an _allegory_ for what would naturally [be one of] the oldest and most
 important story humans would notice and write down, that of the annual passage of the seasons of the year. The position
 of the Sun against the celestial sphere changes during the year. This is explained below. (For a more thorough
 explanation see [Lessons on Solar Mythology](../index.htm#solarmyth))
@@ -394,7 +394,7 @@ didn't. So is the story of Joseph and his coat of many colors, the youngest and 
 number 12 again is a tip off that this is an astrological allegory of the 12 months of the year and the 12 signs of the
 Zodiac.
 
-Not only that, solar mythology goes beyond the Bible and can be shown to be the basis of most of our oldest and most
+Not only that, solar mythology goes beyond the Bible and can be shown to be the basis of most of our  most
 cherished folk tales and fables. Little Red Riding Hood, Jack and the Bean Stalk, Cinderella, Homer's Odyssey (Odysseus
 is the Sun who takes a long journey, yearning to return to his wife, Penelope, who represents Virgo. Odysseus then
 shoots an arrow through twelve axes, representing the twelve months of the year; a feat only the Sun can do) — they all
