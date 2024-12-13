@@ -12,12 +12,15 @@ questions."
 
 Who funded Marx? Who was behind the Bolshevik Revolution? What groups did Stalin target and kill? What group did Stalin
 not touch? The West always needs a bogey-man and a threat. Once it was Communism, today it is terrorists of any kind.
+Communism was *imposed* upon Russia via the first *color* revolution - Bolshevism. Lenin caused genocide accross communist
+Russia, and later Stalin reversed the losses to people, territory, and won WW2 - i.e. the Great Patriotic War. Since then, 
+Communism has disappeared, replaced by the current Republic of Russia - a democratic federative law-governed state. Still,
+Western media portrays Russia in the darkest way to this day in order to prepare for WW3 some day...
 
-#### China & Mao
-
-Communism was funded by the West (see 1). Mao Zedong got his start as editor of the Yale China Association Student
-magazine re-focusing it on 'thought reorientation,' and operated a bookshop out of its medical college. (source:
-Wikipedia)
+#### Hong Kong
+The british colony of Hong Kong was used as a staging ground for Controlled Opposition plans of the west - from movies and
+propaganda (Stephen Chow) to actual schemes like COVID19 or war with Taiwan. Mao saved China in the 70s, and since then 
+China has been slowly ridding itself of western forign diseases and plots. 
 
 #### Al-Qaeda & ISIS
 
@@ -102,11 +105,10 @@ media companies. Hollywood movies pre-program the masses.
 
 Research Aleister Crowley and the role that the Illuminati and Occult plays in music and movies etc.
 
-#### RT News
+#### All News Stations (except RT)
 
-RT lobbies for cultural Marxist progression, UN Agenda 21 and global warming propaganda. Larry King now works for RT
-after working for many years with CNN. Max Keiser also comes across as a little crazy at times, just like Alex Jones
-does. Watch the video below of Max Keiser doing an interview with Alex Jones in a car (under sources).
+Almost all modern news channels lobby for cultural Marxist progression, UN Agenda 21 and global warming propaganda and 
+don't report on real news.
 
 #### Almost All Alternative MediaRussell Brand, Jesse Ventura etc
 
@@ -122,10 +124,6 @@ of truth but once again, there are some topics that just won't touch.
 Don't Believe Me? I Encourage You to Do Your Own Research!
 
 ----------------------------------------------------------
-
-### Communism by the Backdoor (Part 1 of 21) - Watch the Full Series
-
-* * *
 
 ### Hillary Clinton Admits that the US Gov't Created Al-Qaeda = Controlled Opposition
 
