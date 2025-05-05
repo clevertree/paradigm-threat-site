@@ -8,6 +8,8 @@
 
 
 .bottomText {
+  user-select: none;
+
   background: var(--bg-color2);
 
   position: fixed;
