@@ -1,4 +1,4 @@
-# Question by xcitable1
+## Question by xcitable1
 
 > xcitable1: Listened to the THC podcast.  Definitely some thought provoking info, my main question is why would Mars humans remain on Mars if they need our resources?  If they are able to use portals, etc they could all just come here.  Unless there is more to the story
 

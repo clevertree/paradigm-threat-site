@@ -1,4 +1,4 @@
-# History
+## History
 
 The Hollow Earth Theory was proposed by Edmund Halley in 1692.
 He made the claim that the Earth is a hollow shell some 500 miles
@@ -6,7 +6,7 @@ thick with two concentric shells and an innermost core with an inner sun.
 He said that atmospheres separated these shells, that each shell had its own magnetic poles and all rotated at different
 speeds.
 
-# Hollow Planet Seismology vs Solid Earth Seismology
+## Hollow Planet Seismology vs Solid Earth Seismology
 
 [by Jan Lamprecht](https://www.bibliotecapleyades.net/tierra_hueca/esp_tierra_hueca_9.htm)
 
@@ -235,7 +235,7 @@ gravity are so weak that they do not have enough force for us to detect them.
 Let me point out that seismologists have indeed speculated about the possible existence of "Silent Earthquakes" which
 are remain undetected by our equipment.
 
-# Occam's Razor & the Hollow Planets model:
+## Occam's Razor & the Hollow Planets model:
 
 ## When in doubt, the simplest model is probably right
 

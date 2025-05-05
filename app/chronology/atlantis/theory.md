@@ -2,7 +2,7 @@
 <meta name="description" content="Atlantis Mars Theory: Ruins of Atlantis are at the North Pole of Mars, not Earth!" />
 <meta name="keywords" content="Atlantis, Mars, North Pole, Ruins" />
 
-# Atlantis Mars Theory: Ruins of Atlantis are at the North Pole of Mars, not Earth!
+## Atlantis Mars Theory: Ruins of Atlantis are at the North Pole of Mars, not Earth!
 
 During the collinear configuration, the 'highest realm' where Humans could actually set foot would be the North Pole of
 Mars.

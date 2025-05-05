@@ -1,4 +1,4 @@
-# [ENSURE MORE CHILDREN SURVIVE AND THRIVE! BOYCOTT VACCINES!](https://exposingvaccinegenocide.org/)
+## [ENSURE MORE CHILDREN SURVIVE AND THRIVE! BOYCOTT VACCINES!](https://exposingvaccinegenocide.org/)
 
 ```
 Note: This investigation is a work in progress. Check back soon for more updates!
@@ -71,7 +71,7 @@ BOTH CORPORATE AND “PHILANTHROPIC.”
 Vaccine industrialists partner with governments and special interests to hoodwink the public, divert and dim awareness
 to the urgent global issue of vaccinecide, and get away with mass murder.
 
-# [The Covid-19 Vaccine and the U.S. policy of depopulation](https://new.finalcall.com/2020/12/08/the-covid-19-vaccine-and-the-u-s-policy-of-depopulation/)
+## [The Covid-19 Vaccine and the U.S. policy of depopulation](https://new.finalcall.com/2020/12/08/the-covid-19-vaccine-and-the-u-s-policy-of-depopulation/)
 
 If you have difficulty believing that killing Original people is actually policy, not just random violence, then ask
 yourself how we can trust the makers and administrators of the Covid-19 vaccine when U.S. laws protect them from
@@ -132,7 +132,7 @@ itself. What is so horrifying is the enlistment of Black medical and health prof
 preachers to be the mouthpiece for the government; the mouthpiece for that which Minister Farrakhan identifies as “the
 very representative of death itself.”
 
-# [COVID-19 turns out to be huge hoax perpetrated by media](https://www.washingtontimes.com/news/2020/apr/28/covid-19-turning-out-to-be-huge-hoax-perpetrated-b/)
+## [COVID-19 turns out to be huge hoax perpetrated by media](https://www.washingtontimes.com/news/2020/apr/28/covid-19-turning-out-to-be-huge-hoax-perpetrated-b/)
 
 ```
 Note: This investigation is a work in progress. Check back soon for more updates!

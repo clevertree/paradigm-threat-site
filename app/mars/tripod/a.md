@@ -1,4 +1,4 @@
-# Martian Tripod Investigation
+## Martian Tripod Investigation
 
 ```
 Note: This investigation is a work in progress. Check back soon for more updates!

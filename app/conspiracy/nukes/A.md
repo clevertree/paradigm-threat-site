@@ -1,4 +1,4 @@
-# [The Nuclear Scam by Galen Winsor (1986)](https://www.youtube.com/watch?v=IVoKztKs6-E)
+## [The Nuclear Scam by Galen Winsor (1986)](https://www.youtube.com/watch?v=IVoKztKs6-E)
 
 ```
 Note: This investigation is a work in progress. Check back soon for more updates!
@@ -44,7 +44,7 @@ rulers use to keep us under their thumbs.
 He also says Three Mile Island was an intentionally created disaster, and that a core meltdown could not melt its way
 deep into the Earth. We see shades of 911 and Fukushima here…. Could Chernobyl be the same? The answer is frightening.
 
-# [Explanations why a-bombs and h-bombs do not work](http://www.members.tripod.com/heiwaco/bomb1.htm)
+## [Explanations why a-bombs and h-bombs do not work](http://www.members.tripod.com/heiwaco/bomb1.htm)
 
 ## My Atomic Bomb Findings The grand manipulation 1945-2020
 

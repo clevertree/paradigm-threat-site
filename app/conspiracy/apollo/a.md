@@ -1,4 +1,4 @@
-# [A Funny Thing Happened on the Way to the Moon (Faked Moon Mission Documentary)](https://www.youtube.com/watch?v=xciCJfbTvE4)
+## [A Funny Thing Happened on the Way to the Moon (Faked Moon Mission Documentary)](https://www.youtube.com/watch?v=xciCJfbTvE4)
 
 ```
 Note: This investigation is a work in progress. Check back soon for more updates!

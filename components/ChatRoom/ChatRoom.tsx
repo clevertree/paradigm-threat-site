@@ -269,6 +269,12 @@ const ChannelMarkdownOptions: MarkdownToJSX.Options = {
     overrides: {
         p: {
             component: 'div'
-        }
+        },
+        h1: {
+            component: 'div'
+        },
+        h2: {
+            component: 'div'
+        },
     }
 }

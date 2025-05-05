@@ -1,4 +1,4 @@
-# You can take an entire college course and never be told that pH stands for potential of Hydrogen atoms
+## You can take an entire college course and never be told that pH stands for potential of Hydrogen atoms
 
 ```
 Note: This investigation is a work in progress. Check back soon for more updates!
@@ -10,7 +10,7 @@ or in simpler terms:
 
 Healthy Cells = -30mV. Cancer = +30mV.
 
-# [Healing is Voltage](https://www.tennantbiomodulator.ca/2-uncategorised/11-dr-jerry-tennant-healing-is-voltage?start=1)
+## [Healing is Voltage](https://www.tennantbiomodulator.ca/2-uncategorised/11-dr-jerry-tennant-healing-is-voltage?start=1)
 
 "Cells are designed to run between a pH of 7.35 and 7.45.
 

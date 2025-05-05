@@ -1,4 +1,4 @@
-# If we take the testimony of the ancients as a literal description of actual events, the events would have looked like this:
+## If we take the testimony of the ancients as a literal description of actual events, the events would have looked like this:
 
 ## 1. Saturn Joins the Sun's System and Lights Up
 The Earth moved in a congregation of planets,

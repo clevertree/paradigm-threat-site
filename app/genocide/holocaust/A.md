@@ -1,4 +1,4 @@
-# Was Holocaust really Holodomor #3?
+## Was Holocaust really Holodomor #3?
 
 ```
 Note: This investigation is a work in progress. Check back soon for more updates!
@@ -75,7 +75,7 @@ banned and falsification of evidence took place and Russia, to this day, continu
 Russian officials regard evidence of the genocide as “falsifications of history,” and claim that the famine was due to a
 natural disaster that affected the entirety of the Soviet Union.
 
-# [Holocaust Revisionism](http://holocaustrevisionism.com/)
+## [Holocaust Revisionism](http://holocaustrevisionism.com/)
 
 by Mark R. Elsis
 
@@ -159,7 +159,7 @@ fighter for truth and justice."
 Adolf Hitler
 ```
 
-# History Of The Jews
+## History Of The Jews
 
 "The followers of the [National-Socialist] movement, and indeed the whole nation, must be
 reminded again and again of the fact that, through the medium of his newspapers, the Jew is
@@ -4756,7 +4756,7 @@ John Fitzgerald Kennedy
 The following essay was published in Der Angriff, January 21, 1929. Joseph Goebbels founded
 the newspaper in Berlin in 1927 shortly after taking over as the party’s leader.
 
-# The Jew
+## The Jew
 
 ```
 by Dr. Joseph Goebbels
@@ -4857,7 +4857,7 @@ Voltaire
 
 ### -------------------------------------------------------
 
-# 50 Sections Of Evidence
+## 50 Sections Of Evidence
 
 "If the Marxist teaching were to be accepted as the foundation of the life of the universe, it would
 lead to the disappearance of all order that is conceivable to the human mind. And thus the
@@ -8188,7 +8188,7 @@ Adolf Hitler
 
 ### -------------------------------------------------------
 
-# Solutions For The Survival Of Humanity (The Jewish Problem)
+## Solutions For The Survival Of Humanity (The Jewish Problem)
 
 Because of the freedom of the Internet, I have noticed over the last few years that an awakening
 of truth is occurring about the supposed Holocaust. I have also observed a growing allegiance of

@@ -1,4 +1,4 @@
-# The Genocide of the Palestinian People: An International Law and Human Rights Perspective
+## The Genocide of the Palestinian People: An International Law and Human Rights Perspective
 
 [August 25, 2016](https://ccrjustice.org/genocide-palestinian-people-international-law-and-human-rights-perspective)
 

@@ -1,4 +1,4 @@
-# ALL WARS ARE BANKER WARS
+## ALL WARS ARE BANKER WARS
 
 ```
 Note: This investigation is a work in progress. Check back soon for more updates!

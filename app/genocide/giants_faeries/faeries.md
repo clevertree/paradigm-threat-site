@@ -1,4 +1,4 @@
-# Investigation into the Existence/Cover-up of Small Humanoids (like Fairies)
+## Investigation into the Existence/Cover-up of Small Humanoids (like Fairies)
 
 ```
 Note: This investigation is a work in progress. Check back soon for more updates!

@@ -4,7 +4,7 @@
 > ― Tom Robbins, Even Cowgirls Get the Blues
 
 
-# Magic and the Silly People
+## Magic and the Silly People
 by Geri Roberts
 
 

@@ -2,7 +2,7 @@
 <meta name="description" content="The Biblical Jesus Christ is a combination of an Astrological Allegory for the new Lord - our Sun combined with the story of human Andronicus Christ of the Crimea" />
 <meta property="og:image" content="/christ/christ_is_the_sun7.jpg" />
 
-# [Solar Mythology and the Jesus Story](https://solarmythology.com/lessons/christ2002.htm)
+## [Solar Mythology and the Jesus Story](https://solarmythology.com/lessons/christ2002.htm)
 
 <img src="christ_is_the_sun7.jpg" class="float-left" alt="Christ as the Sun" />
 <img src="christ_is_the_sun6.jpg" class="float-right" alt="Christ as the Sun" />
@@ -407,7 +407,7 @@ astronomical meaning of these stories. Today most people never look at the stars
 the Sun in the sky. There's a whole lot of answers to be found in this area of research, and hardly anyone is looking in
 this direction.
 
-# CONCLUSION
+## CONCLUSION
 
 I will close on a positive note that all of this study of the Jesus story which has led to a study of the Seasons of the
 Year can actually lead us towards a more spiritual understanding of life. A Jewish scholar, Arthur I. Waskow, in 1985

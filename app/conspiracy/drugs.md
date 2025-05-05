@@ -4,7 +4,7 @@
 > ― Jane Roberts, The “Unknown” Reality, Volume Two
 
 
-# The Comfort Blanket Theory Of Conspiracy
+## The Comfort Blanket Theory Of Conspiracy
 
 By Geri Roberts
 

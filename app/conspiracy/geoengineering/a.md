@@ -1,4 +1,4 @@
-# [Climate Change, George Soros and Censorship](https://redstate.com/diary/davenj1/2020/02/06/climate-change-george-soros-and-censorship-n240953)
+## [Climate Change, George Soros and Censorship](https://redstate.com/diary/davenj1/2020/02/06/climate-change-george-soros-and-censorship-n240953)
 
 ```
 Note: This investigation is a work in progress. Check back soon for more updates!

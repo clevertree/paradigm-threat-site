@@ -1,4 +1,4 @@
-# [Uncovering	the	Missing	Secrets	of Magnetism](http://argos.vu/wp-content/uploads/2017/02/magnetism1small.pdf)
+## [Uncovering	the	Missing	Secrets	of Magnetism](http://argos.vu/wp-content/uploads/2017/02/magnetism1small.pdf)
 
 ##### by: Ken Lee Wheeler (neoplatonist@icloud.com)
 

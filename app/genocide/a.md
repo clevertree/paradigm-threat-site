@@ -1,4 +1,4 @@
-# [22 Years Later, US Still Classifying “Bombshell” Plan to Pull Peacekeepers Out Before Rwanda Genocide](https://unredacted.com/2016/04/26/22-years-later-us-still-classifying-bombshell-plan-to-pull-peacekeepers-out-before-rwanda-genocide/)
+## [22 Years Later, US Still Classifying “Bombshell” Plan to Pull Peacekeepers Out Before Rwanda Genocide](https://unredacted.com/2016/04/26/22-years-later-us-still-classifying-bombshell-plan-to-pull-peacekeepers-out-before-rwanda-genocide/)
 
 
 Left: Redacted State Department “bombshell” document, Right: Excerpts from cables reporting on the “bombshell” from the Czech Republic, New Zealand, United Kingdom, and the United Nations’ Kofi Annan.

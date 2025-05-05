@@ -5,7 +5,7 @@
 
 <div style="clear: both" />
 
-# Astronomy: The Simulated Universe.
+## Astronomy: The Simulated Universe.
 
 ```
 Note: This investigation is a work in progress. Check back soon for more updates!
@@ -98,7 +98,7 @@ evidence."
 
 ---
 
-# Einstein was wrong. He said so himself
+## Einstein was wrong. He said so himself
 
 Einstein's self-proclaimed "biggest blunder" was his postulation of a cosmological constant
 (a force that opposes gravity and keeps the universe from collapsing).

@@ -1,4 +1,4 @@
-# [The encyclopedia of False Flag staged operations](https://hofs.online/the-encyclopedia-of-false-flag-staged-operations/)
+## [The encyclopedia of False Flag staged operations](https://hofs.online/the-encyclopedia-of-false-flag-staged-operations/)
 
 ```
 Note: This investigation is a work in progress. Check back soon for more updates!
@@ -31,7 +31,7 @@ encyclopedia based on facts.
 * New Zealand Mosque attack
 * Notre Dame
 
-# II USS MAINE
+## II USS MAINE
 
 The island of Cuba was first claimed by Spain in 1492 when Christopher Columbus landed on the island. They remained a
 Spanish colony until the end of the Spanish-American War in 1898\. For many years the Cuban natives attempted to free
@@ -73,7 +73,7 @@ Spain had any intentions of war towards the United States or not.
 
 ###### Reference https://www.falseflag.info/uss-maine/
 
-# III Manchurian Incident
+## III Manchurian Incident
 
 Manchurian Incident or Mukden Incident, 1931, confrontation that gave Japan the impetus to set up a puppet government in
 Manchuria. After the Russo-Japanese War (1904–5), Japan replaced Russia as the dominant foreign power in S Manchuria. By
