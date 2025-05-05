@@ -1,6 +1,6 @@
 ## Was Golda Meir really a man? This section will investigate.
 
-Could it be that Golda really born a boy? This might explain away many of the many contradictions in her life. 
+Could it be that Golda was born a boy? This might explain away many of the many contradictions in her life. 
 
 > “An androgynous, who presents both male and female physical traits, is in some ways like men and in some ways like women. 
 > In some ways, they are like both men and women, and in other ways, like neither men nor women." (Bikkurim 4:1)
