@@ -18,6 +18,11 @@ Christ originally meant the Sun, because this new Sun god 'anointed' all the lif
 9 “How can this be?” Nicodemus asked.
 
 10 “You are Israel’s teacher,” said Jesus, “and do you not understand these things? 11 Very truly I tell you, we speak of what we know, and we testify to what we have seen, but still you people do not accept our testimony. 12 I have spoken to you of earthly things and you do not believe; how then will you believe if I speak of heavenly things? 13 No one has ever gone into heaven except the one who came from heaven—the Son of Man.[e] 14 Just as Moses lifted up the snake in the wilderness, so the Son of Man must be lifted up,[f] 15 that everyone who believes may have eternal life in him.”[g]
+
 https://www.biblegateway.com/passage/?search=John%203&version=NIV
 
 Christ was refering to all humans when he said the 'Son of Man', again not himself. 
+
+Had Christ refered to himself as 'the' Son of God, wouldn't he have been crucified for that reason? Instead 'Yehuda of Nazarath, King of the Jews' was carved upon the Crucifix. Did he ever claim to be the King of the Jews? Nope, factually speaking Jesus was never recorded as having made either claim. He was simply a threat - like his literary duplicate 'Barbaras'. 
+
+When you become as much of a threat as Christ had become, your enemies *will* lie about you. First the Catholic/Monotheistic church denied Christ's existance for nearly 200 years, refusing to write down his name in any other fashion than the letter 'iota'. Then, after his myth wouldn't go away, the Monotheists slaughtered the original Gnostic/Cathar Polytheistic Christians in 1380 and created the Apostelic Monotheistic Christianity we know today. This is what the enemies of Christianity did for the next 800 years in order to conquer what could not be defeated: *they obliterated it's true history*.
