@@ -1,12 +1,11 @@
 Christ never referred to himself as the 'Son of God'. Instead, he said all humans are "God's Children" - which itself dispelled any subtle notion that Christ was distinct from other humans.
-
-When Christ talked about the Son of God who was Sent into the World, he was referring to the Sun, of course, which had recently shown up to drive away the old gods (Planets) ending the golden age.
+When the NT authors talked about the Son of God who was Sent into the World, they were referring to the Sun, of course, which had recently shown up to drive away the old gods (Planets) ending the golden age.
 
 "3 See what great love the Father has lavished on us, that we should be called children of God! And that is what we are! The reason the world does not know us is that it did not know him. 2 Dear friends, now we are children of God, and what we will be has not yet been made known. But we know that when Christ appears,[a] we shall be like him, for we shall see him as he is. 3 All who have this hope in him purify themselves, just as he is pure.
 
 https://www.biblegateway.com/passage/?search=1%20John%203&version=NIV
 
-Christ originally meant the Sun, because this new Sun god 'anointed' all the life on Earth. 
+Christ originally meant the Sun, because this new Sun god 'anointed' all the life on Earth signaling the end of the most grim Dark Ages.
 
 "Now there was a Pharisee, a man named Nicodemus who was a member of the Jewish ruling council. 2 He came to Jesus at night and said, “Rabbi, we know that you are a teacher who has come from God. For no one could perform the signs you are doing if God were not with him.”
 
