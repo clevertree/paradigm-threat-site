@@ -14,7 +14,7 @@ However, a [plan by the U.S.](http://nsarchive.gwu.edu/NSAEBB/NSAEBB511/) and th
 Reviewers redacted the historic “bombshell” from a State Department cable, however, even though the fact that the U.S. called for the withdrawal of UNAMIR troops, was previously released to the National Security Archive by the governments of the Czech Republic, New Zealand, and the United Kingdom, and the UN’s Kofi Annan in response to FOIA requests. The information had even been [published on the Archive’s website](http://nsarchive.gwu.edu/NSAEBB/NSAEBB472/) and in the critical oral history conference [briefing book](http://nsarchive.gwu.edu/ageofgenocide/VOLUME%202%20COMPLETE.pdf), “International Decision-Making in the Age of Genocide: Rwanda 1990-1994,” in June 2014.
 
 
-Declassified notes from a April 21, 1994, Peacekeeping Core Group meeting, written by Susan Rice, detailing discussions surrounding the withdrawal of UN peacekeeping forces from Rwanda.
+Declassified notes from an April 21, 1994, Peacekeeping Core Group meeting, written by Susan Rice, detailing discussions surrounding the withdrawal of UN peacekeeping forces from Rwanda.
 
 
 

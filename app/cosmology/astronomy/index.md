@@ -107,7 +107,7 @@ Einstein's self-proclaimed "biggest blunder" was his postulation of a cosmologic
 two Texas A&M University researchers.
 The team is working on a project called ESSENCE that studies supernovae (exploding stars) to figure out if dark
 energy -- the accelerating force of the universe -- is consistent with Einstein's cosmological constant.
-Texas A&M researchers Nicholas Suntzeff and Kevin Krisciunas are part of the project, which began in October of 2002 and
+Texas A&M researchers Nicholas Suntzeff and Kevin Krisciunas are part of the project, which began in October 2002 and
 is scheduled to end next month after achieving its goal of discovering and studying 200 supernovae. The team uses a
 4-meter diameter telescope in Chile during the observing season of October to December to find the supernovae.
 

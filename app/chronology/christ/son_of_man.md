@@ -21,8 +21,8 @@ Christ originally meant the Sun, because this new Sun god 'anointed' all the lif
 
 https://www.biblegateway.com/passage/?search=John%203&version=NIV
 
-Christ was refering to all humans when he said the 'Son of Man', again not himself. 
+Christ was referring to all humans when he said the 'Son of Man', again not himself. 
 
-Had Christ refered to himself as 'the' Son of God, wouldn't he have been crucified for that reason? Instead 'Yehuda of Nazarath, King of the Jews' was carved upon the Crucifix. Did he ever claim to be the King of the Jews? Nope, factually speaking Jesus was never recorded as having made either claim. He was simply a threat - like his literary duplicate 'Barbaras'. 
+Had Christ referred to himself as 'the' Son of God, wouldn't he have been crucified for that reason? Instead, 'Yehuda of Nazareth, King of the Jews' was carved upon the Crucifix. Did he ever claim to be the King of the Jews? Nope, factually speaking Jesus was never recorded as having made either claim. He was simply a threat - like his literary duplicate 'Barrabas'. 
 
-When you become as much of a threat as Christ had become, your enemies *will* lie about you. First the Catholic/Monotheistic church denied Christ's existance for nearly 200 years, refusing to write down his name in any other fashion than the letter 'iota'. Then, after his myth wouldn't go away, the Monotheists slaughtered the original Gnostic/Cathar Polytheistic Christians in 1380 and created the Apostelic Monotheistic Christianity we know today. This is what the enemies of Christianity did for the next 800 years in order to conquer what could not be defeated: *they obliterated it's true history*.
+When you become as much of a threat as Christ had become, your enemies *will* lie about you. First the Catholic/Monotheistic church denied Christ's existence for nearly 200 years, refusing to write down his name in any other fashion than the letter 'iota'. Then, after his myth wouldn't go away, the Monotheists slaughtered the original Gnostic/Cathar Polytheistic Christians in 1380 and created the Apostolic Monotheistic Christianity we know today. This is what the enemies of Christianity did for the next 800 years in order to conquer what could not be defeated: *they obliterated it's true history*.

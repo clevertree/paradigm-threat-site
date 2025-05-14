@@ -14,8 +14,8 @@ Note: This investigation is a work in progress. Check back soon for more updates
 * Everywhere that was “conquered” by “Romans” ... they just killed all the people there, took over the cities and
   temples,
 * assimilated whoever was leftover and then claimed their stuff as “Roman”.
-* Then when you trace the Caesars, their ancestry is always something else.
-* And then after the so called “Roman Civilization” started collapsing
+* Then, when you trace the Caesars, their ancestry is always something else.
+* And then after the so-called “Roman Civilization” started collapsing
 * OSTS story is that they had spread out too much and couldn’t maintain their territories
 * It’s more like they just ransacked everything and said “hey, you’re Roman now” and the people said, “okay, whatever
   just don’t kill us anymore”...

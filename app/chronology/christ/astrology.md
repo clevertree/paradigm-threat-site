@@ -24,7 +24,7 @@ explanation see [Lessons on Solar Mythology](../index.htm#solarmyth))
 
 
 
-In ancient times people were very familiar with the Sun and the stars. At night they had nothing better to do than gaze
+In ancient times people were very familiar with the Sun and the stars. At night, they had nothing better to do than gaze
 up at the stars. They didn't conquer darkness with the flip of a light switch like we do nowadays. When sunset came that
 was it—that was the end of the day. They observed how the stars move across the sky during the night, and how different
 constellations are visible at different times of the year.
@@ -50,7 +50,7 @@ Go outside at night and look up. You are literally looking at heaven. And what d
 make up all the constellations. The Jesus Story takes place not on earth, but in the starry night sky above.
 
 And that is the solution to the conundrum. That is the secret to understanding the Jesus story. The entire story of
-Jesus’ travels during his one year ministry is an _allegory_ for the yearly journey of the Sun through the twelve zodiac
+Jesus’ travels during his one-year ministry is an _allegory_ for the yearly journey of the Sun through the twelve zodiac
 constellations and the passage of the seasons of the year.
 
 I will now explain how this is so.
@@ -61,7 +61,7 @@ Just after sunset is a good time to note the position of the Sun relative to the
 after sunset. You know the Sun is just below the horizon, so you can get a good idea of where the Sun is relative to the
 celestial sphere of stars.
 
-At right we see the Sun begins in Capricorn on December 22\. (All dates are for “Biblical Times”, around the first or
+At right, we see the Sun begins in Capricorn on December 22\. (All dates are for “Biblical Times”, around the first or
 second century AD, when the Jesus Story was written. In our present age you have to wait until January 18 to see what
 they saw on December 22, due to the earth’s precession. See [Lesson on Earth's Precession](precession.htm)). Note how
 each day at sunset Capricorn gets lower and lower until it is completely below the horizon. The Sun appears to travel
@@ -76,7 +76,7 @@ January Sunset. The Sun is just below the horizon. The Sun is in Aquarius, curre
 the two fish, are above. As the month progresses Aquarius will appear lower and lower at sunset, until it is completely
 below the horizon, and Pisces will be on the horizon.
 
-In mid January the Sun enters Aquarius. The constellation Aquarius is visible at sunset on the western horizon where the
+In mid-January the Sun enters Aquarius. The constellation Aquarius is visible at sunset on the western horizon where the
 sun sets. Aquarius is the bringer of water, because it's the rainy season. Rain is the first step in the harvest cycle.
 When the Sun sets in the west, there is Aquarius just above the western horizon.
 
@@ -85,7 +85,7 @@ what time of year it is and the significance of what is happening at that time o
 connecting of the dots to draw a picture of what you've already decided should be there in that part of the sky. (
 See [The Constellations Don't Look Like What They're Named](constel.htm))
 
-In January it is traditional in church to start reading through one of the Gospels depicting the life of Jesus. The
+In January, it is traditional in church to start reading through one of the Gospels depicting the life of Jesus. The
 Jesus story always begins with Jesus visiting John the Baptist, who baptizes with
 water. ([Mark 1:1-13](http://www.biblegateway.com/bible?passage=Mark+1:1-13)
 ; [Matthew 3](http://www.biblegateway.com/bible?passage=Matthew+3)
@@ -103,7 +103,7 @@ won't be seen at sunset again for six months, when it pops its head up on the ea
 February is a good time to go fishing. After all, there's a lot of water around from Aquarius bringing all that rain.
 Hunting isn't very good and there's no harvest yet to eat, so it's a good time to go fishing and eat fish.
 
-Thus after the month of Aquarius the Sun moves into Pisces, the two fish. Again the constellation really doesn't look
+Thus, after the month of Aquarius the Sun moves into Pisces, the two fish. Again the constellation really doesn't look
 much like two fish, the constellation has more to do with what time of year it is and the significance of what is
 happening at that time of year. The rest is just an imaginative connecting of the dots to draw a picture of what you've
 already decided should be there in that part of the sky.
@@ -172,12 +172,12 @@ due east. This day is the Vernal Equinox. 'Vernal' means spring. 'Equinox' is tw
 means night. Because on this day, the Vernal Equinox, the day and night are of equal length.
 
 At this time Christians celebrate Easter. East-er, because the Sun is rising due east. Easter is defined as the first
-Sunday after the first full moon after the Vernal Equinox, when the Sun rises directly in the east. Thus Easter day is
+Sunday after the first full moon after the Vernal Equinox, when the Sun rises directly in the east. Thus, Easter day is
 technically defined to be:
 
 1. Wait for the Vernal Equinox, the day when the Sun rises directly in the east, hence East-er.
-2. Wait for a full moon, because they didn't have electric street lights at night and if you want to have a party it's
-   much nicer to have it during a full moon. The full moon is your night street lamp.
+2. Wait for a full moon, because they didn't have electric streetlights at night and if you want to have a party it's
+   much nicer to have it during a full moon. The full moon is your night streetlamp.
 3. Wait for Sunday, our religious day of the week set aside for religious parties.
 
 And voilà, we have the secret behind the scheduling of Easter.
@@ -205,7 +205,7 @@ stars in Gemini are named Castor and Pollux. In the Jesus story, after crossing 
 two demon possessed men (I bet their names were Castor and
 Pollux) [(Matthew 8:28-34)](http://www.biblegateway.com/bible?passage=Matthew+8:28-34) Castor and Pollux are also
 explicitly mentioned in [Acts 28:11](http://www.biblegateway.com/bible?passage=Acts+28:11) — "After three months we put
-out to sea in a ship that had wintered in the island. It was an Alexandrian ship with the figurehead of the twin gods **
+out to sea in a ship that had wintered on the island. It was an Alexandrian ship with the figurehead of the twin gods **
 Castor and Pollux**."
 
 The allegorical Jesus story continues to parallel the passage of the seasons of the year. I'll quickly skim through it.
@@ -214,7 +214,7 @@ The allegorical Jesus story continues to parallel the passage of the seasons of 
 
 In June the Sun passes through Cancer — the Crab that thought to go backwards (June 21 - July 22). The starting date is
 June 21, the Summer Solstice, the longest day of the year, when the Sun is at its highest ascension. After this day the
-Sun does go backwards, beginning it's descent southward, as the days get shorter and shorter.
+Sun does go backwards, beginning its descent southward, as the days get shorter and shorter.
 
 In July the Sun passes through Leo the Lion (July 23 - Aug. 22), for the strong hot days of summer.
 
@@ -229,7 +229,7 @@ that the head of Aquarius is cut off by the horizon. This is John the Baptist ri
 who are below the earth. This is the beheading of John the Baptist by King Herod, a personification of darkness, which
 reigns supreme at night (See [Matthew Chapter 2—The Birth of Jesus](mat2.htm) for more on King Herod).
 
-Afterwards comes the story of Jesus'
+Afterward comes the story of Jesus'
 transfiguration ([Mark 9:2-13](http://www.biblegateway.com/bible?passage=Mark+9:2-13)
 ; [Matthew 17:1-13](http://www.biblegateway.com/bible?passage=Matthew+17:1-13)
 ; [Luke 9:28-36](http://www.biblegateway.com/bible?passage=Luke+9:28-36)). Jesus goes to a high mountain top and shines
@@ -256,10 +256,10 @@ on the Transfiguration see [commentary by Bishop John Shelby Spong](../biblenote
 Summer passes, the story of Jesus’ journeys continues. We eventually come to the end of Summer, the month of August, and
 it's harvest time! Harvest time is the best time of the year, the time we’ve all been waiting for. In August the Sun has
 moved out of Leo, the strong lion of summer, and into a new constellation that represents the harvest, that food which
-grows out of the virgin soil of the earth. Hence the constellation for harvest time is a female virgin holding a sheaf
+grows out of the virgin soil of the earth. Hence, the constellation for harvest time is a female virgin holding a sheaf
 of wheat. The constellation the Sun enters in August is Virgo, the eternal celestial virgin, holding a sheaf of wheat
 representing harvest time. Farmers who till the fields are said to be wedded to this celestial virgin for which they
-wait for each year. Thus they are known as "husbandmen," and their tools such as tractors are known as implements of
+wait for each year. Thus, they are known as "husbandmen," and their tools such as tractors are known as implements of
 husbandry.
 
 Harvest time comes about three quarters of the way through the year, and it’s the happiest time of the year. And about
@@ -280,7 +280,7 @@ end of harvest time, when there is nothing left to sell, the money changers pack
 entered the temple area and drove out all who were buying and selling there. He overturned the tables of the money
 changers.” ([Mark 11:12-19](http://www.biblegateway.com/bible?passage=Mark+11:12-19)
 ; [Matthew 21:12](http://www.biblegateway.com/bible?passage=Matthew+21:12)) Jesus, the Sun, representing the passage of
-time, moves out of Libra, the Scales of Justice, and the money changers pack up and leave, because the season has passed
+time, moves out of Libra, the Scales of Justice, and the money changers pack up and leave, because the season has passed,
 and they are finished selling the harvest.
 
 As we enter the season of Autumn the leaves fall from the trees and the trees appear to wither. It is at this point in
@@ -295,7 +295,7 @@ zodiac months of the year, recline and eat the
 harvest. ([Mark 14:12-26](http://www.biblegateway.com/bible?passage=Mark+14:12-26)
 ; [Matthew 26:17-30](http://www.biblegateway.com/bible?passage=Matthew+26:17-30)
 ; [Luke 22:7-38](http://www.biblegateway.com/bible?passage=Luke+22:7-38)) This is the natural time of year to have a
-huge feast. In America we celebrate Thanksgiving and have a huge feast of food. We eat the flesh of the
+huge feast. In America, we celebrate Thanksgiving and have a huge feast of food. We eat the flesh of the
 fruit—figuratively the flesh of Jesus, who personifies the Sun which make the fruit grow; and we drink wine—the blood of
 the grapes, figuratively the blood of Jesus, who personifies the Sun which made the grapes grow. Without this food we
 would perish.
@@ -326,7 +326,7 @@ a spear", a reference to Sagittarius, the archer, the man armed with a spear. Po
 Sagittarius, the last constellation the Sun passes through during the last month of the year, Nov. 22 - Dec. 21\. Pilate
 is the last person Jesus sees in the story — Sagittarius is the last zodiac month of the year. Sagittarius is a man on a
 horse with a bow and arrow. He is the man armed with a spear. It is a good time of the year to go hunting. The animals
-are full grown. But the days get shorter and shorter and colder and colder as the year comes to a close. Things look
+are full-grown. But the days get shorter and shorter and colder and colder as the year comes to a close. Things look
 dark and gloomy. What will happen to our savior, the Sun, who makes the harvest grow? Will he disappear forever?
 
 Jesus is crucified and placed in a cave. It is the end of the story. A sad ending. But have faith. Jesus, the Sun, will
@@ -334,7 +334,7 @@ arise again — a new year will begin. Three days after Jesus is placed in the c
 prophecy.
 
 On Christmas day, December 25, we celebrate the birth of Jesus. December 22 was the Winter Solstice, the shortest day of
-the year, when the Sun was at its lowest. Three days later, on December 25, the sun rises 1/10 of it's width farther
+the year, when the Sun was at its lowest. Three days later, on December 25, the sun rises 1/10 of its width farther
 north — just barely detectable by carefully observing the shadows cast at sunrise. Our savior, the Sun, has been reborn,
 to begin the cycle of the year and the cycle of life again.
 
@@ -347,7 +347,7 @@ Contra Celsum, I, li.) It is reproduced also in the apocryphal gospels (Pseudo-M
 159-163; Protevang. of James, xvii sqq., Bonaccorsi, 155-159; Gospel of the Infancy, II-IV, Bonaccorsi, 163-164)
 .” [See Eusebius's [Life of Constantine](http://www.newadvent.org/fathers/25023.htm), lib. 3, chs xl, xli, and xlii.] [Also see [Matthew Chapter 2—The Birth of Jesus](mat2.htm)]
 
-Hence the story is circular, just as the years are circular. A new year begins after the old year ends.
+Hence, the story is circular, just as the years are circular. A new year begins after the old year ends.
 
 On New Years Eve we personify Father Time and Baby New Year, but we know these two figures aren't real people, they are
 merely personifications of the passage of time and the beginning of a new year. The current year is old and finished
@@ -359,7 +359,7 @@ Why does the story end here? Why isn't the rest of his life chronicled? — The 
 continuation of the story, turn back to page one. The story is circular. Three days after Jesus dies and is placed in
 the cave he is born again, and the story begins anew.
 
-In church it is customary to begin reading through one of the Gospels at the beginning of the year. Each Sunday we take
+In church, it is customary to begin reading through one of the Gospels at the beginning of the year. Each Sunday we take
 the next chunk of the story and read it and the pastor makes a sermon on it, never realizing that the story is an
 allegory for the passage of time, the seasons of the year, which we ourselves live and experience, as we live our lives,
 dependent on the Sun for light and for food.
@@ -380,7 +380,7 @@ The four posts of the Cross divide the year into the four seasons. The circle yo
 the symbol of Christianity, represents the ecliptic, the circular path of the Sun. A planisphere is a map of the starry
 night sky. A planisphere also doubles as a time of year calendar. On the planisphere along with the stars is drawn the
 ecliptic — the apparent path the Sun takes through the stars during the year. On the planisphere the ecliptic is close
-to a circle. You can divide the planisphere into the four seasons of the year by drawing a cross on it. Thus you end up
+to a circle. You can divide the planisphere into the four seasons of the year by drawing a cross on it. Thus, you end up
 with a cross with a circle in the middle. The Cross on top of Goleta Presbyterian Church has the traditional circle in
 the middle of it.
 
@@ -388,7 +388,7 @@ The whole Bible is mostly astrological allegories. The reason the book of Revela
 it's an astrological allegory. It makes sense when you start to interpret it in that
 manner. [See [The Book of Revelation](../biblenotes/revelation.htm)]. The Old Testament also originated as an
 astrological allegory.
-The story of Adam and Eve is the story of Virgo and Bootes, the constellation next to Virgo. The whole story of Moses is
+The story of Adam and Eve is the story of Virgo and Boötes, the constellation next to Virgo. The whole story of Moses is
 an astrological allegory. There is no evidence that any of it actually happened, and quite a lot of evidence that it
 didn't. So is the story of Joseph and his coat of many colors, the youngest and most favorite of twelve brothers. The
 number 12 again is a tip off that this is an astrological allegory of the 12 months of the year and the 12 signs of the
@@ -404,7 +404,7 @@ by John Thackray Bunce, 1878.)
 
 It's not surprising in our present culture of digital watches and wall calendars that we've lost the original
 astronomical meaning of these stories. Today most people never look at the stars or pay any attention to the position of
-the Sun in the sky. There's a whole lot of answers to be found in this area of research, and hardly anyone is looking in
+the Sun in the sky. There's a lot of answers to be found in this area of research, and hardly anyone is looking in
 this direction.
 
 ## CONCLUSION
