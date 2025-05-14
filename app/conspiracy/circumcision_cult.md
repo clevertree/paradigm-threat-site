@@ -29,3 +29,8 @@ Salvation by Grace: Paul strongly opposed this view, arguing that salvation come
 Emphasis on Faith: Paul emphasizes that true circumcision is not physical but spiritual, a circumcision of the heart by the Holy Spirit, as highlighted in Romans 2:28-29.
 Strong Condemnation: Paul condemns those who promote circumcision as a necessary step for salvation, stating that if the Galatians accept circumcision, Christ will be of no value to them (Galatians 5:2-4).
 Philippians & Warning Against Legalism: In Philippians 3:2, Paul cautions against those who "mutilate the flesh," referring to the Judaizers' emphasis on physical circumcision, highlighting the dangers of legalism. 
+
+Galatians 5:2–4
+```
+2 Listen! I, Paul, am telling you that if you let yourselves be circumcised, Christ will be of no benefit to you. 3 Once again I testify to every man who lets himself be circumcised that he is obliged to obey the entire law. 4 You who want to be justified by the law have cut yourselves off from Christ; you have fallen away from grace.
+```
