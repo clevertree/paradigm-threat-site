@@ -32,5 +32,7 @@ Philippians & Warning Against Legalism: In Philippians 3:2, Paul cautions agains
 
 Galatians 5:2–4
 ```
-2 Listen! I, Paul, am telling you that if you let yourselves be circumcised, Christ will be of no benefit to you. 3 Once again I testify to every man who lets himself be circumcised that he is obliged to obey the entire law. 4 You who want to be justified by the law have cut yourselves off from Christ; you have fallen away from grace.
+2 Listen! I, Paul, am telling you that if you let yourselves be circumcised, Christ will be of no benefit to you.
+3 Once again I testify to every man who lets himself be circumcised that he is obliged to obey the entire law.
+4 You who want to be justified by the law have cut yourselves off from Christ; you have fallen away from grace.
 ```
