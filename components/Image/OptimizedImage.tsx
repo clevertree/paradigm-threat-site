@@ -25,7 +25,7 @@ export default function OptimizedImage({children, className, ...props}: Optimize
 
     return (
         <figure
-            className={`${styles.imageCaptionContainer} ${className || ''}`}
+            className={`${className || ''}`}
             style={{maxWidth: finalProps.width + 'px'}}
         >
             <img

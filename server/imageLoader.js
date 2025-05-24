@@ -1,10 +1,11 @@
 const { join, relative } = require('path')
 const { mkdirSync, existsSync } = require('fs')
 const Sharp = require('sharp')
+const path = require('path')
 
 module.exports = async function imageLoader (buffer) {
   const appPath = join(process.cwd(), 'app')
-  const relativePath = '/' + relative(appPath, this.resourcePath)
+  const relativePath = path.sep + relative(appPath, this.resourcePath)
   // const relativePath = '/' + relative(join(process.cwd(), 'app'), this.resourcePath)
   const queryParams = this.resourceQuery ? Object.fromEntries([...new URLSearchParams(this.resourceQuery.split('?')[1])]) : {}
   // console.log('import image', relativePath)
@@ -35,12 +36,13 @@ module.exports = async function imageLoader (buffer) {
       const optimizedImageFileName = `${paramWidth}${relativePath.replace(/[/. ]/g, '_')}.webp`
       const optimizedImageRelativeDirectoryPath = process.env.NEXT_PUBLIC_OPTIMIZE_IMAGE_PATH || '/site/thumb'
       const optimizedImageRelativePath = join(optimizedImageRelativeDirectoryPath, optimizedImageFileName)
-      const optimizedImageAbsPath = join(appPath, optimizedImageRelativePath)
-      if (!existsSync(optimizedImageAbsPath)) {
-        mkdirSync(join(appPath, optimizedImageRelativeDirectoryPath), { recursive: true })
+      const optimizedImageAbsFilePath = join(appPath, optimizedImageRelativePath)
+      const optimizedImageAbsDirectoryPath = path.dirname(optimizedImageAbsFilePath)
+      if (!existsSync(optimizedImageAbsFilePath)) {
+        mkdirRecursiveSync(optimizedImageAbsDirectoryPath)
         await Sharp(buffer)
           .resize(paramWidth, paramHeight)
-          .toFile(optimizedImageAbsPath)
+          .toFile(optimizedImageAbsFilePath)
         // console.info(info)
         console.log('Optimizing image created: ', optimizedImageRelativePath)
       } else {
@@ -67,6 +69,13 @@ module.exports = async function imageLoader (buffer) {
   // }
   // const response = await getImageSize(source, ext);
   return `export default ${JSON.stringify(data)};`
+}
+
+function mkdirRecursiveSync (dir) {
+  if (existsSync(dir)) { return true }
+  const dirname = path.dirname(dir)
+  mkdirRecursiveSync(dirname)
+  mkdirSync(dir)
 }
 
 module.exports.raw = true

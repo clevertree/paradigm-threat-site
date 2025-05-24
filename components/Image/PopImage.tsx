@@ -9,7 +9,7 @@ import {processImageProps} from '@/components/helpers/imageHelper'
 import {onToggle} from '@/components/helpers/inputHelper'
 
 interface PopImageProps {
-    children?: React.ReactNode,
+    children?: any,
     className?: string,
 
     [key: string]: any
