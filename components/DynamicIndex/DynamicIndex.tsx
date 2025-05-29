@@ -77,7 +77,9 @@ function generateHeaderList(container: HTMLUListElement, scrollToHash?: string) 
         }
         let {nodeName, id, textContent} = headerElm
         if (!id) {
-            id = headerElm.id = (`${nodeName}_${textContent}`).toLowerCase().replace(/[^\w-]+/g, '_')
+            id = headerElm.id = 'header:'+(`${textContent}`).toLowerCase()
+                .replace(/\s+/g, '_')
+                .replace(/[^\w-]+/g, '')
         }
         const level = parseInt(nodeName.substring(1, 2))
         const headerEntry: HeaderEntry = {id, title: textContent + '', children: []}
