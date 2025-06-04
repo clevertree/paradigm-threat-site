@@ -1342,7 +1342,7 @@ Israhell On Earth (Film)
 https://www.youtube.com/watch?v=Yt3d3Fmouh4
 
 Palestinian Refugees
-Palestinian Refugees From 1948 And Their Descendents Comprise The Bulk Of The Palestinian
+Palestinian Refugees From 1948 And Their Descendants Comprise The Bulk Of The Palestinian
 Refugee Population Today Numbering Over 5 Million Persons And Constituting Nearly Two-
 Thirds Of The Palestinian People.
 
@@ -5125,7 +5125,7 @@ Israeli Pageant Crowns Miss Holocaust Survivor
 Aide To Egyptian President Morsi Triggers Outrage
 With Claim Six Million 'Dead' Jews Had Simply Moved To America
 Fathi Shibab-Eddim Claims U.S. Used Myth To Destroy Image Of The Nazis
-Comes After It Emerged Morsi Had Described Jews As 'Descendents Of Pigs'
+Comes After It Emerged Morsi Had Described Jews As 'Descendants Of Pigs'
 Raises Fears Egyptian Government Has Major Elements That Deny Genocide
 by Simon Tomlinson
 [http://www.dailymail.co.uk/news/article-2270675/Egypt-President-Morsi-aide-claims-Holocaust-](http://www.dailymail.co.uk/news/article-2270675/Egypt-President-Morsi-aide-claims-Holocaust-)
