@@ -1,3 +1,17 @@
+import { DynamicIndex, PopImage, ChatRoom } from "/components";
+// Page Styles
+export const imageStyleRight = "sm:float-right clear-right m-auto sm:m-1 sm:ml-4";
+export const imageStyleLeft = "sm:float-left clear-left m-auto sm:m-1 sm:mr-4";
+// Metadata
+export const metadata = {
+  title: 'Notes:MudFlood Energetic Event Hypothesis',
+  description: "The MudFlood Energetic Event Hypothesis proposes a solution to the mystery of the world-wide ‘Mud Flood’ event and its alleged cover-up while attempting to answer: Who it happened to, What happened, When, Where, Why, and How did it happen?",
+  keywords: "MudFlood, Energetic Event Hypothesis, The Great Reset, Apocalypse, World War of 1812",
+  openGraph: {
+    images: `${process.env.NEXT_PUBLIC_METADATA_URL}/mudflood/mudflood_journalistic_six.jpg`,
+  }
+}
+
 # This section only contains MudFlood scratch notes and is still being worked on
 
 ## After the MF
@@ -79,7 +93,7 @@ describes these events as "murderous ethnic cleansing on a stupendous scale not 
 
 ## Negative Lightning scar
 
-<PopImage {...require("./melted_rocks_utah.jpg?w=384")} alt="MudFlood Evidence: Melted Rocks in Utah
+<PopImage {...require("../melted_rocks_utah.jpg?w=384")} alt="MudFlood Evidence: Melted Rocks in Utah
 are said to have been caused by millions of years of erosion
 but may instead have been **actually melted** by electric discharge strikes
 during the MudFlood Energy Event
@@ -390,7 +404,7 @@ MudFlood Event Redacted Dates:
 
 ## Controlled Opposition Agents
 
-<PopImage {...require("./mudflood_buried_russian_winter_palace_deepfake.jpg?w=384")} alt="MudFlood Controlled Opposition Deep Fake by
+<PopImage {...require("../mudflood_buried_russian_winter_palace_deepfake.jpg?w=384")} alt="MudFlood Controlled Opposition Deep Fake by
 KorbenDallas from StolenHistory.net"
           className={`[&>img]:rounded-md ${imageStyleRight}`}/>
 
