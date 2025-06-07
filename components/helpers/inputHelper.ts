@@ -3,7 +3,7 @@ import React from "react";
 export function onToggle(callback: Function) {
     return {
         onKeyDown: (e: React.KeyboardEvent<HTMLElement>) => {
-            if (['Enter', 'Spacebar', ' '].includes(e.key)) {
+            if (['Enter', 'Spacebar', 'Escape', ' '].includes(e.key)) {
                 e.preventDefault();
                 e.stopPropagation();
                 callback();
