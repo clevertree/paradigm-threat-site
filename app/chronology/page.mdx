@@ -1,4 +1,5 @@
 import { DynamicIndex, PopImage, ChatRoom } from "/components";
+import AutoContent from "./content.auto.mdx";
 // Page Styles
 export const imageStyleRight = "sm:float-right clear-right m-auto sm:m-1 sm:ml-4";
 export const imageStyleLeft = "sm:float-left clear-left m-auto sm:m-1 sm:mr-4";
@@ -2994,5 +2995,8 @@ original location of the Biblical Jerusalem.
 
 <ChatRoom channel='chronology' title='Chronology'/>
 
-## Unsorted Assets
+## All Assets
 
+<div className="flex flex-wrap max-h-[80vh] overflow-y-auto justify-center">
+  <AutoContent />
+</div>

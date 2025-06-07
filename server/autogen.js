@@ -1,15 +1,13 @@
-const { readdir, writeFile, readFile } = require('fs/promises')
+const { readdir, writeFile, readFile, unlink } = require('fs/promises')
 const {
   join,
   resolve,
-  dirname
 } = require('path')
 require('dotenv').config({ path: resolve(__dirname, '../.env.development.local') })
 const CRC32 = require('crc-32')
-const { existsSync, createReadStream } = require('fs')
+const { existsSync } = require('fs')
 const { getGitChangeLog } = require('./gitUtil')
-const { createInterface } = require('node:readline/promises')
-const AUTOGEN_DEFAULT_WIDTH = process.env.NEXT_PUBLIC_AUTOGEN_IMAGE_WIDTH || 384
+const AUTOGEN_DEFAULT_WIDTH = process.env.NEXT_PUBLIC_AUTOGEN_IMAGE_WIDTH || 360
 const FILE_NAV_IGNORE = `${process.env.NEXT_PUBLIC_ASSET_NAV_IGNORE_FILE || '.navignore'}`
 const PATH_ASSETS_ABS = join(resolve(__dirname, '../'), `${process.env.NEXT_PUBLIC_ASSET_PATH || 'app'}`)
 const TEXT_FILE_PATTERN = /\.(txt|mdx?)$/i
@@ -36,7 +34,7 @@ async function generateDirectory () {
     // if (dirents.some(dirent => dirent.name === process.env.NEXT_PUBLIC_ASSET_NAV_IGNORE_FILE))
     //     return null;
 
-    let keywordCount = []
+    const keywordCount = []
     for (const dirent of dirents) {
       const subPathRelative = join(currentPathRelative, dirent.name)
       if (dirent.isDirectory()) {
@@ -50,9 +48,10 @@ async function generateDirectory () {
         // console.log('indexing file: ', subPathRelative)
         if (TEXT_FILE_PATTERN.test(subPathRelative)) {
           const fileKeywordObj = await readTextFileKeywords(subPathRelative)
-          for (const keyword of Object.keys(fileKeywordObj))
-            keywordCount[keyword] = (keywordCount.hasOwnProperty(keyword) ? keywordCount[keyword] : 0)
-              + fileKeywordObj[keyword]
+          for (const keyword of Object.keys(fileKeywordObj)) {
+            keywordCount[keyword] = (keywordCount.hasOwnProperty(keyword) ? keywordCount[keyword] : 0) +
+              fileKeywordObj[keyword]
+          }
         }
       }
     }
@@ -60,7 +59,7 @@ async function generateDirectory () {
     const pairListString = keywordList.sort().map(keyword => `${keyword}:${keywordCount[keyword]}`).join(',')
     // var uniqueAndSortedKeywordString = keywordList.sort().join(',')
 
-    if(await isConnected()) {
+    if (await isConnected()) {
       const crc32 = CRC32.str(pairListString) // keywordList.reduce((crc32, keyword) => CRC32.str(keyword), 0)
       if (crc32 !== 0 && !await pathHasCRC(currentPathRelative, crc32)) {
         console.log('indexing path: ', currentPathRelative)
@@ -91,7 +90,8 @@ async function readTextFileKeywords (relativeFilePath) {
   const fileContent = await readFile(absFilePath, 'utf8')
   const strippedFileContent = fileContent.replace(TEXT_LINE_IGNORE_PATTERN, '')
 
-  let match, keywordObj = {}
+  let match; const keywordObj = {}
+  // eslint-disable-next-line no-cond-assign
   while (match = TEXT_KEYWORD_PATTERN.exec(strippedFileContent)) {
     const keyword = match[0].toLowerCase()
     if (!TEXT_KEYWORD_IGNORE_PATTERN.test(keyword)) {
@@ -105,13 +105,12 @@ let cachedPathCRCs = null
 let connectionFailed = false
 
 async function isConnected () {
-  if(connectionFailed)
-    return false;
+  if (connectionFailed) { return false }
   try {
-    await getPathCRCs();
+    await getPathCRCs()
   } catch (e) {
-    connectionFailed = true;
-    console.log("Error connecting to database", e);
+    connectionFailed = true
+    console.log('Error connecting to database', e)
   }
 }
 
@@ -120,8 +119,7 @@ async function getPathCRCs () {
     const { rows } = await sql`SELECT path, crc32
                                FROM search_paths;`
     cachedPathCRCs = {}
-    for (const row of rows)
-      cachedPathCRCs[row.path] = row.crc32
+    for (const row of rows) { cachedPathCRCs[row.path] = row.crc32 }
     console.log(`Found ${rows.length} path entries in database`)
   }
   return cachedPathCRCs
@@ -161,7 +159,7 @@ async function generatePages (directoryPath) {
           break
         case 'md':
         case 'mdx':
-          if (/page\.auto\.mdx$/i.test(pFile.name)) {
+          if (/(page|content)\.auto\.mdx$/i.test(pFile.name)) {
             // console.log("Skipping file: ", pFile.name)
             break
           }
@@ -183,13 +181,13 @@ async function generatePages (directoryPath) {
         case 'avif':
           componentList.PopImage = true
           mdxContent.imports.push(`import ${fileNameVariable} from "./${pFile.name}?w=${AUTOGEN_DEFAULT_WIDTH}"`)
-          mdxContent.content.push(`<PopImage className="${i++ % 2 === 0 ? imageStyleRight : imageStyleLeft}" src={${fileNameVariable}} alt="${pFile.name}">`)
+          mdxContent.content.push(`<PopImage className="${i++ % 2 === 0 ? imageStyleRight : imageStyleRight}" src={${fileNameVariable}} alt="${pFile.name}">`)
           mdxContent.content.push(`\t${pFile.name}`)
           mdxContent.content.push('</PopImage>')
           break
         case 'svg':
           mdxContent.imports.push(`import ${fileNameVariable} from "./${pFile.name}"`)
-          mdxContent.content.push(`<div className="${i++ % 2 === 0 ? imageStyleRight : imageStyleLeft}">`)
+          mdxContent.content.push(`<div className="${i++ % 2 === 0 ? imageStyleRight : imageStyleRight}">`)
           mdxContent.content.push(`<img src={${fileNameVariable}.src} width={${AUTOGEN_DEFAULT_WIDTH}} alt="${pFile.name}"/>`)
           mdxContent.content.push(`\t${pFile.name}`)
           mdxContent.content.push('</div>')
@@ -199,7 +197,7 @@ async function generatePages (directoryPath) {
         case 'mkv':
         case 'webm':
           mdxContent.imports.push(`import ${fileNameVariable} from "./${pFile.name}"`)
-          mdxContent.content.push(`<div className="${i++ % 2 === 0 ? imageStyleRight : imageStyleLeft}">`)
+          mdxContent.content.push(`<div className="${i++ % 2 === 0 ? imageStyleRight : imageStyleRight}">`)
           mdxContent.content.push('\t<video controls autoPlay muted loop>')
           mdxContent.content.push(`\t\t<source {...${fileNameVariable}}/>`)
           mdxContent.content.push('\t</video>')
@@ -237,12 +235,6 @@ async function generatePages (directoryPath) {
     }
   }
 
-  if (existsSync(join(directoryPath, 'page.mdx')) ||
-    existsSync(join(directoryPath, 'route.mdx'))) {
-    // existsSync(join(directoryPath, FILE_NAV_IGNORE))) {
-    console.log(`Found index file. Canceling auto generation for ${directoryPath}.`)
-    return
-  }
   const componentListKeys = Object.keys(componentList)
   if (componentListKeys.length > 0) {
     mdxContent.imports.push(`import {${componentListKeys.join(',')}} from "@components"`)
@@ -250,15 +242,35 @@ async function generatePages (directoryPath) {
   const mdxScriptContent = `${mdxContent.imports.join(';\n')}
     
 ${mdxContent.content.join('\n')}
-${mdxContent.contentLast.join('\n')}`
-
-  const autoGenPageFile = `${directoryPath}/page.auto.mdx`
+${mdxContent.contentLast.join('\n')}
+`
   if (mdxContent.content.length === 0) {
     // console.log("Skipping empty autogenerated page: ", autoGenPageFile)
     return
   }
   // console.log("Writing autogenerated page: ", autoGenPageFile)
-  await writeOrIgnoreFile(autoGenPageFile, mdxScriptContent)
+  const autoGenContentFile = `${directoryPath}/content.auto.mdx`
+  await writeOrIgnoreFile(autoGenContentFile, mdxScriptContent)
+
+  const autoGenPageFile = `${directoryPath}/page.auto.mdx`
+  if (!existsSync(join(directoryPath, 'page.mdx')) &&
+    !existsSync(join(directoryPath, 'route.mdx'))) {
+    // existsSync(join(directoryPath, FILE_NAV_IGNORE))) {
+    if (!existsSync(autoGenPageFile)) {
+      console.log(`No index file found. Generating auto index for ${directoryPath}.`)
+      const autoGenMDXScriptContent = `import AutoContent from "./content.auto.mdx"
+
+<div className="flex flex-wrap justify-center">
+<AutoContent />
+</div>`
+      await writeOrIgnoreFile(autoGenPageFile, autoGenMDXScriptContent)
+    }
+  } else {
+    if (existsSync(autoGenPageFile)) {
+      console.log(`Index file found. Removing auto-index for ${directoryPath}.`)
+      await unlink(autoGenPageFile)
+    }
+  }
 }
 
 async function generateGitLog () {

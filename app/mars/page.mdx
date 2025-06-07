@@ -1,4 +1,5 @@
 import { ChatRoom, DynamicIndex, PopImage } from '/components'
+import AutoContent from "./content.auto.mdx";
 // Page Styles
 export const imageStyleRight = "sm:float-right clear-right m-auto sm:m-1 sm:ml-4";
 export const imageStyleLeft = "sm:float-left clear-left m-auto sm:m-1 sm:mr-4";
@@ -971,23 +972,8 @@ our **God of War**: The Planet Mars.
 
 <ChatRoom channel="mars" title="Life on Mars Chatroom"/>
 
-## Unorganized Photos
+## All Assets
 
-
-<PopImage {...require("./book_the_martians_nick_redfern.jpg?w=384")}
-          alt="Life on Mars Book"
-          className={`[&>img]:rounded-md ${imageStyleLeft}`}/>
-
-<PopImage {...require("./mars-dagger-back2.jpg?w=384")}
-          alt="Martian Knife Back"
-          className={`[&>img]:rounded-md ${imageStyleRight}`}/>
-<PopImage {...require("./mars-dagger-front.jpg?w=384")}
-          alt="Martian Knife Front"
-          className={`[&>img]:rounded-md ${imageStyleRight}`}/>
-
-<PopImage {...require("./mars_map.jpg?w=384")}
-          alt="Mars Map"
-          className={`[&>img]:rounded-md ${imageStyleRight}`}/>
-<PopImage {...require("./mars_map2.jpg?w=384")}
-          alt="Mars Map"
-          className={`[&>img]:rounded-md ${imageStyleRight}`}/>
+<div className="flex flex-wrap max-h-[80vh] overflow-y-auto justify-center">
+  <AutoContent />
+</div>

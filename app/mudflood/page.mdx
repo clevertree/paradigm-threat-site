@@ -1,4 +1,5 @@
 import { DynamicIndex, PopImage, ChatRoom } from "/components";
+import AutoContent from "./content.auto.mdx";
 // Page Styles
 export const imageStyleRight = "sm:float-right clear-right m-auto sm:m-1 sm:ml-4";
 export const imageStyleLeft = "sm:float-left clear-left m-auto sm:m-1 sm:mr-4";
@@ -11,7 +12,6 @@ export const metadata = {
     images: `${process.env.NEXT_PUBLIC_METADATA_URL}/mudflood/mudflood_journalistic_six.jpg`,
   }
 }
-
 
 <PopImage {...require("./mudflood_energetic_event_hypothesis.png?w=800")}
           className="sm:max-w-[60rem] rounded-md m-auto"
@@ -912,28 +912,12 @@ The [Earth History Timeline Reconstruction](/chronology) provides a geopolitical
 Pugachev Rebellion of 1773 may have been so significant to world affairs, and why it may have triggered an apocalyptic
 interplanetary genocide.
 
-## Mudflood Chatroom
+## MudFlood Chatroom
 
 <ChatRoom channel="mudflood" title="Mudflood Chatroom" className="clear-both"/>
 
-## Unused Assets
+## All Assets
 
-<PopImage {...require("./mudflood_buried_buildings_deepfake.jpg?w=384")}
-          alt="MudFlood DeepFake"
-          className={`[&>img]:rounded-md ${imageStyleRight}`}>
-  This popular image is shared in videos, books, internet threads, and articles as evidence of 18th Century buildings
-  covered up by the MudFlood.
-  However, the image does not show buried architecture from prior to the 19th century. Instead, it shows a series of
-  Soldier Pile Walls filled with concrete typically used as a foundation in the 1970s architecture.
-  This example of Revelation of the Method promotes discreditation of MudFlood Research as the image
-  is purposefully and perpetually net-boosted and designed to be easily debunked.
-</PopImage>
-
-<PopImage {...require("./mudflood_tartaria_meme.jpg?w=384")}
-          alt="MudFlood Evidence"
-          className={`[&>img]:rounded-md ${imageStyleLeft}`}>
-  Tartarian Buildings exist all over the world and are designed to harness natural earth energy
-  providing the local population with unlimited free light and power.
-  The giant-sized humans who had built them were later eradicated and the technology to build Tartarian-style
-  buildings was lost.
-</PopImage>
+<div className="flex flex-wrap max-h-[80vh] overflow-y-auto justify-center">
+  <AutoContent />
+</div>

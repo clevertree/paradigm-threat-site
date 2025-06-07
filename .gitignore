@@ -3,6 +3,7 @@
 # auto gen pages
 
 **/page.auto.mdx
+**/content.auto.mdx
 
 # dependencies
 /node_modules
