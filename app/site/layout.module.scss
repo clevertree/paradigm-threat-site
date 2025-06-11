@@ -13,6 +13,7 @@
   background-color: var(--nav-bg-color, #999);
   /*font-size: 18px;*/
   padding: 2px;
+  width: 100%;
 
   + .linkContainer {
     background-color: color-mix(in srgb, var(--nav-bg-color, #999), #000 10%);
