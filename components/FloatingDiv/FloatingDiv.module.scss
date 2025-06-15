@@ -6,6 +6,12 @@
   z-index: 9;
 }
 
+.disableButton {
+  position: absolute;
+  right: 6px;
+  bottom: 4px;
+  cursor: pointer;
+}
 
 .bottomText {
   user-select: none;

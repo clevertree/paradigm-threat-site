@@ -12,24 +12,25 @@ interface FloatingDivProps {
 }
 
 export default function FloatingDiv({children, containerTag, className}: FloatingDivProps) {
-    const [isFloating, setIsFloating] = useState(false)
+    const [isDisabled, setIsDisabled] = useState(false)
+    const [isScrolling, setIsScrolling] = useState(false)
     const [containerHeight, setContainerHeight] = useState<string | number>('inherit')
     const refContainer = useRef<HTMLElement>()
-
+    const isFloating = !isDisabled && isScrolling;
     function onScroll() {
         const navElm = refContainer.current
         if (navElm) {
             const {top, height} = navElm.getBoundingClientRect()
             // console.log(top, height, isFloating)
-            if (!isFloating) {
+            if (!isScrolling) {
                 if (top < 0) {
-                    setIsFloating(true)
+                    setIsScrolling(true)
                     setContainerHeight(height)
                 }
-            } else if (isFloating) {
+            } else if (isScrolling) {
                 if (top > 0) {
                     // console.log('isFloating', isFloating, top, top > 0)
-                    setIsFloating(false)
+                    setIsScrolling(false)
                     setContainerHeight('inherit')
                 }
             }
@@ -64,6 +65,12 @@ export default function FloatingDiv({children, containerTag, className}: Floatin
                 className={(isFloating ? ' ' + styles.floatingDiv : '')}
             >
                 {children}
+                {isFloating ? <div
+                    {...onToggle(() => setIsDisabled(true))}
+                    title='temporarily hide header'
+                    className={styles.disableButton}>
+                    &#x00d7;
+                </div> : ''}
             </div>
             <button
                 className={`${styles.bottomText} ${!isFloating ? styles.bottomTextHidden : ''}`}

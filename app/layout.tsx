@@ -38,14 +38,14 @@ export default async function RootLayout(
         </header>
 
 
-        {/*<FloatingDiv containerTag='nav' className={styles.navContainer}>*/}
-        <DynamicNav directory={Directory} className={styles.linkContainer}>
-            <Link href="/search">🔍</Link>
-            <Link href="/">home</Link>
-            <Link href="/chat">chat</Link>
-            <Link href="https://www.bitchute.com/channel/paradigmthreat">videos</Link>
-        </DynamicNav>
-        {/*</FloatingDiv>*/}
+        <FloatingDiv containerTag='nav' className={styles.navContainer}>
+            <DynamicNav directory={Directory} className={styles.linkContainer}>
+                <Link href="/search">🔍</Link>
+                <Link href="/">home</Link>
+                <Link href="/chat">chat</Link>
+                <Link href="https://www.bitchute.com/channel/paradigmthreat">videos</Link>
+            </DynamicNav>
+        </FloatingDiv>
 
         <Suspense fallback={<SuspenseLoader/>}>
             <article>
