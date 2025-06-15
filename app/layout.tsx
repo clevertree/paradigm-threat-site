@@ -29,7 +29,10 @@ export default async function RootLayout(
 
     return (
         <html lang="en">
-        <head/>
+        <head>
+            <title>Paradigm Threat</title>
+            <link rel="icon" type="image/svg+xml" href="/site/favicon.svg" />
+        </head>
         <body>
         <header className={styles.headerContainer}>
             <Link href="/">
