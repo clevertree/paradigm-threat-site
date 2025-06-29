@@ -43,7 +43,7 @@ export default function FloatingDiv({children, containerTag, className}: Floatin
             left: 0,
             behavior: 'smooth'
         })
-        window.history.pushState('', document.title, window.location.pathname)
+        window.history.pushState({}, document.title, window.location.pathname)
     }
 
     useEffect(() => {
