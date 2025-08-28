@@ -2,7 +2,6 @@ import type {Metadata} from 'next'
 import React, {Suspense} from "react";
 import Link from "next/link";
 import {DynamicNav, FloatingDiv} from "@/components";
-import HeaderImg from "./site/header.png";
 import Directory from "./directory.json"
 import {Analytics} from '@vercel/analytics/react';
 import {SpeedInsights} from "@vercel/speed-insights/next"
@@ -36,7 +35,7 @@ export default async function RootLayout(
         <body>
         <header className={styles.headerContainer}>
             <Link href="/">
-                <img src={HeaderImg.src} alt="Header Logo"/>
+                <img src="/site/header.png" alt="Header Logo"/>
             </Link>
         </header>
 

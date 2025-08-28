@@ -29,6 +29,9 @@
       ],
       "@api": [
         "./app/api/index.ts"
+      ],
+      "@public/*": [
+        "./public/*"
       ]
     },
     "baseUrl": "./",
