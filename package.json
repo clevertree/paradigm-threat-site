@@ -10,6 +10,7 @@
     "build": "next build",
     "export": "next export",
     "start": "next start -p 8081",
+    "build-start": "next build && next start -p 8081",
     "cypress:component": "cypress run --component",
     "cypress:e2e": "cypress run --e2e",
     "cypress:e2e:prod": "CYPRESS_BASE_URL=http://localhost:8081 cypress run --e2e",
