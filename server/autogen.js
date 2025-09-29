@@ -3,7 +3,7 @@ const {
   join,
   resolve,
 } = require('path')
-require('dotenv').config({ path: resolve(__dirname, '../.env.development.local') })
+require('dotenv').config({ path: resolve(__dirname, '../.env.local') })
 const CRC32 = require('crc-32')
 const { existsSync } = require('fs')
 const { getGitChangeLog } = require('./gitUtil')
