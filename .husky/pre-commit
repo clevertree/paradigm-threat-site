@@ -2,8 +2,8 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 #npx standard --fix
-yarn lint
-#yarn test:coverage
+npm run lint
+#npm run test:coverage
 echo "Starting tests"
 npm run cypress:component
 npm run cypress:e2e || true
