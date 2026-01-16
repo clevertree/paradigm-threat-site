@@ -18,33 +18,30 @@ const TEXT_KEYWORD_IGNORE_PATTERN = /^(https?|com|net|org|const|metadata|export|
 const { sql } = require('@vercel/postgres')
 generate()
 
-async function generate () {
+async function generate() {
   await generateAllPages()
-  await generateDirectory()
+  await generateFiles()
   await generateGitLog()
 }
 
-async function generateDirectory () {
-  // const files = {}
+async function generateFiles() {
+  const files = {}
 
-  async function getPathsForDirectory (currentPathRelative) {
-    const directories = {}
+  async function getPathsForDirectory(currentPathRelative) {
     const absPath = join(PATH_ASSETS_ABS, currentPathRelative)
     const dirents = await readdir(absPath, { withFileTypes: true })
-    // if (dirents.some(dirent => dirent.name === process.env.NEXT_PUBLIC_ASSET_NAV_IGNORE_FILE))
-    //     return null;
 
     const keywordCount = []
     for (const dirent of dirents) {
       const subPathRelative = join(currentPathRelative, dirent.name)
       if (dirent.isDirectory()) {
-        const ignoreFile = join(absPath, subPathRelative, FILE_NAV_IGNORE)
+        const ignoreFile = join(PATH_ASSETS_ABS, subPathRelative, FILE_NAV_IGNORE)
         if (!existsSync(ignoreFile)) {
-          directories[dirent.name] = await getPathsForDirectory(subPathRelative)
+          await getPathsForDirectory(subPathRelative)
         }
       } else {
-        // if (!files[currentPathRelative]) { files[currentPathRelative] = [] }
-        // files[currentPathRelative].push(dirent.name)
+        if (!files[currentPathRelative]) { files[currentPathRelative] = [] }
+        files[currentPathRelative].push(dirent.name)
         // console.log('indexing file: ', subPathRelative)
         if (TEXT_FILE_PATTERN.test(subPathRelative)) {
           const fileKeywordObj = await readTextFileKeywords(subPathRelative)
@@ -57,34 +54,49 @@ async function generateDirectory () {
     }
     const keywordList = Object.keys(keywordCount)
     const pairListString = keywordList.sort().map(keyword => `${keyword}:${keywordCount[keyword]}`).join(',')
-    // var uniqueAndSortedKeywordString = keywordList.sort().join(',')
 
     if (await isConnected()) {
-      const crc32 = CRC32.str(pairListString) // keywordList.reduce((crc32, keyword) => CRC32.str(keyword), 0)
+      const crc32 = CRC32.str(pairListString)
       if (crc32 !== 0 && !await pathHasCRC(currentPathRelative, crc32)) {
         console.log('indexing path: ', currentPathRelative)
         await sql`SELECT search_add_keywords_to_path(${currentPathRelative}, ${crc32}, ${pairListString});`
       }
     }
-
-    return directories
   }
 
-  const directories = await getPathsForDirectory('/')
-  const directoryFile = `${PATH_ASSETS_ABS}/directory.json`
-  // console.log("Writing directory file: ", directoryFile)
-  await writeOrIgnoreFile(directoryFile, JSON.stringify(directories))
-  // const filesFile = `${PATH_ASSETS_ABS}/files.json`
-  // await writeOrIgnoreFile(filesFile, JSON.stringify(files))
+  await getPathsForDirectory('/')
+  const backupPath = join(resolve(__dirname, '../'), 'app_backup')
+  if (existsSync(backupPath)) {
+    // Temporary: also index app_backup to maintain files.json for navigation
+    const originalPath = PATH_ASSETS_ABS
+    // Set PATH_ASSETS_ABS to app_backup temporarily for the recursive call
+    // (This is a bit hacky but works for transition)
+    const getPathsForBackup = async (currentPathRelative) => {
+      const absPath = join(backupPath, currentPathRelative)
+      const dirents = await readdir(absPath, { withFileTypes: true })
+      for (const dirent of dirents) {
+        const subPathRelative = join(currentPathRelative, dirent.name)
+        if (dirent.isDirectory()) {
+          await getPathsForBackup(subPathRelative)
+        } else {
+          if (!files[currentPathRelative]) { files[currentPathRelative] = [] }
+          files[currentPathRelative].push(dirent.name)
+        }
+      }
+    }
+    await getPathsForBackup('/')
+  }
+  const filesFile = `${PATH_ASSETS_ABS}/files.json`
+  await writeOrIgnoreFile(filesFile, JSON.stringify(files))
 }
 
-async function generateAllPages () {
+async function generateAllPages() {
   for await (const appSubDirectory of listDirectoriesRecursive(PATH_ASSETS_ABS, FILE_NAV_IGNORE)) {
     await generatePages(appSubDirectory)
   }
 }
 
-async function readTextFileKeywords (relativeFilePath) {
+async function readTextFileKeywords(relativeFilePath) {
   const absFilePath = PATH_ASSETS_ABS + relativeFilePath
   // const directoryPath = dirname(relativeFilePath)
   const fileContent = await readFile(absFilePath, 'utf8')
@@ -104,7 +116,7 @@ async function readTextFileKeywords (relativeFilePath) {
 let cachedPathCRCs = null
 let connectionFailed = false
 
-async function isConnected () {
+async function isConnected() {
   if (connectionFailed) { return false }
   try {
     await getPathCRCs()
@@ -114,7 +126,7 @@ async function isConnected () {
   }
 }
 
-async function getPathCRCs () {
+async function getPathCRCs() {
   if (!cachedPathCRCs) {
     const { rows } = await sql`SELECT path, crc32
                                FROM search_paths;`
@@ -125,12 +137,12 @@ async function getPathCRCs () {
   return cachedPathCRCs
 }
 
-async function pathHasCRC (path, crc32) {
+async function pathHasCRC(path, crc32) {
   const paths = await getPathCRCs()
   return (paths[path] === crc32)
 }
 
-async function generatePages (directoryPath) {
+async function generatePages(directoryPath) {
   const imageStyleRight = 'sm:float-right m-auto sm:m-1 sm:ml-4'
   const imageStyleLeft = 'sm:float-left m-auto sm:m-1 sm:mr-4'
   // const imageStyleRight = "w-full sm:max-w-[50vw] md:max-w-md float-right sm:m-1 sm:ml-4";
@@ -273,7 +285,7 @@ ${mdxContent.contentLast.join('\n')}
   }
 }
 
-async function generateGitLog () {
+async function generateGitLog() {
   const projectRoot = resolve(__dirname, '../')
   const changeLog = await getGitChangeLog()
 
@@ -285,7 +297,7 @@ async function generateGitLog () {
   await writeFile(gitLogFile, gitLogContent)
 }
 
-async function writeOrIgnoreFile (filePath, fileContent) {
+async function writeOrIgnoreFile(filePath, fileContent) {
   if (existsSync(filePath)) {
     const existingFileContent = await readFile(filePath, 'utf8')
     if (existingFileContent === fileContent) {
@@ -297,7 +309,7 @@ async function writeOrIgnoreFile (filePath, fileContent) {
   await writeFile(filePath, fileContent)
 }
 
-async function * listDirectoriesRecursive (dir, ignoreFile = FILE_NAV_IGNORE) {
+async function* listDirectoriesRecursive(dir, ignoreFile = FILE_NAV_IGNORE) {
   const dirents = await readdir(dir, { withFileTypes: true })
   for (const dirent of dirents) {
     const currentPath = join(dir, dirent.name)
@@ -305,7 +317,7 @@ async function * listDirectoriesRecursive (dir, ignoreFile = FILE_NAV_IGNORE) {
       // const ignoreFile = join(currentPath, FILE_NAV_IGNORE)
       if (!ignoreFile || !existsSync(join(currentPath, ignoreFile))) {
         yield currentPath
-        yield * listDirectoriesRecursive(currentPath)
+        yield* listDirectoriesRecursive(currentPath)
       } else {
         console.log('Ignoring recursive path: ', currentPath)
       }

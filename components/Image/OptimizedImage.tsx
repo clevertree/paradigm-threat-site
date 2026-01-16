@@ -1,6 +1,7 @@
-import styles from '@/components/Image/Image.module.scss'
-import {processImageProps} from '@/components/helpers/imageHelper'
-import React from "react";
+'use client'
+
+import { processImageProps } from '@/components/helpers/imageHelper'
+import React, { useState, useEffect, useRef } from "react";
 
 interface OptimizedImageProps {
     children?: React.ReactNode,
@@ -9,15 +10,40 @@ interface OptimizedImageProps {
     [key: string]: any
 }
 
-export default function OptimizedImage({children, className, ...props}: OptimizedImageProps) {
-    const srcProps: OptimizedImageProps = processImageProps(props)
+export default function OptimizedImage({ children, className, ...props }: OptimizedImageProps) {
+    const srcProps: OptimizedImageProps = processImageProps({ ...props, className }, props.basePath)
+    const [isVisible, setIsVisible] = useState(false)
+    const ref = useRef<HTMLImageElement>(null)
 
-    const {alt, priority, blurDataURL, optimizedSrc, ...finalProps} = srcProps
+    const { alt, priority, blurDataURL, optimizedSrc, className: processedClassName, ...finalProps } = srcProps
+
+    useEffect(() => {
+        if (priority) {
+            setIsVisible(true)
+            return
+        }
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setIsVisible(true)
+                    observer.disconnect()
+                }
+            },
+            { rootMargin: '200px' } // Load 200px before it enters view
+        )
+
+        if (ref.current) {
+            observer.observe(ref.current)
+        }
+
+        return () => observer.disconnect()
+    }, [priority])
 
     if (blurDataURL) {
-        finalProps.style = {backgroundImage: `url('${blurDataURL}')`}
+        finalProps.style = { backgroundImage: `url('${blurDataURL}')` }
     }
-    // if (typeof finalProps.loading === 'undefined') { finalProps.loading = 'lazy' }
+
     if (optimizedSrc) {
         finalProps['data-original-src'] = finalProps.src;
         finalProps.src = optimizedSrc
@@ -25,16 +51,23 @@ export default function OptimizedImage({children, className, ...props}: Optimize
 
     return (
         <figure
-            className={`${className || ''}`}
-            style={{maxWidth: finalProps.width + 'px'}}
+            className={`${processedClassName || ''} overflow-hidden not-prose`}
+            style={finalProps.width ? { maxWidth: `${finalProps.width}px` } : {}}
         >
-            <img
-                loading='lazy'
-                alt={alt}
-                className={styles.image}
-                {...finalProps}
-            />
-            {children ? <figcaption>{children}</figcaption> : null}
+            <div
+                className={`relative w-full bg-slate-100 dark:bg-slate-900 overflow-hidden ${!isVisible ? 'animate-pulse' : ''}`}
+                style={finalProps.width && finalProps.height ? { aspectRatio: `${finalProps.width}/${finalProps.height}` } : { minHeight: '100px' }}
+            >
+                <img
+                    ref={ref}
+                    loading='lazy'
+                    alt={alt}
+                    className={`w-full h-auto transition-opacity duration-700 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+                    {...finalProps}
+                    src={isVisible ? finalProps.src : ''}
+                />
+            </div>
+            {children ? <figcaption className="mt-2 text-sm text-slate-500 dark:text-slate-400 italic text-center px-2">{children}</figcaption> : null}
         </figure>
     )
 }

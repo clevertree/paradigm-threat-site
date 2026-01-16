@@ -1,13 +1,9 @@
 'use client'
 
-import React, {useEffect, useState} from 'react'
-
-import styles from './ChatRoom.module.scss'
-import {ErrorBoundary, SuspenseLoader} from '@client'
-import Markdown, {MarkdownToJSX} from 'markdown-to-jsx'
-import debug from "debug";
-
-const API_URL = process.env.NEXT_PUBLIC_API
+import React, { useEffect, useState, useCallback } from 'react'
+import { ErrorBoundary, SuspenseLoader } from '@client'
+import Markdown, { MarkdownToJSX } from 'markdown-to-jsx'
+import { Send, User, MessageSquare, AlertCircle, RefreshCcw } from 'lucide-react'
 
 interface ChatRoomProps {
     channel: string,
@@ -18,12 +14,10 @@ interface ChatRoomProps {
 
 interface ChannelEntry {
     id: number,
-    user_id: number,
     username: string,
-    channel_id: number,
-    created: Date,
+    created: string,
     content: string,
-    isError?: true
+    isError?: boolean
 }
 
 interface ChannelContent {
@@ -40,241 +34,240 @@ interface ChannelInfo {
 interface ChannelList extends Array<ChannelInfo> {
 }
 
-interface FormElements extends HTMLFormControlsCollection {
-    content: HTMLInputElement
-}
-
-export default function ChatRoom({channel, title, className, mode}: ChatRoomProps) {
-    const [channelContent, setChannelContent] = useState<ChannelContent | null>()
+export default function ChatRoom({ channel, title, className, mode }: ChatRoomProps) {
+    const [channelContent, setChannelContent] = useState<ChannelContent | null>(null)
     const [channelList, setChannelList] = useState<ChannelList>([])
     const [loading, setLoading] = useState(true)
     const [disabled, setDisabled] = useState<boolean>(false)
-    // const [error, setError] = useState<string | null>()
     const [postCount, setPostCount] = useState<number>(0)
     const [currentChannelName, setCurrentChannelName] = useState<string>(channel)
     const [currentUserName, setCurrentUserName] = useState<string>('')
 
-    function addError(error:string) {
-        setChannelContent(channelContent => {
-            const newContent = channelContent ? {...channelContent} : {posts: []}
+    const addError = useCallback((error: string) => {
+        setChannelContent(prev => {
             const newEntry: ChannelEntry = {
                 username: 'system',
                 id: -1,
-                user_id: -1,
-                channel_id: -1,
-                created: new Date(),
+                created: new Date().toISOString(),
                 content: error,
                 isError: true
             }
-            newContent.posts = [newEntry, ...newContent.posts]
-            return newContent as ChannelContent
+            return {
+                channel: currentChannelName,
+                posts: [newEntry, ...(prev?.posts || [])]
+            }
         })
-    }
+    }, [currentChannelName])
 
     useEffect(() => {
         const username = localStorage.getItem('ChatRoom:username');
-        if (username)
-            setCurrentUserName(username);
+        if (username) setCurrentUserName(username);
     }, [])
 
+    const fetchPosts = useCallback(() => {
+        if (!currentChannelName) return;
+        setLoading(true);
+        fetch(`/api/chat/getPosts?channel=${encodeURIComponent(currentChannelName)}&limit=50`)
+            .then(res => res.json())
+            .then((data) => {
+                if (data.error) {
+                    addError(data.error)
+                } else {
+                    setChannelContent(data)
+                }
+            })
+            .catch(error => {
+                console.error(error)
+                addError(error.message)
+            }).finally(() => {
+                setLoading(false);
+            })
+    }, [currentChannelName, addError])
+
     useEffect(() => {
-        if (currentChannelName) {
-            // Fetch top directory
+        fetchPosts()
+    }, [fetchPosts, postCount])
+
+    useEffect(() => {
+        if (mode === "full") {
             setLoading(true);
-            fetch(`${API_URL}/api/chat/channel/${currentChannelName}/getPosts?postCount=${postCount}`)
+            fetch(`/api/chat/getChannels`)
                 .then(res => res.json())
-                .then((channelContent) => {
-                    if (channelContent.error) {
-                        addError(JSON.stringify(channelContent.error))
+                .then((data) => {
+                    if (data.error) {
+                        addError(data.error)
                     } else {
-                        // channelContent.posts = channelContent.posts.slice(0).reverse()
-                        setChannelContent(channelContent)
+                        setChannelList(data)
+                        if (!currentChannelName && data.length > 0) {
+                            setCurrentChannelName(data[0].name)
+                        }
                     }
-                })
-                .catch(error => {
+                }).catch(error => {
                     console.error(error)
                     addError(error.message)
                 }).finally(() => {
                     setLoading(false);
                 })
         }
-    }, [currentChannelName, postCount])
+    }, [mode, currentChannelName, addError])
 
-    useEffect(() => {
-        // Fetch channel list
-        setLoading(true);
-        if (mode === "full") {
-            fetch(`${API_URL}/api/chat/getChannels`)
-                .then(res => res.json())
-                .then((channelList) => {
-                    if (channelList.error) {
-                        addError(JSON.stringify(channelList.error))
-                    } else {
-                        if (!currentChannelName) {
-                            const randomChannel = channelList[Math.floor(Math.random() * channelList.length)].name;
-                            setCurrentChannelName(randomChannel)
-                        }
-                        setChannelList(channelList)
-                    }
-                }).catch(error => {
-                console.error(error)
-                addError(error.message)
-            }).finally(() => {
-                setLoading(false);
-            })
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [mode])
-
-    async function onKeyDown(event: React.KeyboardEvent) {
-        if (event.key === 'Enter' && event.ctrlKey) {
-            // event.target.form.submit();
-            await submitForm(event.target as HTMLFormElement);
-        }
-    }
-
-    async function onSubmit(event: React.FormEvent<HTMLElement>) {
+    async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
-        await submitForm(event.target as HTMLFormElement);
-    }
+        const form = event.currentTarget
+        const formData = new FormData(form)
+        const username = formData.get('username') as string || 'guest'
+        const content = formData.get('content') as string
 
+        if (!content.trim()) return
 
-    async function submitForm(formElm: HTMLFormElement) {
-            const formData = new FormData(formElm)
-            const formDataObject = Object.fromEntries(formData.entries()) as { [key: string]: string }
-            if (!formDataObject?.username) {
-                formDataObject.username = 'guest'
-            } else {
-                localStorage.setItem("ChatRoom:username", formDataObject.username);
-            }
-            const {content: contentElm} = (formElm.elements as FormElements)
-            contentElm.value = ''
-            setDisabled(true)
-            fetch(`${API_URL}/api/chat/channel/${currentChannelName}/createGuestPost`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Accept: 'application/json'
-                },
+        localStorage.setItem("ChatRoom:username", username);
+        setDisabled(true)
+
+        try {
+            const res = await fetch(`/api/chat/createGuestPost`, {
+                headers: { 'Content-Type': 'application/json' },
                 method: 'POST',
-                body: JSON.stringify(formDataObject)
+                body: JSON.stringify({ username, content, channel: currentChannelName })
             })
-                .then((response) => {
-                    if(!response.ok) {
-                        response.json().then(json => {
-                            addError(`HTTP error! status: ${response.status}, message: ${JSON.stringify(json?.error?.message || json?.error || json)}`);
-                        });
-                    } else {
-                        setPostCount(postCount + 1);
-                    }
-                })
-                .catch(error => {
-                    console.error(error)
-                    addError(`Error submitting message: ${error.message} (`)
-                })
-                .finally(() => {
-                    setDisabled(false)
 
-                })
+            if (!res.ok) {
+                const json = await res.json()
+                throw new Error(json.error || 'Failed to post message')
+            }
+
+            form.reset()
+            setPostCount(prev => prev + 1)
+        } catch (error: any) {
+            addError(error.message)
+        } finally {
+            setDisabled(false)
+        }
     }
-
-    let channelSelectionMarkup = null;
-    if (mode === 'full') {
-        channelSelectionMarkup = (
-            <select
-                size={4}
-                value={currentChannelName}
-                onChange={e => {
-                    setCurrentChannelName(e.target.value)
-                    setChannelContent(null)
-                }}
-                className='overflow-y-auto h-full  text-sm'>
-                {channelList.map((c) => (
-                    <option key={c.name}
-                    >{c.name}</option>
-                ))}
-            </select>
-        )
-    }
-
-    // TODO: Shadow DOM?
-    let renderedMarkup = (
-        <div className={`${styles.container} ${className || ''}`}>
-            {loading ? <SuspenseLoader/> : null}
-            <div className={styles.channelTitle}>
-                {title || loading ? "Loading..." : `Channel '${currentChannelName}'`}
-            </div>
-            <div className='flex flex-col sm:flex-row sm:h-[60vh]'>
-                {channelSelectionMarkup}
-                <div className={styles.channel + ' max-h-[80vh] sm:w-[80%] flex-grow overflow-y-auto'}>
-                    {channelContent?.posts?.map(({username, content, created, isError}, index) => (
-                        <div key={index} className={styles.post + (isError ? ' ' + styles.error : '')}
-                             title={`Created at ${new Date(created).toLocaleString()}`}>
-                            <span className={styles.username}>{username}</span>
-                            <span className={styles.content}>
-                                <Markdown options={ChannelMarkdownOptions}>
-                                    {content}
-                                </Markdown>
-                            </span>
-                        </div>
-                    ))}
-                </div>
-            </div>
-            <div>
-                <form onSubmit={onSubmit}>
-                    <fieldset disabled={disabled || loading} className="flex">
-                        <input
-                            type="text" name="username"
-                            className={`${styles.input} w-24 text-center italic`}
-                            defaultValue={currentUserName}
-                            placeholder="guest"
-                            title="Type your guest name here"
-                        />
-                        <input
-                            type="text"
-                            name="content"
-                            className={`${styles.input} w-full`}
-                            onKeyDown={onKeyDown}
-                            required
-                            maxLength={1024}
-                            title="Send a message to the channel"
-                            placeholder="got something to say? type it here and hit the enter key to send to the channel"
-                        />
-                        <button
-                            type="submit" className={`${styles.input} ${styles.submit} w-24`} value="Submit"
-                        >Send
-                        </button>
-                    </fieldset>
-                </form>
-            </div>
-            {/*<div className={styles.channelFooter}>*/}
-            {/*  <a*/}
-            {/*    href={`https://chat.paradigmthreat.net/paradigm-threat/channels/${channel}`} target=" _blank"*/}
-            {/*    rel="noreferrer"*/}
-            {/*  >*/}
-            {/*    Visit {title || channel} in new window*/}
-            {/*  </a>*/}
-            {/*</div>*/}
-        </div>
-    );
 
     return (
         <ErrorBoundary assetName="ChatRoom">
-            {renderedMarkup}
+            <div className={`flex flex-col h-[70vh] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xl ${className || ''}`}>
+                {/* Header */}
+                <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex flex-wrap justify-between items-center gap-4">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-blue-600 rounded-lg text-white">
+                            <MessageSquare size={20} />
+                        </div>
+                        <div>
+                            <h3 className="font-bold text-slate-900 dark:text-white leading-none mb-1">
+                                {title || `Channel: ${currentChannelName}`}
+                            </h3>
+                            <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Public Repository Chat</p>
+                        </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                        {mode === 'full' && (
+                            <select
+                                value={currentChannelName}
+                                onChange={e => {
+                                    setCurrentChannelName(e.target.value)
+                                    setChannelContent(null)
+                                }}
+                                className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                            >
+                                {channelList.map((c) => (
+                                    <option key={c.name} value={c.name}>{c.name}</option>
+                                ))}
+                            </select>
+                        )}
+                        <button
+                            onClick={() => setPostCount(prev => prev + 1)}
+                            className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-500"
+                            title="Refresh messages"
+                        >
+                            <RefreshCcw size={20} className={loading ? 'animate-spin' : ''} />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Messages */}
+                <div className="flex-grow overflow-y-auto p-6 space-y-4 scroll-smooth">
+                    {loading && !channelContent && (
+                        <div className="flex flex-col items-center justify-center h-full gap-4 text-slate-400">
+                            <SuspenseLoader />
+                            <p className="animate-pulse">Loading messages...</p>
+                        </div>
+                    )}
+
+                    {channelContent?.posts?.map((post, index) => (
+                        <div
+                            key={post.id === -1 ? `err-${index}` : post.id}
+                            className={`flex flex-col ${post.isError ? 'bg-red-500/10 border border-red-500/20 p-4 rounded-xl shadow-inner' : ''}`}
+                        >
+                            <div className="flex items-center gap-2 mb-1">
+                                <span className={`font-bold text-sm ${post.isError ? 'text-red-500' : 'text-blue-600 dark:text-blue-400'}`}>
+                                    {post.username}
+                                </span>
+                                <span className="text-[10px] text-slate-400 font-mono">
+                                    {new Date(post.created).toLocaleTimeString()}
+                                </span>
+                                {post.isError && <AlertCircle size={14} className="text-red-500" />}
+                            </div>
+                            <div className={`prose prose-sm dark:prose-invert max-w-none prose-p:mb-0 ${post.isError ? 'text-red-500 font-medium' : 'text-slate-700 dark:text-slate-300'}`}>
+                                <Markdown options={ChannelMarkdownOptions}>
+                                    {post.content}
+                                </Markdown>
+                            </div>
+                        </div>
+                    ))}
+
+                    {!loading && channelContent?.posts?.length === 0 && (
+                        <div className="flex flex-col items-center justify-center h-full gap-2 text-slate-400 opacity-50">
+                            <MessageSquare size={48} />
+                            <p>No messages yet. Be the first to speak!</p>
+                        </div>
+                    )}
+                </div>
+
+                {/* Footer / Input */}
+                <div className="p-4 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
+                    <form onSubmit={onSubmit} className="flex gap-2">
+                        <div className="relative flex-shrink-0 group">
+                            <User className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={16} />
+                            <input
+                                type="text"
+                                name="username"
+                                defaultValue={currentUserName}
+                                placeholder="guest"
+                                disabled={disabled || loading}
+                                className="pl-9 pr-3 py-2.5 w-32 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500/50 transition-all transition-all"
+                            />
+                        </div>
+                        <div className="relative flex-grow group">
+                            <input
+                                type="text"
+                                name="content"
+                                placeholder="Write a message..."
+                                required
+                                disabled={disabled || loading}
+                                autoComplete="off"
+                                className="w-full px-4 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                            />
+                        </div>
+                        <button
+                            type="submit"
+                            disabled={disabled || loading}
+                            className="bg-blue-600 hover:bg-blue-700 disabled:bg-slate-400 text-white p-2.5 rounded-xl transition-all shadow-lg shadow-blue-600/20 active:scale-95 flex items-center justify-center flex-shrink-0"
+                        >
+                            <Send size={18} />
+                        </button>
+                    </form>
+                </div>
+            </div>
         </ErrorBoundary>
     )
 }
 
-
 const ChannelMarkdownOptions: MarkdownToJSX.Options = {
     overrides: {
-        p: {
-            component: 'div'
-        },
-        h1: {
-            component: 'div'
-        },
-        h2: {
-            component: 'div'
-        },
+        p: { component: 'div' },
+        h1: { component: 'div' },
+        h2: { component: 'div' },
     }
 }

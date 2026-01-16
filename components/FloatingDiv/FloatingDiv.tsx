@@ -1,41 +1,70 @@
 'use client'
 
-import React, {useEffect, useRef, useState} from 'react'
-
-import styles from './FloatingDiv.module.scss'
-import {onToggle} from '@/components/helpers/inputHelper'
+import React, { useEffect, useRef, useState, useCallback } from 'react'
+import { onToggle } from '@/components/helpers/inputHelper'
 
 interface FloatingDivProps {
     children: React.ReactNode,
     containerTag?: string,
-    className: string
+    className?: string
 }
 
-export default function FloatingDiv({children, containerTag, className}: FloatingDivProps) {
+export default function FloatingDiv({ children, containerTag, className }: FloatingDivProps) {
     const [isDisabled, setIsDisabled] = useState(false)
     const [isScrolling, setIsScrolling] = useState(false)
+    const [activeSection, setActiveSection] = useState<string>('')
+    const [headings, setHeadings] = useState<{ id: string, text: string, top: number }[]>([])
     const [containerHeight, setContainerHeight] = useState<string | number>('inherit')
-    const refContainer = useRef<HTMLElement>()
+    const refContainer = useRef<HTMLElement>(null)
+    const headingsRef = useRef(headings)
+    const isScrollingRef = useRef(isScrolling)
     const isFloating = !isDisabled && isScrolling;
-    function onScroll() {
+
+    useEffect(() => { headingsRef.current = headings }, [headings])
+    useEffect(() => { isScrollingRef.current = isScrolling }, [isScrolling])
+
+    const onScroll = useCallback(() => {
         const navElm = refContainer.current
         if (navElm) {
-            const {top, height} = navElm.getBoundingClientRect()
-            // console.log(top, height, isFloating)
-            if (!isScrolling) {
+            const { top, height } = navElm.getBoundingClientRect()
+            const currentIsScrolling = isScrollingRef.current
+            if (!currentIsScrolling) {
                 if (top < 0) {
                     setIsScrolling(true)
                     setContainerHeight(height)
                 }
-            } else if (isScrolling) {
+            } else {
                 if (top > 0) {
-                    // console.log('isFloating', isFloating, top, top > 0)
                     setIsScrolling(false)
                     setContainerHeight('inherit')
                 }
             }
         }
-    }
+
+        // Track active section
+        const currentHeadings = headingsRef.current
+        if (currentHeadings.length > 0) {
+            const scrollPos = window.scrollY + 100 // offset for header
+            let currentAction = ''
+            for (let i = currentHeadings.length - 1; i >= 0; i--) {
+                if (scrollPos >= currentHeadings[i].top) {
+                    currentAction = currentHeadings[i].text
+                    break
+                }
+            }
+            setActiveSection(currentAction)
+        }
+    }, []) // Now stable
+
+    const updateHeadings = useCallback(() => {
+        const articleHeadings = Array.from(document.querySelectorAll('article h1, article h2, article h3, article h4'))
+        const headingData = articleHeadings.map(h => ({
+            id: h.id,
+            text: (h as HTMLElement).innerText,
+            top: h.getBoundingClientRect().top + window.scrollY
+        })).filter(h => h.id)
+        setHeadings(headingData)
+    }, [setHeadings])
 
     function scrollToTop() {
         window.scroll({
@@ -43,41 +72,104 @@ export default function FloatingDiv({children, containerTag, className}: Floatin
             left: 0,
             behavior: 'smooth'
         })
-        window.history.pushState({}, document.title, window.location.pathname)
+        if (window.location.hash) {
+            window.history.pushState({}, document.title, window.location.pathname)
+        }
+    }
+
+    function navigateSection(direction: number) {
+        const scrollPos = window.scrollY + 110 // offset
+        let targetIndex = -1
+
+        if (direction > 0) {
+            targetIndex = headings.findIndex(h => h.top > scrollPos)
+        } else {
+            targetIndex = headings.findLastIndex(h => h.top < scrollPos - 20)
+        }
+
+        if (targetIndex !== -1 && headings[targetIndex]) {
+            const target = headings[targetIndex]
+            window.scroll({
+                top: target.top - 100,
+                behavior: 'smooth'
+            })
+        }
     }
 
     useEffect(() => {
         window.addEventListener('scroll', onScroll)
         onScroll()
-        return () => window.removeEventListener('scroll', onScroll)
-    })
 
-    const Container = containerTag || 'div'
+        // Initial headings update
+        updateHeadings()
+
+        // Update headings on content changes (simplified)
+        const observer = new MutationObserver(updateHeadings)
+        const article = document.querySelector('article')
+        if (article) {
+            observer.observe(article, { childList: true, subtree: true })
+        }
+
+        return () => {
+            window.removeEventListener('scroll', onScroll)
+            observer.disconnect()
+        }
+    }, [onScroll, updateHeadings])
+
+    const Container = (containerTag as any) || 'div'
 
     return (
-        // @ts-ignore
         <Container
-            className={className}
-            style={{height: containerHeight}}
+            className={`${className}`}
+            style={{ height: containerHeight }}
             ref={refContainer}
         >
             <div
-                className={(isFloating ? ' ' + styles.floatingDiv : '')}
+                className={(isFloating ? 'fixed top-0 left-0 right-0 z-50 animate-in fade-in slide-in-from-top-4 duration-300' : '')}
             >
                 {children}
-                {isFloating ? <div
-                    {...onToggle(() => setIsDisabled(true))}
-                    title='temporarily hide header'
-                    className={styles.disableButton}>
-                    &#x00d7;
-                </div> : ''}
+                {isFloating && (
+                    <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                        <div
+                            {...onToggle(() => setIsDisabled(true))}
+                            title='temporarily hide header'
+                            className="w-6 h-6 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/40 dark:bg-white/20 dark:hover:bg-white/40 cursor-pointer text-sm leading-none"
+                        >
+                            &#x00d7;
+                        </div>
+                    </div>
+                )}
             </div>
-            <button
-                className={`${styles.bottomText} ${!isFloating ? styles.bottomTextHidden : ''}`}
-                {...onToggle(scrollToTop)}
-                tabIndex={isFloating ? 0 : -1} // TODO: move to own component
-            >Back to top
-            </button>
+
+            <div className={`fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2 transition-all duration-300 ${!isFloating ? 'translate-y-20 opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}`}>
+                {activeSection && (
+                    <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg shadow-lg text-sm font-medium mb-1 max-w-[200px] truncate">
+                        {activeSection}
+                    </div>
+                )}
+                <div className="flex items-center gap-2">
+                    <button
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 shadow-lg hover:scale-110 active:scale-95 transition-all"
+                        onClick={() => navigateSection(-1)}
+                        title="Previous section"
+                    >
+                        -
+                    </button>
+                    <button
+                        className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 shadow-lg hover:scale-110 active:scale-95 transition-all"
+                        onClick={() => navigateSection(1)}
+                        title="Next section"
+                    >
+                        +
+                    </button>
+                    <button
+                        className="bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 px-4 py-2 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all text-sm font-bold"
+                        {...onToggle(scrollToTop)}
+                    >
+                        Back to top
+                    </button>
+                </div>
+            </div>
         </Container>
     )
 }

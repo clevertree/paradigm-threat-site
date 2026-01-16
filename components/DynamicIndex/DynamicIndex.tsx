@@ -1,88 +1,121 @@
 'use client'
 
-import React, {useEffect, useRef, useState} from 'react'
-import styles from './DynamicIndex.module.css'
+import React, { useEffect, useRef, useState } from 'react'
+import { usePathname } from 'next/navigation'
 
 interface DynamicIndexProps {
-
+    currentPath?: string;
+    mode?: 'sidebar' | 'inline';
 }
 
-
 interface HeaderList extends Array<HeaderEntry> {
-
 }
 
 interface HeaderEntry {
-    id: string,
-    title: string,
-    children: HeaderList
+    id: string;
+    title: string;
+    children: HeaderList;
 }
 
-export default function DynamicIndex(props: DynamicIndexProps) {
+export default function DynamicIndex({ mode = 'inline', ...props }: DynamicIndexProps) {
     const container = useRef<HTMLUListElement>(null)
     const [headerList, setHeaderList] = useState<HeaderList>([])
+    const pathname = usePathname()
 
     useEffect(() => {
-        const {hash} = window.location
+        const { hash } = window.location
         const current = container.current
-        if (!current)
-            throw new Error("DynamicIndex container not found");
-        const headerList: HeaderList = generateHeaderList(current, hash ? hash.substring(1) : undefined)
-        setHeaderList(headerList);
+        if (!current) return;
+
+        // Small delay to ensure MDX/Content is rendered if this is the sidebar instance
+        // or after a client-side navigation
+        const timer = setTimeout(() => {
+            const list: HeaderList = generateHeaderList(current, hash ? hash.substring(1) : undefined)
+            setHeaderList(list);
+        }, 200);
+
         return () => {
+            clearTimeout(timer);
             setHeaderList([])
         }
-    }, [])
+    }, [pathname])
 
+    if (headerList.length === 0) {
+        return <ul ref={container} className="hidden" />
+    }
 
-    return (<ul
-        className={styles.container}
-        {...props}
-        ref={container}
-    >
-        {headerList.map(headerEntry => renderHeaderChild(headerEntry, 1))}
-    </ul>)
+    return (
+        <ul
+            className={`dynamic-index-container space-y-0 p-5 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl transition-all duration-300 shadow-xl overflow-y-auto max-h-[calc(100vh-10rem)] ${mode === 'sidebar'
+                ? 'hidden lg:block w-full'
+                : 'block lg:hidden mb-8 max-w-2xl'
+                }`}
+            ref={container}
+        >
+            <li className="font-bold text-slate-400 dark:text-slate-500 uppercase text-[10px] tracking-widest mb-3 px-2">Table of Contents</li>
+            {headerList.map(headerEntry => renderHeaderChild(headerEntry, 1))}
+        </ul>
+    )
 
-    function renderHeaderChild({title, id, children,}: HeaderEntry, level: number) {
-        return [
-            <li className={'h' + level} key={id + '_li'}>
-                <a
-                    onClick={e => onClick(e.nativeEvent || e, id)}
-                    href={'#' + id}
-                >{title}
-                </a>
-            </li>,
-            (children && children.length > 0
-                ? (
-                    <ul key={id + '_ul'}>
-                        {children.map((child, i) => renderHeaderChild(child, level + 1))}
+    function renderHeaderChild({ title, id, children, }: HeaderEntry, level: number) {
+        return (
+            <React.Fragment key={id}>
+                <li className="list-none">
+                    <a
+                        onClick={e => {
+                            e.preventDefault();
+                            onClick(e, id);
+                        }}
+                        href={'#' + id}
+                        className={`block px-3 rounded-xl hover:bg-blue-600/10 dark:hover:bg-blue-500/20 transition-all duration-200 text-blue-600 dark:text-blue-400 no-underline group ${level === 1 ? 'font-bold text-sm mb-1 bg-white/50 dark:bg-white/5 shadow-sm border border-slate-200/50 dark:border-white/5' : 'text-[11px] py-0 opacity-80 hover:opacity-100'}`}
+                    >
+                        <span className="flex items-center gap-2 group-hover:translate-x-1 transition-transform duration-200">
+                            <span className="truncate">{title}</span>
+                        </span>
+                    </a>
+                </li>
+                {children && children.length > 0 && (
+                    <ul className="list-none ml-4 my-1 border-l border-slate-200 dark:border-slate-800/50 space-y-0.5">
+                        {children.map(child => renderHeaderChild(child, level + 1))}
                     </ul>
-                )
-                : null)
-        ]
+                )}
+            </React.Fragment>
+        )
     }
 }
 
 
 function generateHeaderList(container: HTMLUListElement, scrollToHash?: string) {
-    const articleElm = container.closest('article, section, body')
-    if (!articleElm)
-        throw new Error("DynamicIndex articleElm not found");
-    const list = articleElm.querySelectorAll('h1, h2, h3, h4, h5, h6')
-    const root: HeaderEntry = {id: 'root', title: 'root', children: []}
+    const contentElm = document.querySelector('main') || container.closest('article, section, body')
+    if (!contentElm)
+        throw new Error("DynamicIndex contentElm not found");
+    const list = contentElm.querySelectorAll('h1, h2, h3, h4, h5, h6')
+    const root: HeaderEntry = { id: 'root', title: 'root', children: [] }
     let lastByLevel: HeaderList = [root];
+    const usedIds = new Set<string>();
+
     [].forEach.call(list, (headerElm: HTMLHeadingElement) => {
         if (headerElm.classList.contains('no-index')) {
             return
         }
-        let {nodeName, id, textContent} = headerElm
+        let { nodeName, textContent } = headerElm
+        let id = headerElm.id
+
         if (!id) {
-            id = headerElm.id = `${textContent}`.toLowerCase()
+            const baseId = `${textContent}`.toLowerCase()
                 .replace(/\s+/g, '_')
                 .replace(/[^\w-]+/g, '')
+            id = baseId
+            let counter = 1
+            while (usedIds.has(id)) {
+                id = `${baseId}_${counter++}`
+            }
+            headerElm.id = id
         }
+        usedIds.add(id)
+
         const level = parseInt(nodeName.substring(1, 2))
-        const headerEntry: HeaderEntry = {id, title: textContent + '', children: []}
+        const headerEntry: HeaderEntry = { id, title: textContent + '', children: [] }
         lastByLevel[level] = headerEntry
 
         // Erase disconnected levels
@@ -116,20 +149,19 @@ function generateHeaderList(container: HTMLUListElement, scrollToHash?: string) 
     // current.reactContainer.render(render)
 }
 
-function onClick(e: MouseEvent, id: string) {
-    e.preventDefault()
-    const target = e.target as HTMLHeadingElement;
-    const articleElm = target.closest('article, section, body') || document.body;
+function onClick(e: React.MouseEvent | MouseEvent, id: string) {
+    const target = e.target as HTMLElement;
+    const articleElm = target?.closest('article, section, body') || document.body;
     const hash = '#' + id
     const headerElm = articleElm.querySelector(`*[id='${id}']`) as HTMLHeadingElement
-    if (!headerElm)
-        throw new Error("Header Element not found: " + id)
+    if (!headerElm) return; // Silent fail if header not found
+
     scrollToHeader(headerElm)
     window.history.pushState({}, '', hash)
 }
 
-function scrollToHeader(headerElm: HTMLHeadingElement, behavior?: ScrollBehavior) {
-    headerElm.scrollIntoView({block: 'center', behavior})
+function scrollToHeader(headerElm: HTMLHeadingElement, behavior: ScrollBehavior = 'smooth') {
+    headerElm.scrollIntoView({ block: 'center', behavior })
     const eventHandler = () => {
         headerElm.classList.remove('text-highlighted')
         headerElm.removeEventListener('animationend', eventHandler)

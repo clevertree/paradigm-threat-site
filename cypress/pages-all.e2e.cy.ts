@@ -1,22 +1,19 @@
-import Directory from "../app/directory.json"
-
-type DirectoryType = {
-    [name: string]: DirectoryType
-}
-
 describe('template spec', () => {
     it('passes', () => {
+        const filesBaseUrl = 'https://files.paradigmthreat.net'; // Fallback or use env
+        cy.request(`${filesBaseUrl}/index.json`).then((response) => {
+            const fileList: string[] = response.body;
+            const paths = new Set<string>();
+            fileList.forEach((file: string) => {
+                const parts = file.split('/');
+                const path = '/' + parts.slice(0, -1).join('/');
+                paths.add(path);
+            });
 
-        function visitPathsInDirectory(path: string, directory: DirectoryType) {
-            Object.keys(directory).forEach(subPath => {
-                const currentPath = `${path}/${subPath}`;
-                // cy.log("Visiting " + currentPath)
-                cy.visit(currentPath)
-                visitPathsInDirectory(currentPath, directory[subPath])
-            })
-        }
-
-        visitPathsInDirectory('/', Directory);
-
-    })
-})
+            Array.from(paths).forEach((path) => {
+                if (path === '/') return;
+                cy.visit(path);
+            });
+        });
+    });
+});
