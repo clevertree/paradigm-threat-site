@@ -1,17 +1,17 @@
 'use client'
 
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useState, useMemo, Suspense } from 'react'
 import { getFilesIndex, getRemoteFile } from '@/server/remoteFiles'
 import * as components from '@/components'
 import Link from 'next/link'
 import matter from 'gray-matter'
-import { Search, FileText, Image as ImageIcon, Folder, Loader2 } from 'lucide-react'
+import { Search, FileText, Folder, Loader2 } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Markdown from 'markdown-to-jsx'
 
 const { PopImage } = components;
 
-export default function SearchPage() {
+function SearchContent() {
     const router = useRouter()
     const searchParams = useSearchParams()
     const query = searchParams.get('q') || ''
@@ -291,7 +291,7 @@ export default function SearchPage() {
                                                     w={600}
                                                     className="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.02] clear-none m-0 shadow-none ring-0 rounded-none"
                                                 />
-                                                <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                                                <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                                                     <span className="text-[10px] text-white truncate w-full font-mono">{img.split('/').pop()}</span>
                                                 </div>
                                             </div>
@@ -304,5 +304,13 @@ export default function SearchPage() {
                 )}
             </div>
         </div>
+    );
+}
+
+export default function SearchPage() {
+    return (
+        <Suspense fallback={<div className="flex items-center justify-center min-h-screen"><Loader2 className="animate-spin text-blue-500" size={48} /></div>}>
+            <SearchContent />
+        </Suspense>
     )
 }
