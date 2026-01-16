@@ -58,9 +58,9 @@ export default function SearchPage() {
 
     // Fetch MD content for the top results when search results change
     useEffect(() => {
-        const mds = searchResults.filter(path => 
-            path.endsWith('.md') && 
-            !path.endsWith('page.md') && 
+        const mds = searchResults.filter(path =>
+            path.endsWith('.md') &&
+            !path.endsWith('page.md') &&
             !path.endsWith('index.md') &&
             !path.includes('.auto.md')
         ).slice(0, 5)
@@ -138,7 +138,7 @@ export default function SearchPage() {
                     <div className="max-w-2xl mx-auto p-6 bg-red-500/10 border border-red-500/20 text-red-500 rounded-3xl text-center">
                         <div className="font-bold text-lg mb-2">Error</div>
                         <p>{error}</p>
-                        <button 
+                        <button
                             onClick={() => window.location.reload()}
                             className="mt-4 px-6 py-2 bg-red-500 text-white rounded-full font-bold hover:bg-red-600 transition-colors"
                         >

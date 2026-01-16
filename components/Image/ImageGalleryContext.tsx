@@ -84,7 +84,7 @@ function ImageGalleryOverlay() {
         const currentSrc = currentImage.src;
         if (!currentImage.children && !currentImage.alt && currentSrc && !currentSrc.startsWith('http')) {
             const FILES_BASE_URL = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://files.paradigmthreat.net';
-            
+
             // Fix double slashes and ensure no leading slash for index check
             const cleanSrc = currentSrc.replace(/\/+/g, '/').replace(/^\/+/, '');
             const mdPath = `${cleanSrc}.md`;
