@@ -71,10 +71,25 @@ function ImageGalleryOverlay() {
     const [direction, setDirection] = useState(0)
     const [remoteCaption, setRemoteCaption] = useState<string | null>(null)
     const [isHighResLoaded, setIsHighResLoaded] = useState(false)
+    const [aspectRatio, setAspectRatio] = useState<number | null>(null)
 
     useEffect(() => {
         setIsHighResLoaded(false)
-    }, [currentIndex])
+        setAspectRatio(null)
+
+        // Preload next and previous images
+        if (isOpen && images.length > 1) {
+            const nextIdx = (currentIndex + 1) % images.length;
+            const prevIdx = (currentIndex - 1 + images.length) % images.length;
+
+            [images[nextIdx], images[prevIdx]].forEach(img => {
+                if (img && (img.highResSrc || img.src)) {
+                    const preload = new Image();
+                    preload.src = img.highResSrc || img.src;
+                }
+            });
+        }
+    }, [currentIndex, isOpen, images])
 
     const currentImage = images[currentIndex] || null
 
@@ -285,28 +300,26 @@ function ImageGalleryOverlay() {
                             if (swipe < -100) goNext()
                             else if (swipe > 100) goPrev()
                         }}
-                        className="relative z-10 max-w-[95vw] lg:max-w-[70vw] max-h-[75vh] lg:max-h-[85vh] flex flex-col items-center pointer-events-none"
+                        onClick={(e) => e.stopPropagation()}
+                        className={`relative z-10 max-w-[95vw] ${aspectRatio && aspectRatio < 1 ? 'lg:max-w-[90vw]' : 'lg:max-w-[75vw]'} max-h-full flex ${aspectRatio && aspectRatio < 1 ? 'flex-col lg:flex-row' : 'flex-col'} items-center justify-center gap-4 lg:gap-8 pointer-events-none`}
                     >
-                        <div className="relative w-full h-full flex items-center justify-center min-h-[200px]">
-                            {/* Low-res Placeholder */}
-                            <img
-                                src={`/api/image?path=${encodeURIComponent(currentImage.src)}&w=800`}
-                                className={`max-w-full max-h-full object-contain rounded-lg transition-opacity duration-300 ${isHighResLoaded ? 'opacity-0' : 'opacity-100'}`}
-                                alt={currentImage.alt}
-                            />
-
+                        <div className="relative flex-grow flex items-center justify-center min-h-[200px] w-full h-full overflow-hidden">
                             {/* High-res Full Scale Image */}
                             <img
                                 key={currentImage.src + '-high'}
-                                src={`/api/image?path=${encodeURIComponent(currentImage.src)}&w=2048`}
-                                className={`absolute inset-0 w-full h-full object-contain shadow-2xl rounded-lg pointer-events-auto cursor-grab active:cursor-grabbing transition-opacity duration-500 ${isHighResLoaded ? 'opacity-100' : 'opacity-0'}`}
+                                src={currentImage.highResSrc || currentImage.src}
+                                className="max-w-full max-h-full object-contain shadow-2xl rounded-lg pointer-events-auto cursor-grab active:cursor-grabbing transition-opacity duration-300"
+                                style={{ opacity: aspectRatio ? 1 : 0, maxHeight: '100vh' }}
                                 alt={currentImage.alt}
-                                onLoad={() => setIsHighResLoaded(true)}
                                 onDragStart={(e) => e.preventDefault()}
+                                onLoad={(e) => {
+                                    const img = e.currentTarget;
+                                    setAspectRatio(img.naturalWidth / img.naturalHeight);
+                                }}
                             />
                         </div>
                         {displayCaption && (
-                            <div className="mt-4 text-center text-white/90 font-medium px-4 max-w-2xl text-shadow-lg">
+                            <div className={`text-white/90 font-medium px-4 ${aspectRatio && aspectRatio < 1 ? 'lg:max-w-xs lg:text-left' : 'max-w-2xl text-center'} text-shadow-lg pointer-events-auto max-h-[20vh] lg:max-h-full overflow-y-auto`}>
                                 {displayCaption}
                             </div>
                         )}

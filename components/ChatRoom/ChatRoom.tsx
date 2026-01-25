@@ -146,7 +146,12 @@ export default function ChatRoom({ channel, title, className, mode }: ChatRoomPr
 
     return (
         <ErrorBoundary assetName="ChatRoom">
-            <div className={`flex flex-col h-[70vh] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xl ${className || ''}`}>
+            <div className={`flex flex-col h-[70vh] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xl ${className || ''} select-none`}>
+                {/* Copy Placeholder - invisible but selectable */}
+                <span className="absolute opacity-0 pointer-events-none select-text">
+                    [Paradigm Threat Live Chat: {title || currentChannelName}]
+                </span>
+
                 {/* Header */}
                 <div className="bg-slate-100 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-4 flex flex-wrap justify-between items-center gap-4">
                     <div className="flex items-center gap-3">

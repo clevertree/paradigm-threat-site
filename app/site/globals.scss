@@ -7,7 +7,29 @@
 @layer base {
   body {
     @apply antialiased;
+    user-select: none;
+    -webkit-user-select: none;
   }
+}
+
+/* Enable selection for content only */
+.prose,
+.prose *,
+main h1,
+.mdx-content,
+.selectable-content {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* Ensure interactive elements and code remain selectable */
+input,
+textarea,
+code,
+pre,
+pre * {
+  user-select: text !important;
+  -webkit-user-select: text !important;
 }
 
 /* Custom prose overrides */
@@ -86,6 +108,7 @@
 ::-webkit-scrollbar-thumb:hover {
   @apply bg-slate-400 dark:bg-slate-600;
 }
+
 /* Custom scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
