@@ -1,14 +1,29 @@
-import React, { Suspense } from "react";
+'use client'
+
+import React, { Suspense, useState, useEffect } from "react";
 import { DynamicNav, FloatingDiv, DynamicIndex } from "@/components";
-import { getFilesIndex } from "@/server/remoteFiles";
 import { SuspenseLoader } from "@client";
 
-export default async function MainLayout({
+export default function MainLayout({
     children
 }: {
     children: React.ReactNode
 }) {
-    const fileList = await getFilesIndex().catch(() => []);
+    const [fileList, setFileList] = useState<string[]>([]);
+    const [isHydrated, setIsHydrated] = useState(false);
+
+    useEffect(() => {
+        setIsHydrated(true);
+        const baseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://files.paradigmthreat.net';
+        fetch(`${baseUrl}/index.json`)
+            .then(res => res.json())
+            .then(data => setFileList(data))
+            .catch(() => setFileList([]));
+    }, []);
+
+    if (!isHydrated) {
+        return <div className="flex items-center justify-center min-h-screen"><SuspenseLoader /></div>;
+    }
 
     return (
         <div className="flex-grow flex justify-center w-full px-4 py-8 relative">

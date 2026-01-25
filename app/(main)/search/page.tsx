@@ -42,6 +42,15 @@ function SearchContent() {
             })
     }, [])
 
+    // Trigger DynamicIndex update when content changes
+    useEffect(() => {
+        if (!loading && !contentLoading) {
+            setTimeout(() => {
+                window.dispatchEvent(new Event('dynamic-index-update'));
+            }, 500);
+        }
+    }, [loading, contentLoading, renderedMds]);
+
     const searchResults = useMemo(() => {
         if (!filesIndex || !Array.isArray(filesIndex)) return []
         const cleanQuery = query.trim().toLowerCase()
@@ -225,7 +234,7 @@ function SearchContent() {
                                                     <div className="text-sm text-slate-400 font-mono mt-1">{path}</div>
                                                 </div>
                                             </div>
-                                            <article className="prose prose-slate dark:prose-invert max-w-none bg-white dark:bg-slate-900/30 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl mdx-content">
+                                            <article className="prose prose-slate dark:prose-invert max-w-none bg-white dark:bg-slate-900/30 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl mdx-content max-h-[80vh] overflow-y-auto custom-scrollbar">
                                                 <Markdown
                                                     options={{
                                                         overrides: {

@@ -1,31 +1,49 @@
-import type { Metadata } from 'next'
-import React, { Suspense } from "react";
+'use client'
+
+import React, { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { DynamicNav, FloatingDiv, ThemeToggle, Navbar, ImageGalleryProvider, DynamicIndex } from "@/components";
-import { getFilesIndex } from "@/server/remoteFiles";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/next"
-
 
 /** Styles **/
 import './site/globals.scss'
 import { SuspenseLoader } from "@client";
 
-export const metadata: Metadata = {
-    metadataBase: new URL(`${process.env.NEXT_PUBLIC_METADATA_URL || 'https://paradigmthreat.net'}`),
-    title: 'Paradigm Threat',
-    description: 'Conspiracy Repository',
-}
-
-
-export default async function RootLayout(
+export default function RootLayout(
     {
         children
     }: {
         children: React.ReactNode
     }) {
 
-    const fileList = await getFilesIndex().catch(() => []);
+    const [fileList, setFileList] = useState<string[]>([]);
+    const [isHydrated, setIsHydrated] = useState(false);
+
+    useEffect(() => {
+        setIsHydrated(true);
+        const baseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://files.paradigmthreat.net';
+        fetch(`${baseUrl}/index.json`)
+            .then(res => res.json())
+            .then(data => setFileList(data))
+            .catch(() => setFileList([]));
+    }, []);
+
+    if (!isHydrated) {
+        return (
+            <html lang="en" className="dark font-['Titillium_Web']" suppressHydrationWarning>
+                <head>
+                    <title>Paradigm Threat</title>
+                    <link rel="icon" type="image/svg+xml" href="/site/favicon.svg" />
+                </head>
+                <body className="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
+                    <div className="flex items-center justify-center min-h-screen">
+                        <SuspenseLoader />
+                    </div>
+                </body>
+            </html>
+        );
+    }
 
     return (
         <html lang="en" className="dark font-['Titillium_Web']" suppressHydrationWarning>

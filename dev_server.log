@@ -1,0 +1,49 @@
+nohup: ignoring input
+
+> paradigm-threat-site@2.0.5 predev
+> true
+
+
+> paradigm-threat-site@2.0.5 dev
+> next dev
+
+   automatically enabled Fast Refresh for 1 custom loader
+  ▲ Next.js 13.5.5-canary.16
+  - Local:        http://localhost:3000
+  - Environments: .env.local, .env
+
+ ✓ Ready in 1355ms
+ ○ Compiling /(main)/[[...slug]]/page ...
+ ✓ Compiled /(main)/[[...slug]]/page in 3.8s (2361 modules)
+ ✓ Compiled in 380ms (1189 modules)
+ ⚠ ./node_modules/ws/lib/validation.js
+Module not found: Can't resolve 'utf-8-validate' in '/home/ari/dev/paradigm-threat-site/node_modules/ws/lib'
+
+Import trace for requested module:
+./node_modules/ws/lib/validation.js
+./node_modules/ws/lib/receiver.js
+./node_modules/ws/wrapper.mjs
+./node_modules/@vercel/postgres/dist/index-node.js
+./server/chatDB.ts
+./app/api/chat/getChannels/route.ts
+ ⚠ ./node_modules/ws/lib/validation.js
+Module not found: Can't resolve 'utf-8-validate' in '/home/ari/dev/paradigm-threat-site/node_modules/ws/lib'
+
+Import trace for requested module:
+./node_modules/ws/lib/validation.js
+./node_modules/ws/lib/receiver.js
+./node_modules/ws/wrapper.mjs
+./node_modules/@vercel/postgres/dist/index-node.js
+./server/chatDB.ts
+./app/api/chat/getChannels/route.ts
+ ⚠ ./node_modules/ws/lib/validation.js
+Module not found: Can't resolve 'utf-8-validate' in '/home/ari/dev/paradigm-threat-site/node_modules/ws/lib'
+
+Import trace for requested module:
+./node_modules/ws/lib/validation.js
+./node_modules/ws/lib/receiver.js
+./node_modules/ws/wrapper.mjs
+./node_modules/@vercel/postgres/dist/index-node.js
+./server/chatDB.ts
+./app/api/chat/getChannels/route.ts
+ ○ Compiling /api/image/route ...

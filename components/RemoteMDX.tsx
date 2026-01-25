@@ -25,6 +25,7 @@ const mdxComponents = (basePath: string) => ({
     DynamicIndex: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
     DynamicNav: (props: any) => <DynamicNav {...props} currentPath={basePath} />,
     AutoContent: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
+    Auto: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
 });
 
 export function RemoteMDX({ source, basePath = '' }: { source: string, basePath?: string }) {

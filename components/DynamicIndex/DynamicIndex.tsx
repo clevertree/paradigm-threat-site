@@ -27,15 +27,24 @@ export default function DynamicIndex({ mode = 'inline', ...props }: DynamicIndex
         const current = container.current
         if (!current) return;
 
-        // Small delay to ensure MDX/Content is rendered if this is the sidebar instance
-        // or after a client-side navigation
-        const timer = setTimeout(() => {
+        const updateIndex = () => {
             const list: HeaderList = generateHeaderList(current, hash ? hash.substring(1) : undefined)
             setHeaderList(list);
-        }, 200);
+        }
+
+        // Small delay to ensure MDX/Content is rendered if this is the sidebar instance
+        // or after a client-side navigation
+        const timer = setTimeout(updateIndex, 200);
+
+        const handleContentUpdate = () => {
+            setTimeout(updateIndex, 100);
+        };
+
+        window.addEventListener('dynamic-index-update', handleContentUpdate);
 
         return () => {
             clearTimeout(timer);
+            window.removeEventListener('dynamic-index-update', handleContentUpdate);
             setHeaderList([])
         }
     }, [pathname])
