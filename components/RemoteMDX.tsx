@@ -3,14 +3,27 @@ import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import * as componentsNamespace from '@/components';
 
-// Extract components from the namespace
-const { PopImage, OptimizedImage, ChatRoom, ChangeLog, DynamicIndex, DynamicNav, EmbedFile, ImageGalleryProvider } = componentsNamespace;
+const {
+    PopImage,
+    OptimizedImage,
+    ChatRoom,
+    ChangeLog,
+    DynamicIndex,
+    DynamicNav,
+    EmbedFile,
+    ImageGalleryProvider,
+    FloatingDiv,
+    ThemeToggle,
+    Navbar
+} = componentsNamespace;
 
 const mdxComponents = (basePath: string) => ({
-    ...componentsNamespace,
-    img: (props: any) => <PopImage {...props} basePath={basePath} />,
     PopImage: (props: any) => <PopImage {...props} basePath={basePath} />,
     OptimizedImage: (props: any) => <OptimizedImage {...props} basePath={basePath} />,
+    ChatRoom,
+    ChangeLog,
+    DynamicIndex: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
+    DynamicNav: (props: any) => <DynamicNav {...props} currentPath={basePath} />,
     EmbedFile: (props: any) => {
         let src = props.src;
         if (src && src.startsWith('./')) {
@@ -22,8 +35,11 @@ const mdxComponents = (basePath: string) => ({
         }
         return <EmbedFile {...props} src={src} currentPath={basePath} />;
     },
-    DynamicIndex: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
-    DynamicNav: (props: any) => <DynamicNav {...props} currentPath={basePath} />,
+    ImageGalleryProvider,
+    FloatingDiv,
+    ThemeToggle,
+    Navbar,
+    img: (props: any) => <PopImage {...props} basePath={basePath} />,
     AutoContent: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
     Auto: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
 });

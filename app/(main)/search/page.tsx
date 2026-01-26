@@ -238,12 +238,11 @@ function SearchContent() {
                                                 <Markdown
                                                     options={{
                                                         overrides: {
-                                                            ...components,
-                                                            img: {
+                                                            PopImage: {
                                                                 component: PopImage,
                                                                 props: { basePath }
                                                             },
-                                                            PopImage: {
+                                                            img: {
                                                                 component: PopImage,
                                                                 props: { basePath }
                                                             },
@@ -262,7 +261,12 @@ function SearchContent() {
                                                             autocontent: {
                                                                 component: components.DynamicIndex,
                                                                 props: { mode: 'inline', currentPath: basePath }
-                                                            }
+                                                            },
+                                                            ChangeLog: components.ChangeLog,
+                                                            ChatRoom: components.ChatRoom,
+                                                            EmbedFile: components.EmbedFile,
+                                                            DynamicNav: components.DynamicNav,
+                                                            FloatingDiv: components.FloatingDiv,
                                                         }
                                                     }}
                                                 >
