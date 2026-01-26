@@ -23,6 +23,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'files.paradigmthreat.net',
+      },
+      {
+        protocol: 'https',
+        hostname: 'clevertree.github.io',
       }
     ],
     unoptimized: true

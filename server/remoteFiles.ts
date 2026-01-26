@@ -1,4 +1,4 @@
-const FILES_BASE_URL = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://files.paradigmthreat.net';
+const FILES_BASE_URL = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://clevertree.github.io/paradigm-threat-files';
 
 export async function getFilesIndex() {
     const res = await fetch(`${FILES_BASE_URL}/index.json`, { cache: 'no-store' });

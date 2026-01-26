@@ -22,7 +22,7 @@ export default function RootLayout(
 
     useEffect(() => {
         setIsHydrated(true);
-        const baseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://files.paradigmthreat.net';
+        const baseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://clevertree.github.io/paradigm-threat-files';
         fetch(`${baseUrl}/index.json`)
             .then(res => res.json())
             .then(data => setFileList(data))

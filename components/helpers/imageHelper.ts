@@ -3,7 +3,7 @@ interface ImagePropsFormatted {
     [key: string]: any
 }
 
-const FILES_BASE_URL = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://files.paradigmthreat.net';
+const FILES_BASE_URL = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://clevertree.github.io/paradigm-threat-files';
 
 let cachedIndex: any = null;
 let indexPromise: Promise<any> | null = null;

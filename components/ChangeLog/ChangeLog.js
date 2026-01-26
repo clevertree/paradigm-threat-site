@@ -6,7 +6,7 @@ import styles from './ChangeLog.module.css'
 export default async function ChangeLog({ changeLog = [], target = '_blank' }) {
   if (changeLog.length === 0) {
     try {
-      const filesBaseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://files.paradigmthreat.net';
+      const filesBaseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://clevertree.github.io/paradigm-threat-files';
       const res = await fetch(`${filesBaseUrl}/changelog.json`, { cache: 'no-store' });
       if (res.ok) {
         changeLog = await res.json();

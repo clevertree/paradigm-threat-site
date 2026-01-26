@@ -23,7 +23,7 @@ export default function CatchAllPage() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        const baseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://files.paradigmthreat.net';
+        const baseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://clevertree.github.io/paradigm-threat-files';
         let slug: string[] = [];
         if (params.slug) {
             slug = Array.isArray(params.slug) ? params.slug : [params.slug];
@@ -142,7 +142,7 @@ export default function CatchAllPage() {
                             setMds(mdFiles);
 
                             const contents: Record<string, { title: string, content: string }> = {};
-                            
+
                             // Use pre-scanned titles from index if available
                             mdFiles.forEach(f => {
                                 const fileData = current[f];
@@ -180,9 +180,9 @@ export default function CatchAllPage() {
             }
         };
 
-                loadPage();
-                return () => { isMounted = false; abortController.abort(); };
-            }, [params.slug]);
+        loadPage();
+        return () => { isMounted = false; abortController.abort(); };
+    }, [params.slug]);
 
     if (loading) {
         return <div className="flex items-center justify-center min-h-screen"><SuspenseLoader /></div>;
