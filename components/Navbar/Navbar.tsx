@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, memo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X, Search, Home, MessageSquare, Video } from 'lucide-react'
@@ -10,7 +10,7 @@ interface NavbarProps {
     fileList: any
 }
 
-export default function Navbar({ fileList }: NavbarProps) {
+const Navbar = memo(function Navbar({ fileList }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false)
     const pathname = usePathname()
 
@@ -101,4 +101,6 @@ export default function Navbar({ fileList }: NavbarProps) {
             )}
         </header>
     )
-}
+})
+
+export default Navbar;

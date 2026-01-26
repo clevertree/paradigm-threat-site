@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react';
 
 interface FilesContextType {
     fileList: any;
@@ -21,7 +21,9 @@ export function FilesProvider({ children }: { children: ReactNode }) {
 
         const fetchFiles = async () => {
             try {
-                const response = await fetch(`${baseUrl}/index.json`);
+                // 60-second cache buster
+                const cacheBuster = Math.floor(Date.now() / 60000);
+                const response = await fetch(`${baseUrl}/index.json?v=${cacheBuster}`);
                 if (!response.ok) {
                     throw new Error(`Failed to fetch index: ${response.status}`);
                 }
@@ -45,8 +47,10 @@ export function FilesProvider({ children }: { children: ReactNode }) {
         };
     }, []);
 
+    const contextValue = useMemo(() => ({ fileList, loading, error }), [fileList, loading, error]);
+
     return (
-        <FilesContext.Provider value={{ fileList, loading, error }}>
+        <FilesContext.Provider value={contextValue}>
             {children}
         </FilesContext.Provider>
     );

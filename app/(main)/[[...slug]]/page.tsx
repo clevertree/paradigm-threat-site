@@ -1,15 +1,16 @@
 'use client'
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, memo } from 'react';
 import { useParams } from 'next/navigation';
 import { RemoteMDX } from '@/components/RemoteMDX';
-import { PopImage } from '@/components';
+import { PopImage, useFiles } from '@/components';
 import Link from 'next/link';
 import matter from 'gray-matter';
 import { SuspenseLoader } from "@client";
 
-export default function CatchAllPage() {
+const CatchAllPage = memo(function CatchAllPage() {
     const params = useParams();
+    const { fileList } = useFiles();
     const [content, setContent] = useState<string | null>(null);
     const [basePath, setBasePath] = useState('');
     const [unusedImages, setUnusedImages] = useState<string[]>([]);
@@ -22,30 +23,26 @@ export default function CatchAllPage() {
     const [mdContents, setMdContents] = useState<Record<string, { title: string, content: string }>>({});
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        const baseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://files.paradigmthreat.net';
-        let slug: string[] = [];
-        if (params.slug) {
-            slug = Array.isArray(params.slug) ? params.slug : [params.slug];
-        }
-        const path = slug.join('/');
+    const slugArray = useMemo(() => {
+        if (!params.slug) return [];
+        return Array.isArray(params.slug) ? params.slug : [params.slug];
+    }, [params.slug]);
 
+    const path = useMemo(() => slugArray.join('/'), [slugArray]);
+
+    useEffect(() => {
+        if (!fileList) return;
+        setFilesIndex(fileList);
+
+        const baseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://files.paradigmthreat.net';
+        
         let isMounted = true;
         const abortController = new AbortController();
 
         const loadPage = async () => {
+            window.scrollTo(0, 0);
             try {
                 setLoading(true);
-                const indexUrl = `${baseUrl}/index.json`;
-                const indexResponse = await fetch(indexUrl, { signal: abortController.signal });
-
-                if (!indexResponse.ok) {
-                    throw new Error(`Failed to fetch index: ${indexResponse.status}`);
-                }
-
-                const index = await indexResponse.json();
-                if (!isMounted) return;
-                setFilesIndex(index);
 
                 let targetPath = '';
                 let fileContent = null;
@@ -86,7 +83,7 @@ export default function CatchAllPage() {
                     }
 
                     // Find gallery images in the same folder using the tree
-                    let current = index;
+                    let current = fileList;
                     for (const s of calcBasePath.split('/').filter(Boolean)) {
                         if (current && current[s]) current = current[s];
                         else { current = null; break; }
@@ -108,8 +105,8 @@ export default function CatchAllPage() {
                     }
                 } else {
                     // CASE B: Directory Listing
-                    let current = index;
-                    for (const s of slug) {
+                    let current = fileList;
+                    for (const s of slugArray) {
                         if (current && typeof current === 'object' && current[s]) current = current[s];
                         else { current = null; break; }
                     }
@@ -182,17 +179,11 @@ export default function CatchAllPage() {
 
         loadPage();
         return () => { isMounted = false; abortController.abort(); };
-    }, [params.slug]);
+    }, [path, slugArray, fileList]);
 
     if (loading) {
         return <div className="flex items-center justify-center min-h-screen"><SuspenseLoader /></div>;
     }
-
-    let slugArray: string[] = [];
-    if (params.slug) {
-        slugArray = Array.isArray(params.slug) ? params.slug : [params.slug];
-    }
-    const path = slugArray.join('/');
 
     if (content) {
         return (
@@ -378,4 +369,6 @@ export default function CatchAllPage() {
             </div>
         </div>
     );
-}
+});
+
+export default CatchAllPage;

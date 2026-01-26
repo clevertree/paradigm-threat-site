@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { memo } from 'react'
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -13,7 +13,7 @@ interface DynamicNavProps {
     [key: string]: any,
 }
 
-export default function DynamicNav({ directory: inputDirectory, children, className }: DynamicNavProps) {
+const DynamicNav = memo(function DynamicNav({ directory: inputDirectory, children, className }: DynamicNavProps) {
     const currentPath = usePathname()
 
     // Reconstruct nested directory tree if we received the flat files object or array
@@ -84,10 +84,6 @@ export default function DynamicNav({ directory: inputDirectory, children, classN
         )
     }
 
-    if (!directory) {
-        return null
-    }
-
     const content = [
         renderDirectory(directory, '/', children)
     ]
@@ -119,4 +115,6 @@ export default function DynamicNav({ directory: inputDirectory, children, classN
         }
     }
     return <div className="space-y-1">{content}</div>
-}
+})
+
+export default DynamicNav;

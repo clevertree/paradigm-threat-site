@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useState, useCallback, useRef, useEffect } from 'react'
+import React, { createContext, useContext, useState, useCallback, useRef, useEffect, useMemo } from 'react'
 
 interface GalleryImage {
     src: string
@@ -46,16 +46,18 @@ export function ImageGalleryProvider({ children }: { children: React.ReactNode }
         setImages([...imagesRef.current])
     }, [])
 
+    const contextValue = useMemo(() => ({
+        images,
+        registerImage,
+        unregisterImage,
+        currentIndex,
+        setCurrentIndex,
+        isOpen,
+        setIsOpen
+    }), [images, registerImage, unregisterImage, currentIndex, isOpen]);
+
     return (
-        <ImageGalleryContext.Provider value={{
-            images,
-            registerImage,
-            unregisterImage,
-            currentIndex,
-            setCurrentIndex,
-            isOpen,
-            setIsOpen
-        }}>
+        <ImageGalleryContext.Provider value={contextValue}>
             {children}
             <ImageGalleryOverlay />
         </ImageGalleryContext.Provider>

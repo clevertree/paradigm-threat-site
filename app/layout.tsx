@@ -2,6 +2,7 @@
 
 import React, { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { DynamicNav, FloatingDiv, ThemeToggle, Navbar, ImageGalleryProvider, DynamicIndex, FilesProvider, useFiles } from "@/components";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -29,10 +30,15 @@ export default function RootLayout(
 function RootLayoutInner({ children }: { children: React.ReactNode }) {
     const { fileList } = useFiles();
     const [isHydrated, setIsHydrated] = useState(false);
+    const pathname = usePathname();
 
     useEffect(() => {
         setIsHydrated(true);
     }, []);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
 
     if (!isHydrated) {
         return (
