@@ -29,7 +29,8 @@ export async function GET(request: NextRequest) {
                 'githubusercontent.com',
                 'github.com',
                 'localhost',
-                '127.0.0.1'
+                '127.0.0.1',
+                'clevertree.github.io'
             ];
             const isWhitelisted = whitelistedDomains.some(domain =>
                 parsedUrl.hostname === domain || parsedUrl.hostname.endsWith('.' + domain)
