@@ -338,7 +338,7 @@ function ImageGalleryOverlay() {
                     </motion.div>
 
                     {/* Mobile Controls */}
-                    <div className="absolute bottom-10 left-0 right-0 md:hidden flex justify-center gap-12 pointer-events-none">
+                    <div className="absolute bottom-10 left-0 right-0 md:hidden flex justify-center gap-12 pointer-events-none z-50">
                         <button onClick={(e) => { e.stopPropagation(); goPrev(); }} className={`p-4 rounded-full bg-white/10 backdrop-blur-md text-white pointer-events-auto ${!prevImage && 'opacity-20'}`} disabled={!prevImage}>
                             <ChevronLeft size={32} />
                         </button>
