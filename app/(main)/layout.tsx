@@ -1,7 +1,7 @@
 'use client'
 
 import React, { Suspense, useState, useEffect } from "react";
-import { DynamicNav, FloatingDiv, DynamicIndex } from "@/components";
+import { DynamicNav, FloatingDiv, DynamicIndex, useFiles } from "@/components";
 import { SuspenseLoader } from "@client";
 
 export default function MainLayout({
@@ -9,16 +9,11 @@ export default function MainLayout({
 }: {
     children: React.ReactNode
 }) {
-    const [fileList, setFileList] = useState<string[]>([]);
+    const { fileList } = useFiles();
     const [isHydrated, setIsHydrated] = useState(false);
 
     useEffect(() => {
         setIsHydrated(true);
-        const baseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://clevertree.github.io/paradigm-threat-files';
-        fetch(`${baseUrl}/index.json`)
-            .then(res => res.json())
-            .then(data => setFileList(data))
-            .catch(() => setFileList([]));
     }, []);
 
     if (!isHydrated) {

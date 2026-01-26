@@ -2,7 +2,7 @@
 
 import React, { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
-import { DynamicNav, FloatingDiv, ThemeToggle, Navbar, ImageGalleryProvider, DynamicIndex } from "@/components";
+import { DynamicNav, FloatingDiv, ThemeToggle, Navbar, ImageGalleryProvider, DynamicIndex, FilesProvider, useFiles } from "@/components";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -17,16 +17,21 @@ export default function RootLayout(
         children: React.ReactNode
     }) {
 
-    const [fileList, setFileList] = useState<string[]>([]);
+    return (
+        <FilesProvider>
+            <RootLayoutInner>
+                {children}
+            </RootLayoutInner>
+        </FilesProvider>
+    )
+}
+
+function RootLayoutInner({ children }: { children: React.ReactNode }) {
+    const { fileList } = useFiles();
     const [isHydrated, setIsHydrated] = useState(false);
 
     useEffect(() => {
         setIsHydrated(true);
-        const baseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://clevertree.github.io/paradigm-threat-files';
-        fetch(`${baseUrl}/index.json`)
-            .then(res => res.json())
-            .then(data => setFileList(data))
-            .catch(() => setFileList([]));
     }, []);
 
     if (!isHydrated) {

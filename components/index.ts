@@ -1,6 +1,7 @@
 export { default as OptimizedImage } from './Image/OptimizedImage'
 export { default as PopImage } from './Image/PopImage'
 export { ImageGalleryProvider } from './Image/ImageGalleryContext'
+export { FilesProvider, useFiles } from './FilesContext'
 export { default as EmbedFile } from '@/components/embed/EmbedFile'
 export { default as ChangeLog } from './ChangeLog/ChangeLog'
 export { default as ChatRoom } from './ChatRoom/ChatRoom'
