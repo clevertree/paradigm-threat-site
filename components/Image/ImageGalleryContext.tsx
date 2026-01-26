@@ -72,6 +72,9 @@ function ImageGalleryOverlay() {
     const [remoteCaption, setRemoteCaption] = useState<string | null>(null)
     const [isHighResLoaded, setIsHighResLoaded] = useState(false)
     const [aspectRatio, setAspectRatio] = useState<number | null>(null)
+    const imgRef = useRef<HTMLImageElement>(null)
+
+    const currentImage = images[currentIndex] || null
 
     useEffect(() => {
         setIsHighResLoaded(false)
@@ -89,9 +92,14 @@ function ImageGalleryOverlay() {
                 }
             });
         }
-    }, [currentIndex, isOpen, images])
+    }, [currentIndex, isOpen, currentImage?.src])
 
-    const currentImage = images[currentIndex] || null
+    useEffect(() => {
+        if (isOpen && imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
+            setAspectRatio(imgRef.current.naturalWidth / imgRef.current.naturalHeight)
+            setIsHighResLoaded(true)
+        }
+    }, [isOpen, currentImage?.src])
 
     useEffect(() => {
         if (!isOpen || !currentImage) return
@@ -306,15 +314,19 @@ function ImageGalleryOverlay() {
                         <div className="relative flex-grow flex items-center justify-center min-h-[200px] w-full h-full overflow-hidden">
                             {/* High-res Full Scale Image */}
                             <img
+                                ref={imgRef}
                                 key={currentImage.src + '-high'}
                                 src={currentImage.highResSrc || currentImage.src}
                                 className="max-w-full max-h-full object-contain shadow-2xl rounded-lg pointer-events-auto cursor-grab active:cursor-grabbing transition-opacity duration-300"
-                                style={{ opacity: aspectRatio ? 1 : 0, maxHeight: '100vh' }}
+                                style={{ opacity: (aspectRatio !== null || isHighResLoaded) ? 1 : 0, maxHeight: '100vh' }}
                                 alt={currentImage.alt}
                                 onDragStart={(e) => e.preventDefault()}
                                 onLoad={(e) => {
                                     const img = e.currentTarget;
-                                    setAspectRatio(img.naturalWidth / img.naturalHeight);
+                                    if (img.naturalWidth > 0) {
+                                        setAspectRatio(img.naturalWidth / img.naturalHeight);
+                                        setIsHighResLoaded(true);
+                                    }
                                 }}
                             />
                         </div>
