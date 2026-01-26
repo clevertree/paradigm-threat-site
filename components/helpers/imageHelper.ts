@@ -99,6 +99,10 @@ export function processImageProps(props: any, basePath?: string): ImagePropsForm
         delete (finalProps as any).w;
     }
 
+    if (props.lqip) {
+        finalProps.blurDataURL = props.lqip;
+    }
+
     // If optimizedSrc is already provided, we assume the props are already processed
     if (props.optimizedSrc && typeof src === 'string') {
         return { ...props, title, alt, className } as ImagePropsFormatted;

@@ -25,6 +25,9 @@ export async function GET(request: NextRequest) {
             const whitelistedDomains = [
                 'files.paradigmthreat.net',
                 'paradigmthreat.net',
+                'raw.githubusercontent.com',
+                'githubusercontent.com',
+                'github.com',
                 'localhost',
                 '127.0.0.1'
             ];

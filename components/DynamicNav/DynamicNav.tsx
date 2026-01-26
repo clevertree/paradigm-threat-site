@@ -20,58 +20,63 @@ export default function DynamicNav({ directory: inputDirectory, children, classN
     const directory = React.useMemo(() => {
         if (!inputDirectory) return {};
 
-        let paths: string[] = [];
         if (Array.isArray(inputDirectory)) {
-            paths = inputDirectory;
-        } else {
-            // It's an object. Check if it's flat paths or nested tree
-            const keys = Object.keys(inputDirectory);
-            const isFlat = keys.some(key => key.startsWith('/') && key.length > 1);
-            if (!isFlat) return inputDirectory;
-            paths = keys;
-        }
+            const tree: Record<string, any> = {};
+            inputDirectory.forEach(path => {
+                if (path === '/' || !path) return;
+                const normalizedPath = path.startsWith('/') ? path : '/' + path;
+                const parts = normalizedPath.split('/').filter(Boolean);
 
-        const tree: Record<string, any> = {};
-        paths.forEach(path => {
-            if (path === '/' || !path) return;
-            // Ensure path starts with / for relative splitting if it doesn't already
-            const normalizedPath = path.startsWith('/') ? path : '/' + path;
-            const parts = normalizedPath.split('/').filter(Boolean);
-
-            let current = tree;
-            parts.forEach((part, index) => {
-                // If it's a file (has extension and is the last part), we don't add it as a directory
-                // unless it is part of the path logic we want to show.
-                // The request says "only list directories".
-                if (index === parts.length - 1 && part.includes('.')) {
-                    return;
-                }
-
-                if (!current[part]) {
-                    current[part] = {};
-                }
-                current = current[part];
+                let current = tree;
+                parts.forEach((part: string, index: number) => {
+                    if (index === parts.length - 1 && part.includes('.')) {
+                        return;
+                    }
+                    if (!current[part]) {
+                        current[part] = {};
+                    }
+                    current = current[part];
+                });
             });
-        });
-        return tree;
+            return tree;
+        } else {
+            // It's already a tree, but we might need to filter out files and non-directory keys
+            const cleanTree = (node: any) => {
+                const result: any = {};
+                Object.keys(node).forEach(key => {
+                    if (key === '_count') {
+                        result[key] = node[key];
+                    } else if (node[key] !== null && typeof node[key] === 'object' && '_count' in node[key]) {
+                        result[key] = cleanTree(node[key]);
+                    }
+                });
+                return result;
+            };
+            return cleanTree(inputDirectory);
+        }
     }, [inputDirectory]);
 
     function renderDirectory(directoryList: any, directoryPath: string, children: React.ReactNode = null) {
         return (
             <div key={directoryPath} className={`flex flex-col space-y-1 ${className || ''}`}>
                 {children}
-                {Object.keys(directoryList).map(subPathName => {
+                {Object.keys(directoryList).filter(k => k !== '_count').map(subPathName => {
                     const relativeSubPathName = directoryPath + subPathName
+                    const subPathData = directoryList[subPathName];
+                    const count = subPathData?._count || 0;
+                    const title = subPathData?._title;
                     return (
                         <Link
                             prefetch={false}
                             key={subPathName}
-                            className={`px-3 py-1.5 rounded-lg text-sm transition-colors ${currentPath.startsWith(relativeSubPathName)
+                            className={`px-3 py-1.5 rounded-lg text-sm transition-colors flex justify-between items-center ${currentPath.startsWith(relativeSubPathName)
                                 ? 'bg-blue-500/10 text-blue-600 dark:text-blue-400 font-bold'
                                 : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                                 }`}
                             href={relativeSubPathName}
-                        >{(subPathName.split('/').pop() || '').replace(/_/g, ' ')}
+                        >
+                            <span>{title || (subPathName.split('/').pop() || '').replace(/_/g, ' ')}</span>
+                            {count > 0 && <span className="text-[10px] opacity-50 font-normal">({count})</span>}
                         </Link>
                     )
                 })}
