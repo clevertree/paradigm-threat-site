@@ -66,20 +66,103 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { checkFileExists } from '@/components/helpers/imageHelper'
 
-function ImageGalleryOverlay() {
-    const { images, currentIndex, setCurrentIndex, isOpen, setIsOpen } = useImageGallery()
-    const [direction, setDirection] = useState(0)
-    const [remoteCaption, setRemoteCaption] = useState<string | null>(null)
+/**
+ * Individual image item in the gallery to handle its own loading state
+ * and prevent jumpy layout shifts during carousel transitions.
+ */
+function GalleryImageItem({
+    image,
+    direction,
+    displayCaption,
+    goNext,
+    goPrev
+}: {
+    image: GalleryImage,
+    direction: number,
+    displayCaption: React.ReactNode,
+    goNext: () => void,
+    goPrev: () => void
+}) {
     const [isHighResLoaded, setIsHighResLoaded] = useState(false)
     const [aspectRatio, setAspectRatio] = useState<number | null>(null)
     const imgRef = useRef<HTMLImageElement>(null)
 
+    useEffect(() => {
+        if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
+            setAspectRatio(imgRef.current.naturalWidth / imgRef.current.naturalHeight)
+            setIsHighResLoaded(true)
+        }
+    }, [image.src])
+
+    return (
+        <motion.div
+            key={image.src}
+            custom={direction}
+            initial={{
+                x: direction > 0 ? '50%' : direction < 0 ? '-50%' : 0,
+                opacity: 0,
+                scale: 0.95
+            }}
+            animate={{
+                x: 0,
+                opacity: 1,
+                scale: 1
+            }}
+            exit={{
+                x: direction < 0 ? '50%' : direction > 0 ? '-50%' : 0,
+                opacity: 0,
+                scale: 1.05
+            }}
+            transition={{
+                x: { type: "spring", stiffness: 200, damping: 25 },
+                opacity: { duration: 0.2 }
+            }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.5}
+            onDragEnd={(e, { offset, velocity }) => {
+                const swipe = offset.x
+                if (swipe < -100) goNext()
+                else if (swipe > 100) goPrev()
+            }}
+            onClick={(e) => e.stopPropagation()}
+            className={`relative z-10 max-w-[95vw] ${aspectRatio && aspectRatio < 1 ? 'lg:max-w-[90vw]' : 'lg:max-w-[75vw]'} max-h-full flex ${aspectRatio && aspectRatio < 1 ? 'flex-col lg:flex-row' : 'flex-col'} items-center justify-center gap-4 lg:gap-8 pointer-events-none`}
+            style={{ willChange: 'transform, opacity' }}
+        >
+            <div className="relative flex-grow flex items-center justify-center min-h-[200px] w-full h-full overflow-hidden">
+                <img
+                    ref={imgRef}
+                    src={image.highResSrc || image.src}
+                    className="max-w-full max-h-full object-contain shadow-2xl rounded-lg pointer-events-auto cursor-grab active:cursor-grabbing transition-opacity duration-300"
+                    style={{ opacity: (aspectRatio !== null || isHighResLoaded) ? 1 : 0, maxHeight: '100vh' }}
+                    alt={image.alt}
+                    onDragStart={(e) => e.preventDefault()}
+                    onLoad={(e) => {
+                        const img = e.currentTarget;
+                        if (img.naturalWidth > 0) {
+                            setAspectRatio(img.naturalWidth / img.naturalHeight);
+                            setIsHighResLoaded(true);
+                        }
+                    }}
+                />
+            </div>
+            {displayCaption && (
+                <div className={`text-white/90 font-medium px-4 ${aspectRatio && aspectRatio < 1 ? 'lg:max-w-xs lg:text-left' : 'max-w-2xl text-center'} text-shadow-lg pointer-events-auto max-h-[20vh] lg:max-h-full overflow-y-auto`}>
+                    {displayCaption}
+                </div>
+            )}
+        </motion.div>
+    )
+}
+
+function ImageGalleryOverlay() {
+    const { images, currentIndex, setCurrentIndex, isOpen, setIsOpen } = useImageGallery()
+    const [direction, setDirection] = useState(0)
+    const [remoteCaption, setRemoteCaption] = useState<string | null>(null)
+
     const currentImage = images[currentIndex] || null
 
     useEffect(() => {
-        setIsHighResLoaded(false)
-        setAspectRatio(null)
-
         // Preload next and previous images
         if (isOpen && images.length > 1) {
             const nextIdx = (currentIndex + 1) % images.length;
@@ -93,13 +176,6 @@ function ImageGalleryOverlay() {
             });
         }
     }, [currentIndex, isOpen, currentImage?.src])
-
-    useEffect(() => {
-        if (isOpen && imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
-            setAspectRatio(imgRef.current.naturalWidth / imgRef.current.naturalHeight)
-            setIsHighResLoaded(true)
-        }
-    }, [isOpen, currentImage?.src])
 
     useEffect(() => {
         if (!isOpen || !currentImage) return
@@ -184,7 +260,7 @@ function ImageGalleryOverlay() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4 md:p-12 select-none"
+                    className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center p-4 md:p-12 select-none"
                     onClick={closeFullscreen}
                 >
                     {/* Header Controls */}
@@ -278,64 +354,16 @@ function ImageGalleryOverlay() {
                     </div>
 
                     {/* Main Image */}
-                    <motion.div
-                        key={currentImage.src}
-                        custom={direction}
-                        initial={{
-                            x: direction > 0 ? 300 : direction < 0 ? -300 : 0,
-                            opacity: 0,
-                            scale: 0.95
-                        }}
-                        animate={{
-                            x: 0,
-                            opacity: 1,
-                            scale: 1
-                        }}
-                        exit={{
-                            x: direction < 0 ? 300 : direction > 0 ? -300 : 0,
-                            opacity: 0,
-                            scale: 1.05
-                        }}
-                        transition={{
-                            x: { type: "spring", stiffness: 300, damping: 30 },
-                            opacity: { duration: 0.2 }
-                        }}
-                        drag="x"
-                        dragConstraints={{ left: 0, right: 0 }}
-                        dragElastic={0.5}
-                        onDragEnd={(e, { offset, velocity }) => {
-                            const swipe = offset.x
-                            if (swipe < -100) goNext()
-                            else if (swipe > 100) goPrev()
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                        className={`relative z-10 max-w-[95vw] ${aspectRatio && aspectRatio < 1 ? 'lg:max-w-[90vw]' : 'lg:max-w-[75vw]'} max-h-full flex ${aspectRatio && aspectRatio < 1 ? 'flex-col lg:flex-row' : 'flex-col'} items-center justify-center gap-4 lg:gap-8 pointer-events-none`}
-                    >
-                        <div className="relative flex-grow flex items-center justify-center min-h-[200px] w-full h-full overflow-hidden">
-                            {/* High-res Full Scale Image */}
-                            <img
-                                ref={imgRef}
-                                key={currentImage.src + '-high'}
-                                src={currentImage.highResSrc || currentImage.src}
-                                className="max-w-full max-h-full object-contain shadow-2xl rounded-lg pointer-events-auto cursor-grab active:cursor-grabbing transition-opacity duration-300"
-                                style={{ opacity: (aspectRatio !== null || isHighResLoaded) ? 1 : 0, maxHeight: '100vh' }}
-                                alt={currentImage.alt}
-                                onDragStart={(e) => e.preventDefault()}
-                                onLoad={(e) => {
-                                    const img = e.currentTarget;
-                                    if (img.naturalWidth > 0) {
-                                        setAspectRatio(img.naturalWidth / img.naturalHeight);
-                                        setIsHighResLoaded(true);
-                                    }
-                                }}
-                            />
-                        </div>
-                        {displayCaption && (
-                            <div className={`text-white/90 font-medium px-4 ${aspectRatio && aspectRatio < 1 ? 'lg:max-w-xs lg:text-left' : 'max-w-2xl text-center'} text-shadow-lg pointer-events-auto max-h-[20vh] lg:max-h-full overflow-y-auto`}>
-                                {displayCaption}
-                            </div>
-                        )}
-                    </motion.div>
+                    <AnimatePresence mode="popLayout" initial={false} custom={direction}>
+                        <GalleryImageItem
+                            key={currentImage.src}
+                            image={currentImage}
+                            direction={direction}
+                            displayCaption={displayCaption}
+                            goNext={goNext}
+                            goPrev={goPrev}
+                        />
+                    </AnimatePresence>
 
                     {/* Mobile Controls */}
                     <div className="absolute bottom-10 left-0 right-0 md:hidden flex justify-center gap-12 pointer-events-none z-50">
