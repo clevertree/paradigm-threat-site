@@ -177,7 +177,7 @@ function ImageGalleryOverlay() {
                 }
             });
         }
-    }, [currentIndex, isOpen, currentImage?.src])
+    }, [currentIndex, isOpen, currentImage?.src, images])
 
     useEffect(() => {
         if (!isOpen || !currentImage) return
