@@ -4,6 +4,7 @@ import React, { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { Search, FileText, Image as ImageIcon, Loader2 } from 'lucide-react'
 import { getFilesIndex } from '@/server/remoteFiles'
+import { flattenFilesIndex } from '@/components/helpers/indexHelper'
 
 interface FileSearchFormProps {
     keywords?: string,
@@ -19,8 +20,8 @@ export default function FileSearchForm({ keywords = "" }: FileSearchFormProps) {
         const fetchIndex = async () => {
             try {
                 setLoading(true)
-                const files = await getFilesIndex()
-                setFileIndex(files)
+                const index = await getFilesIndex()
+                setFileIndex(flattenFilesIndex(index))
                 setError(null)
             } catch (err: any) {
                 console.error('Failed to fetch file index:', err)

@@ -2,14 +2,11 @@
 
 import React, { useEffect, useState, useMemo, Suspense } from 'react'
 import { getFilesIndex, getRemoteFile } from '@/server/remoteFiles'
-import * as components from '@/components'
-import Link from 'next/link'
+import { SearchHeader, FolderGrid, ArticleStack, ImageGallery } from '@/components/search'
 import matter from 'gray-matter'
-import { Search, FileText, Folder, Loader2 } from 'lucide-react'
+import { Loader2, Search } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import Markdown from 'markdown-to-jsx'
-
-const { PopImage } = components;
+import { flattenFilesIndex } from '@/components/helpers/indexHelper'
 
 function SearchContent() {
     const router = useRouter()
@@ -27,8 +24,8 @@ function SearchContent() {
         setLoading(true)
         getFilesIndex()
             .then(index => {
-                if (index && Array.isArray(index)) {
-                    setFilesIndex(index)
+                if (index) {
+                    setFilesIndex(flattenFilesIndex(index))
                 } else {
                     setError('Received invalid file index')
                 }
@@ -115,33 +112,11 @@ function SearchContent() {
     return (
         <div className="w-full min-h-screen bg-white dark:bg-slate-950">
             <div className="max-w-[90rem] mx-auto px-4 py-12 space-y-16">
-                {/* Search Header */}
-                <div className="max-w-3xl mx-auto space-y-8">
-                    <div className="text-center space-y-4">
-                        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-                            Search Repository
-                        </h1>
-                        <p className="text-slate-500 dark:text-slate-400">
-                            Explore articles, documents, and media across the paradigm
-                        </p>
-                    </div>
-
-                    <div className="relative group">
-                        <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={28} />
-                        <input
-                            type="text"
-                            value={query}
-                            onChange={handleSearchChange}
-                            placeholder="Type keywords (e.g. '911 physics', 'mars water')..."
-                            className="w-full pl-16 pr-6 py-6 bg-slate-100 dark:bg-slate-900/50 border-2 border-slate-200 dark:border-slate-800 rounded-3xl outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all font-semibold text-xl shadow-lg"
-                        />
-                        {loading && (
-                            <div className="absolute right-6 top-1/2 -translate-y-1/2">
-                                <Loader2 className="animate-spin text-blue-500" size={24} />
-                            </div>
-                        )}
-                    </div>
-                </div>
+                <SearchHeader
+                    query={query}
+                    loading={loading}
+                    onChange={handleSearchChange}
+                />
 
                 {error && (
                     <div className="max-w-2xl mx-auto p-6 bg-red-500/10 border border-red-500/20 text-red-500 rounded-3xl text-center">
@@ -172,152 +147,20 @@ function SearchContent() {
 
                 {searchResults.length > 0 && (
                     <div className="space-y-20">
-                        {/* Folders Stack */}
-                        {folders.length > 0 && (
-                            <div className="space-y-8">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-2 h-8 bg-blue-500 rounded-full" />
-                                    <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Directories</h2>
-                                    <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-sm font-bold text-slate-500">
-                                        {folders.length}
-                                    </span>
-                                </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                                    {folders.map(folder => (
-                                        <Link
-                                            key={folder}
-                                            href={`/${folder}`}
-                                            className="group relative p-5 bg-slate-50 dark:bg-slate-900/50 hover:bg-blue-600 dark:hover:bg-blue-600 rounded-2xl transition-all duration-300 border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-blue-500/20"
-                                        >
-                                            <div className="flex items-center justify-between">
-                                                <div className="flex flex-col min-w-0">
-                                                    <span className="text-xs font-bold text-slate-400 group-hover:text-blue-200 uppercase tracking-widest mb-1">Folder</span>
-                                                    <span className="font-bold text-slate-800 dark:text-slate-200 group-hover:text-white truncate text-lg">
-                                                        {folder.split('/').pop()?.replace(/_/g, ' ')}
-                                                    </span>
-                                                    <span className="text-[10px] text-slate-400 group-hover:text-white/60 truncate mt-1">
-                                                        {folder}
-                                                    </span>
-                                                </div>
-                                                <Folder className="text-slate-300 dark:text-slate-700 group-hover:text-white/40 transition-colors" size={32} />
-                                            </div>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
+                        <FolderGrid folders={folders} />
 
-                        {/* Articles Stack */}
-                        {(renderedMds.length > 0 || contentLoading) && (
-                            <div className="space-y-12">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-2 h-8 bg-emerald-500 rounded-full" />
-                                    <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Articles</h2>
-                                    <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-sm font-bold text-slate-500">
-                                        {searchResults.filter(f => f.endsWith('.md')).length}
-                                    </span>
-                                    {contentLoading && <Loader2 className="animate-spin text-emerald-500" size={24} />}
-                                </div>
-                                <div className="space-y-24">
-                                    {renderedMds.map(({ path, mdxSource, frontMatter, basePath }) => (
-                                        <section key={path} className="relative group">
-                                            <div className="flex items-center gap-4 mb-8">
-                                                <div className="p-3 bg-slate-100 dark:bg-slate-900 rounded-2xl text-emerald-500">
-                                                    <FileText size={24} />
-                                                </div>
-                                                <div>
-                                                    <Link href={`/${path}`} className="group-hover:text-blue-500 transition-colors">
-                                                        <h3 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
-                                                            {frontMatter.title || path.split('/').pop()?.replace('.md', '').replace(/_/g, ' ')}
-                                                        </h3>
-                                                    </Link>
-                                                    <div className="text-sm text-slate-400 font-mono mt-1">{path}</div>
-                                                </div>
-                                            </div>
-                                            <article className="prose prose-slate dark:prose-invert max-w-none bg-white dark:bg-slate-900/30 p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl mdx-content max-h-[80vh] overflow-y-auto custom-scrollbar">
-                                                <Markdown
-                                                    options={{
-                                                        overrides: {
-                                                            PopImage: {
-                                                                component: PopImage,
-                                                                props: { basePath }
-                                                            },
-                                                            img: {
-                                                                component: PopImage,
-                                                                props: { basePath }
-                                                            },
-                                                            OptimizedImage: {
-                                                                component: components.OptimizedImage,
-                                                                props: { basePath }
-                                                            },
-                                                            DynamicIndex: {
-                                                                component: components.DynamicIndex,
-                                                                props: { mode: 'inline', currentPath: basePath }
-                                                            },
-                                                            AutoContent: {
-                                                                component: components.DynamicIndex,
-                                                                props: { mode: 'inline', currentPath: basePath }
-                                                            },
-                                                            autocontent: {
-                                                                component: components.DynamicIndex,
-                                                                props: { mode: 'inline', currentPath: basePath }
-                                                            },
-                                                            ChangeLog: components.ChangeLog,
-                                                            ChatRoom: components.ChatRoom,
-                                                            EmbedFile: components.EmbedFile,
-                                                            DynamicNav: components.DynamicNav,
-                                                            FloatingDiv: components.FloatingDiv,
-                                                        }
-                                                    }}
-                                                >
-                                                    {mdxSource}
-                                                </Markdown>
-                                            </article>
-                                        </section>
-                                    ))}
-                                </div>
-                                {searchResults.filter(f => f.endsWith('.md')).length > renderedMds.length && !contentLoading && (
-                                    <div className="text-center py-8">
-                                        <p className="text-slate-500 italic">... and {searchResults.filter(f => f.endsWith('.md')).length - renderedMds.length} more articles. Be more specific for more results.</p>
-                                    </div>
-                                )}
-                            </div>
-                        )}
+                        <ArticleStack
+                            renderedMds={renderedMds}
+                            contentLoading={contentLoading}
+                            totalArticles={searchResults.filter(f => f.endsWith('.md')).length}
+                        />
 
-                        {/* Gallery Stack */}
-                        {images.length > 0 && (
-                            <div className="space-y-8">
-                                <div className="flex items-center gap-4">
-                                    <div className="w-2 h-8 bg-purple-500 rounded-full" />
-                                    <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight uppercase">Gallery</h2>
-                                    <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 rounded-full text-sm font-bold text-slate-500">
-                                        {images.length}
-                                    </span>
-                                </div>
-                                <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 xl:columns-6 gap-4 space-y-4">
-                                    {images.slice(0, 48).map(img => (
-                                        <div key={img} className="break-inside-avoid">
-                                            <div className="group relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-xl transition-all duration-300 bg-slate-50 dark:bg-slate-900/50">
-                                                <PopImage
-                                                    src={img.split('/').pop()!}
-                                                    basePath={img.split('/').slice(0, -1).join('/')}
-                                                    w={600}
-                                                    className="w-full h-auto block transition-transform duration-500 group-hover:scale-[1.02] clear-none m-0 shadow-none ring-0 rounded-none"
-                                                />
-                                                <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-                                                    <span className="text-[10px] text-white truncate w-full font-mono">{img.split('/').pop()}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
+                        <ImageGallery images={images} />
                     </div>
                 )}
             </div>
         </div>
-    );
+    )
 }
 
 export default function SearchPage() {
