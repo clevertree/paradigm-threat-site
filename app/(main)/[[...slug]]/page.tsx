@@ -35,7 +35,7 @@ const CatchAllPage = memo(function CatchAllPage() {
         setFilesIndex(fileList);
 
         const baseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://files.paradigmthreat.net';
-        
+
         let isMounted = true;
         const abortController = new AbortController();
 
@@ -200,7 +200,6 @@ const CatchAllPage = memo(function CatchAllPage() {
                         </div>
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
                             {unusedImages.map(img => {
-                                // Find current level to get lqip
                                 let curr: any = filesIndex;
                                 const baseParts = basePath.split('/').filter(Boolean);
                                 for (const p of baseParts) {

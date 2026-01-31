@@ -1,4 +1,4 @@
-import React, { useMemo, memo } from 'react';
+import React, { useMemo, memo, useEffect } from 'react';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
 import Link from 'next/link';
@@ -43,7 +43,7 @@ const mdxComponents = (basePath: string) => ({
     img: (props: any) => <PopImage {...props} basePath={basePath} />,
     AutoContent: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
     Auto: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
-    a: ({children, href, ...props}: any) => {
+    a: ({ children, href, ...props }: any) => {
         const isExternal = href?.startsWith('http');
         if (isExternal) {
             return <a href={href} target="_blank" rel="noopener noreferrer" {...props}>{children}</a>
@@ -54,6 +54,16 @@ const mdxComponents = (basePath: string) => ({
 
 export const RemoteMDX = memo(function RemoteMDX({ source, basePath = '' }: { source: string, basePath?: string }) {
     const components = useMemo(() => mdxComponents(basePath), [basePath]);
+
+    // Notify DynamicIndex (sidebar TOC) to re-scan headers after this content is in the DOM
+    useEffect(() => {
+        if (!source) return;
+        const id = setTimeout(() => {
+            window.dispatchEvent(new Event('dynamic-index-update'));
+        }, 150);
+        return () => clearTimeout(id);
+    }, [source]);
+
     return (
         <div className="mdx-content">
             <MDXRemote
