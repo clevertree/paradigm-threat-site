@@ -31,6 +31,7 @@ export async function checkFileExists(path: string): Promise<boolean> {
 }
 
 export function resolveImagePath(src: string, basePath?: string): string {
+    if (typeof src !== 'string') return '';
     if (!src) return '';
     if (src.startsWith('http')) return src;
 

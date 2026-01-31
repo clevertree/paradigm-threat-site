@@ -15,6 +15,8 @@ export default function FloatingDiv({ children, containerTag, className }: Float
     const [activeSection, setActiveSection] = useState<string>('')
     const [headings, setHeadings] = useState<{ id: string, text: string, top: number }[]>([])
     const [containerHeight, setContainerHeight] = useState<string | number>('inherit')
+    const [leftPosition, setLeftPosition] = useState<number>(0)
+    const [containerWidth, setContainerWidth] = useState<number>(0)
     const refContainer = useRef<HTMLElement>(null)
     const headingsRef = useRef(headings)
     const isScrollingRef = useRef(isScrolling)
@@ -26,12 +28,14 @@ export default function FloatingDiv({ children, containerTag, className }: Float
     const onScroll = useCallback(() => {
         const navElm = refContainer.current
         if (navElm) {
-            const { top, height } = navElm.getBoundingClientRect()
+            const { top, height, left, width } = navElm.getBoundingClientRect()
             const currentIsScrolling = isScrollingRef.current
             if (!currentIsScrolling) {
                 if (top < 0) {
                     setIsScrolling(true)
                     setContainerHeight(height)
+                    setLeftPosition(left)
+                    setContainerWidth(width)
                 }
             } else {
                 if (top > 0) {
@@ -57,7 +61,13 @@ export default function FloatingDiv({ children, containerTag, className }: Float
     }, []) // Now stable
 
     const updateHeadings = useCallback(() => {
-        const articleHeadings = Array.from(document.querySelectorAll('article h1, article h2, article h3, article h4'))
+        // Only select headings from the main content article, not from other articles (like search results, carousels, etc.)
+        const mainArticle = document.querySelector('main article')
+        if (!mainArticle) {
+            setHeadings([])
+            return
+        }
+        const articleHeadings = Array.from(mainArticle.querySelectorAll('h1, h2, h3, h4'))
         const headingData = articleHeadings.map(h => ({
             id: h.id,
             text: (h as HTMLElement).innerText,
@@ -105,9 +115,9 @@ export default function FloatingDiv({ children, containerTag, className }: Float
 
         // Update headings on content changes (simplified)
         const observer = new MutationObserver(updateHeadings)
-        const article = document.querySelector('article')
-        if (article) {
-            observer.observe(article, { childList: true, subtree: true })
+        const mainArticle = document.querySelector('main article')
+        if (mainArticle) {
+            observer.observe(mainArticle, { childList: true, subtree: true })
         }
 
         return () => {
@@ -125,7 +135,8 @@ export default function FloatingDiv({ children, containerTag, className }: Float
             ref={refContainer}
         >
             <div
-                className={(isFloating ? 'fixed top-0 left-0 right-0 z-50 animate-in fade-in slide-in-from-top-4 duration-300' : '')}
+                className={(isFloating ? 'fixed top-24 z-50 animate-in fade-in slide-in-from-top-4 duration-300' : '')}
+                style={isFloating ? { left: `${leftPosition}px`, width: `${containerWidth}px` } : undefined}
             >
                 {children}
                 {isFloating && (

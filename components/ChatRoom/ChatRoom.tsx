@@ -216,7 +216,7 @@ export default function ChatRoom({ channel, title, className, mode }: ChatRoomPr
                             </div>
                             <div className={`prose prose-sm dark:prose-invert max-w-none prose-p:mb-0 ${post.isError ? 'text-red-500 font-medium' : 'text-slate-700 dark:text-slate-300'}`}>
                                 <Markdown options={ChannelMarkdownOptions}>
-                                    {post.content}
+                                    {typeof post.content === 'string' ? post.content : ''}
                                 </Markdown>
                             </div>
                         </div>

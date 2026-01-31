@@ -79,7 +79,7 @@ export function ArticleStack({ renderedMds, contentLoading, totalArticles }: Art
                                     }
                                 }}
                             >
-                                {mdxSource}
+                                {typeof mdxSource === 'string' ? mdxSource : ''}
                             </Markdown>
                         </article>
                     </section>

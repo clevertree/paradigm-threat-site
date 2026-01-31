@@ -26,7 +26,7 @@ const PopImage = memo(function PopImage({ ...props }: PopImageProps) {
     const { children, alt, src, highResSrc } = srcProps
 
     useEffect(() => {
-        return registerImage({ src, alt, children, highResSrc });
+        return registerImage({ src: typeof src === 'string' ? src : '', alt, children, highResSrc });
     }, [src, alt, children, highResSrc, registerImage]);
 
     function toggleFullscreen() {

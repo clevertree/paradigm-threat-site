@@ -8,6 +8,7 @@ import { transformImageCaptions, DEFAULT_IMAGE_CLASS } from './markdownTransform
 
 /** Strip H1 title and YAML frontmatter before rendering. */
 function prepareMarkdownContent(md: string): string {
+  if (typeof md !== 'string') return ''
   let out = md
     .replace(/^# .+\n*/m, '')
     .replace(/^---\s*\n[\s\S]*?\n---\s*\n?/m, '')
@@ -76,7 +77,7 @@ export function MarkdownCarousel({
                           className={props.className || DEFAULT_IMAGE_CLASS}
                         />
                       ),
-                      PopImage: (props: { children?: string; [key: string]: unknown }) => (
+                      PopImage: (props: { children?: string;[key: string]: unknown }) => (
                         <PopImage
                           {...props}
                           basePath={baseUrl}
@@ -99,7 +100,7 @@ export function MarkdownCarousel({
                     },
                   }}
                 >
-                  {transformImageCaptions(prepareMarkdownContent(mdContent))}
+                  {transformImageCaptions(prepareMarkdownContent(typeof mdContent === 'string' ? mdContent : ''))}
                 </Markdown>
               </div>
             ) : null}

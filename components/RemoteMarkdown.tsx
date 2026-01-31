@@ -7,6 +7,7 @@ import { transformImageCaptions, DEFAULT_IMAGE_CLASS } from '@/components/Timeli
 
 /** Strip H1 title and YAML frontmatter before rendering. */
 function prepareMarkdownContent(md: string): string {
+  if (typeof md !== 'string') return ''
   let out = md
     .replace(/^# .+\n*/m, '')
     .replace(/^---\s*\n[\s\S]*?\n---\s*\n?/m, '')
@@ -50,7 +51,7 @@ export function RemoteMarkdown({ src, baseUrl, title, className = '' }: RemoteMa
   }
   if (!content) return null
 
-  const prepared = prepareMarkdownContent(content)
+  const prepared = prepareMarkdownContent(typeof content === 'string' ? content : '')
   const transformed = transformImageCaptions(prepared)
 
   return (
@@ -72,7 +73,7 @@ export function RemoteMarkdown({ src, baseUrl, title, className = '' }: RemoteMa
                 basePath={baseUrl}
                 className={(props.className as string) || DEFAULT_IMAGE_CLASS}
               >
-                {props.children ? (
+                {typeof props.children === 'string' ? (
                   <Markdown
                     options={{
                       overrides: {
@@ -91,7 +92,7 @@ export function RemoteMarkdown({ src, baseUrl, title, className = '' }: RemoteMa
           },
         }}
       >
-        {transformed}
+        {typeof transformed === 'string' ? transformed : ''}
       </Markdown>
     </article>
   )

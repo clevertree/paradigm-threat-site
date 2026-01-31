@@ -183,7 +183,7 @@ function ImageGalleryOverlay() {
         if (!isOpen || !currentImage) return
 
         const currentSrc = currentImage.src;
-        if (!currentImage.children && !currentImage.alt && currentSrc && !currentSrc.startsWith('http')) {
+        if (typeof currentSrc === 'string' && !currentImage.children && !currentImage.alt && currentSrc && !currentSrc.startsWith('http')) {
             const FILES_BASE_URL = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://clevertree.github.io/paradigm-threat-files';
 
             // Fix double slashes and ensure no leading slash for index check
@@ -242,7 +242,8 @@ function ImageGalleryOverlay() {
     // Update hash for deep linking when open
     useEffect(() => {
         if (isOpen && currentImage) {
-            const newHash = `#img=${encodeURIComponent(currentImage.src)}`;
+            const srcStr = typeof currentImage.src === 'string' ? currentImage.src : '';
+            const newHash = `#img=${encodeURIComponent(srcStr)}`;
             if (window.location.hash !== newHash) {
                 window.history.replaceState(null, '', newHash);
             }
