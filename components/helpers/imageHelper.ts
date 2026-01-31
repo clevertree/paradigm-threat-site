@@ -48,7 +48,11 @@ export function resolveImagePath(src: string, basePath?: string): string {
     }
 
     const prefix = basePath ? (basePath.endsWith('/') ? basePath : basePath + '/') : '';
-    // Combine and ensure it starts with / and has no double slashes
+    // When basePath is an absolute URL (e.g. timeline base = same domain as events.json), resolve to full URL
+    if (basePath?.startsWith('http')) {
+        return (prefix + resolved) + query;
+    }
+    // Path-based: combine and ensure it starts with / and has no double slashes
     const combined = (prefix + resolved).replace(/\/+/g, '/').replace(/^\/+/, '');
     return '/' + combined + query;
 }

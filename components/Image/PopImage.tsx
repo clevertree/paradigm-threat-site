@@ -15,6 +15,11 @@ interface PopImageProps {
     [key: string]: any
 }
 
+function safeImgId(src: unknown): string {
+    if (typeof src !== 'string') return 'img-unknown'
+    return `img-${src.replace(/[^a-zA-Z0-9]/g, '-')}`
+}
+
 const PopImage = memo(function PopImage({ ...props }: PopImageProps) {
     const { registerImage, images, currentIndex, setCurrentIndex, setIsOpen } = useImageGallery()
     const srcProps = processImageProps(props, props.basePath)
@@ -46,7 +51,7 @@ const PopImage = memo(function PopImage({ ...props }: PopImageProps) {
 
                     // Scroll immediately
                     requestAnimationFrame(() => {
-                        const id = `img-${src.replace(/[^a-zA-Z0-9]/g, '-')}`;
+                        const id = safeImgId(src);
                         const el = document.getElementById(id);
                         if (el) {
                             el.scrollIntoView({ behavior: 'auto', block: 'center' });
@@ -64,11 +69,11 @@ const PopImage = memo(function PopImage({ ...props }: PopImageProps) {
 
     const finalClassName = `${userClasses} ${!hasFloat && !hasClear ? 'clear-both' : ''} ${!hasMargin ? 'm-auto' : ''} w-fit cursor-pointer group shadow-lg hover:shadow-xl dark:shadow-blue-900/10 transition-shadow duration-300 rounded-xl overflow-hidden ring-1 ring-slate-200 dark:ring-slate-800 not-prose`
 
-    const { className: _className, children: _children, ...optimizedImageProps } = srcProps;
+    const { className: _className, children: _children, basePath: _basePath, highResSrc: _highResSrc, ...optimizedImageProps } = srcProps;
 
     return (
         <div
-            id={`img-${src.replace(/[^a-zA-Z0-9]/g, '-')}`}
+            id={safeImgId(src)}
             className={finalClassName}
             {...onToggle(toggleFullscreen)}
             style={{ maxWidth: srcProps.width ? `${srcProps.width}px` : '100%' }}

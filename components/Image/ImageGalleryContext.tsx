@@ -253,7 +253,14 @@ function ImageGalleryOverlay() {
 
     const prevImage = images.length > 1 ? images[(currentIndex - 1 + images.length) % images.length] : null;
     const nextImage = images.length > 1 ? images[(currentIndex + 1) % images.length] : null;
-    const displayCaption = currentImage.children || remoteCaption || currentImage.alt || currentImage.src.split('/').pop()?.split('.')[0].replace(/_/g, ' ');
+    const fallbackCaption =
+        typeof currentImage.src === 'string'
+            ? currentImage.src.split('/').pop()?.split('.')[0]?.replace(/_/g, ' ')
+            : '';
+    const displayCaption =
+        typeof currentImage.children === 'string'
+            ? currentImage.children
+            : remoteCaption || currentImage.alt || fallbackCaption;
 
     return (
         <AnimatePresence>

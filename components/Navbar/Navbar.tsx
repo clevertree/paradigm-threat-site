@@ -3,7 +3,7 @@
 import React, { useState, useEffect, memo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Search, Home, MessageSquare, Video } from 'lucide-react'
+import { Menu, X, Search, Home, MessageSquare, Video, Clock } from 'lucide-react'
 import { ThemeToggle, DynamicNav } from '@/components'
 
 interface NavbarProps {
@@ -22,6 +22,7 @@ const Navbar = memo(function Navbar({ fileList }: NavbarProps) {
     const navLinks = [
         { href: '/search', label: 'Search', icon: Search },
         { href: '/', label: 'Home', icon: Home },
+        { href: '/timeline', label: 'Timeline', icon: Clock },
         { href: '/chat', label: 'Chat', icon: MessageSquare },
         { href: 'https://www.bitchute.com/channel/paradigmthreat', label: 'Videos', icon: Video, external: true },
     ]
@@ -43,8 +44,8 @@ const Navbar = memo(function Navbar({ fileList }: NavbarProps) {
                                     href={link.href}
                                     target={link.external ? '_blank' : undefined}
                                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2 ${pathname === link.href
-                                            ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white'
-                                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white'
+                                        ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white'
+                                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white'
                                         }`}
                                 >
                                     <link.icon size={18} />
@@ -80,8 +81,8 @@ const Navbar = memo(function Navbar({ fileList }: NavbarProps) {
                                     href={link.href}
                                     target={link.external ? '_blank' : undefined}
                                     className={`px-4 py-3 rounded-xl text-base font-medium flex items-center gap-3 transition-colors ${pathname === link.href
-                                            ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white'
-                                            : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50'
+                                        ? 'bg-slate-200 dark:bg-slate-800 text-slate-900 dark:text-white'
+                                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800/50'
                                         }`}
                                 >
                                     <link.icon size={20} />

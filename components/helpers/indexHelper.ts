@@ -5,7 +5,7 @@ export function flattenFilesIndex(index: any, prefix = ''): string[] {
     let paths: string[] = [];
     for (const key in index) {
         if (key.startsWith('_')) continue;
-        
+
         const path = prefix ? `${prefix}/${key}` : key;
         const value = index[key];
 
@@ -19,7 +19,7 @@ export function flattenFilesIndex(index: any, prefix = ''): string[] {
                 // We add the directory itself to paths so it can be searched too? 
                 // The original logic expected a list of all files. 
                 // If we want to find folders, we should probably add them.
-                paths.push(path); 
+                paths.push(path);
                 paths.push(...flattenFilesIndex(value, path));
             }
         } else {

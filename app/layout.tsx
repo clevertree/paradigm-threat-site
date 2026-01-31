@@ -65,18 +65,21 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
                     __html: `try{if(localStorage.theme==='dark'||(!('theme' in localStorage)&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}else{document.documentElement.classList.remove('dark')}}catch(_){}`,
                 }} />
             </head>
-            <body className="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
+            <body className={`bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-300`}>
                 <Navbar fileList={fileList} />
 
-                <ImageGalleryProvider>
-                    {children}
-                </ImageGalleryProvider>
+                <div className={`flex-1 min-h-0 flex flex-col overflow-auto`}>
+                    <ImageGalleryProvider>
+                        {children}
+                    </ImageGalleryProvider>
+                </div>
 
-                <footer className="w-full bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12 mt-auto">
+                <footer className="flex-shrink-0 w-full bg-slate-100 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 py-12">
                     <div className="max-w-7xl mx-auto px-4 text-center space-y-6">
                         <div className="flex justify-center gap-8 text-slate-600 dark:text-slate-400">
                             <Link href="/search" className="hover:text-slate-900 dark:hover:text-white transition-colors">Search</Link>
                             <Link href="/" className="hover:text-slate-900 dark:hover:text-white transition-colors">Home</Link>
+                            <Link href="/timeline" className="hover:text-slate-900 dark:hover:text-white transition-colors">Timeline</Link>
                             <Link href="/chat" className="hover:text-slate-900 dark:hover:text-white transition-colors">Chat</Link>
                             <Link href="https://www.bitchute.com/channel/paradigmthreat" target="_blank" className="hover:text-slate-900 dark:hover:text-white transition-colors">Videos</Link>
                         </div>

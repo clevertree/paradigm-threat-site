@@ -10,12 +10,28 @@ interface OptimizedImageProps {
     [key: string]: any
 }
 
+/** DOM-safe subset of props to pass to <img> (exclude custom/React-only props). */
+const IMG_ATTRS = new Set(['src', 'alt', 'width', 'height', 'loading', 'title', 'style', 'referrerPolicy', 'sizes', 'crossOrigin', 'decoding', 'fetchPriority'])
+
 export default function OptimizedImage({ children, className, ...props }: OptimizedImageProps) {
     const srcProps: OptimizedImageProps = processImageProps({ ...props, className }, props.basePath)
     const [isVisible, setIsVisible] = useState(false)
     const ref = useRef<HTMLImageElement>(null)
 
-    const { alt, priority, blurDataURL, optimizedSrc, className: processedClassName, ...finalProps } = srcProps
+    const {
+        alt,
+        priority,
+        blurDataURL,
+        optimizedSrc,
+        highResSrc,
+        basePath,
+        className: processedClassName,
+        ...rest
+    } = srcProps
+    const finalProps: Record<string, unknown> = {}
+    Object.keys(rest).forEach((key) => {
+        if (IMG_ATTRS.has(key)) finalProps[key] = (rest as Record<string, unknown>)[key]
+    })
 
     useEffect(() => {
         if (priority) {
@@ -64,7 +80,7 @@ export default function OptimizedImage({ children, className, ...props }: Optimi
                     alt={alt}
                     className={`w-full h-auto transition-opacity duration-700 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
                     {...finalProps}
-                    src={isVisible ? finalProps.src : ''}
+                    src={isVisible ? (finalProps.src as string | undefined) : ''}
                 />
             </div>
             {children ? <figcaption className="mt-2 text-sm text-slate-500 dark:text-slate-400 italic text-center px-2">{children}</figcaption> : null}
