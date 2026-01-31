@@ -77,25 +77,28 @@ export function MarkdownCarousel({
                           className={props.className || DEFAULT_IMAGE_CLASS}
                         />
                       ),
-                      PopImage: (props: { children?: string;[key: string]: unknown }) => (
-                        <PopImage
-                          {...props}
-                          basePath={baseUrl}
-                          className={(props.className as string) || DEFAULT_IMAGE_CLASS}
-                        >
-                          {props.children ? (
-                            <Markdown
-                              options={{
-                                overrides: {
-                                  a: { props: { target: '_blank', rel: 'noopener' } },
-                                },
-                              }}
-                            >
-                              {props.children}
-                            </Markdown>
-                          ) : null}
-                        </PopImage>
-                      ),
+                      PopImage: (props: { children?: React.ReactNode;[key: string]: unknown }) => {
+                        const captionText = typeof props.children === 'string' ? props.children : null
+                        return (
+                          <PopImage
+                            {...props}
+                            basePath={baseUrl}
+                            className={(props.className as string) || DEFAULT_IMAGE_CLASS}
+                          >
+                            {captionText ? (
+                              <Markdown
+                                options={{
+                                  overrides: {
+                                    a: { props: { target: '_blank', rel: 'noopener' } },
+                                  },
+                                }}
+                              >
+                                {captionText}
+                              </Markdown>
+                            ) : null}
+                          </PopImage>
+                        )
+                      },
                       a: { props: { target: '_blank', rel: 'noopener' } },
                     },
                   }}
