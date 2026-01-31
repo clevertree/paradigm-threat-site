@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import Markdown from 'markdown-to-jsx'
 import type { TimelineEntry } from '@/components/TimelineContext'
 import { PopImage } from '@/components'
-import { transformImageCaptions, DEFAULT_IMAGE_CLASS } from './markdownTransform'
+import { transformImageCaptions } from './markdownTransform'
 
 /** Strip H1 title and YAML frontmatter before rendering. */
 function prepareMarkdownContent(md: string): string {
@@ -74,7 +74,7 @@ export function MarkdownCarousel({
                         <PopImage
                           {...props}
                           basePath={baseUrl}
-                          className={props.className || DEFAULT_IMAGE_CLASS}
+                          className={props.className}
                         />
                       ),
                       PopImage: (props: { children?: React.ReactNode;[key: string]: unknown }) => {
@@ -83,7 +83,7 @@ export function MarkdownCarousel({
                           <PopImage
                             {...props}
                             basePath={baseUrl}
-                            className={(props.className as string) || DEFAULT_IMAGE_CLASS}
+                            className={props.className as string}
                           >
                             {captionText ? (
                               <Markdown

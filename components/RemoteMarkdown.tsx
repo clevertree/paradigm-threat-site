@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Markdown from 'markdown-to-jsx'
 import { PopImage, DynamicIndex } from '@/components'
-import { transformImageCaptions, DEFAULT_IMAGE_CLASS } from '@/components/Timeline/markdownTransform'
+import { transformImageCaptions } from '@/components/Timeline/markdownTransform'
 
 /** Strip H1 title and YAML frontmatter before rendering. */
 function prepareMarkdownContent(md: string): string {
@@ -64,14 +64,14 @@ export function RemoteMarkdown({ src, baseUrl, title, className = '' }: RemoteMa
               <PopImage
                 {...props}
                 basePath={baseUrl}
-                className={props.className || DEFAULT_IMAGE_CLASS}
+                className={props.className}
               />
             ),
             PopImage: (props: { children?: string;[key: string]: unknown }) => (
               <PopImage
                 {...props}
                 basePath={baseUrl}
-                className={(props.className as string) || DEFAULT_IMAGE_CLASS}
+                className={props.className as string}
               >
                 {typeof props.children === 'string' ? (
                   <Markdown

@@ -1,15 +1,13 @@
 /**
  * Transforms standalone markdown images into PopImage components.
- * Handles: ![alt](url) -> <PopImage src="url" alt="alt" className="..." />
- * Captions (*italic text* after image) are left as regular markdown.
+ * Handles: ![alt](url) -> <PopImage src="url" alt="alt" />
+ * Alt text is rendered as caption below the image.
+ * No default classes; use JSON-in-title for per-image styling: ![alt](url?w=360 '{"className":"..."}').
  */
-
-const DEFAULT_IMAGE_CLASS =
-  'sm:float-left clear-left m-auto sm:m-1 sm:mr-6 sm:max-w-sm'
 
 /**
  * Transform markdown images to PopImage components.
- * Only standalone images are converted; any caption text below remains as markdown.
+ * Alt text appears as caption below the image.
  */
 export function transformImageCaptions(md: string): string {
   if (typeof md !== 'string') return ''
@@ -20,10 +18,8 @@ export function transformImageCaptions(md: string): string {
   const result = md.replace(standaloneImage, (_, alt, url) => {
     const safeAlt = typeof alt === 'string' ? alt.replace(/"/g, '&quot;') : ''
     const safeUrl = typeof url === 'string' ? url : ''
-    return `<PopImage src="${safeUrl}" alt="${safeAlt}" className="${DEFAULT_IMAGE_CLASS}" />`
+    return `<PopImage src="${safeUrl}" alt="${safeAlt}" />`
   })
 
   return result
 }
-
-export { DEFAULT_IMAGE_CLASS }
