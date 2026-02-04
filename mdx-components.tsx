@@ -1,5 +1,6 @@
 import type {MDXComponents} from 'mdx/types'
 import Link from 'next/link'
+import { MarkdownLink } from './components/MarkdownLink'
 
 // This file allows you to provide custom React components
 // to be used in MDX files. You can import and use any
@@ -10,21 +11,7 @@ import Link from 'next/link'
 export function useMDXComponents(components: MDXComponents): MDXComponents {
     return {
         // Allows customizing built-in components, e.g. to add styling.
-        a: ({children, href, ref, ...props}: any) => {
-            const isExternal = href?.startsWith('http');
-            if (isExternal) {
-                return <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    {...props}
-                >{children}</a>
-            }
-            return <Link
-                href={href || ''}
-                {...props}
-            >{children}</Link>
-        },
+        a: MarkdownLink,
         ...components,
     }
 }
