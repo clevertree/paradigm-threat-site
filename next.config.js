@@ -29,6 +29,12 @@ const nextConfig = {
         hostname: 'clevertree.github.io',
       }
     ],
+    localPatterns: [
+      {
+        pathname: '/**',
+        search: '?*',
+      },
+    ],
     unoptimized: true
   },
   // Configure pageExtensions to include md and mdx
