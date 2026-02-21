@@ -14,8 +14,8 @@ export function getEventYear(evt: { dates?: { start?: number; value?: number }[]
   return d.start ?? (d as { value?: number }).value ?? null
 }
 
-function formatYear(year: number, calendar?: string): string {
-  const era = calendar === 'BCE' || year < 0 ? 'BCE' : 'CE'
+function formatYear(year: number, _calendar?: string): string {
+  const era = year <= 0 ? 'BCE' : 'CE'
   const absYear = Math.abs(year)
   return `${absYear} ${era}`
 }

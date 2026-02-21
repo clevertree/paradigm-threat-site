@@ -25,7 +25,7 @@ const VIEW_LABELS: Record<TimelineViewMode, string> = {
   custom: 'Custom',
 }
 
-export type ExpansionMode = 'all' | 'none' | 'level2'
+export type ExpansionMode = 'all' | 'none'
 
 
 function getStoredLeftPct(): number | null {
@@ -56,7 +56,7 @@ export function TimelineView() {
 
   const onToggleFullscreen = useCallback(() => setFullPage((p) => !p), [])
   const [viewMode, setViewMode] = useState<TimelineViewMode>('custom')
-  const [expansionMode, setExpansionMode] = useState<ExpansionMode>('level2')
+  const [expansionMode, setExpansionMode] = useState<ExpansionMode>('all')
   const [selected, setSelected] = useState<TimelineEntry | null>(null)
   const [leftPct, setLeftPct] = useState<number>(DEFAULT_LEFT_PCT)
   const [isDragging, setIsDragging] = useState(false)
@@ -177,25 +177,34 @@ export function TimelineView() {
       <div className={`flex flex-col flex-1 min-h-0 min-w-0 ${fullPage ? 'min-[1000px]:hidden' : ''}`}>
         <div className="flex-shrink-0 px-2 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 space-y-2">
           <label htmlFor="timeline-event-select" className="block text-sm font-medium text-slate-600 dark:text-slate-400">Select event</label>
-          <select
-            id="timeline-event-select"
-            value={selected?.id ?? (events[0]?.id ?? '')}
-            onChange={(e) => {
-              const evt = events.find((x) => x.id === e.target.value)
-              if (evt) handleSelectEvent(evt)
-            }}
-            className="w-full rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm"
-          >
-            {hierarchicalOptions.map(({ entry: evt, depth }) => {
-              const indent = '\u00A0\u00A0\u00A0\u00A0'.repeat(depth)
-              const label = evt.type === 'article' ? evt.title : `${formatDateRange(evt)} — ${evt.title}`
-              return (
-                <option key={evt.id} value={evt.id}>
-                  {indent}{label}
-                </option>
-              )
-            })}
-          </select>
+          <div className="flex items-center gap-2">
+            <select
+              id="timeline-event-select"
+              value={selected?.id ?? (events[0]?.id ?? '')}
+              onChange={(e) => {
+                const evt = events.find((x) => x.id === e.target.value)
+                if (evt) handleSelectEvent(evt)
+              }}
+              className="flex-1 min-w-0 rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm"
+            >
+              {hierarchicalOptions.map(({ entry: evt, depth }) => {
+                const indent = '\u00A0\u00A0\u00A0\u00A0'.repeat(depth)
+                const label = evt.type === 'article' ? evt.title : `${formatDateRange(evt)} — ${evt.title}`
+                return (
+                  <option key={evt.id} value={evt.id}>
+                    {indent}{label}
+                  </option>
+                )
+              })}
+            </select>
+            <button
+              type="button"
+              onClick={onToggleFullscreen}
+              className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800"
+            >
+              {fullPage ? 'Exit full page' : 'Full page'}
+            </button>
+          </div>
         </div>
         <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
           <MarkdownCarousel
@@ -203,7 +212,6 @@ export function TimelineView() {
             baseUrl={baseUrl}
             selectedId={selected?.id ?? null}
             onSelectEvent={handleSelectEvent}
-            fullPageControl={{ fullPage, onToggle: onToggleFullscreen }}
           />
         </div>
       </div>
@@ -231,39 +239,13 @@ export function TimelineView() {
               </button>
             </div>
             {viewMode === 'custom' && (
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-slate-500">Expand:</span>
-                <button
-                  type="button"
-                  onClick={() => setExpansionMode('all')}
-                  className={`rounded border px-2 py-1 transition-colors ${expansionMode === 'all'
-                    ? 'border-slate-500 bg-slate-200 dark:bg-slate-700'
-                    : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
-                    }`}
-                >
-                  All
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setExpansionMode('none')}
-                  className={`rounded border px-2 py-1 transition-colors ${expansionMode === 'none'
-                    ? 'border-slate-500 bg-slate-200 dark:bg-slate-700'
-                    : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
-                    }`}
-                >
-                  None
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setExpansionMode('level2')}
-                  className={`rounded border px-2 py-1 transition-colors ${expansionMode === 'level2'
-                    ? 'border-slate-500 bg-slate-200 dark:bg-slate-700'
-                    : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
-                    }`}
-                >
-                  To level 2
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={() => setExpansionMode((m) => m === 'all' ? 'none' : 'all')}
+                className="rounded border px-2 py-1 text-sm transition-colors border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800"
+              >
+                {expansionMode === 'all' ? 'Collapse all' : 'Expand all'}
+              </button>
             )}
             <label className="flex items-center gap-2 text-sm text-slate-500">
               View:

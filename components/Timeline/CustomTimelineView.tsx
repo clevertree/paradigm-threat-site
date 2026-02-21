@@ -7,16 +7,40 @@ import { formatDateRange } from './utils'
 import type { TimelineEntry } from '@/components/TimelineContext'
 import type { ExpansionMode } from './TimelineView'
 
-const LEVEL_COLORS: Record<number, string> = {
-  0: 'bg-slate-50 dark:bg-slate-900/60 border-l-slate-300 dark:border-l-slate-600',
-  1: 'bg-blue-50/70 dark:bg-blue-950/40 border-l-blue-400 dark:border-l-blue-600',
-  2: 'bg-amber-50/70 dark:bg-amber-950/30 border-l-amber-400 dark:border-l-amber-600',
-  3: 'bg-emerald-50/70 dark:bg-emerald-950/30 border-l-emerald-400 dark:border-l-emerald-600',
-  4: 'bg-violet-50/70 dark:bg-violet-950/30 border-l-violet-400 dark:border-l-violet-600',
+const LEVEL_BG: Record<number, string> = {
+  0: 'bg-slate-100 dark:bg-slate-900/60',
+  1: 'bg-slate-50 dark:bg-slate-900/40',
+  2: 'bg-transparent dark:bg-transparent',
+  3: 'bg-transparent dark:bg-transparent',
+  4: 'bg-transparent dark:bg-transparent',
 }
 
-function getLevelStyles(depth: number): string {
-  return LEVEL_COLORS[depth] ?? 'bg-slate-100/50 dark:bg-slate-800/40 border-l-slate-400 dark:border-l-slate-500'
+const LEVEL_TEXT: Record<number, string> = {
+  0: 'text-base font-bold text-slate-900 dark:text-slate-100',
+  1: 'text-sm font-semibold text-slate-800 dark:text-slate-200',
+  2: 'text-sm font-medium text-slate-700 dark:text-slate-300',
+  3: 'text-xs font-medium text-slate-600 dark:text-slate-400',
+  4: 'text-xs font-normal text-slate-500 dark:text-slate-500',
+}
+
+const LEVEL_DATE: Record<number, string> = {
+  0: 'text-sm text-slate-600 dark:text-slate-300',
+  1: 'text-xs text-slate-500 dark:text-slate-400',
+  2: 'text-xs text-slate-500 dark:text-slate-400',
+  3: 'text-xs text-slate-400 dark:text-slate-500',
+  4: 'text-xs text-slate-400 dark:text-slate-500',
+}
+
+function getLevelBg(depth: number): string {
+  return LEVEL_BG[depth] ?? 'bg-transparent'
+}
+
+function getLevelText(depth: number): string {
+  return LEVEL_TEXT[depth] ?? 'text-xs font-normal text-slate-500 dark:text-slate-500'
+}
+
+function getLevelDate(depth: number): string {
+  return LEVEL_DATE[depth] ?? 'text-xs text-slate-500 dark:text-slate-500'
 }
 
 interface CustomTimelineViewProps {
@@ -35,11 +59,10 @@ interface TreeEntryProps {
   selectedId?: string | null
 }
 
-function getBaseExpanded(expansionMode: ExpansionMode, depth: number, hasChildren: boolean): boolean {
+function getBaseExpanded(expansionMode: ExpansionMode, _depth: number, hasChildren: boolean): boolean {
   if (!hasChildren) return false
   if (expansionMode === 'all') return true
   if (expansionMode === 'none') return false
-  if (expansionMode === 'level2') return depth < 3
   return false
 }
 
@@ -58,12 +81,13 @@ function TreeEntry({
   const isArticle = entry.type === 'article'
   const dateStr = formatDateRange(entry)
   const isSelected = selectedId === entry.id
-  const levelStyles = getLevelStyles(depth)
+  const levelBg = getLevelBg(depth)
+  const levelText = getLevelText(depth)
+  const levelDate = getLevelDate(depth)
 
   return (
     <div
-      className={`border-b border-slate-200 dark:border-slate-700 last:border-b-0 border-l-2 ${levelStyles}`}
-      style={{ marginLeft: depth * 12 }}
+      className={`border-b border-slate-200/30 dark:border-slate-700/40 last:border-b-0 ${levelBg}`}
     >
       <div
         role="button"
@@ -76,7 +100,7 @@ function TreeEntry({
             onSelectEvent?.(entry)
           }
         }}
-        className={`w-full text-left px-3 py-2 flex items-center gap-2 transition-colors hover:opacity-90 cursor-pointer ${isSelected ? 'ring-1 ring-inset ring-slate-400 dark:ring-slate-500' : ''}`}
+        className={`w-full text-left px-3 py-2 flex items-center gap-2 transition-colors hover:opacity-90 cursor-pointer ${isSelected ? 'ring-1 ring-inset ring-slate-400 dark:ring-slate-500 bg-slate-800/40' : ''}`}
       >
         {hasChildren ? (
           <button
@@ -102,16 +126,16 @@ function TreeEntry({
           <Calendar className="shrink-0 w-4 h-4 text-slate-500 dark:text-slate-400" aria-hidden />
         )}
         {!isArticle && (
-          <span className="text-slate-500 dark:text-slate-400 text-xs tabular-nums shrink-0 min-w-[7rem] text-left">
+          <span className={`tabular-nums shrink-0 min-w-[7rem] text-left ${levelDate}`}>
             {dateStr}
           </span>
         )}
-        <span className={`font-medium text-slate-900 dark:text-slate-100 truncate text-left flex-1 min-w-0 ${isArticle ? 'text-sm' : ''}`}>
+        <span className={`truncate text-left flex-1 min-w-0 ${levelText} ${isArticle ? 'italic opacity-80' : ''}`}>
           {entry.title}
         </span>
       </div>
       {expanded && hasChildren && (
-        <div className="border-t border-slate-200 dark:border-slate-700/50">
+        <div className="border-t border-slate-200/20 dark:border-slate-700/30">
           {entry.children!.map((child) => (
             <TreeEntry
               key={child.id}
