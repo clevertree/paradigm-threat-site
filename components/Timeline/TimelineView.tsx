@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react'
-import { createPortal } from 'react-dom'
 import { useTimeline } from '@/components/TimelineContext'
 import { ListView } from './ListView'
 import { VisTimelineView } from './VisTimelineView'
@@ -51,7 +50,11 @@ export function TimelineView() {
       if (e.key === 'Escape') setFullPage(false)
     }
     document.addEventListener('keydown', onKeyDown)
-    return () => document.removeEventListener('keydown', onKeyDown)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.body.style.overflow = ''
+    }
   }, [fullPage])
 
   const onToggleFullscreen = useCallback(() => setFullPage((p) => !p), [])
@@ -171,8 +174,12 @@ export function TimelineView() {
     )
   }
 
-  const timelineContent = (
-    <div className={`flex flex-col flex-1 min-h-0 w-full overflow-hidden ${fullPage ? 'h-full min-h-0' : 'max-h-[80vh] min-h-[80vh]'}`}>
+  return (
+    <div className={
+      fullPage
+        ? 'fixed inset-0 z-[110] flex flex-col bg-white dark:bg-slate-950 overflow-hidden p-4'
+        : 'flex flex-col flex-1 min-h-0 w-full overflow-hidden max-h-[80vh] min-h-[80vh]'
+    }>
       {/* Mobile: always show when not fullscreen; when fullscreen, show only when viewport < 1000px */}
       <div className={`flex flex-col flex-1 min-h-0 min-w-0 ${fullPage ? 'min-[1000px]:hidden' : ''}`}>
         <div className="flex-shrink-0 px-2 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 space-y-2">
@@ -318,17 +325,4 @@ export function TimelineView() {
       </div>
     </div>
   )
-
-  if (fullPage && typeof document !== 'undefined') {
-    return createPortal(
-      <div className="fixed inset-0 z-[110] flex flex-col bg-white dark:bg-slate-950 overflow-hidden">
-        <div className="w-full flex-1 min-h-0 flex flex-col px-4 py-4 overflow-hidden" style={{ minHeight: 0 }}>
-          {timelineContent}
-        </div>
-      </div>,
-      document.body
-    )
-  }
-
-  return timelineContent
 }

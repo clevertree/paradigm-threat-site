@@ -38,9 +38,15 @@ export function resolveImagePath(src: string, basePath?: string): string {
     // Separate path from query string
     const [pathPart, queryPart] = src.split('?');
     const query = queryPart ? '?' + queryPart : '';
+    const prefix = basePath ? (basePath.endsWith('/') ? basePath : basePath + '/') : '';
 
     if (pathPart.startsWith('/')) {
-        return pathPart + query; // Already absolute
+        if (basePath?.startsWith('http')) {
+            // Root-relative path: resolve against basePath (works for both localhost and GitHub Pages subdirectories)
+            const relPath = pathPart.slice(1);
+            return (prefix + relPath) + query;
+        }
+        return pathPart + query; // Already absolute on current domain
     }
 
     let resolved = pathPart;
@@ -48,7 +54,6 @@ export function resolveImagePath(src: string, basePath?: string): string {
         resolved = pathPart.slice(2);
     }
 
-    const prefix = basePath ? (basePath.endsWith('/') ? basePath : basePath + '/') : '';
     // When basePath is an absolute URL (e.g. timeline base = same domain as events.json), resolve to full URL
     if (basePath?.startsWith('http')) {
         return (prefix + resolved) + query;
