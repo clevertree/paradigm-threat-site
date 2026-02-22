@@ -22,6 +22,10 @@ interface MarkdownCarouselProps {
   onSelectEvent: (entry: TimelineEntry) => void
   /** When provided (mobile), render Full page button between Prev and Next */
   fullPageControl?: { fullPage: boolean; onToggle: () => void }
+  /** Whether TTS is currently playing this event */
+  ttsIsPlaying?: boolean
+  /** Called when user clicks the Listen/Stop button on the event header */
+  onPlayEvent?: () => void
 }
 
 export function MarkdownCarousel({
@@ -30,6 +34,8 @@ export function MarkdownCarousel({
   selectedId,
   onSelectEvent,
   fullPageControl,
+  ttsIsPlaying = false,
+  onPlayEvent,
 }: MarkdownCarouselProps) {
   const [mdContent, setMdContent] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
@@ -60,9 +66,29 @@ export function MarkdownCarousel({
       <div className="flex-1 min-h-0 overflow-y-scroll overflow-x-hidden px-4 py-4 overscroll-contain touch-pan-y" style={{ minHeight: 0, WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' } as React.CSSProperties}>
         {currentEntry ? (
           <>
-            <h2 className={`font-semibold text-slate-900 dark:text-slate-100 mb-4 text-left select-text ${currentEntry.type === 'article' ? 'text-sm' : 'text-lg'}`}>
-              {currentEntry.title}
-            </h2>
+            <div className="flex items-start justify-between gap-2 mb-4">
+              <h2 className={`font-semibold text-slate-900 dark:text-slate-100 text-left select-text flex-1 min-w-0 ${currentEntry.type === 'article' ? 'text-sm' : 'text-lg'}`}>
+                {currentEntry.title}
+              </h2>
+              {onPlayEvent && (
+                <button
+                  type="button"
+                  onClick={onPlayEvent}
+                  title={ttsIsPlaying ? 'Stop audio' : 'Listen (audio slideshow)'}
+                  className={`shrink-0 flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all ${
+                    ttsIsPlaying
+                      ? 'bg-indigo-600 border-indigo-500 text-white shadow-md shadow-indigo-500/30'
+                      : 'border-indigo-500/30 text-indigo-400 dark:text-indigo-400 hover:bg-indigo-500/10'
+                  }`}
+                >
+                  {ttsIsPlaying ? (
+                    <><span className="inline-block w-2 h-2 rounded-sm bg-white" />Stop</>
+                  ) : (
+                    <><span>▶</span> Listen</>
+                  )}
+                </button>
+              )}
+            </div>
             {loading ? (
               <div className="text-slate-500 text-sm text-left">Loading…</div>
             ) : mdContent ? (

@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react'
+import { Play, Square } from 'lucide-react'
 import { useTimeline } from '@/components/TimelineContext'
 import { ListView } from './ListView'
 import { VisTimelineView } from './VisTimelineView'
@@ -8,7 +9,10 @@ import { TimelineJSView } from './TimelineJSView'
 import { CustomTimelineView } from './CustomTimelineView'
 import { MarkdownCarousel } from './MarkdownCarousel'
 import { TimelineGalleryProvider } from './TimelineGalleryProvider'
+import { TTSSlideshowOverlay } from './TTSSlideshowOverlay'
 import { formatDateRange } from './utils'
+import { useTTS } from '@/lib/hooks/useTTS'
+import { stripMarkdownForTTS } from './ttsHelpers'
 import type { TimelineEntry } from '@/components/TimelineContext'
 
 const STORAGE_KEY = 'paradigm-threat-timeline-left-panel-pct'
@@ -114,6 +118,45 @@ export function TimelineView() {
 
   const leftScrollRef = useRef<HTMLDivElement>(null)
 
+  // ── TTS ──────────────────────────────────────────────────────────────
+  const tts = useTTS()
+  const [slideshowOpen, setSlideshowOpen] = useState(false)
+  const ttsStartIndexRef = useRef(0)
+
+  /** Build TTS segments from a start event through all remaining events */
+  const buildSegments = useCallback((startEntry: TimelineEntry) => {
+    const startIdx = events.findIndex(e => e.id === startEntry.id)
+    if (startIdx < 0) return []
+    return events.slice(startIdx).map(evt => ({
+      id: evt.id,
+      title: evt.title,
+      fetchText: async () => {
+        try {
+          const res = await fetch(`${baseUrl}/${evt.md_path}`)
+          const text = res.ok ? await res.text() : ''
+          return stripMarkdownForTTS(text, evt.title)
+        } catch { return evt.title }
+      },
+    }))
+  }, [events, baseUrl])
+
+  const handlePlayEvent = useCallback((entry: TimelineEntry) => {
+    const idx = events.findIndex(e => e.id === entry.id)
+    ttsStartIndexRef.current = idx >= 0 ? idx : 0
+    tts.play(buildSegments(entry), 0)
+    setSlideshowOpen(true)
+  }, [events, tts, buildSegments])
+
+  const handleStopTTS = useCallback(() => {
+    tts.stop()
+    setSlideshowOpen(false)
+  }, [tts])
+
+  // Stop TTS when the component unmounts
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => () => { tts.stop() }, [])
+  // ─────────────────────────────────────────────────────────────────────
+
   const handleSelectEvent = useCallback((evt: TimelineEntry) => {
     setSelected(evt)
     const params = new URLSearchParams(window.location.search)
@@ -121,6 +164,18 @@ export function TimelineView() {
     const q = params.toString()
     window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
   }, [])
+
+  // When TTS auto-advances to a new segment, sync the carousel
+  const prevTTSSegRef = useRef(-1)
+  useEffect(() => {
+    const seg = tts.state.currentSegmentIndex
+    if (seg < 0 || seg === prevTTSSegRef.current) return
+    prevTTSSegRef.current = seg
+    const event = tts.state.segments[seg]
+    if (!event) return
+    const entry = events.find(e => e.id === event.id)
+    if (entry && entry.id !== selected?.id) handleSelectEvent(entry)
+  }, [tts.state.currentSegmentIndex, tts.state.segments, events, selected, handleSelectEvent])
 
   const handleSeparatorMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault()
@@ -246,6 +301,22 @@ export function TimelineView() {
             >
               {fullPage ? 'Exit full page' : 'Full page'}
             </button>
+            {/* TTS Play button */}
+            <button
+              type="button"
+              title={tts.state.isPlaying ? 'Stop audio' : 'Listen (audio slideshow)'}
+              onClick={() => {
+                if (tts.state.isPlaying) handleStopTTS()
+                else if (selected) handlePlayEvent(selected)
+              }}
+              className={`shrink-0 rounded border px-2.5 py-2 text-sm transition-colors ${
+                tts.state.isPlaying
+                  ? 'bg-indigo-600 border-indigo-500 text-white hover:bg-indigo-700'
+                  : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
+            >
+              {tts.state.isPlaying ? <Square size={14} fill="currentColor" /> : <Play size={14} />}
+            </button>
           </div>
         </div>
         <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
@@ -260,6 +331,8 @@ export function TimelineView() {
               baseUrl={baseUrl}
               selectedId={selected?.id ?? null}
               onSelectEvent={handleSelectEvent}
+              ttsIsPlaying={tts.state.isPlaying && tts.state.segments[tts.state.currentSegmentIndex]?.id === selected?.id}
+              onPlayEvent={() => selected && (tts.state.isPlaying ? handleStopTTS() : handlePlayEvent(selected))}
             />
           </TimelineGalleryProvider>
         </div>
@@ -285,6 +358,22 @@ export function TimelineView() {
                 className="rounded border border-slate-300 dark:border-slate-600 px-3 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0"
               >
                 {fullPage ? 'Exit full page' : 'Full page'}
+              </button>
+              {/* TTS Play button */}
+              <button
+                type="button"
+                title={tts.state.isPlaying ? 'Stop audio' : 'Listen (audio slideshow)'}
+                onClick={() => {
+                  if (tts.state.isPlaying) handleStopTTS()
+                  else if (selected) handlePlayEvent(selected)
+                }}
+                className={`shrink-0 rounded border px-2.5 py-1.5 text-sm transition-colors ${
+                  tts.state.isPlaying
+                    ? 'bg-indigo-600 border-indigo-500 text-white hover:bg-indigo-700'
+                    : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                {tts.state.isPlaying ? <Square size={14} fill="currentColor" /> : <Play size={14} />}
               </button>
             </div>
             {viewMode === 'custom' && (
@@ -368,10 +457,32 @@ export function TimelineView() {
               baseUrl={baseUrl}
               selectedId={selected?.id ?? null}
               onSelectEvent={handleSelectEvent}
+              ttsIsPlaying={tts.state.isPlaying && tts.state.segments[tts.state.currentSegmentIndex]?.id === selected?.id}
+              onPlayEvent={() => selected && (tts.state.isPlaying ? handleStopTTS() : handlePlayEvent(selected))}
             />
           </TimelineGalleryProvider>
         </div>
       </div>
+
+      {/* TTS Slideshow Overlay */}
+      {slideshowOpen && (
+        <TTSSlideshowOverlay
+          ttsState={tts.state}
+          availableVoices={tts.availableVoices}
+          onPause={tts.pause}
+          onNext={tts.next}
+          onPrev={tts.prev}
+          onStop={handleStopTTS}
+          onSetVoice={tts.setVoice}
+          onSetRate={tts.setRate}
+          onSetLangFilter={tts.setLangFilter}
+          onSetLocalOnly={tts.setLocalOnly}
+          events={events}
+          baseUrl={baseUrl}
+          startEventIndex={ttsStartIndexRef.current}
+          onSelectEvent={handleSelectEvent}
+        />
+      )}
     </div>
   )
 }
