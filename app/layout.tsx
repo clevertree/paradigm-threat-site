@@ -45,6 +45,7 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
             <html lang="en" className="dark font-['Titillium_Web']" suppressHydrationWarning>
                 <head>
                     <title>Paradigm Threat</title>
+                    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
                     <link rel="icon" type="image/svg+xml" href="/site/favicon.svg" />
                 </head>
                 <body className="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
@@ -60,6 +61,7 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
         <html lang="en" className="dark font-['Titillium_Web']" suppressHydrationWarning>
             <head>
                 <title>Paradigm Threat</title>
+                <link rel="icon" type="image/x-icon" href="/favicon.ico" />
                 <link rel="icon" type="image/svg+xml" href="/site/favicon.svg" />
                 <script dangerouslySetInnerHTML={{
                     __html: `try{if(localStorage.theme==='dark'||(!('theme' in localStorage)&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}else{document.documentElement.classList.remove('dark')}}catch(_){}`,
