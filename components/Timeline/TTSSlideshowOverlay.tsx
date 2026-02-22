@@ -61,7 +61,10 @@ export function TTSSlideshowOverlay({
     const [animCycle, setAnimCycle] = useState(0)  // 0, 1, 2 — three animation passes per image
     const ANIM_PASSES = 3
     const prevImgIndexRef = useRef(-1)
-    const [fadeIn, setFadeIn] = useState(true)
+    // Dual-layer crossfade: layer A and layer B alternate as foreground
+    const [layerA, setLayerA] = useState<{ imgIndex: number; animCycle: number } | null>({ imgIndex: 0, animCycle: 0 })
+    const [layerB, setLayerB] = useState<{ imgIndex: number; animCycle: number } | null>(null)
+    const [activeFront, setActiveFront] = useState<'A' | 'B'>('A')  // which layer is currently fading in
     const scrollContainerRef = useRef<HTMLDivElement>(null)
     const activeSentenceRef = useRef<HTMLParagraphElement>(null)
 
@@ -118,11 +121,20 @@ export function TTSSlideshowOverlay({
         return () => clearInterval(t)
     }, [allImages.length, intervalMs, ANIM_PASSES])
 
-    // Cross-fade: trigger opacity reset on image or animation change
+    // Cross-fade: push new image/anim onto the back layer, then flip it to front
     useEffect(() => {
-        setFadeIn(false)
-        const t = setTimeout(() => setFadeIn(true), 50)
-        return () => clearTimeout(t)
+        const payload = { imgIndex: currentImgIndex, animCycle }
+        if (activeFront === 'A') {
+            setLayerB(payload)
+            // Small delay so the browser paints the new layer at opacity 0 first
+            const t = setTimeout(() => setActiveFront('B'), 60)
+            return () => clearTimeout(t)
+        } else {
+            setLayerA(payload)
+            const t = setTimeout(() => setActiveFront('A'), 60)
+            return () => clearTimeout(t)
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentImgIndex, animCycle])
 
     // Auto-hide controls after 3s idle
@@ -162,10 +174,33 @@ export function TTSSlideshowOverlay({
     if (ttsState.currentSegmentIndex < 0) return null
 
     const currentSeg = ttsState.segments[ttsState.currentSegmentIndex]
-    const currentImg = allImages[currentImgIndex]
     // Pick a different animation for each pass (offset by image index so sequential images don't repeat)
-    const animClass = KEN_BURNS[(currentImgIndex + animCycle) % KEN_BURNS.length]
     const slideshowDuration = `${Math.round(intervalMs / 1000)}s`
+
+    // Helper to render a slideshow layer (used for A/B crossfade)
+    const renderLayer = (layer: { imgIndex: number; animCycle: number } | null, isFront: boolean) => {
+        if (!layer) return null
+        const img = allImages[layer.imgIndex]
+        if (!img) return null
+        const anim = KEN_BURNS[(layer.imgIndex + layer.animCycle) % KEN_BURNS.length]
+        return (
+            <div
+                key={`layer-${layer.imgIndex}-${layer.animCycle}`}
+                className="absolute inset-0"
+                style={{
+                    '--slideshow-duration': slideshowDuration,
+                    opacity: isFront ? 1 : 0,
+                    transition: 'opacity 1.2s ease-in-out',
+                    zIndex: isFront ? 2 : 1,
+                } as React.CSSProperties}
+            >
+                <div
+                    className={`absolute inset-0 bg-center bg-contain bg-no-repeat ${anim}`}
+                    style={{ backgroundImage: `url(${img.src})` }}
+                />
+            </div>
+        )
+    }
 
     // Filtered voices for dropdowns
     const filteredVoices = availableVoices
@@ -186,29 +221,13 @@ export function TTSSlideshowOverlay({
             onClick={handleInteraction}
             style={{ cursor: showControls ? 'default' : 'none' }}
         >
-            {/* ── Background Ken Burns Slideshow ── */}
+            {/* ── Background Ken Burns Slideshow (dual-layer crossfade) ── */}
             <div className="absolute inset-0">
-                {currentImg ? (
-                    <div
-                        key={`${currentImgIndex}-${animCycle}`}
-                        className="absolute inset-0"
-                        style={{ '--slideshow-duration': slideshowDuration } as React.CSSProperties}
-                    >
-                        {/* Static base image */}
-                        <div
-                            className="absolute inset-0 bg-center bg-contain bg-no-repeat"
-                            style={{ backgroundImage: `url(${currentImg.src})` }}
-                        />
-                        {/* Animated Ken Burns layer */}
-                        <div
-                            className={`absolute inset-0 bg-center bg-contain bg-no-repeat ${animClass}`}
-                            style={{
-                                backgroundImage: `url(${currentImg.src})`,
-                                opacity: fadeIn ? 1 : 0,
-                                transition: 'opacity 1s ease-in-out',
-                            }}
-                        />
-                    </div>
+                {allImages.length > 0 ? (
+                    <>
+                        {renderLayer(layerA, activeFront === 'A')}
+                        {renderLayer(layerB, activeFront === 'B')}
+                    </>
                 ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-slate-900 to-slate-950" />
                 )}
