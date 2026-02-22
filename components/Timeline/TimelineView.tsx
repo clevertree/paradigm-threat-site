@@ -309,11 +309,10 @@ export function TimelineView() {
                 if (tts.state.isPlaying) handleStopTTS()
                 else if (selected) handlePlayEvent(selected)
               }}
-              className={`shrink-0 rounded border px-2.5 py-2 text-sm transition-colors ${
-                tts.state.isPlaying
+              className={`shrink-0 rounded border px-2.5 py-2 text-sm transition-colors ${tts.state.isPlaying
                   ? 'bg-indigo-600 border-indigo-500 text-white hover:bg-indigo-700'
                   : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
-              }`}
+                }`}
             >
               {tts.state.isPlaying ? <Square size={14} fill="currentColor" /> : <Play size={14} />}
             </button>
@@ -367,11 +366,10 @@ export function TimelineView() {
                   if (tts.state.isPlaying) handleStopTTS()
                   else if (selected) handlePlayEvent(selected)
                 }}
-                className={`shrink-0 rounded border px-2.5 py-1.5 text-sm transition-colors ${
-                  tts.state.isPlaying
+                className={`shrink-0 rounded border px-2.5 py-1.5 text-sm transition-colors ${tts.state.isPlaying
                     ? 'bg-indigo-600 border-indigo-500 text-white hover:bg-indigo-700'
                     : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
-                }`}
+                  }`}
               >
                 {tts.state.isPlaying ? <Square size={14} fill="currentColor" /> : <Play size={14} />}
               </button>

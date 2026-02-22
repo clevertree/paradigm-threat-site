@@ -75,11 +75,10 @@ export function MarkdownCarousel({
                   type="button"
                   onClick={onPlayEvent}
                   title={ttsIsPlaying ? 'Stop audio' : 'Listen (audio slideshow)'}
-                  className={`shrink-0 flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all ${
-                    ttsIsPlaying
+                  className={`shrink-0 flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all ${ttsIsPlaying
                       ? 'bg-indigo-600 border-indigo-500 text-white shadow-md shadow-indigo-500/30'
                       : 'border-indigo-500/30 text-indigo-400 dark:text-indigo-400 hover:bg-indigo-500/10'
-                  }`}
+                    }`}
                 >
                   {ttsIsPlaying ? (
                     <><span className="inline-block w-2 h-2 rounded-sm bg-white" />Stop</>

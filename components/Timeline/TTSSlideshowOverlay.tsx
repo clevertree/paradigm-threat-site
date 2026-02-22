@@ -134,7 +134,7 @@ export function TTSSlideshowOverlay({
             const t = setTimeout(() => setActiveFront('A'), 60)
             return () => clearTimeout(t)
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentImgIndex, animCycle])
 
     // Auto-hide controls after 3s idle
@@ -253,13 +253,12 @@ export function TTSSlideshowOverlay({
                                 <p
                                     key={i}
                                     ref={i === ttsState.currentSentenceIndex ? activeSentenceRef : undefined}
-                                    className={`text-base md:text-lg leading-relaxed transition-colors duration-300 mb-1 ${
-                                        i === ttsState.currentSentenceIndex
+                                    className={`text-base md:text-lg leading-relaxed transition-colors duration-300 mb-1 ${i === ttsState.currentSentenceIndex
                                             ? 'text-white font-semibold'
                                             : i < ttsState.currentSentenceIndex
                                                 ? 'text-white/30'
                                                 : 'text-white/50'
-                                    }`}
+                                        }`}
                                 >
                                     {s}
                                 </p>
@@ -328,7 +327,7 @@ export function TTSSlideshowOverlay({
                     >
                         {ttsState.isPlaying
                             ? <Pause size={28} fill="currentColor" />
-                            : <Play  size={28} fill="currentColor" className="ml-1" />
+                            : <Play size={28} fill="currentColor" className="ml-1" />
                         }
                     </button>
                     <button

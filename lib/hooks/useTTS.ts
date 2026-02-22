@@ -36,24 +36,54 @@ const LS_LANG = 'tl-tts-lang'
 const LS_LOCAL = 'tl-tts-local-only'
 const LS_SUBTITLE = 'tl-tts-subtitle'
 
-/** Split text into speakable sentences, merging very short fragments */
+/**
+ * Split text into speakable sentences.
+ * - Handles abbreviations like B.C., A.D., c., e.g., i.e., etc. without breaking
+ * - Treats each line/paragraph as at least one sentence
+ * - Merges very short fragments into the previous sentence
+ */
 function splitSentences(text: string): string[] {
-    // Split on sentence-ending punctuation, keeping the punctuation attached
-    const raw = text.match(/[^.!?]*[.!?]+[\s]*/g)
-    if (!raw) return text.trim() ? [text.trim()] : []
-    // If there's leftover text without terminal punctuation, append it
-    const joined = raw.join('')
-    const leftover = text.substring(joined.length).trim()
-    if (leftover) raw.push(leftover)
+    // Known abbreviations whose trailing period is NOT a sentence end.
+    // Protected by temporarily replacing their periods with a placeholder.
+    const ABBR_PLACEHOLDER = '\x00'
+    const ABBREVIATIONS = /\b(B\.C|A\.D|B\.C\.E|C\.E|A\.M|P\.M|e\.g|i\.e|etc|vs|approx|ca?|Mr|Mrs|Ms|Dr|Jr|Sr|St|Prof|Gen|Gov|Sgt|Lt|Col|Capt|Rev|Vol|No|Fig|Dept|Univ|approx|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\./gi
+
+    let safe = text.replace(ABBREVIATIONS, (m) => m.slice(0, -1) + ABBR_PLACEHOLDER)
+
+    // Also protect single-capital-letter abbreviations like "S. Julius" or initials
+    safe = safe.replace(/\b([A-Z])\./g, '$1' + ABBR_PLACEHOLDER)
+
+    // Also protect decimal numbers like "3,147.5"
+    safe = safe.replace(/(\d)\.(\d)/g, '$1' + ABBR_PLACEHOLDER + '$2')
+
+    // Split into paragraphs/lines first (each line is at minimum one sentence)
+    const lines = safe.split(/\n+/).filter(l => l.trim())
+
+    const allSentences: string[] = []
+    for (const line of lines) {
+        // Split on sentence-ending punctuation followed by space or end-of-string
+        const raw = line.match(/[^.!?]*[.!?]+(?:\s+|$)/g)
+        if (!raw) {
+            const restored = line.trim().replaceAll(ABBR_PLACEHOLDER, '.')
+            if (restored) allSentences.push(restored)
+            continue
+        }
+        const joined = raw.join('')
+        const leftover = line.substring(joined.length).trim()
+        if (leftover) raw.push(leftover)
+        for (const s of raw) {
+            const restored = s.trim().replaceAll(ABBR_PLACEHOLDER, '.')
+            if (restored) allSentences.push(restored)
+        }
+    }
+
     // Merge very short fragments (<30 chars) with the previous sentence
     const merged: string[] = []
-    for (const s of raw) {
-        const trimmed = s.trim()
-        if (!trimmed) continue
-        if (merged.length > 0 && trimmed.length < 30) {
-            merged[merged.length - 1] += ' ' + trimmed
+    for (const s of allSentences) {
+        if (merged.length > 0 && s.length < 30) {
+            merged[merged.length - 1] += ' ' + s
         } else {
-            merged.push(trimmed)
+            merged.push(s)
         }
     }
     return merged.filter(s => s.length > 0)
@@ -97,7 +127,7 @@ export function useTTS() {
     }, [])
 
     const releaseWakeLock = useCallback(() => {
-        wakeLockRef.current?.release().catch(() => {})
+        wakeLockRef.current?.release().catch(() => { })
         wakeLockRef.current = null
     }, [])
 

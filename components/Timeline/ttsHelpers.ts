@@ -8,29 +8,35 @@
  */
 export function stripMarkdownForTTS(md: string, title: string): string {
     let text = md
-    // Remove YAML frontmatter
+        // Remove YAML frontmatter
         .replace(/^---\s*\n[\s\S]*?\n---\s*\n?/m, '')
-    // Remove H1 (title line — we'll prepend it separately)
+        // Remove H1 (title line — we'll prepend it separately)
         .replace(/^# .+\n*/m, '')
-    // Remove image tags entirely
+        // Remove image tags entirely
         .replace(/!\[[^\]]*\]\([^)]*\)/g, '')
-    // Remove <PopImage ...> tags from markdown transform
+        // Remove <PopImage ...> tags from markdown transform
         .replace(/<PopImage[^>]*\/>/g, '')
-    // Convert links to text only
+        // Convert links to text only
         .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-    // Remove heading markers but keep text
+        // Remove heading markers but keep text
         .replace(/^#{1,6}\s+/gm, '')
-    // Remove bold/italic/strikethrough/code
+        // Remove bold/italic/strikethrough/code
         .replace(/[*_~`]+/g, '')
-    // Remove blockquote markers
+        // Remove blockquote markers
         .replace(/^>\s*/gm, '')
-    // Remove HTML tags
+        // Remove HTML tags
         .replace(/<[^>]+>/g, '')
-    // Remove table separators
-        .replace(/\|[-: ]+\|[-| :]+/g, '')
-    // Clean up table pipes
+        // Remove table header separator rows entirely
+        .replace(/^\|[-: |]+\|\s*$/gm, '')
+        // Convert table rows: each row becomes a sentence.
+        // Split cells on |, trim, filter empties, join with " — ", append period.
+        .replace(/^\|(.+)\|\s*$/gm, (_match, cells: string) => {
+            const parts = cells.split('|').map((c: string) => c.trim()).filter(Boolean)
+            return parts.join(' — ') + '.'
+        })
+        // Clean any remaining stray pipes
         .replace(/\|/g, ' ')
-    // Collapse whitespace
+        // Collapse whitespace
         .replace(/\n{3,}/g, '\n\n')
         .replace(/[ \t]+/g, ' ')
         .trim()

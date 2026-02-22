@@ -1,46 +1,54 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped
-with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Paradigm Threat
 
-## Getting Started
+**[paradigmthreat.net](https://paradigmthreat.net)**
 
-First, run the development server:
+An investigation into alternate Earth history, correlating mainstream (Scaligerian) chronology with Fomenko's New Chronology, Saturnian Cosmology, and other timeline systems. The site presents research articles, media, and an interactive timeline spanning from before creation through the modern era.
+
+## Features
+
+- **Interactive Timeline** — Browse events across multiple chronology systems with TTS narration and a Ken Burns slideshow with smooth crossfade transitions
+- **Content Library** — Research articles on cosmology, governance, historical events, and scientific anomalies served from a remote file server
+- **Chat** — Real-time discussion channels
+- **Search** — Full-text search across all content
+- **Image Gallery** — Global lightbox carousel for media across all pages
+- **Dark/Light Theme** — Toggle between display modes
+
+## Tech Stack
+
+- **Framework:** [Next.js](https://nextjs.org/) 14 (App Router)
+- **Styling:** Tailwind CSS + SCSS
+- **Deployment:** [Vercel](https://vercel.com)
+- **Analytics:** Vercel Analytics + Speed Insights
+- **Testing:** Cypress (component + E2E)
+
+## Related Repositories
+
+| Repository | Purpose |
+|---|---|
+| [paradigm-threat-timeline](https://github.com/clevertree/paradigm-threat-timeline) | Timeline data, content markdown, and media |
+| [paradigm-threat-files](https://github.com/clevertree/paradigm-threat-files) | Static file server content (articles, images) |
+
+## Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Opens on [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed
-on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited
-in `pages/api/index.ts`.
+| Variable | Default | Description |
+|---|---|---|
+| `NEXT_PUBLIC_TIMELINE_BASE_URL` | `https://clevertree.github.io/paradigm-threat-timeline` | Timeline data source |
+| `NEXT_PUBLIC_FILES_BASE_URL` | `https://files.paradigmthreat.net` | Static file server |
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated
-as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and
-load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions
-are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use
-the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme)
-from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+| Command | Description |
+|---|---|
+| `npm run dev` | Start dev server |
+| `npm run build` | Production build |
+| `npm run start` | Start production server (port 8081) |
+| `npm run cypress:open` | Open Cypress test runner |
