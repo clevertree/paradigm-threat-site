@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { X, Play, Pause, SkipBack, SkipForward } from 'lucide-react'
-import type { TTSState } from '@/lib/hooks/useTTS'
+import type { TTSState, SubtitleMode } from '@/lib/hooks/useTTS'
 import type { TimelineEntry } from '@/components/TimelineContext'
 
 const KEN_BURNS = [
@@ -28,6 +28,7 @@ interface TTSSlideshowOverlayProps {
     onSetRate: (r: number) => void
     onSetLangFilter: (l: string) => void
     onSetLocalOnly: (b: boolean) => void
+    onSetSubtitleMode: (m: SubtitleMode) => void
     events: TimelineEntry[]
     baseUrl: string
     /** Index into `events` where TTS started */
@@ -48,6 +49,7 @@ export function TTSSlideshowOverlay({
     onSetRate,
     onSetLangFilter,
     onSetLocalOnly,
+    onSetSubtitleMode,
     events,
     baseUrl,
     startEventIndex,
@@ -56,8 +58,12 @@ export function TTSSlideshowOverlay({
     const [showControls, setShowControls] = useState(true)
     const lastInteractionRef = useRef(Date.now())
     const [currentImgIndex, setCurrentImgIndex] = useState(0)
+    const [animCycle, setAnimCycle] = useState(0)  // 0, 1, 2 — three animation passes per image
+    const ANIM_PASSES = 3
     const prevImgIndexRef = useRef(-1)
     const [fadeIn, setFadeIn] = useState(true)
+    const scrollContainerRef = useRef<HTMLDivElement>(null)
+    const activeSentenceRef = useRef<HTMLParagraphElement>(null)
 
     // Build flat image list from startEventIndex through all events
     const allImages = useMemo<SlideshowImage[]>(() => {
@@ -90,25 +96,34 @@ export function TTSSlideshowOverlay({
         if (imgIdx != null) {
             prevImgIndexRef.current = currentImgIndex
             setCurrentImgIndex(imgIdx)
+            setAnimCycle(0)
         }
     }, [ttsState.currentSegmentIndex, ttsState.segments, eventToFirstImgIndex, currentImgIndex])
 
-    // Cycle images on interval; duration = 8s / rate (faster speech = faster images)
+    // Cycle animations on interval; each image gets ANIM_PASSES different animations before advancing
     const intervalMs = Math.round(8000 / ttsState.rate)
     useEffect(() => {
-        if (allImages.length <= 1) return
+        if (allImages.length === 0) return
         const t = setInterval(() => {
-            setCurrentImgIndex(i => (i + 1) % allImages.length)
+            setAnimCycle(prev => {
+                const next = prev + 1
+                if (next >= ANIM_PASSES) {
+                    // Advance to next image
+                    setCurrentImgIndex(i => (i + 1) % allImages.length)
+                    return 0
+                }
+                return next
+            })
         }, intervalMs)
         return () => clearInterval(t)
-    }, [allImages.length, intervalMs])
+    }, [allImages.length, intervalMs, ANIM_PASSES])
 
-    // Cross-fade: trigger opacity reset on image change
+    // Cross-fade: trigger opacity reset on image or animation change
     useEffect(() => {
         setFadeIn(false)
         const t = setTimeout(() => setFadeIn(true), 50)
         return () => clearTimeout(t)
-    }, [currentImgIndex])
+    }, [currentImgIndex, animCycle])
 
     // Auto-hide controls after 3s idle
     useEffect(() => {
@@ -135,11 +150,21 @@ export function TTSSlideshowOverlay({
         return () => window.removeEventListener('keydown', handler)
     }, [onStop, onPause, onNext, onPrev])
 
+    // Auto-scroll to active sentence in scroll mode
+    useEffect(() => {
+        if (ttsState.subtitleMode !== 'scroll') return
+        activeSentenceRef.current?.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+        })
+    }, [ttsState.currentSentenceIndex, ttsState.subtitleMode])
+
     if (ttsState.currentSegmentIndex < 0) return null
 
     const currentSeg = ttsState.segments[ttsState.currentSegmentIndex]
     const currentImg = allImages[currentImgIndex]
-    const animClass = KEN_BURNS[currentImgIndex % KEN_BURNS.length]
+    // Pick a different animation for each pass (offset by image index so sequential images don't repeat)
+    const animClass = KEN_BURNS[(currentImgIndex + animCycle) % KEN_BURNS.length]
     const slideshowDuration = `${Math.round(intervalMs / 1000)}s`
 
     // Filtered voices for dropdowns
@@ -165,7 +190,7 @@ export function TTSSlideshowOverlay({
             <div className="absolute inset-0">
                 {currentImg ? (
                     <div
-                        key={currentImgIndex}
+                        key={`${currentImgIndex}-${animCycle}`}
                         className="absolute inset-0"
                         style={{ '--slideshow-duration': slideshowDuration } as React.CSSProperties}
                     >
@@ -191,12 +216,37 @@ export function TTSSlideshowOverlay({
                 <div className="absolute inset-0 bg-black/40" />
             </div>
 
-            {/* ── Subtitle ── */}
-            {ttsState.currentChunkText && (
+            {/* ── Subtitle / Transcription ── */}
+            {ttsState.sentences.length > 0 && (
                 <div className="absolute bottom-28 inset-x-0 z-10 flex justify-center px-6 pointer-events-none">
-                    <div className="bg-black/60 backdrop-blur-sm text-white text-lg md:text-xl font-medium px-8 py-4 rounded-xl max-w-4xl text-center leading-relaxed drop-shadow-lg">
-                        {ttsState.currentChunkText}
-                    </div>
+                    {ttsState.subtitleMode === 'caption' ? (
+                        /* Caption mode: single current sentence */
+                        <div className="bg-black/60 backdrop-blur-sm text-white text-lg md:text-xl font-medium px-8 py-4 rounded-xl max-w-4xl text-center leading-relaxed drop-shadow-lg">
+                            {ttsState.sentences[Math.max(0, ttsState.currentSentenceIndex)] ?? ''}
+                        </div>
+                    ) : (
+                        /* Scroll mode: all sentences, auto-scroll to current */
+                        <div
+                            ref={scrollContainerRef}
+                            className="bg-black/60 backdrop-blur-sm rounded-xl max-w-4xl w-full max-h-[25vh] overflow-y-auto px-8 py-4 pointer-events-auto scroll-smooth"
+                        >
+                            {ttsState.sentences.map((s, i) => (
+                                <p
+                                    key={i}
+                                    ref={i === ttsState.currentSentenceIndex ? activeSentenceRef : undefined}
+                                    className={`text-base md:text-lg leading-relaxed transition-colors duration-300 mb-1 ${
+                                        i === ttsState.currentSentenceIndex
+                                            ? 'text-white font-semibold'
+                                            : i < ttsState.currentSentenceIndex
+                                                ? 'text-white/30'
+                                                : 'text-white/50'
+                                    }`}
+                                >
+                                    {s}
+                                </p>
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
 
@@ -291,6 +341,16 @@ export function TTSSlideshowOverlay({
                         className={`bg-black/40 backdrop-blur-md border rounded-lg px-3 py-2 text-[10px] uppercase font-bold transition-colors ${ttsState.localOnly ? 'border-indigo-500 text-indigo-400' : 'border-white/10 text-white/40'}`}
                     >
                         Local only
+                    </button>
+
+                    <button
+                        onClick={e => {
+                            e.stopPropagation()
+                            onSetSubtitleMode(ttsState.subtitleMode === 'caption' ? 'scroll' : 'caption')
+                        }}
+                        className={`bg-black/40 backdrop-blur-md border rounded-lg px-3 py-2 text-[10px] uppercase font-bold transition-colors ${ttsState.subtitleMode === 'scroll' ? 'border-indigo-500 text-indigo-400' : 'border-white/10 text-white/40'}`}
+                    >
+                        {ttsState.subtitleMode === 'caption' ? 'Caption' : 'Transcript'}
                     </button>
 
                     <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">

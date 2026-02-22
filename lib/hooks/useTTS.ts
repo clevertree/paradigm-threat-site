@@ -10,6 +10,8 @@ export interface TTSSegment {
     fetchText?: () => Promise<string>
 }
 
+export type SubtitleMode = 'caption' | 'scroll'
+
 export interface TTSState {
     isPlaying: boolean
     currentSegmentIndex: number
@@ -18,14 +20,44 @@ export interface TTSState {
     rate: number
     langFilter: string
     localOnly: boolean
-    /** The chunk of text currently being spoken (for subtitle display) */
+    /** The sentence currently being spoken */
     currentChunkText: string | null
+    /** All sentences for the current segment */
+    sentences: string[]
+    /** Index of the sentence currently being spoken */
+    currentSentenceIndex: number
+    /** Display mode: caption (1-2 sentences) or scroll (all text, auto-scrolling) */
+    subtitleMode: SubtitleMode
 }
 
 const LS_VOICE = 'tl-tts-voice'
 const LS_RATE = 'tl-tts-rate'
 const LS_LANG = 'tl-tts-lang'
 const LS_LOCAL = 'tl-tts-local-only'
+const LS_SUBTITLE = 'tl-tts-subtitle'
+
+/** Split text into speakable sentences, merging very short fragments */
+function splitSentences(text: string): string[] {
+    // Split on sentence-ending punctuation, keeping the punctuation attached
+    const raw = text.match(/[^.!?]*[.!?]+[\s]*/g)
+    if (!raw) return text.trim() ? [text.trim()] : []
+    // If there's leftover text without terminal punctuation, append it
+    const joined = raw.join('')
+    const leftover = text.substring(joined.length).trim()
+    if (leftover) raw.push(leftover)
+    // Merge very short fragments (<30 chars) with the previous sentence
+    const merged: string[] = []
+    for (const s of raw) {
+        const trimmed = s.trim()
+        if (!trimmed) continue
+        if (merged.length > 0 && trimmed.length < 30) {
+            merged[merged.length - 1] += ' ' + trimmed
+        } else {
+            merged.push(trimmed)
+        }
+    }
+    return merged.filter(s => s.length > 0)
+}
 
 export function useTTS() {
     const [state, setState] = useState<TTSState>({
@@ -37,6 +69,9 @@ export function useTTS() {
         langFilter: 'en',
         localOnly: false,
         currentChunkText: null,
+        sentences: [],
+        currentSentenceIndex: -1,
+        subtitleMode: 'caption',
     })
 
     const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([])
@@ -45,8 +80,8 @@ export function useTTS() {
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
     const cancelTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
     const isPlayingRef = useRef(false)
-    const currentChunkIndexRef = useRef(0)
-    // Keep latest voice/rate in refs for use inside speak()
+    const currentSentenceIdxRef = useRef(0)
+    const sentencesRef = useRef<string[]>([])
     const voiceRef = useRef<SpeechSynthesisVoice | null>(null)
     const rateRef = useRef(1.0)
 
@@ -79,11 +114,13 @@ export function useTTS() {
         const savedRate = localStorage.getItem(LS_RATE)
         const savedLang = localStorage.getItem(LS_LANG)
         const savedLocal = localStorage.getItem(LS_LOCAL)
+        const savedSubtitle = localStorage.getItem(LS_SUBTITLE)
         setState(prev => ({
             ...prev,
             rate: savedRate ? parseFloat(savedRate) : prev.rate,
             langFilter: savedLang ?? prev.langFilter,
-            localOnly: savedLocal === 'true' ? true : savedLocal === 'false' ? false : prev.localOnly,
+            localOnly: savedLocal === 'true',
+            subtitleMode: (savedSubtitle === 'scroll' ? 'scroll' : 'caption') as SubtitleMode,
         }))
     }, [])
 
@@ -134,42 +171,45 @@ export function useTTS() {
         if (cancelTimeoutRef.current) clearTimeout(cancelTimeoutRef.current)
         synth?.cancel()
         isPlayingRef.current = false
-        currentChunkIndexRef.current = 0
-        setState(prev => ({ ...prev, isPlaying: false, currentSegmentIndex: -1, currentChunkText: null }))
+        currentSentenceIdxRef.current = 0
+        sentencesRef.current = []
+        setState(prev => ({
+            ...prev,
+            isPlaying: false,
+            currentSegmentIndex: -1,
+            currentChunkText: null,
+            sentences: [],
+            currentSentenceIndex: -1,
+        }))
     }, [])
 
+    /**
+     * Speak a segment sentence-by-sentence.
+     * Each sentence is its own SpeechSynthesisUtterance so that onstart/onend
+     * reliably track position (no reliance on the unreliable onboundary event).
+     */
     const speak = useCallback(async (
-        index: number,
+        segIndex: number,
         segments: TTSSegment[],
-        chunkIndex: number = 0
+        sentenceIndex: number = 0
     ) => {
         const synth = synthRef.current
-        if (!synth || !segments[index]) { stop(); return }
+        if (!synth || !segments[segIndex]) { stop(); return }
         if (!isPlayingRef.current) return
 
-        if (chunkIndex === 0) {
-            setState(prev => ({ ...prev, currentSegmentIndex: index, isPlaying: true }))
-        }
-        currentChunkIndexRef.current = chunkIndex
+        const seg = segments[segIndex]
 
-        // Lazy-load text if needed
-        const seg = segments[index]
-        let rawText = seg.text ?? ''
-        if (!rawText && seg.fetchText) {
-            try {
-                rawText = await seg.fetchText()
-                // Cache on the segment so we don't refetch
-                seg.text = rawText
-            } catch {
-                rawText = ''
+        // On first sentence of a segment: load text and split into sentences
+        if (sentenceIndex === 0) {
+            setState(prev => ({ ...prev, currentSegmentIndex: segIndex, isPlaying: true }))
+
+            let rawText = seg.text ?? ''
+            if (!rawText && seg.fetchText) {
+                try {
+                    rawText = await seg.fetchText()
+                    seg.text = rawText // cache
+                } catch { rawText = '' }
             }
-        }
-        if (!isPlayingRef.current) return
-
-        if (cancelTimeoutRef.current) clearTimeout(cancelTimeoutRef.current)
-        synth.cancel()
-
-        cancelTimeoutRef.current = setTimeout(() => {
             if (!isPlayingRef.current) return
 
             const clean = rawText
@@ -177,40 +217,47 @@ export function useTTS() {
                 .replace(/\n+/g, ' ')
                 .replace(/\s+/g, ' ')
                 .trim()
+            const full = clean
+            const sentences = splitSentences(full)
+            sentencesRef.current = sentences
+            setState(prev => ({ ...prev, sentences, currentSentenceIndex: 0 }))
+        }
 
-            const MAX = 2800
-            const full = chunkIndex === 0 && seg.title ? `${seg.title}. ${clean}` : clean
-            const chunks: string[] = []
-            let remaining = full
-            while (remaining.length > 0) {
-                if (remaining.length <= MAX) { chunks.push(remaining); break }
-                let split = remaining.lastIndexOf('.', MAX)
-                if (split === -1 || split < MAX * 0.5) split = remaining.lastIndexOf(' ', MAX)
-                if (split === -1) split = MAX
-                chunks.push(remaining.substring(0, split + 1).trim())
-                remaining = remaining.substring(split + 1).trim()
+        const sentences = sentencesRef.current
+        if (sentenceIndex >= sentences.length) {
+            // All sentences spoken — advance to next segment
+            if (segIndex + 1 < segments.length) {
+                speak(segIndex + 1, segments, 0)
+            } else {
+                stop()
             }
+            return
+        }
 
-            if (chunkIndex >= chunks.length) {
-                if (index + 1 < segments.length) speak(index + 1, segments, 0)
-                else stop()
-                return
-            }
+        currentSentenceIdxRef.current = sentenceIndex
 
-            const chunkText = chunks[chunkIndex]
-            setState(prev => ({ ...prev, currentChunkText: chunkText }))
+        if (cancelTimeoutRef.current) clearTimeout(cancelTimeoutRef.current)
+        synth.cancel()
 
-            const utt = new SpeechSynthesisUtterance(chunkText)
+        // Small delay after cancel to let the synth settle
+        cancelTimeoutRef.current = setTimeout(() => {
+            if (!isPlayingRef.current) return
+
+            const text = sentences[sentenceIndex]
+            setState(prev => ({
+                ...prev,
+                currentSentenceIndex: sentenceIndex,
+                currentChunkText: text,
+            }))
+
+            const utt = new SpeechSynthesisUtterance(text)
             if (voiceRef.current) utt.voice = voiceRef.current
             utt.rate = rateRef.current
             utt.pitch = 1.0
             utt.volume = 1.0
 
-            utt.onstart = () => {
-                setState(prev => ({ ...prev, currentSegmentIndex: index, isPlaying: true, currentChunkText: chunkText }))
-            }
             utt.onend = () => {
-                if (isPlayingRef.current) speak(index, segments, chunkIndex + 1)
+                if (isPlayingRef.current) speak(segIndex, segments, sentenceIndex + 1)
             }
             utt.onerror = (e) => {
                 if (e.error !== 'interrupted' && e.error !== 'canceled') {
@@ -238,12 +285,10 @@ export function useTTS() {
             isPlayingRef.current = false
             synth.cancel()
             setState(prev => ({ ...prev, isPlaying: false }))
-        } else {
-            if (state.currentSegmentIndex !== -1) {
-                isPlayingRef.current = true
-                setState(prev => ({ ...prev, isPlaying: true }))
-                speak(state.currentSegmentIndex, state.segments, currentChunkIndexRef.current)
-            }
+        } else if (state.currentSegmentIndex !== -1) {
+            isPlayingRef.current = true
+            setState(prev => ({ ...prev, isPlaying: true }))
+            speak(state.currentSegmentIndex, state.segments, currentSentenceIdxRef.current)
         }
     }, [state.isPlaying, state.currentSegmentIndex, state.segments, speak])
 
@@ -283,5 +328,14 @@ export function useTTS() {
         setState(prev => ({ ...prev, localOnly }))
     }, [])
 
-    return { state, availableVoices, play, pause, stop, next, prev, setVoice, setRate, setLangFilter, setLocalOnly }
+    const setSubtitleMode = useCallback((mode: SubtitleMode) => {
+        localStorage.setItem(LS_SUBTITLE, mode)
+        setState(prev => ({ ...prev, subtitleMode: mode }))
+    }, [])
+
+    return {
+        state, availableVoices,
+        play, pause, stop, next, prev,
+        setVoice, setRate, setLangFilter, setLocalOnly, setSubtitleMode,
+    }
 }

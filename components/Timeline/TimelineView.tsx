@@ -477,6 +477,7 @@ export function TimelineView() {
           onSetRate={tts.setRate}
           onSetLangFilter={tts.setLangFilter}
           onSetLocalOnly={tts.setLocalOnly}
+          onSetSubtitleMode={tts.setSubtitleMode}
           events={events}
           baseUrl={baseUrl}
           startEventIndex={ttsStartIndexRef.current}
