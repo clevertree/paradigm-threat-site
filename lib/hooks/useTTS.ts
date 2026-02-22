@@ -84,6 +84,22 @@ export function useTTS() {
     const sentencesRef = useRef<string[]>([])
     const voiceRef = useRef<SpeechSynthesisVoice | null>(null)
     const rateRef = useRef(1.0)
+    const wakeLockRef = useRef<WakeLockSentinel | null>(null)
+
+    /** Request screen wake lock (keeps screen on during playback) */
+    const acquireWakeLock = useCallback(async () => {
+        try {
+            if ('wakeLock' in navigator && !wakeLockRef.current) {
+                wakeLockRef.current = await navigator.wakeLock.request('screen')
+                wakeLockRef.current.addEventListener('release', () => { wakeLockRef.current = null })
+            }
+        } catch { /* user denied or not supported */ }
+    }, [])
+
+    const releaseWakeLock = useCallback(() => {
+        wakeLockRef.current?.release().catch(() => {})
+        wakeLockRef.current = null
+    }, [])
 
     // Initialize synth reference on client only
     useEffect(() => {
@@ -160,6 +176,15 @@ export function useTTS() {
         }
     }, [])
 
+    // Re-acquire wake lock when tab becomes visible again (browser auto-releases on hide)
+    useEffect(() => {
+        const onVisChange = () => {
+            if (document.visibilityState === 'visible' && isPlayingRef.current) acquireWakeLock()
+        }
+        document.addEventListener('visibilitychange', onVisChange)
+        return () => document.removeEventListener('visibilitychange', onVisChange)
+    }, [acquireWakeLock])
+
     // Keep refs in sync
     useEffect(() => {
         voiceRef.current = state.voice
@@ -173,6 +198,7 @@ export function useTTS() {
         isPlayingRef.current = false
         currentSentenceIdxRef.current = 0
         sentencesRef.current = []
+        releaseWakeLock()
         setState(prev => ({
             ...prev,
             isPlaying: false,
@@ -274,6 +300,7 @@ export function useTTS() {
 
     const play = useCallback((segments: TTSSegment[], startIndex = 0) => {
         isPlayingRef.current = true
+        acquireWakeLock()
         setState(prev => ({ ...prev, segments, currentSegmentIndex: startIndex, isPlaying: true }))
         speak(startIndex, segments, 0)
     }, [speak])
@@ -284,9 +311,11 @@ export function useTTS() {
         if (state.isPlaying) {
             isPlayingRef.current = false
             synth.cancel()
+            releaseWakeLock()
             setState(prev => ({ ...prev, isPlaying: false }))
         } else if (state.currentSegmentIndex !== -1) {
             isPlayingRef.current = true
+            acquireWakeLock()
             setState(prev => ({ ...prev, isPlaying: true }))
             speak(state.currentSegmentIndex, state.segments, currentSentenceIdxRef.current)
         }
