@@ -171,17 +171,17 @@ pre * {
 }
 
 .animate-ken-burns-zoom-in {
-  animation: ken-burns-zoom-in var(--slideshow-duration, 8s) linear infinite;
+  animation: ken-burns-zoom-in var(--slideshow-duration, 8s) ease-in-out forwards;
 }
 
 .animate-ken-burns-zoom-out {
-  animation: ken-burns-zoom-out var(--slideshow-duration, 8s) linear infinite;
+  animation: ken-burns-zoom-out var(--slideshow-duration, 8s) ease-in-out forwards;
 }
 
 .animate-ken-burns-pan-right {
-  animation: ken-burns-pan-right var(--slideshow-duration, 8s) linear infinite;
+  animation: ken-burns-pan-right var(--slideshow-duration, 8s) ease-in-out forwards;
 }
 
 .animate-ken-burns-pan-left {
-  animation: ken-burns-pan-left var(--slideshow-duration, 8s) linear infinite;
+  animation: ken-burns-pan-left var(--slideshow-duration, 8s) ease-in-out forwards;
 }

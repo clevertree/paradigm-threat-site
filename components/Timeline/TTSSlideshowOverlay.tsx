@@ -62,9 +62,11 @@ export function TTSSlideshowOverlay({
     const ANIM_PASSES = 3
     const prevImgIndexRef = useRef(-1)
     // Dual-layer crossfade: layer A and layer B alternate as foreground
-    const [layerA, setLayerA] = useState<{ imgIndex: number; animCycle: number } | null>({ imgIndex: 0, animCycle: 0 })
-    const [layerB, setLayerB] = useState<{ imgIndex: number; animCycle: number } | null>(null)
+    // Both layers always have content — never null — to prevent black flashes
+    const [layerA, setLayerA] = useState<{ imgIndex: number; animCycle: number }>({ imgIndex: 0, animCycle: 0 })
+    const [layerB, setLayerB] = useState<{ imgIndex: number; animCycle: number }>({ imgIndex: 0, animCycle: 0 })
     const [activeFront, setActiveFront] = useState<'A' | 'B'>('A')  // which layer is currently fading in
+    const preloadedUrls = useRef(new Set<string>())  // track preloaded image URLs
     const scrollContainerRef = useRef<HTMLDivElement>(null)
     const activeSentenceRef = useRef<HTMLParagraphElement>(null)
 
@@ -121,19 +123,39 @@ export function TTSSlideshowOverlay({
         return () => clearInterval(t)
     }, [allImages.length, intervalMs, ANIM_PASSES])
 
+// Preload the next few images so crossfade never reveals an unloaded src
+    useEffect(() => {
+        if (allImages.length === 0) return
+        // Preload current + next 2 images
+        for (let offset = 0; offset <= 2; offset++) {
+            const idx = (currentImgIndex + offset) % allImages.length
+            const url = allImages[idx]?.src
+            if (url && !preloadedUrls.current.has(url)) {
+                const img = new Image()
+                img.src = url
+                preloadedUrls.current.add(url)
+            }
+        }
+    }, [currentImgIndex, allImages])
+
     // Cross-fade: push new image/anim onto the back layer, then flip it to front
+    // Uses double-rAF to guarantee the browser has painted the hidden layer before we transition
     useEffect(() => {
         const payload = { imgIndex: currentImgIndex, animCycle }
+        let rafId1: number, rafId2: number
         if (activeFront === 'A') {
             setLayerB(payload)
-            // Small delay so the browser paints the new layer at opacity 0 first
-            const t = setTimeout(() => setActiveFront('B'), 60)
-            return () => clearTimeout(t)
+            // Double-rAF: first frame paints the new layer at opacity 0, second frame triggers crossfade
+            rafId1 = requestAnimationFrame(() => {
+                rafId2 = requestAnimationFrame(() => setActiveFront('B'))
+            })
         } else {
             setLayerA(payload)
-            const t = setTimeout(() => setActiveFront('A'), 60)
-            return () => clearTimeout(t)
+            rafId1 = requestAnimationFrame(() => {
+                rafId2 = requestAnimationFrame(() => setActiveFront('A'))
+            })
         }
+        return () => { cancelAnimationFrame(rafId1); cancelAnimationFrame(rafId2) }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentImgIndex, animCycle])
 
@@ -178,19 +200,19 @@ export function TTSSlideshowOverlay({
     const slideshowDuration = `${Math.round(intervalMs / 1000)}s`
 
     // Helper to render a slideshow layer (used for A/B crossfade)
-    const renderLayer = (layer: { imgIndex: number; animCycle: number } | null, isFront: boolean) => {
-        if (!layer) return null
+    // Both layers are ALWAYS rendered (never null) to prevent black flashes
+    const renderLayer = (layer: { imgIndex: number; animCycle: number }, isFront: boolean, layerId: string) => {
         const img = allImages[layer.imgIndex]
-        if (!img) return null
+        if (!img) return <div className="absolute inset-0" />
         const anim = KEN_BURNS[(layer.imgIndex + layer.animCycle) % KEN_BURNS.length]
         return (
             <div
-                key={`layer-${layer.imgIndex}-${layer.animCycle}`}
+                key={`${layerId}-${layer.imgIndex}-${layer.animCycle}`}
                 className="absolute inset-0"
                 style={{
                     '--slideshow-duration': slideshowDuration,
                     opacity: isFront ? 1 : 0,
-                    transition: 'opacity 1.2s ease-in-out',
+                    transition: 'opacity 1.5s ease-in-out',
                     zIndex: isFront ? 2 : 1,
                 } as React.CSSProperties}
             >
@@ -225,8 +247,8 @@ export function TTSSlideshowOverlay({
             <div className="absolute inset-0">
                 {allImages.length > 0 ? (
                     <>
-                        {renderLayer(layerA, activeFront === 'A')}
-                        {renderLayer(layerB, activeFront === 'B')}
+                        {renderLayer(layerA, activeFront === 'A', 'A')}
+                        {renderLayer(layerB, activeFront === 'B', 'B')}
                     </>
                 ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-slate-900 to-slate-950" />
