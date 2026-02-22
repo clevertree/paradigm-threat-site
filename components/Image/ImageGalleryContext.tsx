@@ -2,14 +2,14 @@
 
 import React, { createContext, useContext, useState, useCallback, useRef, useEffect, useMemo } from 'react'
 
-interface GalleryImage {
+export interface GalleryImage {
     src: string
     alt?: string
     children?: React.ReactNode
     highResSrc?: string
 }
 
-interface ImageGalleryContextType {
+export interface ImageGalleryContextType {
     images: GalleryImage[]
     registerImage: (img: GalleryImage) => void
     unregisterImage: (src: string) => void
@@ -157,7 +157,7 @@ function GalleryImageItem({
     )
 }
 
-function ImageGalleryOverlay() {
+export function ImageGalleryOverlay() {
     const { images, currentIndex, setCurrentIndex, isOpen, setIsOpen } = useImageGallery()
     const [direction, setDirection] = useState(0)
     const [remoteCaption, setRemoteCaption] = useState<string | null>(null)

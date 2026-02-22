@@ -60,13 +60,13 @@ export function MarkdownCarousel({
       <div className="flex-1 min-h-0 overflow-y-scroll overflow-x-hidden px-4 py-4 overscroll-contain touch-pan-y" style={{ minHeight: 0, WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' } as React.CSSProperties}>
         {currentEntry ? (
           <>
-            <h2 className={`font-semibold text-slate-900 dark:text-slate-100 mb-4 text-left ${currentEntry.type === 'article' ? 'text-sm' : 'text-lg'}`}>
+            <h2 className={`font-semibold text-slate-900 dark:text-slate-100 mb-4 text-left select-text ${currentEntry.type === 'article' ? 'text-sm' : 'text-lg'}`}>
               {currentEntry.title}
             </h2>
             {loading ? (
               <div className="text-slate-500 text-sm text-left">Loading…</div>
             ) : mdContent ? (
-              <div className={`prose dark:prose-invert max-w-none text-left ${currentEntry.type === 'article' ? 'prose-sm text-sm' : 'prose-sm'}`}>
+              <div className={`prose dark:prose-invert max-w-none text-left select-text ${currentEntry.type === 'article' ? 'prose-sm text-sm' : 'prose-sm'}`}>
                 <Markdown
                   options={{
                     overrides: {

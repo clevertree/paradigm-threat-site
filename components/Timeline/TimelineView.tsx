@@ -7,6 +7,7 @@ import { VisTimelineView } from './VisTimelineView'
 import { TimelineJSView } from './TimelineJSView'
 import { CustomTimelineView } from './CustomTimelineView'
 import { MarkdownCarousel } from './MarkdownCarousel'
+import { TimelineGalleryProvider } from './TimelineGalleryProvider'
 import { formatDateRange } from './utils'
 import type { TimelineEntry } from '@/components/TimelineContext'
 
@@ -43,11 +44,26 @@ function getStoredLeftPct(): number | null {
 export function TimelineView() {
   const { entries, events, loading, error, baseUrl } = useTimeline()
   const [fullPage, setFullPage] = useState(false)
+  const initialEventIdRef = useRef<string | null>(null)
+
+  // Read ?fullscreen=1 and ?event=<id> from URL on mount
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('fullscreen') === '1') setFullPage(true)
+    const evtId = params.get('event')
+    if (evtId) initialEventIdRef.current = evtId
+  }, [])
 
   useEffect(() => {
     if (!fullPage) return
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setFullPage(false)
+      if (e.key === 'Escape') {
+        setFullPage(false)
+        const params = new URLSearchParams(window.location.search)
+        params.delete('fullscreen')
+        const q = params.toString()
+        window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
+      }
     }
     document.addEventListener('keydown', onKeyDown)
     document.body.style.overflow = 'hidden'
@@ -57,7 +73,20 @@ export function TimelineView() {
     }
   }, [fullPage])
 
-  const onToggleFullscreen = useCallback(() => setFullPage((p) => !p), [])
+  const onToggleFullscreen = useCallback(() => {
+    setFullPage((p) => {
+      const next = !p
+      const params = new URLSearchParams(window.location.search)
+      if (next) {
+        params.set('fullscreen', '1')
+      } else {
+        params.delete('fullscreen')
+      }
+      const q = params.toString()
+      window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
+      return next
+    })
+  }, [])
   const [viewMode, setViewMode] = useState<TimelineViewMode>('custom')
   const [expansionMode, setExpansionMode] = useState<ExpansionMode>('all')
   const [selected, setSelected] = useState<TimelineEntry | null>(null)
@@ -77,7 +106,9 @@ export function TimelineView() {
 
   useEffect(() => {
     if (events.length > 0 && selected === null) {
-      setSelected(events[0])
+      const urlId = initialEventIdRef.current
+      const target = urlId ? (events.find((e) => e.id === urlId) ?? events[0]) : events[0]
+      setSelected(target ?? null)
     }
   }, [events, selected])
 
@@ -85,6 +116,10 @@ export function TimelineView() {
 
   const handleSelectEvent = useCallback((evt: TimelineEntry) => {
     setSelected(evt)
+    const params = new URLSearchParams(window.location.search)
+    params.set('event', evt.id)
+    const q = params.toString()
+    window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
   }, [])
 
   const handleSeparatorMouseDown = useCallback((e: React.MouseEvent) => {
@@ -177,8 +212,8 @@ export function TimelineView() {
   return (
     <div className={
       fullPage
-        ? 'fixed inset-0 z-[110] flex flex-col bg-white dark:bg-slate-950 overflow-hidden p-4'
-        : 'flex flex-col flex-1 min-h-0 w-full overflow-hidden max-h-[80vh] min-h-[80vh]'
+        ? 'fixed inset-0 z-[110] flex flex-col bg-white dark:bg-slate-950 overflow-hidden p-4 select-none'
+        : 'flex flex-col flex-1 min-h-0 w-full overflow-hidden max-h-[80vh] min-h-[80vh] select-none'
     }>
       {/* Mobile: always show when not fullscreen; when fullscreen, show only when viewport < 1000px */}
       <div className={`flex flex-col flex-1 min-h-0 min-w-0 ${fullPage ? 'min-[1000px]:hidden' : ''}`}>
@@ -214,12 +249,19 @@ export function TimelineView() {
           </div>
         </div>
         <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
-          <MarkdownCarousel
+          <TimelineGalleryProvider
             events={events}
             baseUrl={baseUrl}
-            selectedId={selected?.id ?? null}
+            selectedEventId={selected?.id ?? null}
             onSelectEvent={handleSelectEvent}
-          />
+          >
+            <MarkdownCarousel
+              events={events}
+              baseUrl={baseUrl}
+              selectedId={selected?.id ?? null}
+              onSelectEvent={handleSelectEvent}
+            />
+          </TimelineGalleryProvider>
         </div>
       </div>
 
@@ -315,12 +357,19 @@ export function TimelineView() {
         </button>
 
         <div className="flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden" style={{ minHeight: 0 }}>
-          <MarkdownCarousel
+          <TimelineGalleryProvider
             events={events}
             baseUrl={baseUrl}
-            selectedId={selected?.id ?? null}
+            selectedEventId={selected?.id ?? null}
             onSelectEvent={handleSelectEvent}
-          />
+          >
+            <MarkdownCarousel
+              events={events}
+              baseUrl={baseUrl}
+              selectedId={selected?.id ?? null}
+              onSelectEvent={handleSelectEvent}
+            />
+          </TimelineGalleryProvider>
         </div>
       </div>
     </div>
