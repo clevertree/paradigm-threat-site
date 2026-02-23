@@ -276,9 +276,7 @@ export function TTSSlideshowOverlay({
         .filter(v => ttsState.langFilter === 'all' || v.lang.startsWith(ttsState.langFilter))
         .filter(v => !ttsState.localOnly || v.localService)
 
-    const piperLanguages = Array.from(new Set(availablePiperVoices.map(v => v.lang))).sort()
     const filteredPiperVoices = availablePiperVoices
-        .filter(v => !ttsState.piperLang || v.lang === ttsState.piperLang)
 
     // Current event for jump select
     const segmentEvents = ttsState.segments.map(seg => {
@@ -453,19 +451,6 @@ export function TTSSlideshowOverlay({
                     {ttsState.provider === 'piper' ? (
                         <>
                             <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
-                                <span className="text-white/40 text-[10px] uppercase font-bold">Lang</span>
-                                <select
-                                    value={ttsState.piperLang}
-                                    onChange={e => { e.stopPropagation(); onSetPiperLang(e.target.value) }}
-                                    className="bg-transparent text-white text-xs outline-none cursor-pointer"
-                                >
-                                    {piperLanguages.map(l => (
-                                        <option key={l} value={l} className="bg-slate-900">{l}</option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
                                 <span className="text-white/40 text-[10px] uppercase font-bold">Voice</span>
                                 <select
                                     value={ttsState.piperVoiceId}
@@ -554,25 +539,6 @@ export function TTSSlideshowOverlay({
                     >
                         {ttsState.subtitleMode === 'caption' ? 'Caption' : 'Transcript'}
                     </button>
-
-                    <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
-                        <span className="text-white/40 text-[10px] uppercase font-bold">Voice</span>
-                        <select
-                            value={ttsState.voice?.name ?? ''}
-                            onChange={e => {
-                                e.stopPropagation()
-                                const v = availableVoices.find(v => v.name === e.target.value)
-                                if (v) onSetVoice(v)
-                            }}
-                            className="bg-transparent text-white text-xs outline-none cursor-pointer max-w-[140px] truncate"
-                        >
-                            {filteredVoices.map(v => (
-                                <option key={v.name} value={v.name} className="bg-slate-900">
-                                    {v.name.replace('Google ', '')} {v.localService ? '🏠' : '🌐'}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
 
                     <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
                         <span className="text-white/40 text-[10px] uppercase font-bold">Speed</span>
