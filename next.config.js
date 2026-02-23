@@ -45,8 +45,19 @@ const nextConfig = {
   sassOptions: {
     includePaths: [path.join(__dirname, 'app')]
   },
-  // Optionally, add any other Next.js config below
-  reactStrictMode: true
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Permissions-Policy',
+            value: 'screen-wake-lock=*',
+          },
+        ],
+      },
+    ]
+  },
 }
 
 // Merge MDX config with Next.js config

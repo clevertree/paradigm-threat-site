@@ -10,6 +10,14 @@ export interface TTSSegment {
     fetchText?: () => Promise<string>
 }
 
+export type TTSProvider = 'piper' | 'webSpeech'
+
+export interface PiperVoice {
+    id: string
+    name: string
+    lang: string
+}
+
 export type SubtitleMode = 'caption' | 'scroll'
 
 export interface TTSState {
@@ -20,6 +28,12 @@ export interface TTSState {
     rate: number
     langFilter: string
     localOnly: boolean
+    provider: TTSProvider
+    piperVoiceId: string
+    piperLang: string
+    quoteVoiceId: string
+    speakerMapInput: string
+    error: string | null
     /** The sentence currently being spoken */
     currentChunkText: string | null
     /** All sentences for the current segment */
@@ -35,6 +49,11 @@ const LS_RATE = 'tl-tts-rate'
 const LS_LANG = 'tl-tts-lang'
 const LS_LOCAL = 'tl-tts-local-only'
 const LS_SUBTITLE = 'tl-tts-subtitle'
+const LS_PROVIDER = 'tl-tts-provider'
+const LS_PIPER_VOICE = 'tl-tts-piper-voice'
+const LS_PIPER_LANG = 'tl-tts-piper-lang'
+const LS_PIPER_QUOTE = 'tl-tts-piper-quote-voice'
+const LS_SPEAKER_MAP = 'tl-tts-speaker-map'
 
 /**
  * Split text into speakable sentences.
@@ -89,6 +108,48 @@ function splitSentences(text: string): string[] {
     return merged.filter(s => s.length > 0)
 }
 
+type SpeakerBlock = { speaker: string; text: string }
+
+function normalizeSpeaker(speaker: string): string {
+    return speaker.trim().toLowerCase()
+}
+
+function parseSpeakerBlocks(text: string): SpeakerBlock[] {
+    const blocks: SpeakerBlock[] = []
+    const tag = /\[SPEAKER:([^\]]+)\]/gi
+    let lastIndex = 0
+    let currentSpeaker = 'narrator'
+    let match: RegExpExecArray | null
+    while ((match = tag.exec(text)) !== null) {
+        const idx = match.index ?? 0
+        const before = text.slice(lastIndex, idx).trim()
+        if (before) blocks.push({ speaker: currentSpeaker, text: before })
+        currentSpeaker = normalizeSpeaker(match[1] ?? 'narrator')
+        lastIndex = idx + match[0].length
+    }
+    const tail = text.slice(lastIndex).trim()
+    if (tail) blocks.push({ speaker: currentSpeaker, text: tail })
+    return blocks.length > 0 ? blocks : [{ speaker: 'narrator', text }]
+}
+
+function parseSpeakerMapInput(input: string): Record<string, string> {
+    if (!input.trim()) return {}
+    const pairs = input.split(',')
+    const map: Record<string, string> = {}
+    for (const pair of pairs) {
+        const [rawKey, rawVal] = pair.split('=')
+        if (!rawKey || !rawVal) continue
+        const key = normalizeSpeaker(rawKey)
+        const val = rawVal.trim()
+        if (key && val) map[key] = val
+    }
+    return map
+}
+
+function isQuotedSentence(text: string): boolean {
+    return text.includes('"')
+}
+
 export function useTTS() {
     const [state, setState] = useState<TTSState>({
         isPlaying: false,
@@ -98,6 +159,12 @@ export function useTTS() {
         rate: 1.0,
         langFilter: 'en',
         localOnly: false,
+        provider: 'piper',
+        piperVoiceId: '',
+        piperLang: 'en',
+        quoteVoiceId: '',
+        speakerMapInput: '',
+        error: null,
         currentChunkText: null,
         sentences: [],
         currentSentenceIndex: -1,
@@ -105,15 +172,25 @@ export function useTTS() {
     })
 
     const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([])
+    const [availablePiperVoices, setAvailablePiperVoices] = useState<PiperVoice[]>([])
 
     const synthRef = useRef<SpeechSynthesis | null>(null)
     const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null)
     const cancelTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const audioRef = useRef<HTMLAudioElement | null>(null)
+    const audioUrlRef = useRef<string | null>(null)
+    const fetchAbortRef = useRef<AbortController | null>(null)
     const isPlayingRef = useRef(false)
     const currentSentenceIdxRef = useRef(0)
     const sentencesRef = useRef<string[]>([])
+    const sentenceSpeakersRef = useRef<string[]>([])
     const voiceRef = useRef<SpeechSynthesisVoice | null>(null)
     const rateRef = useRef(1.0)
+    const providerRef = useRef<TTSProvider>('piper')
+    const piperVoiceIdRef = useRef<string>('')
+    const piperLangRef = useRef<string>('en')
+    const quoteVoiceIdRef = useRef<string>('')
+    const speakerMapRef = useRef<Record<string, string>>({})
     const wakeLockRef = useRef<WakeLockSentinel | null>(null)
 
     /** Request screen wake lock (keeps screen on during playback) */
@@ -135,6 +212,7 @@ export function useTTS() {
     useEffect(() => {
         if (typeof window !== 'undefined') {
             synthRef.current = window.speechSynthesis
+            audioRef.current = new Audio()
         }
     }, [])
 
@@ -161,12 +239,22 @@ export function useTTS() {
         const savedLang = localStorage.getItem(LS_LANG)
         const savedLocal = localStorage.getItem(LS_LOCAL)
         const savedSubtitle = localStorage.getItem(LS_SUBTITLE)
+        const savedProvider = localStorage.getItem(LS_PROVIDER)
+        const savedPiperVoice = localStorage.getItem(LS_PIPER_VOICE)
+        const savedPiperLang = localStorage.getItem(LS_PIPER_LANG)
+        const savedQuoteVoice = localStorage.getItem(LS_PIPER_QUOTE)
+        const savedSpeakerMap = localStorage.getItem(LS_SPEAKER_MAP)
         setState(prev => ({
             ...prev,
             rate: savedRate ? parseFloat(savedRate) : prev.rate,
             langFilter: savedLang ?? prev.langFilter,
             localOnly: savedLocal === 'true',
             subtitleMode: (savedSubtitle === 'scroll' ? 'scroll' : 'caption') as SubtitleMode,
+            provider: (savedProvider === 'webSpeech' ? 'webSpeech' : 'piper') as TTSProvider,
+            piperVoiceId: savedPiperVoice ?? prev.piperVoiceId,
+            piperLang: savedPiperLang ?? prev.piperLang,
+            quoteVoiceId: savedQuoteVoice ?? prev.quoteVoiceId,
+            speakerMapInput: savedSpeakerMap ?? prev.speakerMapInput,
         }))
     }, [])
 
@@ -206,6 +294,38 @@ export function useTTS() {
         }
     }, [])
 
+    // Load Piper voices from server config
+    useEffect(() => {
+        if (typeof window === 'undefined') return
+        let mounted = true
+        fetch('/api/tts/piper/voices')
+            .then(res => res.ok ? res.json() : null)
+            .then(data => {
+                if (!mounted || !data) return
+                const voices = Array.isArray(data.voices) ? data.voices as PiperVoice[] : []
+                setAvailablePiperVoices(voices)
+
+                const savedVoiceId = localStorage.getItem(LS_PIPER_VOICE)
+                const defaultVoiceId = data.defaultVoiceId as string | null
+                const firstVoiceId = voices[0]?.id ?? ''
+                const resolvedVoiceId = savedVoiceId || defaultVoiceId || firstVoiceId
+
+                setState(prev => ({
+                    ...prev,
+                    piperVoiceId: resolvedVoiceId || prev.piperVoiceId,
+                    piperLang: prev.piperLang || voices[0]?.lang || 'en',
+                    provider: voices.length > 0 ? prev.provider : 'webSpeech',
+                }))
+            })
+            .catch(() => {
+                if (!mounted) return
+                setAvailablePiperVoices([])
+                setState(prev => ({ ...prev, provider: 'webSpeech' }))
+            })
+
+        return () => { mounted = false }
+    }, [])
+
     // Re-acquire wake lock when tab becomes visible again (browser auto-releases on hide)
     useEffect(() => {
         const onVisChange = () => {
@@ -219,16 +339,33 @@ export function useTTS() {
     useEffect(() => {
         voiceRef.current = state.voice
         rateRef.current = state.rate
-    }, [state.voice, state.rate])
+        providerRef.current = state.provider
+        piperVoiceIdRef.current = state.piperVoiceId
+        piperLangRef.current = state.piperLang
+        quoteVoiceIdRef.current = state.quoteVoiceId
+        speakerMapRef.current = parseSpeakerMapInput(state.speakerMapInput)
+    }, [state.voice, state.rate, state.provider, state.piperVoiceId, state.piperLang, state.quoteVoiceId, state.speakerMapInput])
 
     const stop = useCallback(() => {
         const synth = synthRef.current
         if (cancelTimeoutRef.current) clearTimeout(cancelTimeoutRef.current)
+        fetchAbortRef.current?.abort()
+        fetchAbortRef.current = null
+        if (audioRef.current) {
+            audioRef.current.pause()
+            audioRef.current.currentTime = 0
+        }
+        if (audioUrlRef.current) {
+            URL.revokeObjectURL(audioUrlRef.current)
+            audioUrlRef.current = null
+        }
         synth?.cancel()
         isPlayingRef.current = false
         currentSentenceIdxRef.current = 0
         sentencesRef.current = []
+        sentenceSpeakersRef.current = []
         releaseWakeLock()
+        // NOTE: error is intentionally NOT cleared here so it remains visible after stop
         setState(prev => ({
             ...prev,
             isPlaying: false,
@@ -237,6 +374,10 @@ export function useTTS() {
             sentences: [],
             currentSentenceIndex: -1,
         }))
+    }, [])
+
+    const clearError = useCallback(() => {
+        setState(prev => ({ ...prev, error: null }))
     }, [])
 
     /**
@@ -258,6 +399,7 @@ export function useTTS() {
         // On first sentence of a segment: load text and split into sentences
         if (sentenceIndex === 0) {
             setState(prev => ({ ...prev, currentSegmentIndex: segIndex, isPlaying: true }))
+            setState(prev => ({ ...prev, error: null }))
 
             let rawText = seg.text ?? ''
             if (!rawText && seg.fetchText) {
@@ -268,14 +410,30 @@ export function useTTS() {
             }
             if (!isPlayingRef.current) return
 
-            const clean = rawText
-                .replace(/[#*_~`\[\]()]/g, ' ')
-                .replace(/\n+/g, ' ')
-                .replace(/\s+/g, ' ')
-                .trim()
-            const full = clean
-            const sentences = splitSentences(full)
+            const blocks = parseSpeakerBlocks(rawText).map(block => ({
+                speaker: block.speaker,
+                text: block.text
+                    .replace(/[#*_~`\[\]()]/g, ' ')
+                    .replace(/\n+/g, ' ')
+                    .replace(/\s+/g, ' ')
+                    .trim(),
+            }))
+            const sentences: string[] = []
+            const speakers: string[] = []
+            for (const block of blocks) {
+                const parts = splitSentences(block.text)
+                for (const part of parts) {
+                    sentences.push(part)
+                    speakers.push(block.speaker)
+                }
+            }
+            const resolvedSpeakers = sentences.map((s, i) => {
+                const speaker = speakers[i] ?? 'narrator'
+                if (speaker === 'narrator' && isQuotedSentence(s)) return 'quote'
+                return speaker
+            })
             sentencesRef.current = sentences
+            sentenceSpeakersRef.current = resolvedSpeakers
             setState(prev => ({ ...prev, sentences, currentSentenceIndex: 0 }))
         }
 
@@ -283,7 +441,11 @@ export function useTTS() {
         if (sentenceIndex >= sentences.length) {
             // All sentences spoken — advance to next segment
             if (segIndex + 1 < segments.length) {
-                speak(segIndex + 1, segments, 0)
+                speak(segIndex + 1, segments, 0).catch((err) => {
+                    console.error('TTS next-segment error:', err)
+                    setState(prev => ({ ...prev, error: `TTS error advancing segment: ${err instanceof Error ? err.message : String(err)}` }))
+                    stop()
+                })
             } else {
                 stop()
             }
@@ -291,6 +453,105 @@ export function useTTS() {
         }
 
         currentSentenceIdxRef.current = sentenceIndex
+
+        if (providerRef.current === 'piper') {
+            const text = sentences[sentenceIndex]
+            const speakers = sentenceSpeakersRef.current
+            const speaker = speakers[sentenceIndex] ?? 'narrator'
+            const speakerMap = speakerMapRef.current
+            const quoteVoice = quoteVoiceIdRef.current
+            const voiceId = speaker === 'quote' && quoteVoice
+                ? quoteVoice
+                : speakerMap[speaker] ?? piperVoiceIdRef.current
+
+            setState(prev => ({
+                ...prev,
+                currentSentenceIndex: sentenceIndex,
+                currentChunkText: text,
+            }))
+
+            if (!voiceId) {
+                // No piper voice available — auto-fallback to webSpeech instead of failing
+                console.warn('Piper voice not configured, falling back to Speech API.')
+                providerRef.current = 'webSpeech'
+                setState(prev => ({
+                    ...prev,
+                    provider: 'webSpeech',
+                    error: 'Piper not available (no voices configured — set PIPER1_VOICES_JSON env var). Switched to Speech API.',
+                }))
+                localStorage.setItem(LS_PROVIDER, 'webSpeech')
+                // Continue below to webSpeech path instead of stopping
+            } else {
+
+                fetchAbortRef.current?.abort()
+                const controller = new AbortController()
+                fetchAbortRef.current = controller
+
+                fetch('/api/tts/piper', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text, voiceId, rate: rateRef.current }),
+                    signal: controller.signal,
+                })
+                    .then(async res => {
+                        if (!res.ok) {
+                            let detail = `HTTP ${res.status}`
+                            try {
+                                const errBody = await res.json()
+                                if (errBody?.error) detail = errBody.error
+                            } catch { /* ignore parse errors */ }
+                            throw new Error(`Piper API error: ${detail}`)
+                        }
+                        return res.blob()
+                    })
+                    .then(blob => {
+                        if (!isPlayingRef.current) return
+                        if (!audioRef.current) {
+                            setState(prev => ({ ...prev, error: 'Audio element not available. Try reloading the page.' }))
+                            stop()
+                            return
+                        }
+
+                        const url = URL.createObjectURL(blob)
+                        if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current)
+                        audioUrlRef.current = url
+
+                        audioRef.current.src = url
+                        audioRef.current.onended = () => {
+                            if (isPlayingRef.current) {
+                                speak(segIndex, segments, sentenceIndex + 1).catch((err) => {
+                                    console.error('TTS next-sentence error:', err)
+                                    setState(prev => ({ ...prev, error: `TTS playback error: ${err instanceof Error ? err.message : String(err)}` }))
+                                    stop()
+                                })
+                            }
+                        }
+                        audioRef.current.onerror = (e) => {
+                            const mediaErr = audioRef.current?.error
+                            const detail = mediaErr ? `${mediaErr.message} (code ${mediaErr.code})` : 'unknown'
+                            console.error('Piper audio playback error:', detail, e)
+                            setState(prev => ({ ...prev, error: `Audio playback failed: ${detail}. Try Speech API fallback.` }))
+                            stop()
+                        }
+                        audioRef.current.play().catch((err) => {
+                            console.error('Audio play() rejected:', err)
+                            setState(prev => ({ ...prev, error: `Could not start audio: ${err instanceof Error ? err.message : 'Autoplay blocked?'}. Try clicking play again or switch to Speech API.` }))
+                            stop()
+                        })
+                    })
+                    .catch((err) => {
+                        // Don't treat aborted fetches (user stopped) as errors
+                        if (err instanceof DOMException && err.name === 'AbortError') return
+                        console.error('Piper fetch error:', err)
+                        if (isPlayingRef.current) {
+                            setState(prev => ({ ...prev, error: `Piper synthesis failed: ${err instanceof Error ? err.message : 'Unknown error'}. Try Speech API fallback.` }))
+                            stop()
+                        }
+                    })
+
+                return
+            }
+        }
 
         if (cancelTimeoutRef.current) clearTimeout(cancelTimeoutRef.current)
         synth.cancel()
@@ -313,13 +574,24 @@ export function useTTS() {
             utt.volume = 1.0
 
             utt.onend = () => {
-                if (isPlayingRef.current) speak(segIndex, segments, sentenceIndex + 1)
+                if (isPlayingRef.current) {
+                    speak(segIndex, segments, sentenceIndex + 1).catch((err) => {
+                        console.error('TTS next-sentence error:', err)
+                        setState(prev => ({ ...prev, error: `Speech API error: ${err instanceof Error ? err.message : String(err)}` }))
+                        stop()
+                    })
+                }
             }
             utt.onerror = (e) => {
                 if (e.error !== 'interrupted' && e.error !== 'canceled') {
                     console.error('TTS error:', e)
                     isPlayingRef.current = false
-                    setState(prev => ({ ...prev, isPlaying: false, currentChunkText: null }))
+                    setState(prev => ({
+                        ...prev,
+                        isPlaying: false,
+                        currentChunkText: null,
+                        error: 'Speech API error. Try Piper or reload.',
+                    }))
                 }
             }
 
@@ -331,11 +603,34 @@ export function useTTS() {
     const play = useCallback((segments: TTSSegment[], startIndex = 0) => {
         isPlayingRef.current = true
         acquireWakeLock()
-        setState(prev => ({ ...prev, segments, currentSegmentIndex: startIndex, isPlaying: true }))
-        speak(startIndex, segments, 0)
-    }, [speak])
+        setState(prev => ({ ...prev, segments, currentSegmentIndex: startIndex, isPlaying: true, error: null }))
+        speak(startIndex, segments, 0).catch((err) => {
+            console.error('TTS speak error:', err)
+            setState(prev => ({ ...prev, error: `TTS error: ${err instanceof Error ? err.message : String(err)}` }))
+            stop()
+        })
+    }, [speak, stop])
 
     const pause = useCallback(() => {
+        if (state.provider === 'piper') {
+            if (state.isPlaying) {
+                isPlayingRef.current = false
+                audioRef.current?.pause()
+                releaseWakeLock()
+                setState(prev => ({ ...prev, isPlaying: false }))
+            } else if (state.currentSegmentIndex !== -1) {
+                isPlayingRef.current = true
+                acquireWakeLock()
+                setState(prev => ({ ...prev, isPlaying: true }))
+                speak(state.currentSegmentIndex, state.segments, currentSentenceIdxRef.current).catch((err) => {
+                    console.error('TTS resume error:', err)
+                    setState(prev => ({ ...prev, error: `Resume failed: ${err instanceof Error ? err.message : String(err)}` }))
+                    stop()
+                })
+            }
+            return
+        }
+
         const synth = synthRef.current
         if (!synth) return
         if (state.isPlaying) {
@@ -347,35 +642,109 @@ export function useTTS() {
             isPlayingRef.current = true
             acquireWakeLock()
             setState(prev => ({ ...prev, isPlaying: true }))
-            speak(state.currentSegmentIndex, state.segments, currentSentenceIdxRef.current)
+            speak(state.currentSegmentIndex, state.segments, currentSentenceIdxRef.current).catch((err) => {
+                console.error('TTS resume error:', err)
+                setState(prev => ({ ...prev, error: `Resume failed: ${err instanceof Error ? err.message : String(err)}` }))
+                stop()
+            })
         }
-    }, [state.isPlaying, state.currentSegmentIndex, state.segments, speak])
+    }, [state.isPlaying, state.currentSegmentIndex, state.segments, speak, stop])
 
     const next = useCallback(() => {
         const { currentSegmentIndex, segments } = state
-        if (currentSegmentIndex + 1 < segments.length) speak(currentSegmentIndex + 1, segments, 0)
-        else stop()
+        if (currentSegmentIndex + 1 < segments.length) {
+            speak(currentSegmentIndex + 1, segments, 0).catch((err) => {
+                console.error('TTS next error:', err)
+                setState(prev => ({ ...prev, error: `TTS error: ${err instanceof Error ? err.message : String(err)}` }))
+                stop()
+            })
+        } else stop()
     }, [state, speak, stop])
 
     const prev = useCallback(() => {
         const { currentSegmentIndex, segments } = state
-        if (currentSegmentIndex > 0) speak(currentSegmentIndex - 1, segments, 0)
-    }, [state, speak])
+        if (currentSegmentIndex > 0) {
+            speak(currentSegmentIndex - 1, segments, 0).catch((err) => {
+                console.error('TTS prev error:', err)
+                setState(prev => ({ ...prev, error: `TTS error: ${err instanceof Error ? err.message : String(err)}` }))
+                stop()
+            })
+        }
+    }, [state, speak, stop])
 
     const setVoice = useCallback((voice: SpeechSynthesisVoice | null) => {
         if (voice) localStorage.setItem(LS_VOICE, voice.name)
         else localStorage.removeItem(LS_VOICE)
         voiceRef.current = voice
         setState(prev => ({ ...prev, voice }))
-        if (state.isPlaying) speak(state.currentSegmentIndex, state.segments, 0)
-    }, [state, speak])
+        if (state.isPlaying) {
+            speak(state.currentSegmentIndex, state.segments, 0).catch((err) => {
+                console.error('TTS voice change error:', err)
+                setState(prev => ({ ...prev, error: `Voice change error: ${err instanceof Error ? err.message : String(err)}` }))
+                stop()
+            })
+        }
+    }, [state, speak, stop])
+
+    const setProvider = useCallback((provider: TTSProvider) => {
+        localStorage.setItem(LS_PROVIDER, provider)
+        setState(prev => ({ ...prev, provider, error: null }))
+        if (state.isPlaying) stop()
+    }, [state.isPlaying, stop])
+
+    const setPiperVoiceId = useCallback((voiceId: string) => {
+        localStorage.setItem(LS_PIPER_VOICE, voiceId)
+        setState(prev => ({ ...prev, piperVoiceId: voiceId }))
+        if (state.isPlaying) {
+            speak(state.currentSegmentIndex, state.segments, 0).catch((err) => {
+                console.error('TTS piper voice change error:', err)
+                setState(prev => ({ ...prev, error: `Voice change error: ${err instanceof Error ? err.message : String(err)}` }))
+                stop()
+            })
+        }
+    }, [state, speak, stop])
+
+    const setPiperLang = useCallback((lang: string) => {
+        localStorage.setItem(LS_PIPER_LANG, lang)
+        setState(prev => ({ ...prev, piperLang: lang }))
+    }, [])
+
+    const setQuoteVoiceId = useCallback((voiceId: string) => {
+        localStorage.setItem(LS_PIPER_QUOTE, voiceId)
+        setState(prev => ({ ...prev, quoteVoiceId: voiceId }))
+        if (state.isPlaying) {
+            speak(state.currentSegmentIndex, state.segments, 0).catch((err) => {
+                console.error('TTS quote voice change error:', err)
+                setState(prev => ({ ...prev, error: `Voice change error: ${err instanceof Error ? err.message : String(err)}` }))
+                stop()
+            })
+        }
+    }, [state, speak, stop])
+
+    const setSpeakerMapInput = useCallback((input: string) => {
+        localStorage.setItem(LS_SPEAKER_MAP, input)
+        setState(prev => ({ ...prev, speakerMapInput: input }))
+        if (state.isPlaying) {
+            speak(state.currentSegmentIndex, state.segments, 0).catch((err) => {
+                console.error('TTS speaker map change error:', err)
+                setState(prev => ({ ...prev, error: `Speaker map error: ${err instanceof Error ? err.message : String(err)}` }))
+                stop()
+            })
+        }
+    }, [state, speak, stop])
 
     const setRate = useCallback((rate: number) => {
         localStorage.setItem(LS_RATE, String(rate))
         rateRef.current = rate
         setState(prev => ({ ...prev, rate }))
-        if (state.isPlaying) speak(state.currentSegmentIndex, state.segments, 0)
-    }, [state, speak])
+        if (state.isPlaying) {
+            speak(state.currentSegmentIndex, state.segments, 0).catch((err) => {
+                console.error('TTS rate change error:', err)
+                setState(prev => ({ ...prev, error: `Rate change error: ${err instanceof Error ? err.message : String(err)}` }))
+                stop()
+            })
+        }
+    }, [state, speak, stop])
 
     const setLangFilter = useCallback((langFilter: string) => {
         localStorage.setItem(LS_LANG, langFilter)
@@ -393,8 +762,9 @@ export function useTTS() {
     }, [])
 
     return {
-        state, availableVoices,
-        play, pause, stop, next, prev,
+        state, availableVoices, availablePiperVoices,
+        play, pause, stop, next, prev, clearError,
         setVoice, setRate, setLangFilter, setLocalOnly, setSubtitleMode,
+        setProvider, setPiperVoiceId, setPiperLang, setQuoteVoiceId, setSpeakerMapInput,
     }
 }

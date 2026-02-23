@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react'
-import { Play, Square } from 'lucide-react'
+import { Play, Square, FileDown } from 'lucide-react'
 import { useTimeline } from '@/components/TimelineContext'
 import { ListView } from './ListView'
 import { VisTimelineView } from './VisTimelineView'
@@ -149,6 +149,7 @@ export function TimelineView() {
 
   const handleStopTTS = useCallback(() => {
     tts.stop()
+    tts.clearError()
     setSlideshowOpen(false)
   }, [tts])
 
@@ -310,12 +311,22 @@ export function TimelineView() {
                 else if (selected) handlePlayEvent(selected)
               }}
               className={`shrink-0 rounded border px-2.5 py-2 text-sm transition-colors ${tts.state.isPlaying
-                  ? 'bg-indigo-600 border-indigo-500 text-white hover:bg-indigo-700'
-                  : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
+                ? 'bg-indigo-600 border-indigo-500 text-white hover:bg-indigo-700'
+                : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
             >
               {tts.state.isPlaying ? <Square size={14} fill="currentColor" /> : <Play size={14} />}
             </button>
+            {/* PDF download button */}
+            <a
+              href={`${baseUrl}/export/timeline.pdf`}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Open full timeline PDF in new tab"
+              className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-2.5 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1"
+            >
+              <FileDown size={14} />
+            </a>
           </div>
         </div>
         <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
@@ -367,12 +378,22 @@ export function TimelineView() {
                   else if (selected) handlePlayEvent(selected)
                 }}
                 className={`shrink-0 rounded border px-2.5 py-1.5 text-sm transition-colors ${tts.state.isPlaying
-                    ? 'bg-indigo-600 border-indigo-500 text-white hover:bg-indigo-700'
-                    : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  ? 'bg-indigo-600 border-indigo-500 text-white hover:bg-indigo-700'
+                  : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
               >
                 {tts.state.isPlaying ? <Square size={14} fill="currentColor" /> : <Play size={14} />}
               </button>
+              {/* PDF download button */}
+              <a
+                href={`${baseUrl}/export/timeline.pdf`}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Open full timeline PDF in new tab"
+                className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-2.5 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1"
+              >
+                <FileDown size={14} />
+              </a>
             </div>
             {viewMode === 'custom' && (
               <button
@@ -467,15 +488,22 @@ export function TimelineView() {
         <TTSSlideshowOverlay
           ttsState={tts.state}
           availableVoices={tts.availableVoices}
+          availablePiperVoices={tts.availablePiperVoices}
           onPause={tts.pause}
           onNext={tts.next}
           onPrev={tts.prev}
           onStop={handleStopTTS}
+          onClearError={tts.clearError}
           onSetVoice={tts.setVoice}
           onSetRate={tts.setRate}
           onSetLangFilter={tts.setLangFilter}
           onSetLocalOnly={tts.setLocalOnly}
           onSetSubtitleMode={tts.setSubtitleMode}
+          onSetProvider={tts.setProvider}
+          onSetPiperVoiceId={tts.setPiperVoiceId}
+          onSetPiperLang={tts.setPiperLang}
+          onSetQuoteVoiceId={tts.setQuoteVoiceId}
+          onSetSpeakerMapInput={tts.setSpeakerMapInput}
           events={events}
           baseUrl={baseUrl}
           startEventIndex={ttsStartIndexRef.current}

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { X, Play, Pause, SkipBack, SkipForward } from 'lucide-react'
-import type { TTSState, SubtitleMode } from '@/lib/hooks/useTTS'
+import type { TTSState, SubtitleMode, PiperVoice, TTSProvider } from '@/lib/hooks/useTTS'
 import type { TimelineEntry } from '@/components/TimelineContext'
 
 const KEN_BURNS = [
@@ -20,15 +20,22 @@ interface SlideshowImage {
 interface TTSSlideshowOverlayProps {
     ttsState: TTSState
     availableVoices: SpeechSynthesisVoice[]
+    availablePiperVoices: PiperVoice[]
     onPause: () => void
     onNext: () => void
     onPrev: () => void
     onStop: () => void
+    onClearError: () => void
     onSetVoice: (v: SpeechSynthesisVoice) => void
     onSetRate: (r: number) => void
     onSetLangFilter: (l: string) => void
     onSetLocalOnly: (b: boolean) => void
     onSetSubtitleMode: (m: SubtitleMode) => void
+    onSetProvider: (p: TTSProvider) => void
+    onSetPiperVoiceId: (id: string) => void
+    onSetPiperLang: (lang: string) => void
+    onSetQuoteVoiceId: (id: string) => void
+    onSetSpeakerMapInput: (input: string) => void
     events: TimelineEntry[]
     baseUrl: string
     /** Index into `events` where TTS started */
@@ -41,15 +48,22 @@ const RATES = [0.75, 1.0, 1.25, 1.5, 2.0]
 export function TTSSlideshowOverlay({
     ttsState,
     availableVoices,
+    availablePiperVoices,
     onPause,
     onNext,
     onPrev,
     onStop,
+    onClearError,
     onSetVoice,
     onSetRate,
     onSetLangFilter,
     onSetLocalOnly,
     onSetSubtitleMode,
+    onSetProvider,
+    onSetPiperVoiceId,
+    onSetPiperLang,
+    onSetQuoteVoiceId,
+    onSetSpeakerMapInput,
     events,
     baseUrl,
     startEventIndex,
@@ -65,12 +79,11 @@ export function TTSSlideshowOverlay({
     // Both layers always have content — never null — to prevent black flashes
     const [layerA, setLayerA] = useState<{ imgIndex: number; animCycle: number }>({ imgIndex: 0, animCycle: 0 })
     const [layerB, setLayerB] = useState<{ imgIndex: number; animCycle: number }>({ imgIndex: 0, animCycle: 0 })
-    const [activeFront, setActiveFront] = useState<'A' | 'B'>('A')  // which layer is currently fading in
-    const preloadedUrls = useRef(new Set<string>())  // track preloaded image URLs
+    const [activeFront, setActiveFront] = useState<'A' | 'B'>('A')
+    const preloadedUrls = useRef(new Set<string>())
     const scrollContainerRef = useRef<HTMLDivElement>(null)
     const activeSentenceRef = useRef<HTMLParagraphElement>(null)
 
-    // Build flat image list from startEventIndex through all events
     const allImages = useMemo<SlideshowImage[]>(() => {
         return events.slice(startEventIndex).flatMap(ev =>
             (ev.media || []).map(path => ({
@@ -80,7 +93,6 @@ export function TTSSlideshowOverlay({
         )
     }, [events, baseUrl, startEventIndex])
 
-    // Map eventId -> first image index in allImages
     const eventToFirstImgIndex = useMemo(() => {
         const map = new Map<string, number>()
         allImages.forEach((img, i) => {
@@ -123,7 +135,7 @@ export function TTSSlideshowOverlay({
         return () => clearInterval(t)
     }, [allImages.length, intervalMs, ANIM_PASSES])
 
-// Preload the next few images so crossfade never reveals an unloaded src
+    // Preload the next few images so crossfade never reveals an unloaded src
     useEffect(() => {
         if (allImages.length === 0) return
         // Preload current + next 2 images
@@ -193,7 +205,42 @@ export function TTSSlideshowOverlay({
         })
     }, [ttsState.currentSentenceIndex, ttsState.subtitleMode])
 
-    if (ttsState.currentSegmentIndex < 0) return null
+    if (ttsState.currentSegmentIndex < 0 && !ttsState.error) return null
+
+    // When stopped with an error, show a minimal error overlay instead of the full slideshow
+    if (ttsState.currentSegmentIndex < 0 && ttsState.error) {
+        return (
+            <div className="fixed inset-0 z-[300] bg-black/90 flex items-center justify-center">
+                <div className="max-w-lg w-full mx-6">
+                    <div className="bg-red-950/80 border border-red-500/50 text-red-100 px-6 py-5 rounded-xl flex flex-col gap-4">
+                        <div className="flex items-start gap-3">
+                            <svg className="w-5 h-5 text-red-400 mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                            <div>
+                                <p className="font-semibold text-sm mb-1">Piper TTS Error</p>
+                                <p className="text-sm text-red-200/80">{ttsState.error}</p>
+                            </div>
+                        </div>
+                        <div className="flex gap-3 justify-end">
+                            {ttsState.provider === 'piper' && (
+                                <button
+                                    onClick={() => { onClearError(); onSetProvider('webSpeech') }}
+                                    className="bg-red-500/20 hover:bg-red-500/30 text-red-100 text-xs uppercase tracking-widest px-4 py-2 rounded transition-colors"
+                                >
+                                    Switch to Speech API
+                                </button>
+                            )}
+                            <button
+                                onClick={() => { onClearError(); onStop() }}
+                                className="bg-white/10 hover:bg-white/20 text-white text-xs uppercase tracking-widest px-4 py-2 rounded transition-colors"
+                            >
+                                Dismiss
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     const currentSeg = ttsState.segments[ttsState.currentSegmentIndex]
     // Pick a different animation for each pass (offset by image index so sequential images don't repeat)
@@ -228,6 +275,10 @@ export function TTSSlideshowOverlay({
     const filteredVoices = availableVoices
         .filter(v => ttsState.langFilter === 'all' || v.lang.startsWith(ttsState.langFilter))
         .filter(v => !ttsState.localOnly || v.localService)
+
+    const piperLanguages = Array.from(new Set(availablePiperVoices.map(v => v.lang))).sort()
+    const filteredPiperVoices = availablePiperVoices
+        .filter(v => !ttsState.piperLang || v.lang === ttsState.piperLang)
 
     // Current event for jump select
     const segmentEvents = ttsState.segments.map(seg => {
@@ -276,10 +327,10 @@ export function TTSSlideshowOverlay({
                                     key={i}
                                     ref={i === ttsState.currentSentenceIndex ? activeSentenceRef : undefined}
                                     className={`text-base md:text-lg leading-relaxed transition-colors duration-300 mb-1 ${i === ttsState.currentSentenceIndex
-                                            ? 'text-white font-semibold'
-                                            : i < ttsState.currentSentenceIndex
-                                                ? 'text-white/30'
-                                                : 'text-white/50'
+                                        ? 'text-white font-semibold'
+                                        : i < ttsState.currentSentenceIndex
+                                            ? 'text-white/30'
+                                            : 'text-white/50'
                                         }`}
                                 >
                                     {s}
@@ -287,6 +338,30 @@ export function TTSSlideshowOverlay({
                             ))}
                         </div>
                     )}
+                </div>
+            )}
+
+            {ttsState.error && (
+                <div className="absolute top-20 inset-x-0 z-30 flex justify-center px-6 pointer-events-auto">
+                    <div className="bg-red-950/70 border border-red-500/40 text-red-100 px-5 py-3 rounded-xl max-w-3xl text-sm flex items-center gap-4">
+                        <svg className="w-4 h-4 text-red-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        <span>{ttsState.error}</span>
+                        {ttsState.provider === 'piper' && (
+                            <button
+                                onClick={() => onSetProvider('webSpeech')}
+                                className="ml-auto bg-red-500/20 hover:bg-red-500/30 text-red-100 text-xs uppercase tracking-widest px-3 py-2 rounded"
+                            >
+                                Use Speech API
+                            </button>
+                        )}
+                        <button
+                            onClick={onClearError}
+                            className="text-red-300/60 hover:text-red-100 transition-colors"
+                            aria-label="Dismiss error"
+                        >
+                            <X size={14} />
+                        </button>
+                    </div>
                 </div>
             )}
 
@@ -364,24 +439,111 @@ export function TTSSlideshowOverlay({
                 {/* Settings strip */}
                 <div className="flex flex-wrap items-center justify-center gap-3 pointer-events-auto">
                     <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
-                        <span className="text-white/40 text-[10px] uppercase font-bold">Lang</span>
+                        <span className="text-white/40 text-[10px] uppercase font-bold">Provider</span>
                         <select
-                            value={ttsState.langFilter}
-                            onChange={e => { e.stopPropagation(); onSetLangFilter(e.target.value) }}
+                            value={ttsState.provider}
+                            onChange={e => { e.stopPropagation(); onSetProvider(e.target.value as TTSProvider) }}
                             className="bg-transparent text-white text-xs outline-none cursor-pointer"
                         >
-                            {['en', 'de', 'fr', 'es', 'ja', 'zh', 'all'].map(l => (
-                                <option key={l} value={l} className="bg-slate-900">{l}</option>
-                            ))}
+                            <option value="piper" className="bg-slate-900">Piper</option>
+                            <option value="webSpeech" className="bg-slate-900">Speech API</option>
                         </select>
                     </div>
 
-                    <button
-                        onClick={e => { e.stopPropagation(); onSetLocalOnly(!ttsState.localOnly) }}
-                        className={`bg-black/40 backdrop-blur-md border rounded-lg px-3 py-2 text-[10px] uppercase font-bold transition-colors ${ttsState.localOnly ? 'border-indigo-500 text-indigo-400' : 'border-white/10 text-white/40'}`}
-                    >
-                        Local only
-                    </button>
+                    {ttsState.provider === 'piper' ? (
+                        <>
+                            <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
+                                <span className="text-white/40 text-[10px] uppercase font-bold">Lang</span>
+                                <select
+                                    value={ttsState.piperLang}
+                                    onChange={e => { e.stopPropagation(); onSetPiperLang(e.target.value) }}
+                                    className="bg-transparent text-white text-xs outline-none cursor-pointer"
+                                >
+                                    {piperLanguages.map(l => (
+                                        <option key={l} value={l} className="bg-slate-900">{l}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
+                                <span className="text-white/40 text-[10px] uppercase font-bold">Voice</span>
+                                <select
+                                    value={ttsState.piperVoiceId}
+                                    onChange={e => { e.stopPropagation(); onSetPiperVoiceId(e.target.value) }}
+                                    className="bg-transparent text-white text-xs outline-none cursor-pointer max-w-[160px] truncate"
+                                >
+                                    {filteredPiperVoices.map(v => (
+                                        <option key={v.id} value={v.id} className="bg-slate-900">{v.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
+                                <span className="text-white/40 text-[10px] uppercase font-bold">Quote</span>
+                                <select
+                                    value={ttsState.quoteVoiceId}
+                                    onChange={e => { e.stopPropagation(); onSetQuoteVoiceId(e.target.value) }}
+                                    className="bg-transparent text-white text-xs outline-none cursor-pointer max-w-[160px] truncate"
+                                >
+                                    <option value="" className="bg-slate-900">Narrator</option>
+                                    {filteredPiperVoices.map(v => (
+                                        <option key={v.id} value={v.id} className="bg-slate-900">{v.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="flex items-center gap-2 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
+                                <span className="text-white/40 text-[10px] uppercase font-bold">Speakers</span>
+                                <input
+                                    value={ttsState.speakerMapInput}
+                                    onChange={e => { e.stopPropagation(); onSetSpeakerMapInput(e.target.value) }}
+                                    placeholder="alice=en_US, bob=en_US"
+                                    className="bg-transparent text-white text-xs outline-none placeholder:text-white/30 w-[200px]"
+                                />
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
+                                <span className="text-white/40 text-[10px] uppercase font-bold">Lang</span>
+                                <select
+                                    value={ttsState.langFilter}
+                                    onChange={e => { e.stopPropagation(); onSetLangFilter(e.target.value) }}
+                                    className="bg-transparent text-white text-xs outline-none cursor-pointer"
+                                >
+                                    {['en', 'de', 'fr', 'es', 'ja', 'zh', 'all'].map(l => (
+                                        <option key={l} value={l} className="bg-slate-900">{l}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <button
+                                onClick={e => { e.stopPropagation(); onSetLocalOnly(!ttsState.localOnly) }}
+                                className={`bg-black/40 backdrop-blur-md border rounded-lg px-3 py-2 text-[10px] uppercase font-bold transition-colors ${ttsState.localOnly ? 'border-indigo-500 text-indigo-400' : 'border-white/10 text-white/40'}`}
+                            >
+                                Local only
+                            </button>
+
+                            <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
+                                <span className="text-white/40 text-[10px] uppercase font-bold">Voice</span>
+                                <select
+                                    value={ttsState.voice?.name ?? ''}
+                                    onChange={e => {
+                                        e.stopPropagation()
+                                        const v = availableVoices.find(v => v.name === e.target.value)
+                                        if (v) onSetVoice(v)
+                                    }}
+                                    className="bg-transparent text-white text-xs outline-none cursor-pointer max-w-[140px] truncate"
+                                >
+                                    {filteredVoices.map(v => (
+                                        <option key={v.name} value={v.name} className="bg-slate-900">
+                                            {v.name.replace('Google ', '')} {v.localService ? '🏠' : '🌐'}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </>
+                    )}
 
                     <button
                         onClick={e => {
