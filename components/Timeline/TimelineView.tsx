@@ -153,6 +153,13 @@ export function TimelineView() {
     setSlideshowOpen(false)
   }, [tts])
 
+  /** Jump to an already-loaded segment without rebuilding the segment list */
+  const handleSeekToSegment = useCallback((segmentIndex: number) => {
+    const segments = tts.state.segments
+    if (segmentIndex < 0 || segmentIndex >= segments.length) return
+    tts.play(segments, segmentIndex)
+  }, [tts])
+
   // Stop TTS when the component unmounts
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => () => { tts.stop() }, [])
@@ -508,6 +515,7 @@ export function TimelineView() {
           baseUrl={baseUrl}
           startEventIndex={ttsStartIndexRef.current}
           onSelectEvent={handleSelectEvent}
+          onSeekToSegment={handleSeekToSegment}
         />
       )}
     </div>

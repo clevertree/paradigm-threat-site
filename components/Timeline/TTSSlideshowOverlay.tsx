@@ -41,6 +41,8 @@ interface TTSSlideshowOverlayProps {
     /** Index into `events` where TTS started */
     startEventIndex: number
     onSelectEvent: (entry: TimelineEntry) => void
+    /** Jump TTS to a specific segment index without rebuilding the segment list */
+    onSeekToSegment: (segmentIndex: number) => void
 }
 
 const RATES = [0.75, 1.0, 1.25, 1.5, 2.0]
@@ -68,6 +70,7 @@ export function TTSSlideshowOverlay({
     baseUrl,
     startEventIndex,
     onSelectEvent,
+    onSeekToSegment,
 }: TTSSlideshowOverlayProps) {
     const [showControls, setShowControls] = useState(true)
     const lastInteractionRef = useRef(Date.now())
@@ -381,9 +384,13 @@ export function TTSSlideshowOverlay({
                             value={ttsState.currentSegmentIndex}
                             onChange={e => {
                                 const idx = parseInt(e.target.value)
-                                const entry = events[startEventIndex + idx]
+                                if (isNaN(idx) || idx < 0 || idx >= ttsState.segments.length) return
+                                // Look up the timeline entry by id — never use positional offset
+                                const segId = ttsState.segments[idx]?.id
+                                const entry = segId ? events.find(ev => ev.id === segId) : undefined
                                 if (entry) onSelectEvent(entry)
-                                onNext() // trigger play at new index via parent
+                                // Actually jump TTS to the chosen segment
+                                onSeekToSegment(idx)
                             }}
                             className="bg-black/50 border border-white/20 text-white text-xs rounded px-2 py-1 max-w-[160px] truncate"
                         >
