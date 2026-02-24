@@ -33,20 +33,35 @@ export async function POST(req: NextRequest) {
             headers['Authorization'] = `Bearer ${PIPER_API_SECRET}`
         }
 
-        const upstream = await fetch(`${PIPER_API_URL}/tts`, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({
-                text,
-                voiceId: body.voiceId,
-                rate: body.rate,
-            }),
-        })
+        // Hard timeout: 28s — Vercel/nginx typically kills at 30s, give ourselves a clean exit
+        const upstreamSignal = AbortSignal.timeout(28_000)
+
+        let upstream: Response
+        try {
+            upstream = await fetch(`${PIPER_API_URL}/tts`, {
+                method: 'POST',
+                headers,
+                body: JSON.stringify({
+                    text,
+                    voiceId: body.voiceId,
+                    rate: body.rate,
+                }),
+                signal: upstreamSignal,
+            })
+        } catch (fetchErr) {
+            const isTimeout = fetchErr instanceof Error && fetchErr.name === 'TimeoutError'
+            const msg = isTimeout
+                ? `Piper upstream timed out after 28s (text length: ${text.length})`
+                : `Piper upstream unreachable: ${fetchErr instanceof Error ? fetchErr.message : String(fetchErr)}`
+            console.error('[TTS PROXY]', msg)
+            return NextResponse.json({ error: msg }, { status: 504 })
+        }
 
         if (!upstream.ok) {
             const errBody = await upstream.text()
             let msg = `Piper server error (${upstream.status})`
             try { msg = JSON.parse(errBody).error ?? msg } catch { }
+            console.error('[TTS PROXY] upstream error:', upstream.status, msg)
             return NextResponse.json({ error: msg }, { status: upstream.status })
         }
 

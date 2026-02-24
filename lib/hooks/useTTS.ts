@@ -487,23 +487,46 @@ export function useTTS() {
                 const controller = new AbortController()
                 fetchAbortRef.current = controller
 
-                fetch('/api/tts/piper', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text, voiceId, rate: rateRef.current }),
-                    signal: controller.signal,
-                })
-                    .then(async res => {
+                // Retry on transient gateway errors (504, 502) with exponential backoff
+                const RETRYABLE = new Set([502, 504])
+                const MAX_ATTEMPTS = 4
+                const fetchWithRetry = async (): Promise<Blob> => {
+                    let lastErr: Error = new Error('Unknown error')
+                    for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+                        if (attempt > 0) {
+                            const delayMs = Math.min(1000 * 2 ** (attempt - 1), 16000)
+                            console.warn(`[TTS] Attempt ${attempt + 1}/${MAX_ATTEMPTS} — retrying in ${delayMs}ms`)
+                            setState(prev => ({ ...prev, error: `Piper timeout — retrying (${attempt}/${MAX_ATTEMPTS - 1})…` }))
+                            await new Promise<void>(resolve => setTimeout(resolve, delayMs))
+                            if (!isPlayingRef.current) throw new DOMException('Aborted', 'AbortError')
+                        }
+                        const res = await fetch('/api/tts/piper', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ text, voiceId, rate: rateRef.current }),
+                            signal: controller.signal,
+                        })
                         if (!res.ok) {
                             let detail = `HTTP ${res.status}`
                             try {
                                 const errBody = await res.json()
                                 if (errBody?.error) detail = errBody.error
-                            } catch { /* ignore parse errors */ }
-                            throw new Error(`Piper API error: ${detail}`)
+                            } catch { /* ignore */ }
+                            const err = new Error(`Piper API error: ${detail}`)
+                            console.error(`[TTS] fetch failed (attempt ${attempt + 1}):`, detail)
+                            if (RETRYABLE.has(res.status) && attempt < MAX_ATTEMPTS - 1) {
+                                lastErr = err
+                                continue
+                            }
+                            throw err
                         }
+                        setState(prev => prev.error?.startsWith('Piper timeout') ? { ...prev, error: null } : prev)
                         return res.blob()
-                    })
+                    }
+                    throw lastErr
+                }
+
+                fetchWithRetry()
                     .then(blob => {
                         if (!isPlayingRef.current) return
                         if (!audioRef.current) {
@@ -542,7 +565,7 @@ export function useTTS() {
                     .catch((err) => {
                         // Don't treat aborted fetches (user stopped) as errors
                         if (err instanceof DOMException && err.name === 'AbortError') return
-                        console.error('Piper fetch error:', err)
+                        console.error('[TTS] Piper fetch error (all retries exhausted):', err)
                         if (isPlayingRef.current) {
                             setState(prev => ({ ...prev, error: `Piper synthesis failed: ${err instanceof Error ? err.message : 'Unknown error'}. Try Speech API fallback.` }))
                             stop()
