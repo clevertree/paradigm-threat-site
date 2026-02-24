@@ -128,15 +128,15 @@ function GalleryImageItem({
                 else if (swipe > 100) goPrev()
             }}
             onClick={(e) => e.stopPropagation()}
-            className={`relative z-10 max-w-[95vw] ${aspectRatio && aspectRatio < 1 ? 'lg:max-w-[90vw]' : 'lg:max-w-[75vw]'} max-h-full flex ${aspectRatio && aspectRatio < 1 ? 'flex-col lg:flex-row' : 'flex-col'} items-center justify-center gap-4 lg:gap-8 pointer-events-none`}
-            style={{ willChange: 'transform, opacity' }}
+            className={`relative z-10 max-w-[99vw] ${aspectRatio && aspectRatio < 1 ? 'lg:max-w-[90vw]' : 'lg:max-w-[80vw]'} flex ${aspectRatio && aspectRatio < 1 ? 'flex-col lg:flex-row' : 'flex-col'} items-center justify-center gap-4 lg:gap-6 pointer-events-none`}
+            style={{ willChange: 'transform, opacity', maxHeight: 'calc(100vh - 8rem)' }}
         >
-            <div className="relative flex-grow flex items-center justify-center min-h-[200px] w-full h-full overflow-hidden">
+            <div className="relative flex items-center justify-center min-h-[200px] w-full" style={{ maxHeight: 'calc(100vh - 8rem)' }}>
                 <img
                     ref={imgRef}
                     src={image.highResSrc || image.src}
-                    className="max-w-full max-h-full object-contain shadow-2xl rounded-lg pointer-events-auto cursor-grab active:cursor-grabbing transition-opacity duration-300"
-                    style={{ opacity: (aspectRatio !== null || isHighResLoaded) ? 1 : 0, maxHeight: '100vh' }}
+                    className="max-w-full object-contain shadow-2xl rounded-lg pointer-events-auto cursor-grab active:cursor-grabbing transition-opacity duration-300"
+                    style={{ opacity: (aspectRatio !== null || isHighResLoaded) ? 1 : 0, maxHeight: 'calc(100vh - 8rem)' }}
                     alt={image.alt}
                     onDragStart={(e) => e.preventDefault()}
                     onLoad={(e) => {
@@ -270,11 +270,11 @@ export function ImageGalleryOverlay() {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center p-4 md:p-12 select-none"
+                    className="fixed inset-0 z-[200] bg-black/95 flex items-center justify-center pt-16 pb-4 px-2 md:px-12 select-none"
                     onClick={closeFullscreen}
                 >
                     {/* Header Controls */}
-                    <div className="absolute top-0 inset-x-0 p-6 flex justify-between items-center z-50 bg-gradient-to-b from-black/50 to-transparent">
+                    <div className="absolute top-0 inset-x-0 p-4 flex justify-between items-center z-50">
                         <div className="text-white/50 text-sm font-mono whitespace-nowrap overflow-hidden text-ellipsis mr-4">
                             {currentIndex + 1} / {images.length} — {currentImage.src}
                         </div>
