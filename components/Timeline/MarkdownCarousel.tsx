@@ -53,10 +53,11 @@ export function MarkdownCarousel({
       return
     }
     setLoading(true)
-    fetch(`${baseUrl}/${currentEntry.md_path}`)
+    const url = `${baseUrl}/${currentEntry.md_path}`
+    fetch(url)
       .then((res) => (res.ok ? res.text() : Promise.resolve(null)))
-      .then((text) => setMdContent(text ?? '*Failed to load content*'))
-      .catch(() => setMdContent('*Failed to load content*'))
+      .then((text) => setMdContent(text ?? `*Failed to load content: ${url}*`))
+      .catch(() => setMdContent(`*Failed to load content: ${url}*`))
       .finally(() => setLoading(false))
   }, [baseUrl, currentEntry])
 
@@ -76,8 +77,8 @@ export function MarkdownCarousel({
                   onClick={onPlayEvent}
                   title={ttsIsPlaying ? 'Stop audio' : 'Listen (audio slideshow)'}
                   className={`shrink-0 flex items-center gap-1.5 px-3 py-1 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all ${ttsIsPlaying
-                      ? 'bg-indigo-600 border-indigo-500 text-white shadow-md shadow-indigo-500/30'
-                      : 'border-indigo-500/30 text-indigo-400 dark:text-indigo-400 hover:bg-indigo-500/10'
+                    ? 'bg-indigo-600 border-indigo-500 text-white shadow-md shadow-indigo-500/30'
+                    : 'border-indigo-500/30 text-indigo-400 dark:text-indigo-400 hover:bg-indigo-500/10'
                     }`}
                 >
                   {ttsIsPlaying ? (

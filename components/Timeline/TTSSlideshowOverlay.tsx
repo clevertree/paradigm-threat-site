@@ -74,6 +74,7 @@ export function TTSSlideshowOverlay({
 }: TTSSlideshowOverlayProps) {
     const [showControls, setShowControls] = useState(true)
     const lastInteractionRef = useRef(Date.now())
+    const controlsFocusedRef = useRef(false)
     const [currentImgIndex, setCurrentImgIndex] = useState(0)
     const [animCycle, setAnimCycle] = useState(0)  // 0, 1, 2 — three animation passes per image
     const ANIM_PASSES = 3
@@ -174,16 +175,27 @@ export function TTSSlideshowOverlay({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentImgIndex, animCycle])
 
-    // Auto-hide controls after 3s idle
+    // Auto-hide controls after 3s idle (skip while a dropdown/input is focused)
     useEffect(() => {
         const t = setInterval(() => {
-            if (Date.now() - lastInteractionRef.current > 3000) setShowControls(false)
+            if (!controlsFocusedRef.current && Date.now() - lastInteractionRef.current > 3000) setShowControls(false)
         }, 1000)
         return () => clearInterval(t)
     }, [])
 
     const handleInteraction = useCallback(() => {
         setShowControls(true)
+        lastInteractionRef.current = Date.now()
+    }, [])
+
+    const handleControlsFocus = useCallback(() => {
+        controlsFocusedRef.current = true
+        setShowControls(true)
+        lastInteractionRef.current = Date.now()
+    }, [])
+
+    const handleControlsBlur = useCallback(() => {
+        controlsFocusedRef.current = false
         lastInteractionRef.current = Date.now()
     }, [])
 
@@ -369,6 +381,8 @@ export function TTSSlideshowOverlay({
             {/* ── Top bar ── */}
             <div
                 className={`absolute top-0 inset-x-0 z-20 flex items-center justify-between px-6 py-5 bg-gradient-to-b from-black/70 to-transparent transition-transform duration-500 ${showControls ? 'translate-y-0' : '-translate-y-full'}`}
+                onFocus={handleControlsFocus}
+                onBlur={handleControlsBlur}
             >
                 <div className="flex flex-col min-w-0 mr-4">
                     <span className="text-white/50 text-xs uppercase tracking-widest font-bold">Timeline Audio</span>
@@ -412,6 +426,8 @@ export function TTSSlideshowOverlay({
             {/* ── Bottom controls ── */}
             <div
                 className={`absolute bottom-0 inset-x-0 z-20 flex flex-col items-center gap-4 px-6 pb-8 pt-4 bg-gradient-to-t from-black/80 to-transparent transition-transform duration-500 ${showControls ? 'translate-y-0' : 'translate-y-full'}`}
+                onFocus={handleControlsFocus}
+                onBlur={handleControlsBlur}
             >
                 {/* Transport */}
                 <div className="flex items-center gap-6 pointer-events-auto">

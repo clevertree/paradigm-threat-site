@@ -1,34 +1,54 @@
 'use client'
 
 import React, { useState, useCallback, useEffect } from 'react'
-import { FileText, Calendar } from 'lucide-react'
+import { FileText, Calendar, ChevronRight } from 'lucide-react'
 import { useTimeline } from '@/components/TimelineContext'
 import { formatDateRange } from './utils'
 import type { TimelineEntry } from '@/components/TimelineContext'
 import type { ExpansionMode } from './TimelineView'
 
+/* ── Depth-aware visual tokens ─────────────────────────────────── */
+
 const LEVEL_BG: Record<number, string> = {
-  0: 'bg-slate-100 dark:bg-slate-900/60',
-  1: 'bg-slate-50 dark:bg-slate-900/40',
-  2: 'bg-transparent dark:bg-transparent',
-  3: 'bg-transparent dark:bg-transparent',
-  4: 'bg-transparent dark:bg-transparent',
+  0: 'bg-slate-800/70',
+  1: 'bg-slate-800/40',
+  2: 'bg-slate-800/20',
+  3: 'bg-transparent',
+  4: 'bg-transparent',
 }
 
 const LEVEL_TEXT: Record<number, string> = {
-  0: 'text-base font-bold text-slate-900 dark:text-slate-100',
-  1: 'text-sm font-semibold text-slate-800 dark:text-slate-200',
-  2: 'text-sm font-medium text-slate-700 dark:text-slate-300',
-  3: 'text-xs font-medium text-slate-600 dark:text-slate-400',
-  4: 'text-xs font-normal text-slate-500 dark:text-slate-500',
+  0: 'text-base font-bold text-slate-100',
+  1: 'text-sm font-semibold text-slate-200',
+  2: 'text-sm font-medium text-slate-300',
+  3: 'text-xs font-medium text-slate-400',
+  4: 'text-xs font-normal text-slate-500',
 }
 
 const LEVEL_DATE: Record<number, string> = {
-  0: 'text-sm text-slate-600 dark:text-slate-300',
-  1: 'text-xs text-slate-500 dark:text-slate-400',
-  2: 'text-xs text-slate-500 dark:text-slate-400',
-  3: 'text-xs text-slate-400 dark:text-slate-500',
-  4: 'text-xs text-slate-400 dark:text-slate-500',
+  0: 'text-sm text-slate-300',
+  1: 'text-xs text-slate-400',
+  2: 'text-xs text-slate-400',
+  3: 'text-xs text-slate-500',
+  4: 'text-xs text-slate-500',
+}
+
+/* Left padding per depth (in px) for visual indentation */
+const LEVEL_PADDING_LEFT: Record<number, string> = {
+  0: 'pl-3',
+  1: 'pl-5',
+  2: 'pl-5',
+  3: 'pl-14',
+  4: 'pl-16',
+}
+
+/* Left border accent per depth */
+const LEVEL_BORDER: Record<number, string> = {
+  0: '',
+  1: 'border-l-2 border-l-cyan-700/40',
+  2: 'border-l-2 border-l-cyan-800/30',
+  3: 'border-l-2 border-l-cyan-900/20',
+  4: 'border-l-2 border-l-cyan-900/10',
 }
 
 function getLevelBg(depth: number): string {
@@ -36,11 +56,19 @@ function getLevelBg(depth: number): string {
 }
 
 function getLevelText(depth: number): string {
-  return LEVEL_TEXT[depth] ?? 'text-xs font-normal text-slate-500 dark:text-slate-500'
+  return LEVEL_TEXT[depth] ?? 'text-xs font-normal text-slate-500'
 }
 
 function getLevelDate(depth: number): string {
-  return LEVEL_DATE[depth] ?? 'text-xs text-slate-500 dark:text-slate-500'
+  return LEVEL_DATE[depth] ?? 'text-xs text-slate-500'
+}
+
+function getLevelPadding(depth: number): string {
+  return LEVEL_PADDING_LEFT[depth] ?? 'pl-16'
+}
+
+function getLevelBorder(depth: number): string {
+  return LEVEL_BORDER[depth] ?? ''
 }
 
 interface CustomTimelineViewProps {
@@ -87,7 +115,7 @@ function TreeEntry({
 
   return (
     <div
-      className={`border-b border-slate-200/30 dark:border-slate-700/40 last:border-b-0 ${levelBg}`}
+      className={`border-b border-slate-200/30 dark:border-slate-700/40 last:border-b-0 ${levelBg} ${getLevelBorder(depth)}`}
     >
       <div
         role="button"
@@ -100,7 +128,7 @@ function TreeEntry({
             onSelectEvent?.(entry)
           }
         }}
-        className={`w-full text-left px-3 py-2 flex items-center gap-2 transition-colors hover:opacity-90 cursor-pointer ${isSelected ? 'ring-1 ring-inset ring-slate-400 dark:ring-slate-500 bg-slate-800/40' : ''}`}
+        className={`w-full text-left pr-3 py-2 flex items-center gap-2 transition-colors hover:opacity-90 cursor-pointer ${getLevelPadding(depth)} ${isSelected ? 'ring-1 ring-inset ring-slate-400 dark:ring-slate-500 bg-slate-800/40' : ''}`}
       >
         {hasChildren ? (
           <button
