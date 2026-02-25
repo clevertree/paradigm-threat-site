@@ -137,7 +137,7 @@ function TreeEntry({
               e.stopPropagation()
               onToggleExpanded(entry.id, !expanded)
             }}
-            className="shrink-0 p-0.5 -m-0.5 rounded hover:bg-slate-200/60 dark:hover:bg-slate-600/40 transition-transform"
+            className="shrink-0 px-1.5 -m-0.5 rounded hover:bg-slate-200/60 dark:hover:bg-slate-600/40 transition-transform"
             style={{
               transform: expanded ? 'rotate(90deg)' : 'rotate(0)',
             }}
