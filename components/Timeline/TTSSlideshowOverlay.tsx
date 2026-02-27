@@ -43,6 +43,8 @@ interface TTSSlideshowOverlayProps {
     onSelectEvent: (entry: TimelineEntry) => void
     /** Jump TTS to a specific segment index without rebuilding the segment list */
     onSeekToSegment: (segmentIndex: number) => void
+    /** Switch to Speech API and resume playback from the failed segment */
+    onSwitchToSpeechAndResume?: () => void
 }
 
 const RATES = [0.75, 1.0, 1.25, 1.5, 2.0]
@@ -71,6 +73,7 @@ export function TTSSlideshowOverlay({
     startEventIndex,
     onSelectEvent,
     onSeekToSegment,
+    onSwitchToSpeechAndResume,
 }: TTSSlideshowOverlayProps) {
     const [showControls, setShowControls] = useState(true)
     const lastInteractionRef = useRef(Date.now())
@@ -236,7 +239,15 @@ export function TTSSlideshowOverlay({
                             </div>
                         </div>
                         <div className="flex gap-3 justify-end">
-                            {ttsState.provider === 'piper' && (
+                            {ttsState.provider === 'piper' && ttsState.piperFallbackOffer && onSwitchToSpeechAndResume && (
+                                <button
+                                    onClick={onSwitchToSpeechAndResume}
+                                    className="bg-indigo-600/80 hover:bg-indigo-500/90 text-white text-xs uppercase tracking-widest px-4 py-2 rounded transition-colors"
+                                >
+                                    Switch to Speech API &amp; Resume
+                                </button>
+                            )}
+                            {ttsState.provider === 'piper' && !ttsState.piperFallbackOffer && (
                                 <button
                                     onClick={() => { onClearError(); onSetProvider('webSpeech') }}
                                     className="bg-red-500/20 hover:bg-red-500/30 text-red-100 text-xs uppercase tracking-widest px-4 py-2 rounded transition-colors"
@@ -359,7 +370,15 @@ export function TTSSlideshowOverlay({
                     <div className="bg-red-950/70 border border-red-500/40 text-red-100 px-5 py-3 rounded-xl max-w-3xl text-sm flex items-center gap-4">
                         <svg className="w-4 h-4 text-red-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         <span>{ttsState.error}</span>
-                        {ttsState.provider === 'piper' && (
+                        {ttsState.provider === 'piper' && ttsState.piperFallbackOffer && onSwitchToSpeechAndResume && (
+                            <button
+                                onClick={onSwitchToSpeechAndResume}
+                                className="ml-auto bg-indigo-600/80 hover:bg-indigo-500/90 text-white text-xs uppercase tracking-widest px-3 py-2 rounded whitespace-nowrap"
+                            >
+                                Speech API &amp; Resume
+                            </button>
+                        )}
+                        {ttsState.provider === 'piper' && !ttsState.piperFallbackOffer && (
                             <button
                                 onClick={() => onSetProvider('webSpeech')}
                                 className="ml-auto bg-red-500/20 hover:bg-red-500/30 text-red-100 text-xs uppercase tracking-widest px-3 py-2 rounded"

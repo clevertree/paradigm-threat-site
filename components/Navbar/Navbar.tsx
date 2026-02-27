@@ -4,7 +4,7 @@ import React, { useState, useEffect, memo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X, Search, Home, MessageSquare, Video, Clock } from 'lucide-react'
-import { ThemeToggle, DynamicNav } from '@/components'
+import { ThemeToggle, FontToggle, DynamicNav } from '@/components'
 
 interface NavbarProps {
     fileList: any
@@ -56,6 +56,7 @@ const Navbar = memo(function Navbar({ fileList }: NavbarProps) {
                     </div>
 
                     <div className="flex items-center gap-2">
+                        <FontToggle />
                         <ThemeToggle />
 
                         {/* Mobile Menu Button */}

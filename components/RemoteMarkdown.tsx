@@ -10,7 +10,7 @@ function prepareMarkdownContent(md: string): string {
   if (typeof md !== 'string') return ''
   let out = md
     .replace(/^# .+\n*/m, '')
-    .replace(/^---\s*\n[\s\S]*?\n---\s*\n?/m, '')
+    .replace(/^---\s*\n[\s\S]*?\n---\s*\n?/, '')
   return out.trimStart()
 }
 

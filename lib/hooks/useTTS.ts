@@ -42,6 +42,8 @@ export interface TTSState {
     currentSentenceIndex: number
     /** Display mode: caption (1-2 sentences) or scroll (all text, auto-scrolling) */
     subtitleMode: SubtitleMode
+    /** When Piper fails on consecutive segments, stores resume info for Speech API fallback UI */
+    piperFallbackOffer: { segIndex: number } | null
 }
 
 const LS_VOICE = 'tl-tts-voice'
@@ -169,6 +171,7 @@ export function useTTS() {
         sentences: [],
         currentSentenceIndex: -1,
         subtitleMode: 'caption',
+        piperFallbackOffer: null,
     })
 
     const [availableVoices, setAvailableVoices] = useState<SpeechSynthesisVoice[]>([])
@@ -192,6 +195,9 @@ export function useTTS() {
     const quoteVoiceIdRef = useRef<string>('')
     const speakerMapRef = useRef<Record<string, string>>({})
     const wakeLockRef = useRef<WakeLockSentinel | null>(null)
+    /** Tracks consecutive Piper segment failures for auto-skip / fallback logic */
+    const piperSegmentFailsRef = useRef(0)
+    const segmentsRef = useRef<TTSSegment[]>([])
 
     /** Request screen wake lock (keeps screen on during playback) */
     const acquireWakeLock = useCallback(async () => {
@@ -365,6 +371,7 @@ export function useTTS() {
         sentencesRef.current = []
         sentenceSpeakersRef.current = []
         releaseWakeLock()
+        piperSegmentFailsRef.current = 0
         // NOTE: error is intentionally NOT cleared here so it remains visible after stop
         setState(prev => ({
             ...prev,
@@ -373,6 +380,7 @@ export function useTTS() {
             currentChunkText: null,
             sentences: [],
             currentSentenceIndex: -1,
+            piperFallbackOffer: null,
         }))
     }, [])
 
@@ -393,6 +401,7 @@ export function useTTS() {
         const synth = synthRef.current
         if (!synth || !segments[segIndex]) { stop(); return }
         if (!isPlayingRef.current) return
+        segmentsRef.current = segments
 
         const seg = segments[segIndex]
 
@@ -487,41 +496,89 @@ export function useTTS() {
                 const controller = new AbortController()
                 fetchAbortRef.current = controller
 
-                // Retry on transient gateway errors (504, 502) with exponential backoff
-                const RETRYABLE = new Set([502, 504])
-                const MAX_ATTEMPTS = 4
+                // Helper: when Piper fails for a sentence (after retries), skip to
+                // the next segment.  After 2 consecutive segment failures, pause and
+                // offer the user a "Switch to Speech API & Resume" button.
+                const handlePiperSegmentFail = (errorMsg: string) => {
+                    piperSegmentFailsRef.current++
+                    const fails = piperSegmentFailsRef.current
+
+                    if (fails >= 2) {
+                        // Two consecutive segments failed — pause & offer Speech API fallback
+                        console.error(`[TTS] Piper failed on ${fails} consecutive segments — offering Speech API fallback`)
+                        isPlayingRef.current = false
+                        setState(prev => ({
+                            ...prev,
+                            isPlaying: false,
+                            error: `Piper failed on ${fails} consecutive sections. Switch to Speech API to continue.`,
+                            piperFallbackOffer: { segIndex },
+                        }))
+                    } else if (segIndex + 1 < segments.length) {
+                        // First failure — skip to the next segment
+                        console.warn(`[TTS] Piper failed on segment ${segIndex}, skipping to next. (${errorMsg})`)
+                        setState(prev => ({ ...prev, error: `Piper error — skipping to next section…` }))
+                        speak(segIndex + 1, segments, 0).catch((err) => {
+                            console.error('TTS skip-segment error:', err)
+                            stop()
+                        })
+                    } else {
+                        // Last segment — nowhere to skip, offer fallback
+                        isPlayingRef.current = false
+                        setState(prev => ({
+                            ...prev,
+                            isPlaying: false,
+                            error: errorMsg,
+                            piperFallbackOffer: { segIndex },
+                        }))
+                    }
+                }
+
+                // Retry on transient server / network errors with exponential backoff
+                const RETRYABLE_STATUS = (s: number) => s >= 500
+                const MAX_ATTEMPTS = 3
                 const fetchWithRetry = async (): Promise<Blob> => {
                     let lastErr: Error = new Error('Unknown error')
                     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
                         if (attempt > 0) {
-                            const delayMs = Math.min(1000 * 2 ** (attempt - 1), 16000)
+                            const delayMs = Math.min(2000 * 2 ** (attempt - 1), 16000)
                             console.warn(`[TTS] Attempt ${attempt + 1}/${MAX_ATTEMPTS} — retrying in ${delayMs}ms`)
-                            setState(prev => ({ ...prev, error: `Piper timeout — retrying (${attempt}/${MAX_ATTEMPTS - 1})…` }))
+                            setState(prev => ({ ...prev, error: `Piper error — retry ${attempt}/${MAX_ATTEMPTS - 1}…` }))
                             await new Promise<void>(resolve => setTimeout(resolve, delayMs))
                             if (!isPlayingRef.current) throw new DOMException('Aborted', 'AbortError')
                         }
-                        const res = await fetch('/api/tts/piper', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ text, voiceId, rate: rateRef.current }),
-                            signal: controller.signal,
-                        })
-                        if (!res.ok) {
-                            let detail = `HTTP ${res.status}`
-                            try {
-                                const errBody = await res.json()
-                                if (errBody?.error) detail = errBody.error
-                            } catch { /* ignore */ }
-                            const err = new Error(`Piper API error: ${detail}`)
-                            console.error(`[TTS] fetch failed (attempt ${attempt + 1}):`, detail)
-                            if (RETRYABLE.has(res.status) && attempt < MAX_ATTEMPTS - 1) {
-                                lastErr = err
-                                continue
+                        try {
+                            const res = await fetch('/api/tts/piper', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ text, voiceId, rate: rateRef.current }),
+                                signal: controller.signal,
+                            })
+                            if (!res.ok) {
+                                let detail = `HTTP ${res.status}`
+                                try {
+                                    const errBody = await res.json()
+                                    if (errBody?.error) detail = errBody.error
+                                } catch { /* ignore */ }
+                                const err = new Error(`Piper API error: ${detail}`)
+                                console.error(`[TTS] fetch failed (attempt ${attempt + 1}):`, detail)
+                                if (RETRYABLE_STATUS(res.status) && attempt < MAX_ATTEMPTS - 1) {
+                                    lastErr = err
+                                    continue
+                                }
+                                throw err
                             }
-                            throw err
+                            setState(prev => prev.error?.startsWith('Piper error — retry') ? { ...prev, error: null } : prev)
+                            return res.blob()
+                        } catch (fetchErr) {
+                            // Re-throw aborts immediately
+                            if (fetchErr instanceof DOMException && fetchErr.name === 'AbortError') throw fetchErr
+                            // Network / timeout errors are retryable
+                            const err = fetchErr instanceof Error ? fetchErr : new Error(String(fetchErr))
+                            console.error(`[TTS] fetch exception (attempt ${attempt + 1}):`, err.message)
+                            lastErr = err
+                            if (attempt < MAX_ATTEMPTS - 1) continue
+                            throw lastErr
                         }
-                        setState(prev => prev.error?.startsWith('Piper timeout') ? { ...prev, error: null } : prev)
-                        return res.blob()
                     }
                     throw lastErr
                 }
@@ -529,6 +586,8 @@ export function useTTS() {
                 fetchWithRetry()
                     .then(blob => {
                         if (!isPlayingRef.current) return
+                        // Success — reset consecutive-fail counter
+                        piperSegmentFailsRef.current = 0
                         if (!audioRef.current) {
                             setState(prev => ({ ...prev, error: 'Audio element not available. Try reloading the page.' }))
                             stop()
@@ -553,13 +612,11 @@ export function useTTS() {
                             const mediaErr = audioRef.current?.error
                             const detail = mediaErr ? `${mediaErr.message} (code ${mediaErr.code})` : 'unknown'
                             console.error('Piper audio playback error:', detail, e)
-                            setState(prev => ({ ...prev, error: `Audio playback failed: ${detail}. Try Speech API fallback.` }))
-                            stop()
+                            handlePiperSegmentFail(`Audio playback failed: ${detail}`)
                         }
                         audioRef.current.play().catch((err) => {
                             console.error('Audio play() rejected:', err)
-                            setState(prev => ({ ...prev, error: `Could not start audio: ${err instanceof Error ? err.message : 'Autoplay blocked?'}. Try clicking play again or switch to Speech API.` }))
-                            stop()
+                            handlePiperSegmentFail(`Could not start audio: ${err instanceof Error ? err.message : 'Autoplay blocked?'}`)
                         })
                     })
                     .catch((err) => {
@@ -567,8 +624,7 @@ export function useTTS() {
                         if (err instanceof DOMException && err.name === 'AbortError') return
                         console.error('[TTS] Piper fetch error (all retries exhausted):', err)
                         if (isPlayingRef.current) {
-                            setState(prev => ({ ...prev, error: `Piper synthesis failed: ${err instanceof Error ? err.message : 'Unknown error'}. Try Speech API fallback.` }))
-                            stop()
+                            handlePiperSegmentFail(`Piper synthesis failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
                         }
                     })
 
@@ -623,10 +679,37 @@ export function useTTS() {
         }, 20)
     }, [stop])
 
-    const play = useCallback((segments: TTSSegment[], startIndex = 0) => {
+    const switchToSpeechAndResume = useCallback(() => {
+        const offer = state.piperFallbackOffer
+        if (!offer) return
+        const segments = segmentsRef.current
+        const resumeIdx = offer.segIndex
+        // Switch provider
+        providerRef.current = 'webSpeech'
+        localStorage.setItem(LS_PROVIDER, 'webSpeech')
+        piperSegmentFailsRef.current = 0
+        setState(prev => ({
+            ...prev,
+            provider: 'webSpeech',
+            error: null,
+            piperFallbackOffer: null,
+            isPlaying: true,
+        }))
         isPlayingRef.current = true
         acquireWakeLock()
-        setState(prev => ({ ...prev, segments, currentSegmentIndex: startIndex, isPlaying: true, error: null }))
+        speak(resumeIdx, segments, 0).catch((err) => {
+            console.error('TTS switchToSpeechAndResume error:', err)
+            setState(prev => ({ ...prev, error: `Speech API error: ${err instanceof Error ? err.message : String(err)}` }))
+            stop()
+        })
+    }, [state.piperFallbackOffer, speak, stop, acquireWakeLock])
+
+    const play = useCallback((segments: TTSSegment[], startIndex = 0) => {
+        isPlayingRef.current = true
+        piperSegmentFailsRef.current = 0
+        segmentsRef.current = segments
+        acquireWakeLock()
+        setState(prev => ({ ...prev, segments, currentSegmentIndex: startIndex, isPlaying: true, error: null, piperFallbackOffer: null }))
         speak(startIndex, segments, 0).catch((err) => {
             console.error('TTS speak error:', err)
             setState(prev => ({ ...prev, error: `TTS error: ${err instanceof Error ? err.message : String(err)}` }))
@@ -786,7 +869,7 @@ export function useTTS() {
 
     return {
         state, availableVoices, availablePiperVoices,
-        play, pause, stop, next, prev, clearError,
+        play, pause, stop, next, prev, clearError, switchToSpeechAndResume,
         setVoice, setRate, setLangFilter, setLocalOnly, setSubtitleMode,
         setProvider, setPiperVoiceId, setPiperLang, setQuoteVoiceId, setSpeakerMapInput,
     }

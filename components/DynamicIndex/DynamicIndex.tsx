@@ -111,14 +111,20 @@ function generateHeaderList(container: HTMLUListElement, scrollToHash?: string) 
         let id = headerElm.id
 
         if (!id) {
-            const baseId = `${textContent}`.toLowerCase()
+            id = `${textContent}`.toLowerCase()
                 .replace(/\s+/g, '_')
                 .replace(/[^\w-]+/g, '')
-            id = baseId
+        }
+
+        // Deduplicate IDs even when pre-assigned (e.g. by MDX renderer),
+        // to prevent duplicate React keys when the same heading appears twice.
+        if (usedIds.has(id)) {
+            const baseId = id
             let counter = 1
-            while (usedIds.has(id)) {
-                id = `${baseId}_${counter++}`
+            while (usedIds.has(`${baseId}_${counter}`)) {
+                counter++
             }
+            id = `${baseId}_${counter}`
             headerElm.id = id
         }
         usedIds.add(id)

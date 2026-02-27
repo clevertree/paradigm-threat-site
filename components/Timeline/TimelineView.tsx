@@ -92,7 +92,7 @@ export function TimelineView() {
     })
   }, [])
   const [viewMode, setViewMode] = useState<TimelineViewMode>('custom')
-  const [expansionMode, setExpansionMode] = useState<ExpansionMode>('all')
+  const [expansionMode, setExpansionMode] = useState<ExpansionMode>('none')
   const [selected, setSelected] = useState<TimelineEntry | null>(null)
   const [leftPct, setLeftPct] = useState<number>(DEFAULT_LEFT_PCT)
   const [isDragging, setIsDragging] = useState(false)
@@ -516,6 +516,7 @@ export function TimelineView() {
           startEventIndex={ttsStartIndexRef.current}
           onSelectEvent={handleSelectEvent}
           onSeekToSegment={handleSeekToSegment}
+          onSwitchToSpeechAndResume={tts.switchToSpeechAndResume}
         />
       )}
     </div>

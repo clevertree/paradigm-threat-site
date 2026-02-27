@@ -1,5 +1,66 @@
 @import url("https://fonts.googleapis.com/css?family=Titillium+Web:400,400i,700&display=swap");
 
+@font-face {
+  font-family: 'EB Garamond';
+  src: url('/fonts/EBGaramond-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'EB Garamond';
+  src: url('/fonts/EBGaramond-Italic-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Libre Franklin';
+  src: url('/fonts/LibreFranklin-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Libre Franklin';
+  src: url('/fonts/LibreFranklin-Italic-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMono-Italic-Variable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Default content font */
+html {
+  --content-font: 'EB Garamond', Georgia, serif;
+}
+
+html[data-font="franklin"] {
+  --content-font: 'Libre Franklin', system-ui, sans-serif;
+}
+
+html[data-font="mono"] {
+  --content-font: 'JetBrains Mono', 'Courier New', monospace;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -59,6 +120,7 @@ pre * {
 
 .prose p {
   @apply text-justify leading-relaxed mb-6;
+  font-family: var(--content-font);
 }
 
 .prose h1,

@@ -37,9 +37,9 @@ const LEVEL_DATE: Record<number, string> = {
 const LEVEL_PADDING_LEFT: Record<number, string> = {
   0: 'pl-3',
   1: 'pl-5',
-  2: 'pl-5',
-  3: 'pl-14',
-  4: 'pl-16',
+  2: 'pl-7',
+  3: 'pl-9',
+  4: 'pl-11',
 }
 
 /* Left border accent per depth */
