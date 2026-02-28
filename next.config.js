@@ -16,6 +16,8 @@ const withMDX = require('@next/mdx')({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Transpile the local animation package (ESM, needs Next.js compilation)
+  transpilePackages: ['paradigm-threat-animation'],
   // output: 'export',
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -57,6 +59,14 @@ const nextConfig = {
         ],
       },
     ]
+  },
+  webpack(config) {
+    // Allow importing .geojson files as JSON (for animation empire-boundaries)
+    config.module.rules.push({
+      test: /\.geojson$/,
+      type: 'json',
+    })
+    return config
   },
 }
 

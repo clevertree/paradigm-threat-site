@@ -15,7 +15,10 @@ const KEN_BURNS = [
 interface SlideshowImage {
     src: string
     eventId: string
+    type?: 'image' | 'planet'
 }
+
+const PLANET_ANIM_PASSES = 8  // ~64s at 1.0× rate → several orbits
 
 interface TTSSlideshowOverlayProps {
     ttsState: TTSState
@@ -79,6 +82,7 @@ export function TTSSlideshowOverlay({
     const lastInteractionRef = useRef(Date.now())
     const controlsFocusedRef = useRef(false)
     const [currentImgIndex, setCurrentImgIndex] = useState(0)
+    const currentImgIndexRef = useRef(0)
     const [animCycle, setAnimCycle] = useState(0)  // 0, 1, 2 — three animation passes per image
     const ANIM_PASSES = 3
     const prevImgIndexRef = useRef(-1)
@@ -92,13 +96,24 @@ export function TTSSlideshowOverlay({
     const activeSentenceRef = useRef<HTMLParagraphElement>(null)
 
     const allImages = useMemo<SlideshowImage[]>(() => {
-        return events.slice(startEventIndex).flatMap(ev =>
-            (ev.media || []).map(path => ({
-                src: `${baseUrl}${path}`,
-                eventId: ev.id,
-            }))
+        const imgs: SlideshowImage[] = events.slice(startEventIndex).flatMap(ev =>
+            (ev.media || []).map(entry => {
+                const p = typeof entry === 'string' ? entry : (entry as any)?.path ?? ''
+                return {
+                    src: `${baseUrl}${p}`,
+                    eventId: ev.id,
+                }
+            })
         )
+        // Planet animation slide — appears after all chapter images, before wrap
+        imgs.push({ src: '', eventId: '__planet__', type: 'planet' })
+        return imgs
     }, [events, baseUrl, startEventIndex])
+
+    // Keep ref in sync for use inside setAnimCycle callback
+    useEffect(() => { currentImgIndexRef.current = currentImgIndex }, [currentImgIndex])
+
+    const isPlanetSlide = allImages[currentImgIndex]?.type === 'planet'
 
     const eventToFirstImgIndex = useMemo(() => {
         const map = new Map<string, number>()
@@ -125,13 +140,16 @@ export function TTSSlideshowOverlay({
     }, [ttsState.currentSegmentIndex, ttsState.segments, eventToFirstImgIndex, currentImgIndex])
 
     // Cycle animations on interval; each image gets ANIM_PASSES different animations before advancing
+    // Planet slide gets PLANET_ANIM_PASSES (longer duration for several orbits)
     const intervalMs = Math.round(8000 / ttsState.rate)
     useEffect(() => {
         if (allImages.length === 0) return
         const t = setInterval(() => {
             setAnimCycle(prev => {
                 const next = prev + 1
-                if (next >= ANIM_PASSES) {
+                const onPlanet = allImages[currentImgIndexRef.current]?.type === 'planet'
+                const maxPasses = onPlanet ? PLANET_ANIM_PASSES : ANIM_PASSES
+                if (next >= maxPasses) {
                     // Advance to next image
                     setCurrentImgIndex(i => (i + 1) % allImages.length)
                     return 0
@@ -145,10 +163,12 @@ export function TTSSlideshowOverlay({
     // Preload the next few images so crossfade never reveals an unloaded src
     useEffect(() => {
         if (allImages.length === 0) return
-        // Preload current + next 2 images
+        // Preload current + next 2 images (skip planet sentinel)
         for (let offset = 0; offset <= 2; offset++) {
             const idx = (currentImgIndex + offset) % allImages.length
-            const url = allImages[idx]?.src
+            const entry = allImages[idx]
+            if (entry?.type === 'planet') continue
+            const url = entry?.src
             if (url && !preloadedUrls.current.has(url)) {
                 const img = new Image()
                 img.src = url
@@ -277,6 +297,20 @@ export function TTSSlideshowOverlay({
     const renderLayer = (layer: { imgIndex: number; animCycle: number }, isFront: boolean, layerId: string) => {
         const img = allImages[layer.imgIndex]
         if (!img) return <div className="absolute inset-0" />
+        // Planet slide: render dark bg (canvas is overlaid separately)
+        if (img.type === 'planet') {
+            return (
+                <div
+                    key={`${layerId}-planet`}
+                    className="absolute inset-0 bg-black"
+                    style={{
+                        opacity: isFront ? 1 : 0,
+                        transition: 'opacity 1.5s ease-in-out',
+                        zIndex: isFront ? 2 : 1,
+                    }}
+                />
+            )
+        }
         const anim = KEN_BURNS[(layer.imgIndex + layer.animCycle) % KEN_BURNS.length]
         return (
             <div
@@ -328,8 +362,10 @@ export function TTSSlideshowOverlay({
                 ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-slate-900 to-slate-950" />
                 )}
-                {/* Dark vignette */}
-                <div className="absolute inset-0 bg-black/40" />
+                {/* Planet animation canvas overlay */}
+                <PlanetSlideCanvas active={isPlanetSlide} />
+                {/* Dark vignette (skip when planet canvas is showing) */}
+                {!isPlanetSlide && <div className="absolute inset-0 bg-black/40" />}
             </div>
 
             {/* ── Subtitle / Transcription ── */}
@@ -604,5 +640,65 @@ export function TTSSlideshowOverlay({
                 )}
             </div>
         </div>
+    )
+}
+
+// ── Inline sub-component: renders the Three.js planet animation as a fullscreen canvas ──
+function PlanetSlideCanvas({ active }: { active: boolean }) {
+    const canvasRef = useRef<HTMLCanvasElement>(null)
+    const ctrlRef = useRef<any>(null)
+    const rafRef = useRef<number>()
+
+    useEffect(() => {
+        if (!active) {
+            if (rafRef.current) cancelAnimationFrame(rafRef.current)
+            ctrlRef.current?.destroy()
+            ctrlRef.current = null
+            return
+        }
+
+        let cancelled = false
+        let year = -5000
+
+        async function init() {
+            const { createPlanetController } = await import('paradigm-threat-animation')
+            if (cancelled || !canvasRef.current) return
+            const ctrl = await createPlanetController(canvasRef.current)
+            if (cancelled) { ctrl.destroy(); return }
+            ctrlRef.current = ctrl
+            ctrl.setYear(year)
+
+            let lastT = performance.now()
+            function tick() {
+                if (cancelled) return
+                const now = performance.now()
+                const dt = (now - lastT) / 1000
+                lastT = now
+                // 1× speed: 0.1 years per second → 1 full Earth orbit every 10 seconds
+                year += 0.1 * dt
+                if (year > -670) year = -5000  // loop
+                ctrl.setYear(year)
+                rafRef.current = requestAnimationFrame(tick)
+            }
+            rafRef.current = requestAnimationFrame(tick)
+        }
+
+        init()
+        return () => {
+            cancelled = true
+            if (rafRef.current) cancelAnimationFrame(rafRef.current)
+            ctrlRef.current?.destroy()
+            ctrlRef.current = null
+        }
+    }, [active])
+
+    if (!active) return null
+
+    return (
+        <canvas
+            ref={canvasRef}
+            className="absolute inset-0 w-full h-full"
+            style={{ zIndex: 3 }}
+        />
     )
 }

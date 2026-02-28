@@ -34,11 +34,16 @@ export function TimelineGalleryProvider({
     // Build the complete, ordered image list from all events' media arrays.
     const globalImages = useMemo<TimelineGalleryImage[]>(() => {
         return events.flatMap((event) =>
-            (event.media || []).map((path) => ({
-                src: `${baseUrl}${path}`,
-                alt: path.split('/').pop()?.split('.')[0]?.replace(/_/g, ' ') || '',
-                eventId: event.id,
-            }))
+            (event.media || []).map((entry) => {
+                const path = typeof entry === 'string' ? entry : (entry as any)?.path ?? ''
+                return {
+                    src: `${baseUrl}${path}`,
+                    alt: typeof path === 'string'
+                        ? path.split('/').pop()?.split('.')[0]?.replace(/_/g, ' ') || ''
+                        : '',
+                    eventId: event.id,
+                }
+            })
         )
     }, [events, baseUrl])
 

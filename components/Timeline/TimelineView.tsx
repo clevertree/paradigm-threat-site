@@ -10,6 +10,8 @@ import { CustomTimelineView } from './CustomTimelineView'
 import { MarkdownCarousel } from './MarkdownCarousel'
 import { TimelineGalleryProvider } from './TimelineGalleryProvider'
 import { TTSSlideshowOverlay } from './TTSSlideshowOverlay'
+import { AnimationMapView } from './AnimationMapView'
+import { AnimationPlanetView } from './AnimationPlanetView'
 import { formatDateRange } from './utils'
 import { useTTS } from '@/lib/hooks/useTTS'
 import { stripMarkdownForTTS } from './ttsHelpers'
@@ -20,13 +22,15 @@ const DEFAULT_LEFT_PCT = 50
 const MIN_LEFT_PCT = 20
 const MAX_LEFT_PCT = 80
 
-export type TimelineViewMode = 'list' | 'vis' | 'timelinejs' | 'custom'
+export type TimelineViewMode = 'list' | 'vis' | 'timelinejs' | 'custom' | 'animation-map' | 'animation-3d'
 
 const VIEW_LABELS: Record<TimelineViewMode, string> = {
   list: 'List',
   vis: 'vis-timeline',
   timelinejs: 'TimelineJS',
   custom: 'Custom',
+  'animation-map': 'Map (CE)',
+  'animation-3d': 'Planets (BC)',
 }
 
 export type ExpansionMode = 'all' | 'none'
@@ -418,7 +422,7 @@ export function TimelineView() {
                 onChange={(e) => setViewMode(e.target.value as TimelineViewMode)}
                 className="rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1"
               >
-                {(['list', 'vis', 'timelinejs', 'custom'] as const).map((m) => (
+                {(['list', 'vis', 'timelinejs', 'custom', 'animation-map', 'animation-3d'] as const).map((m) => (
                   <option key={m} value={m}>
                     {VIEW_LABELS[m]}
                   </option>
@@ -452,6 +456,16 @@ export function TimelineView() {
                 onSelectEvent={handleSelectEvent}
                 selectedId={selected?.id}
               />
+            )}
+            {viewMode === 'animation-map' && (
+              <div className="relative w-full h-full">
+                <AnimationMapView />
+              </div>
+            )}
+            {viewMode === 'animation-3d' && (
+              <div className="relative w-full h-full">
+                <AnimationPlanetView />
+              </div>
             )}
           </div>
         </div>
