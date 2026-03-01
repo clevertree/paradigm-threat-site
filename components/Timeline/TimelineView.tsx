@@ -54,11 +54,14 @@ export function TimelineView() {
   const [fullPage, setFullPage] = useState(false)
   const initialEventIdRef = useRef<string | null>(null)
 
-  // Read ?fullscreen=1 and ?event=<id> from URL on mount
+  // Read ?fullscreen=1 and event id from URL on mount
+  // Supports both /timeline/<eventId> and /timeline?event=<eventId>
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.get('fullscreen') === '1') setFullPage(true)
-    const evtId = params.get('event')
+    // Prefer path-based event ID: /timeline/<eventId>
+    const pathMatch = window.location.pathname.match(/^\/timeline\/(.+)$/)
+    const evtId = pathMatch ? decodeURIComponent(pathMatch[1]) : params.get('event')
     if (evtId) initialEventIdRef.current = evtId
   }, [])
 
@@ -172,9 +175,9 @@ export function TimelineView() {
   const handleSelectEvent = useCallback((evt: TimelineEntry) => {
     setSelected(evt)
     const params = new URLSearchParams(window.location.search)
-    params.set('event', evt.id)
+    params.delete('event') // clean up legacy query param if present
     const q = params.toString()
-    window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
+    window.history.replaceState(null, '', `/timeline/${evt.id}` + (q ? '?' + q : ''))
   }, [])
 
   // When TTS auto-advances to a new segment, sync the carousel

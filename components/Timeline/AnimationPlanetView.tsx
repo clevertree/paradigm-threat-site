@@ -45,6 +45,8 @@ export function AnimationPlanetView({ onSelectEvent }: AnimationPlanetViewProps)
             ctrlRef.current = ctrl
             ctrl.setYear(MIN_YEAR)
             setPhaseInfo(ctrl.getPhaseInfo())
+            // Trigger initial resize to match container
+            if (ctrl.resize) ctrl.resize()
             setReady(true)
         }
 
@@ -118,7 +120,7 @@ export function AnimationPlanetView({ onSelectEvent }: AnimationPlanetViewProps)
     return (
         <div className="flex flex-col h-full w-full bg-slate-950 relative">
             {/* 3D canvas */}
-            <canvas ref={canvasRef} className="flex-1 min-h-0 w-full" style={{ minHeight: 300 }} />
+            <canvas ref={canvasRef} className="flex-1 min-h-0 w-full block" style={{ minHeight: 300, width: '100%', height: '100%' }} />
 
             {/* Phase overlay */}
             {ready && (

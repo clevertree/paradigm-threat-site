@@ -22,6 +22,7 @@ declare module 'paradigm-threat-animation' {
         setYear(year: number): void
         getPhaseInfo(): { label: string; description: string }
         getOrbitInfo(): Record<string, number>
+        resize(): void
         destroy(): void
     }>
 
