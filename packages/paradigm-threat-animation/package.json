@@ -1,0 +1,25 @@
+{
+    "name": "paradigm-threat-animation",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Animated timeline visualization — maps (11th-21st CE) and 3D planetary (BC/Golden Age)",
+    "type": "module",
+    "main": "src/index.js",
+    "exports": {
+        ".": "./src/index.js",
+        "./data/*": "./data/*",
+        "./style.css": "./src/style.css"
+    },
+    "peerDependencies": {
+        "leaflet": ">=1.9.0",
+        "three": ">=0.150.0"
+    },
+    "peerDependenciesMeta": {
+        "leaflet": {
+            "optional": true
+        },
+        "three": {
+            "optional": true
+        }
+    }
+}

@@ -1,0 +1,639 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Rus-Horde Core",
+                "phase": "empire-formation",
+                "yearStart": 1150,
+                "yearEnd": 1775,
+                "label": "Great Tartary / Mongol Empire",
+                "fomenkoName": "Rus-Horde"
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            30,
+                            45
+                        ],
+                        [
+                            35,
+                            42
+                        ],
+                        [
+                            40,
+                            38
+                        ],
+                        [
+                            45,
+                            40
+                        ],
+                        [
+                            50,
+                            42
+                        ],
+                        [
+                            55,
+                            43
+                        ],
+                        [
+                            60,
+                            45
+                        ],
+                        [
+                            70,
+                            48
+                        ],
+                        [
+                            80,
+                            50
+                        ],
+                        [
+                            90,
+                            52
+                        ],
+                        [
+                            100,
+                            53
+                        ],
+                        [
+                            110,
+                            52
+                        ],
+                        [
+                            120,
+                            50
+                        ],
+                        [
+                            130,
+                            48
+                        ],
+                        [
+                            135,
+                            45
+                        ],
+                        [
+                            130,
+                            55
+                        ],
+                        [
+                            120,
+                            60
+                        ],
+                        [
+                            110,
+                            62
+                        ],
+                        [
+                            100,
+                            63
+                        ],
+                        [
+                            90,
+                            64
+                        ],
+                        [
+                            80,
+                            65
+                        ],
+                        [
+                            70,
+                            66
+                        ],
+                        [
+                            60,
+                            65
+                        ],
+                        [
+                            50,
+                            63
+                        ],
+                        [
+                            45,
+                            60
+                        ],
+                        [
+                            40,
+                            58
+                        ],
+                        [
+                            35,
+                            55
+                        ],
+                        [
+                            30,
+                            52
+                        ],
+                        [
+                            28,
+                            48
+                        ],
+                        [
+                            30,
+                            45
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Ottoman Region",
+                "phase": "fragmentation",
+                "yearStart": 1400,
+                "yearEnd": 1922,
+                "label": "Ottoman Empire (= Ataman/Horde Province)",
+                "fomenkoName": "Ataman",
+                "subRegion": true
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            20,
+                            35
+                        ],
+                        [
+                            25,
+                            33
+                        ],
+                        [
+                            30,
+                            32
+                        ],
+                        [
+                            35,
+                            33
+                        ],
+                        [
+                            40,
+                            35
+                        ],
+                        [
+                            42,
+                            37
+                        ],
+                        [
+                            40,
+                            40
+                        ],
+                        [
+                            35,
+                            42
+                        ],
+                        [
+                            30,
+                            43
+                        ],
+                        [
+                            27,
+                            42
+                        ],
+                        [
+                            25,
+                            40
+                        ],
+                        [
+                            22,
+                            38
+                        ],
+                        [
+                            20,
+                            36
+                        ],
+                        [
+                            20,
+                            35
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Spain / Iberia",
+                "phase": "fragmentation",
+                "yearStart": 1400,
+                "yearEnd": 1700,
+                "label": "Spain (= Horde Colony per Fomenko)",
+                "fomenkoName": "Horde Colony — Iberia",
+                "subRegion": true
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -10,
+                            36
+                        ],
+                        [
+                            -9,
+                            37
+                        ],
+                        [
+                            -8,
+                            39
+                        ],
+                        [
+                            -7,
+                            41
+                        ],
+                        [
+                            -5,
+                            43
+                        ],
+                        [
+                            -2,
+                            43
+                        ],
+                        [
+                            0,
+                            42
+                        ],
+                        [
+                            2,
+                            42
+                        ],
+                        [
+                            3,
+                            40
+                        ],
+                        [
+                            1,
+                            38
+                        ],
+                        [
+                            -1,
+                            37
+                        ],
+                        [
+                            -3,
+                            36
+                        ],
+                        [
+                            -5,
+                            36
+                        ],
+                        [
+                            -7,
+                            36
+                        ],
+                        [
+                            -10,
+                            36
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Habsburg Territories",
+                "phase": "fragmentation",
+                "yearStart": 1450,
+                "yearEnd": 1800,
+                "label": "Habsburg / Holy Roman Empire",
+                "fomenkoName": "Western Horde Province",
+                "subRegion": true
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            5,
+                            46
+                        ],
+                        [
+                            8,
+                            44
+                        ],
+                        [
+                            12,
+                            44
+                        ],
+                        [
+                            15,
+                            45
+                        ],
+                        [
+                            17,
+                            46
+                        ],
+                        [
+                            20,
+                            47
+                        ],
+                        [
+                            22,
+                            48
+                        ],
+                        [
+                            20,
+                            50
+                        ],
+                        [
+                            18,
+                            51
+                        ],
+                        [
+                            15,
+                            52
+                        ],
+                        [
+                            12,
+                            51
+                        ],
+                        [
+                            10,
+                            50
+                        ],
+                        [
+                            7,
+                            49
+                        ],
+                        [
+                            5,
+                            48
+                        ],
+                        [
+                            5,
+                            46
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Protestant Zone",
+                "phase": "religious-schism",
+                "yearStart": 1517,
+                "yearEnd": 1700,
+                "label": "Protestant Territories",
+                "conflictType": "protestant-vs-orthodox",
+                "subRegion": true
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            5,
+                            52
+                        ],
+                        [
+                            8,
+                            50
+                        ],
+                        [
+                            12,
+                            49
+                        ],
+                        [
+                            15,
+                            50
+                        ],
+                        [
+                            10,
+                            55
+                        ],
+                        [
+                            8,
+                            56
+                        ],
+                        [
+                            5,
+                            55
+                        ],
+                        [
+                            3,
+                            54
+                        ],
+                        [
+                            5,
+                            52
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Eastern Orthodox Zone",
+                "phase": "religious-schism",
+                "yearStart": 1053,
+                "yearEnd": 1700,
+                "label": "Eastern Orthodox Territories",
+                "conflictType": "protestant-vs-orthodox",
+                "subRegion": true
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            25,
+                            42
+                        ],
+                        [
+                            30,
+                            40
+                        ],
+                        [
+                            35,
+                            42
+                        ],
+                        [
+                            40,
+                            45
+                        ],
+                        [
+                            45,
+                            50
+                        ],
+                        [
+                            50,
+                            55
+                        ],
+                        [
+                            45,
+                            58
+                        ],
+                        [
+                            40,
+                            60
+                        ],
+                        [
+                            35,
+                            58
+                        ],
+                        [
+                            30,
+                            55
+                        ],
+                        [
+                            28,
+                            50
+                        ],
+                        [
+                            25,
+                            46
+                        ],
+                        [
+                            25,
+                            42
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "Muscovy (Romanov Split)",
+                "phase": "romanov-split",
+                "yearStart": 1613,
+                "yearEnd": 1917,
+                "label": "Muscovy / Romanov Russia",
+                "fomenkoName": "Romanov rebel state",
+                "subRegion": true
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            28,
+                            52
+                        ],
+                        [
+                            32,
+                            50
+                        ],
+                        [
+                            38,
+                            50
+                        ],
+                        [
+                            42,
+                            52
+                        ],
+                        [
+                            48,
+                            55
+                        ],
+                        [
+                            50,
+                            58
+                        ],
+                        [
+                            48,
+                            62
+                        ],
+                        [
+                            42,
+                            64
+                        ],
+                        [
+                            36,
+                            63
+                        ],
+                        [
+                            32,
+                            60
+                        ],
+                        [
+                            30,
+                            57
+                        ],
+                        [
+                            28,
+                            55
+                        ],
+                        [
+                            28,
+                            52
+                        ]
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "name": "British Empire Zone",
+                "phase": "romanov-split",
+                "yearStart": 1583,
+                "yearEnd": 1997,
+                "label": "British Empire (Deep State Instrument)",
+                "subRegion": true
+            },
+            "geometry": {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -8,
+                            50
+                        ],
+                        [
+                            -6,
+                            50
+                        ],
+                        [
+                            -5,
+                            51
+                        ],
+                        [
+                            -3,
+                            52
+                        ],
+                        [
+                            0,
+                            53
+                        ],
+                        [
+                            2,
+                            52
+                        ],
+                        [
+                            2,
+                            51
+                        ],
+                        [
+                            0,
+                            50
+                        ],
+                        [
+                            -2,
+                            50
+                        ],
+                        [
+                            -4,
+                            49
+                        ],
+                        [
+                            -6,
+                            49
+                        ],
+                        [
+                            -8,
+                            50
+                        ]
+                    ]
+                ]
+            }
+        }
+    ]
+}
