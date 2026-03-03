@@ -397,7 +397,40 @@ export function TimelineView() {
         className={`flex-1 min-h-0 w-full overflow-hidden hidden ${fullPage ? 'min-[1000px]:flex' : ''}`}
         style={{ minHeight: 0 }}
       >
-        <div
+        {/* Browser view takes over the entire container */}
+        {viewMode === 'browser' && (
+          <div className="flex flex-col flex-1 min-h-0 w-full overflow-hidden">
+            <div className="flex items-center gap-4 px-4 py-2 flex-shrink-0 border-b border-slate-200 dark:border-slate-700">
+              <h2 className="text-lg font-semibold">Alternate Earth History Timeline</h2>
+              <button
+                type="button"
+                onClick={onToggleFullscreen}
+                className="rounded border border-slate-300 dark:border-slate-600 px-3 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 shrink-0"
+              >
+                {fullPage ? 'Exit full page' : 'Full page'}
+              </button>
+              <label className="flex items-center gap-2 text-sm text-slate-500">
+                View:
+                <select
+                  value={viewMode}
+                  onChange={(e) => setViewMode(e.target.value as TimelineViewMode)}
+                  className="rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1"
+                >
+                  {(['list', 'vis', 'timelinejs', 'custom', 'animation-map', 'animation-3d', 'browser'] as const).map((m) => (
+                    <option key={m} value={m}>
+                      {VIEW_LABELS[m]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div className="flex-1 min-h-0 w-full overflow-hidden flex">
+              <BrowserView initialPath={browserPath} />
+            </div>
+          </div>
+        )}
+
+        {viewMode !== 'browser' && <div
           data-left-panel
           className="flex flex-col flex-shrink-0 min-h-0 overflow-hidden"
           style={{ width: `${leftPct}%`, minWidth: 200 }}
@@ -462,15 +495,7 @@ export function TimelineView() {
               </select>
             </label>
           </div>
-
-          {/* Browser view takes over both panels */}
-          {viewMode === 'browser' && (
-            <div className="flex-1 min-h-0 w-full overflow-hidden flex">
-              <BrowserView initialPath={browserPath} />
-            </div>
-          )}
-
-          {viewMode !== 'browser' && <div
+          <div
             ref={leftScrollRef}
             className="flex-1 min-h-0 w-full overflow-y-scroll overflow-x-hidden overscroll-contain touch-pan-y"
             style={{ flex: '1 1 0', minHeight: 0, WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
@@ -507,8 +532,8 @@ export function TimelineView() {
                 <AnimationPlanetView />
               </div>
             )}
-          </div>}
-        </div>
+          </div>
+        </div>}
 
         {/* Draggable separator — hidden in browser mode */}
         {viewMode !== 'browser' && (
@@ -527,7 +552,7 @@ export function TimelineView() {
           </button>
         )}
 
-        {viewMode !== 'browser' && <div className="flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden" style={{ minHeight: 0 }}>
+        {viewMode !== 'browser' && (<div className="flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden" style={{ minHeight: 0 }}>
           <TimelineGalleryProvider
             events={events}
             baseUrl={baseUrl}
@@ -543,7 +568,7 @@ export function TimelineView() {
               onPlayEvent={() => selected && (tts.state.isPlaying ? handleStopTTS() : handlePlayEvent(selected))}
             />
           </TimelineGalleryProvider>
-        </div>}
+        </div>)}
       </div>
 
       {/* TTS Slideshow Overlay */}
