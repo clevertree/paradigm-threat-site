@@ -12,6 +12,7 @@ import { TimelineGalleryProvider } from './TimelineGalleryProvider'
 import { TTSSlideshowOverlay } from './TTSSlideshowOverlay'
 import { AnimationMapView } from './AnimationMapView'
 import { AnimationPlanetView } from './AnimationPlanetView'
+import { BrowserView } from './BrowserView'
 import { formatDateRange } from './utils'
 import { useTTS } from '@/lib/hooks/useTTS'
 import { stripMarkdownForTTS } from './ttsHelpers'
@@ -22,7 +23,7 @@ const DEFAULT_LEFT_PCT = 50
 const MIN_LEFT_PCT = 20
 const MAX_LEFT_PCT = 80
 
-export type TimelineViewMode = 'list' | 'vis' | 'timelinejs' | 'custom' | 'animation-map' | 'animation-3d'
+export type TimelineViewMode = 'list' | 'vis' | 'timelinejs' | 'custom' | 'animation-map' | 'animation-3d' | 'browser'
 
 const VIEW_LABELS: Record<TimelineViewMode, string> = {
   list: 'List',
@@ -31,6 +32,7 @@ const VIEW_LABELS: Record<TimelineViewMode, string> = {
   custom: 'Custom',
   'animation-map': 'Map (CE)',
   'animation-3d': 'Planets (BC)',
+  browser: 'Browser',
 }
 
 export type ExpansionMode = 'all' | 'none'
@@ -53,12 +55,21 @@ export function TimelineView() {
   const { entries, events, loading, error, baseUrl } = useTimeline()
   const [fullPage, setFullPage] = useState(false)
   const initialEventIdRef = useRef<string | null>(null)
+  const [browserPath, setBrowserPath] = useState<string | null>(null)
 
   // Read ?fullscreen=1 and event id from URL on mount
   // Supports both /timeline/<eventId> and /timeline?event=<eventId>
+  // Also supports ?view=browser&path=... for deep linking to the file browser
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.get('fullscreen') === '1') setFullPage(true)
+    // Deep link to browser mode
+    if (params.get('view') === 'browser') {
+      setViewMode('browser')
+      setFullPage(true)
+      const p = params.get('path')
+      if (p) setBrowserPath(p)
+    }
     // Prefer path-based event ID: /timeline/<eventId>
     const pathMatch = window.location.pathname.match(/^\/timeline\/(.+)$/)
     const evtId = pathMatch ? decodeURIComponent(pathMatch[1]) : params.get('event')
@@ -98,7 +109,25 @@ export function TimelineView() {
       return next
     })
   }, [])
-  const [viewMode, setViewMode] = useState<TimelineViewMode>('custom')
+  const [viewMode, setViewModeRaw] = useState<TimelineViewMode>('custom')
+  const setViewMode = useCallback((mode: TimelineViewMode) => {
+    setViewModeRaw(mode)
+    // When switching to browser, auto-enter fullscreen; update URL
+    if (mode === 'browser') {
+      setFullPage(true)
+      const params = new URLSearchParams(window.location.search)
+      params.set('view', 'browser')
+      params.set('fullscreen', '1')
+      const q = params.toString()
+      window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
+    } else {
+      const params = new URLSearchParams(window.location.search)
+      params.delete('view')
+      params.delete('path')
+      const q = params.toString()
+      window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
+    }
+  }, [])
   const [expansionMode, setExpansionMode] = useState<ExpansionMode>('none')
   const [selected, setSelected] = useState<TimelineEntry | null>(null)
   const [leftPct, setLeftPct] = useState<number>(DEFAULT_LEFT_PCT)
@@ -425,7 +454,7 @@ export function TimelineView() {
                 onChange={(e) => setViewMode(e.target.value as TimelineViewMode)}
                 className="rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1"
               >
-                {(['list', 'vis', 'timelinejs', 'custom', 'animation-map', 'animation-3d'] as const).map((m) => (
+                {(['list', 'vis', 'timelinejs', 'custom', 'animation-map', 'animation-3d', 'browser'] as const).map((m) => (
                   <option key={m} value={m}>
                     {VIEW_LABELS[m]}
                   </option>
@@ -433,7 +462,15 @@ export function TimelineView() {
               </select>
             </label>
           </div>
-          <div
+
+          {/* Browser view takes over both panels */}
+          {viewMode === 'browser' && (
+            <div className="flex-1 min-h-0 w-full overflow-hidden flex">
+              <BrowserView initialPath={browserPath} />
+            </div>
+          )}
+
+          {viewMode !== 'browser' && <div
             ref={leftScrollRef}
             className="flex-1 min-h-0 w-full overflow-y-scroll overflow-x-hidden overscroll-contain touch-pan-y"
             style={{ flex: '1 1 0', minHeight: 0, WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
@@ -470,25 +507,27 @@ export function TimelineView() {
                 <AnimationPlanetView />
               </div>
             )}
-          </div>
+          </div>}
         </div>
 
-        {/* Draggable separator */}
-        <button
-          type="button"
-          role="slider"
-          aria-orientation="vertical"
-          aria-valuemin={20}
-          aria-valuemax={80}
-          aria-valuenow={leftPct}
-          aria-label="Resize panels"
-          onMouseDown={handleSeparatorMouseDown}
-          className={`flex-shrink-0 w-1 flex flex-col items-center justify-center bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 cursor-col-resize select-none border-0 p-0 ${isDragging ? 'bg-slate-400 dark:bg-slate-500' : ''}`}
-        >
-          <span className="w-0.5 h-8 bg-slate-400 dark:bg-slate-500 rounded-full block" aria-hidden />
-        </button>
+        {/* Draggable separator — hidden in browser mode */}
+        {viewMode !== 'browser' && (
+          <button
+            type="button"
+            role="slider"
+            aria-orientation="vertical"
+            aria-valuemin={20}
+            aria-valuemax={80}
+            aria-valuenow={leftPct}
+            aria-label="Resize panels"
+            onMouseDown={handleSeparatorMouseDown}
+            className={`flex-shrink-0 w-1 flex flex-col items-center justify-center bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 cursor-col-resize select-none border-0 p-0 ${isDragging ? 'bg-slate-400 dark:bg-slate-500' : ''}`}
+          >
+            <span className="w-0.5 h-8 bg-slate-400 dark:bg-slate-500 rounded-full block" aria-hidden />
+          </button>
+        )}
 
-        <div className="flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden" style={{ minHeight: 0 }}>
+        {viewMode !== 'browser' && <div className="flex-1 min-w-0 min-h-0 flex flex-col overflow-hidden" style={{ minHeight: 0 }}>
           <TimelineGalleryProvider
             events={events}
             baseUrl={baseUrl}
@@ -504,7 +543,7 @@ export function TimelineView() {
               onPlayEvent={() => selected && (tts.state.isPlaying ? handleStopTTS() : handlePlayEvent(selected))}
             />
           </TimelineGalleryProvider>
-        </div>
+        </div>}
       </div>
 
       {/* TTS Slideshow Overlay */}
