@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react'
-import { Play, Square, FileDown } from 'lucide-react'
+import { Play, Square, FileDown, BookOpen, X } from 'lucide-react'
 import { useTimeline } from '@/components/TimelineContext'
 import { ListView } from './ListView'
 import { VisTimelineView } from './VisTimelineView'
@@ -143,6 +143,7 @@ export function TimelineView() {
   const [leftPct, setLeftPct] = useState<number>(DEFAULT_LEFT_PCT)
   const [isDragging, setIsDragging] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
+  const [showContentDrawer, setShowContentDrawer] = useState(false)
 
   const eventIdToEvent = useMemo(
     () => new Map(events.map((e) => [e.id, e])),
@@ -336,16 +337,21 @@ export function TimelineView() {
     )
   }
 
+  // Whether the current view is a full-canvas view (animation/browser) that shouldn't show carousel inline
+  const isFullCanvasView = viewMode === 'animation-map' || viewMode === 'animation-3d' || viewMode === 'browser'
+
   return (
     <div className={
       fullPage
         ? 'fixed inset-0 z-[110] flex flex-col bg-white dark:bg-slate-950 overflow-hidden p-4 select-none'
         : 'flex flex-col flex-1 min-h-0 w-full overflow-hidden max-h-[80vh] min-h-[80vh] select-none'
     }>
-      {/* Mobile: always show when not fullscreen; when fullscreen, show only when viewport < 1000px */}
+      {/* ══════════ COMPACT / MOBILE LAYOUT ══════════
+           Shown: always when NOT fullscreen
+           Shown: in fullscreen when viewport < 1000px (narrow)
+           Now includes view mode selector + all views */}
       <div className={`flex flex-col flex-1 min-h-0 min-w-0 ${fullPage ? 'min-[1000px]:hidden' : ''}`}>
         <div className="flex-shrink-0 px-2 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 space-y-2">
-          <label htmlFor="timeline-event-select" className="block text-sm font-medium text-slate-600 dark:text-slate-400">Select event</label>
           <div className="flex items-center gap-2">
             <select
               id="timeline-event-select"
@@ -371,9 +377,34 @@ export function TimelineView() {
               onClick={onToggleFullscreen}
               className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800"
             >
-              {fullPage ? 'Exit full page' : 'Full page'}
+              {fullPage ? 'Exit' : 'Full page'}
             </button>
-            {/* TTS Play button */}
+          </div>
+          {/* Action row: view mode + TTS + PDF + expand/collapse */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <label className="flex items-center gap-1.5 text-sm text-slate-500">
+              View:
+              <select
+                value={viewMode}
+                onChange={(e) => setViewMode(e.target.value as TimelineViewMode)}
+                className="rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-sm"
+              >
+                {(['list', 'vis', 'timelinejs', 'custom', 'animation-map', 'animation-3d', 'browser'] as const).map((m) => (
+                  <option key={m} value={m}>
+                    {VIEW_LABELS[m]}
+                  </option>
+                ))}
+              </select>
+            </label>
+            {viewMode === 'custom' && (
+              <button
+                type="button"
+                onClick={() => setExpansionMode((m) => m === 'all' ? 'none' : 'all')}
+                className="rounded border px-2 py-1 text-xs transition-colors border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800"
+              >
+                {expansionMode === 'all' ? 'Collapse' : 'Expand'}
+              </button>
+            )}
             <button
               type="button"
               title={tts.state.isPlaying ? 'Stop audio' : 'Listen (audio slideshow)'}
@@ -381,45 +412,132 @@ export function TimelineView() {
                 if (tts.state.isPlaying) handleStopTTS()
                 else if (selected) handlePlayEvent(selected)
               }}
-              className={`shrink-0 rounded border px-2.5 py-2 text-sm transition-colors ${tts.state.isPlaying
+              className={`shrink-0 rounded border px-2.5 py-1.5 text-sm transition-colors ${tts.state.isPlaying
                 ? 'bg-indigo-600 border-indigo-500 text-white hover:bg-indigo-700'
                 : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
                 }`}
             >
               {tts.state.isPlaying ? <Square size={14} fill="currentColor" /> : <Play size={14} />}
             </button>
-            {/* PDF download button */}
             <a
               href={`${baseUrl}/export/timeline.pdf`}
               target="_blank"
               rel="noopener noreferrer"
               title="Open full timeline PDF in new tab"
-              className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-2.5 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1"
+              className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-2.5 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1"
             >
               <FileDown size={14} />
             </a>
+            {/* Content drawer toggle — only in fullscreen with full-canvas views */}
+            {fullPage && isFullCanvasView && (
+              <button
+                type="button"
+                title="Show article content"
+                onClick={() => setShowContentDrawer(true)}
+                className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-2.5 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1"
+              >
+                <BookOpen size={14} /> Content
+              </button>
+            )}
           </div>
         </div>
+        {/* Main content area: view fills the remaining space */}
         <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
-          <TimelineGalleryProvider
-            events={events}
-            baseUrl={baseUrl}
-            selectedEventId={selected?.id ?? null}
-            onSelectEvent={handleSelectEvent}
-          >
-            <MarkdownCarousel
-              events={events}
-              baseUrl={baseUrl}
-              selectedId={selected?.id ?? null}
-              onSelectEvent={handleSelectEvent}
-              ttsIsPlaying={tts.state.isPlaying && tts.state.segments[tts.state.currentSegmentIndex]?.id === selected?.id}
-              onPlayEvent={() => selected && (tts.state.isPlaying ? handleStopTTS() : handlePlayEvent(selected))}
-            />
-          </TimelineGalleryProvider>
+          {viewMode === 'browser' && (
+            <div className="flex-1 min-h-0 w-full overflow-hidden flex">
+              <BrowserView initialPath={browserPath} />
+            </div>
+          )}
+          {viewMode === 'animation-map' && (
+            <div className="relative w-full flex-1 min-h-0">
+              <AnimationMapView />
+            </div>
+          )}
+          {viewMode === 'animation-3d' && (
+            <div className="relative w-full flex-1 min-h-0">
+              <AnimationPlanetView />
+            </div>
+          )}
+          {/* For non-full-canvas views, show the carousel/list directly */}
+          {!isFullCanvasView && (
+            <>
+              {viewMode === 'list' && (
+                <div className="flex-1 min-h-0 overflow-y-auto">
+                  <ListView onSelectEvent={handleSelectEvent} selectedId={selected?.id} />
+                </div>
+              )}
+              {viewMode === 'vis' && (
+                <div className="flex-1 min-h-0 overflow-y-auto">
+                  <VisTimelineView onSelectEvent={handleSelectEvent} eventIdToEvent={eventIdToEvent} />
+                </div>
+              )}
+              {viewMode === 'timelinejs' && (
+                <div className="flex-1 min-h-0 overflow-y-auto">
+                  <TimelineJSView onSelectEvent={handleSelectEvent} eventIdToEvent={eventIdToEvent} />
+                </div>
+              )}
+              {viewMode === 'custom' && (
+                <div className="flex-1 min-h-0 overflow-y-auto">
+                  <CustomTimelineView expansionMode={expansionMode} onSelectEvent={handleSelectEvent} selectedId={selected?.id} />
+                </div>
+              )}
+              {/* Non-fullscreen: always show carousel below the view */}
+              {!fullPage && (
+                <TimelineGalleryProvider
+                  events={events}
+                  baseUrl={baseUrl}
+                  selectedEventId={selected?.id ?? null}
+                  onSelectEvent={handleSelectEvent}
+                >
+                  <MarkdownCarousel
+                    events={events}
+                    baseUrl={baseUrl}
+                    selectedId={selected?.id ?? null}
+                    onSelectEvent={handleSelectEvent}
+                    ttsIsPlaying={tts.state.isPlaying && tts.state.segments[tts.state.currentSegmentIndex]?.id === selected?.id}
+                    onPlayEvent={() => selected && (tts.state.isPlaying ? handleStopTTS() : handlePlayEvent(selected))}
+                  />
+                </TimelineGalleryProvider>
+              )}
+            </>
+          )}
         </div>
+        {/* Content drawer overlay — slides up over the view in narrow fullscreen */}
+        {fullPage && showContentDrawer && (
+          <div className="absolute inset-0 z-[120] flex flex-col bg-white dark:bg-slate-950">
+            <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
+              <h3 className="text-sm font-semibold flex-1">Article Content</h3>
+              <button
+                type="button"
+                onClick={() => setShowContentDrawer(false)}
+                className="shrink-0 rounded border border-slate-300 dark:border-slate-600 p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div className="flex-1 min-h-0 overflow-hidden">
+              <TimelineGalleryProvider
+                events={events}
+                baseUrl={baseUrl}
+                selectedEventId={selected?.id ?? null}
+                onSelectEvent={handleSelectEvent}
+              >
+                <MarkdownCarousel
+                  events={events}
+                  baseUrl={baseUrl}
+                  selectedId={selected?.id ?? null}
+                  onSelectEvent={handleSelectEvent}
+                  ttsIsPlaying={tts.state.isPlaying && tts.state.segments[tts.state.currentSegmentIndex]?.id === selected?.id}
+                  onPlayEvent={() => selected && (tts.state.isPlaying ? handleStopTTS() : handlePlayEvent(selected))}
+                />
+              </TimelineGalleryProvider>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Desktop: resizable panels — only in fullscreen when viewport >= 1000px */}
+      {/* ══════════ DESKTOP SPLIT-PANEL LAYOUT ══════════
+           Only in fullscreen when viewport >= 1000px */}
       <div
         ref={containerRef}
         className={`flex-1 min-h-0 w-full overflow-hidden hidden ${fullPage ? 'min-[1000px]:flex' : ''}`}
