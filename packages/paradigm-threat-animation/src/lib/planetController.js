@@ -12,7 +12,8 @@
  *  - Mercury, Neptune, Uranus added as column members
  *  - Orbit counting per planet per era
  */
-import { planetaryConfigs } from '../../data/events.js';
+import { planetaryConfigs, timelineEvents } from '../../data/events.js';
+import { formatYear } from './utils.js';
 
 let THREE = null;
 
@@ -30,15 +31,16 @@ const MOON_ORBIT_RADIUS = 0.8;
 const COL = {
     R: 10, // orbital radius of column center around Sun
     period: 1.0,
-    // dist: distance from Sun along column axis (Jupiter closest, Uranus furthest)
+    // dist: distance from Sun along column axis
+    // Correct Saturnian order: Sun → Jupiter → Saturn → Venus → Mars → Earth
     jupiter: { dist: 1.5 },
-    saturn: { dist: 3.5 },
-    venus: { dist: 5.5 },
-    mars: { dist: 7.0 },
-    earth: { dist: 8.5 },
-    mercury: { dist: 10.0 },
-    neptune: { dist: 11.5 },
-    uranus: { dist: 13.0 },
+    saturn: { dist: 4.0 },
+    venus: { dist: 6.5 },
+    mars: { dist: 8.5 },
+    earth: { dist: 10.5 },
+    mercury: { dist: 12.0 },
+    neptune: { dist: 13.5 },
+    uranus: { dist: 15.0 },
 };
 
 /* ── Round Table config ──
@@ -154,6 +156,37 @@ export async function createPlanetController(canvas) {
     setGroupVis(oLines.roundTable, false);
     setGroupVis(oLines.modern, false);
 
+    // ── HUD overlay (HTML element on top of canvas) ──
+    const hud = buildHUD(canvas);
+
+    // ── Multi-view cameras (Golden Age only) ──
+    // North Pole camera: at Earth, looking inward along column toward Saturn
+    const northCam = new THREE.PerspectiveCamera(
+        50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000
+    );
+    // South Pole camera: at Earth, looking outward along column toward Uranus
+    const southCam = new THREE.PerspectiveCamera(
+        60, canvas.clientWidth / canvas.clientHeight, 0.1, 1000
+    );
+
+    // ── Multi-view state ──
+    let viewMode = 1;            // 1=orbital main, 2=north main, 3=south main
+    let multiViewActive = false; // only true during collinear/golden-age
+
+    // ── View toggle UI + labels (HTML overlays) ──
+    const viewUI = buildViewToggleUI(canvas, (mode) => { viewMode = mode; });
+
+    // ── Keyboard listener for view toggle ──
+    const onKeyDown = (e) => {
+        if (!multiViewActive) return;
+        if (e.key === '1') viewMode = 1;
+        else if (e.key === '2') viewMode = 2;
+        else if (e.key === '3') viewMode = 3;
+        else return;
+        viewUI.setActive(viewMode);
+    };
+    window.addEventListener('keydown', onKeyDown);
+
     // ── State ──
     let currentYear = -5000;
     let curStyle = '';
@@ -169,6 +202,10 @@ export async function createPlanetController(canvas) {
         if (!w || !h) return;
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
+        northCam.aspect = w / h;
+        northCam.updateProjectionMatrix();
+        southCam.aspect = w / h;
+        southCam.updateProjectionMatrix();
         renderer.setSize(w, h, false);
     };
     // Use ResizeObserver on the canvas for container-driven resizing
@@ -183,7 +220,14 @@ export async function createPlanetController(canvas) {
     function animate() {
         animId = requestAnimationFrame(animate);
         const t = performance.now() * 0.001;
-        if (p.sun) p.sun.rotation.y += 0.001;
+
+        // Enforce Sun visibility every frame (hidden before -4077 and during collinear)
+        if (currentYear < -4077 || curStyle === 'collinear') {
+            p.sun.visible = false;
+            L.sun.visible = false;
+        }
+
+        if (p.sun?.visible) p.sun.rotation.y += 0.001;
         if (p.saturn?.visible) p.saturn.rotation.y += 0.002;
         if (p.venus?.visible) p.venus.rotation.y += 0.005;
         if (p.mars?.visible) p.mars.rotation.y += 0.004;
@@ -253,20 +297,105 @@ export async function createPlanetController(canvas) {
 
         camera.position.lerp(camPosGoal, 0.03);
         camera.lookAt(camLookGoal);
+
+        // ── Update North/South cameras to track column ──
+        if (multiViewActive && p.earth?.visible) {
+            // North cam: at Earth, offset below column plane, look toward Saturn
+            const earthPos = p.earth.position;
+            const saturnPos = p.saturn.position;
+            northCam.position.set(earthPos.x, earthPos.y - 2, earthPos.z);
+            northCam.lookAt(saturnPos.x, saturnPos.y + 2, saturnPos.z);
+
+            // South cam: at Earth, offset below column plane, look outward toward Uranus
+            const uranusPos = p.uranus.position;
+            const nepPos = p.neptune.position;
+            // Look at the midpoint between Mercury, Neptune, Uranus
+            const southTargetX = (p.mercury.position.x + nepPos.x + uranusPos.x) / 3;
+            const southTargetZ = (p.mercury.position.z + nepPos.z + uranusPos.z) / 3;
+            southCam.position.set(earthPos.x, earthPos.y - 2, earthPos.z);
+            southCam.lookAt(southTargetX, 2, southTargetZ);
+        }
+
+        // ── Determine the active camera for label syncing ──
+        const labelCam = multiViewActive
+            ? (viewMode === 2 ? northCam : viewMode === 3 ? southCam : camera)
+            : camera;
+
         // Labels
-        syncLabel(L.sun, p.sun, 1.4, camera);
-        syncLabel(L.saturn, p.saturn, 1.8, camera);
-        syncLabel(L.venus, p.venus, 0.8, camera);
-        syncLabel(L.mars, p.mars, 0.7, camera);
-        syncLabel(L.earth, p.earth, 0.8, camera);
-        syncLabel(L.jupiter, p.jupiter, 1.4, camera);
-        syncLabel(L.mercury, p.mercury, 0.5, camera);
-        syncLabel(L.neptune, p.neptune, 0.7, camera);
-        syncLabel(L.uranus, p.uranus, 0.7, camera);
-        syncLabel(L.moon, p.moon, 0.4, camera);
-        renderer.render(scene, camera);
+        syncLabel(L.sun, p.sun, 1.4, labelCam);
+        syncLabel(L.saturn, p.saturn, 1.8, labelCam);
+        // Venus label tracks the star when the sphere is hidden
+        const venusTarget = p.venusStar?.visible ? p.venusStar : p.venus;
+        syncLabel(L.venus, venusTarget, 0.8, labelCam);
+        // Show Venus label when either sphere or star is visible
+        L.venus.visible = p.venus.visible || (p.venusStar?.visible ?? false);
+        syncLabel(L.mars, p.mars, 0.7, labelCam);
+        syncLabel(L.earth, p.earth, 0.8, labelCam);
+        syncLabel(L.jupiter, p.jupiter, 1.4, labelCam);
+        syncLabel(L.mercury, p.mercury, 0.5, labelCam);
+        syncLabel(L.neptune, p.neptune, 0.7, labelCam);
+        syncLabel(L.uranus, p.uranus, 0.7, labelCam);
+        syncLabel(L.moon, p.moon, 0.4, labelCam);
+
+        // ── Render: multi-viewport during collinear, single otherwise ──
+        if (multiViewActive) {
+            renderMultiView();
+        } else {
+            renderer.render(scene, camera);
+        }
     }
     animate();
+
+    // ═══════════════════ Multi-View Rendering ═══════════════════
+
+    /** Map viewMode (1/2/3) to { main, corner1, corner2 } cameras */
+    function getViewCameras() {
+        if (viewMode === 2) return { main: northCam, c1: camera, c2: southCam, mainLabel: 'NORTH POLE', c1Label: 'ORBITAL', c2Label: 'SOUTH POLE' };
+        if (viewMode === 3) return { main: southCam, c1: camera, c2: northCam, mainLabel: 'SOUTH POLE', c1Label: 'ORBITAL', c2Label: 'NORTH POLE' };
+        return { main: camera, c1: northCam, c2: southCam, mainLabel: 'ORBITAL', c1Label: 'NORTH POLE', c2Label: 'SOUTH POLE' };
+    }
+
+    /** Render scene 3× with viewport/scissor for main + 2 corner PIPs */
+    function renderMultiView() {
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        const pixelRatio = renderer.getPixelRatio();
+        const rw = w * pixelRatio;
+        const rh = h * pixelRatio;
+
+        const cams = getViewCameras();
+
+        // PIP dimensions (20% of canvas width, 16:9-ish aspect)
+        const pipW = Math.floor(rw * 0.22);
+        const pipH = Math.floor(pipW * 0.625);
+        const pad = Math.floor(8 * pixelRatio);
+
+        renderer.setScissorTest(true);
+
+        // 1. Main view (full canvas)
+        renderer.setViewport(0, 0, rw, rh);
+        renderer.setScissor(0, 0, rw, rh);
+        renderer.render(scene, cams.main);
+
+        // 2. Corner 1 — top-right
+        const c1x = rw - pipW - pad;
+        const c1y = rh - pipH - pad;
+        renderer.setViewport(c1x, c1y, pipW, pipH);
+        renderer.setScissor(c1x, c1y, pipW, pipH);
+        renderer.render(scene, cams.c1);
+
+        // 3. Corner 2 — bottom-right (below corner 1)
+        const c2x = rw - pipW - pad;
+        const c2y = c1y - pipH - pad;
+        renderer.setViewport(c2x, c2y, pipW, pipH);
+        renderer.setScissor(c2x, c2y, pipW, pipH);
+        renderer.render(scene, cams.c2);
+
+        renderer.setScissorTest(false);
+
+        // Update PIP overlay label positions
+        viewUI.updatePIPPositions(w, h, pipW / pixelRatio, pipH / pixelRatio, pad / pixelRatio, cams);
+    }
 
     // ═══════════════════ Public API ═══════════════════
 
@@ -290,8 +419,13 @@ export async function createPlanetController(canvas) {
             setGroupVis(oLines.roundTable, style === 'roundTable');
             setGroupVis(oLines.modern, style === 'modern');
             curStyle = style;
+
+            // Multi-view: only active during collinear (Golden Age)
+            multiViewActive = (style === 'collinear');
+            viewUI.setVisible(multiViewActive);
+
             if (style === 'collinear') {
-                camPosGoal.set(0, 18, 22);
+                camPosGoal.set(0, 22, 28);
                 camLookGoal.set(0, 0, 0);
             } else if (style === 'roundTable') {
                 camPosGoal.set(0, 22, 22);
@@ -305,9 +439,13 @@ export async function createPlanetController(canvas) {
             }
         }
 
-        // ── Sun always visible ──
-        p.sun.visible = true;
-        L.sun.visible = true;
+        // ── Sun visibility ──
+        // Hidden before 4077 BC AND during the Golden Age collinear phase
+        // (Sun was behind the column, not visible from Earth's polar perspective)
+        const sunVisible = (year >= -4077) && (style !== 'collinear');
+        p.sun.visible = sunVisible;
+        L.sun.visible = sunVisible;
+        sunLight.intensity = sunVisible ? 3.0 : 0.6; // dim ambient even when hidden
 
         // ── Position by style ──
         if (style === 'collinear') placeCollinear(elapsed, cfg);
@@ -379,6 +517,9 @@ export async function createPlanetController(canvas) {
             const periodDays = 10 + (27.3 - 10) * frac;
             orbitCounts.moon = Math.abs((year - MOON_CAPTURE_YEAR) * yl / periodDays);
         }
+
+        // ── Update HUD overlay ──
+        updateHUD();
     }
 
     // ═══════ Phase update helpers (called from setYear) ═══════
@@ -388,9 +529,15 @@ export async function createPlanetController(canvas) {
         // Wheel of Heaven — only visible in golden-age
         p.wheelOfHeaven.visible = (cfg.id === 'golden-age');
         if (p.wheelOfHeaven.visible) {
-            // Position wheel behind Saturn (on the polar axis facing Earth)
-            p.wheelOfHeaven.position.copy(p.saturn.position);
-            p.wheelOfHeaven.position.y += 0.1; // slightly behind
+            // Position wheel BEHIND Saturn along the column toward Sun
+            // (the polar view = looking up the column from Earth toward Saturn)
+            const satPos = p.saturn.position;
+            // Shift it toward the Sun (inward along column) so it appears as a backdrop
+            const toSun = satPos.clone().normalize().multiplyScalar(-1.5);
+            p.wheelOfHeaven.position.copy(satPos).add(toSun);
+            p.wheelOfHeaven.position.y += 0.1;
+            // Make the wheel face the camera
+            p.wheelOfHeaven.lookAt(camera.position);
         }
 
         // Ring fade-in during stabilization (-806 to -670)
@@ -479,264 +626,544 @@ export async function createPlanetController(canvas) {
 
         // Sync Venus star position to Venus sphere position (golden-age / breakup)
         if (p.venusStar.visible) {
-            p.venusStar.position.copy(p.venus.visible ? p.venus.position : new THREE.Vector3(0, 2, 0));
-            // Use the config position if venus sphere is hidden
-            if (!p.venus.visible && cfg.venus?.position) {
-                p.venusStar.position.set(cfg.venus.position[0], cfg.venus.position[1], cfg.venus.position[2]);
+            // During collinear, placeCollinear already set the Venus star position
+            // on the column — don't override it here.
+            if (curStyle !== 'collinear') {
+                if (p.venus.visible) {
+                    p.venusStar.position.copy(p.venus.position);
+                } else if (cfg.venus?.position) {
+                    p.venusStar.position.set(cfg.venus.position[0], cfg.venus.position[1], cfg.venus.position[2]);
+                }
             }
+            p.venusStar.position.set(cfg.venus.position[0], cfg.venus.position[1], cfg.venus.position[2]);
         }
     }
 
-    /** Mars: solid sphere always, outer shell in dark-age, explosion at stabilization */
-    function updateMarsPhase(p, cfg, year, elapsed) {
-        const id = cfg.id;
+/** Mars: solid sphere always, outer shell in dark-age, explosion at stabilization */
+function updateMarsPhase(p, cfg, year, elapsed) {
+    const id = cfg.id;
 
-        // Mars outer shell — visible from round-table through venus-returns
-        const shellPhases = ['round-table', 'deluge', 'post-deluge', 'venus-returns'];
-        const showShell = shellPhases.includes(id);
-        p.marsShell.visible = showShell;
+    // Mars outer shell — visible from round-table through venus-returns
+    const shellPhases = ['round-table', 'deluge', 'post-deluge', 'venus-returns'];
+    const showShell = shellPhases.includes(id);
+    p.marsShell.visible = showShell;
 
-        if (showShell) {
-            // Shell follows Mars position
-            p.marsShell.position.copy(p.mars.position);
+    if (showShell) {
+        // Shell follows Mars position
+        p.marsShell.position.copy(p.mars.position);
 
-            if (id === 'venus-returns') {
-                // Stress fractures — shell glowing with cracks
-                p.marsShell.userData.stressed = true;
-                p.marsShell.material.emissive.set(0xff4400);
-                p.marsShell.material.opacity = 0.25;
-            } else if (id === 'deluge') {
-                // Close approach — shell glows red from discharge
-                p.marsShell.userData.stressed = false;
-                p.marsShell.material.emissive.set(0xcc2200);
-                p.marsShell.material.emissiveIntensity = 0.5;
-                p.marsShell.material.opacity = 0.2;
-            } else {
-                p.marsShell.userData.stressed = false;
-                p.marsShell.material.emissive.set(0x883300);
-                p.marsShell.material.emissiveIntensity = 0.15;
-                p.marsShell.material.opacity = 0.15;
-            }
-        }
-
-        // Shell explosion fragments — visible during stabilization
-        const showFragments = (id === 'stabilization');
-        p.marsFragments.visible = showFragments;
-        if (showFragments) {
-            // Set explosion origin to Mars position
-            p.marsFragments.userData.origin = p.mars.position.clone();
-            // Progress of explosion (0→1 over the stabilization period)
-            const dur = cfg.yearEnd - cfg.yearStart;
-            p.marsFragments.userData.progress = Math.min(1, elapsed / dur);
-
-            // Mars becomes smaller + darker after losing shell
-            const shellLoss = Math.min(1, elapsed / dur);
-            p.mars.scale.setScalar(1.0 - shellLoss * 0.3); // shrinks to 0.7
-            p.mars.material.color.set(
-                new THREE.Color(0xff4422).lerp(new THREE.Color(0x993311), shellLoss)
-            );
-        } else if (id === 'modern-solar') {
-            // Modern Mars — smaller, darker
-            p.mars.scale.setScalar(0.7);
-            p.mars.material.color.set(0x993311);
+        if (id === 'venus-returns') {
+            // Stress fractures — shell glowing with cracks
+            p.marsShell.userData.stressed = true;
+            p.marsShell.material.emissive.set(0xff4400);
+            p.marsShell.material.opacity = 0.25;
+        } else if (id === 'deluge') {
+            // Close approach — shell glows red from discharge
+            p.marsShell.userData.stressed = false;
+            p.marsShell.material.emissive.set(0xcc2200);
+            p.marsShell.material.emissiveIntensity = 0.5;
+            p.marsShell.material.opacity = 0.2;
         } else {
-            p.mars.scale.setScalar(1.0);
+            p.marsShell.userData.stressed = false;
+            p.marsShell.material.emissive.set(0x883300);
+            p.marsShell.material.emissiveIntensity = 0.15;
+            p.marsShell.material.opacity = 0.15;
         }
     }
 
-    /** Dragon tether (Venus ↔ Mars electric arc) — visible in venus-returns phase */
-    function updateDragonTetherPhase(p, cfg, year) {
-        const show = (cfg.id === 'venus-returns');
-        p.dragonTether.visible = show;
-        if (show && p.venus.visible && p.mars.visible) {
-            p.dragonTether.userData.venusPos = p.venus.position.clone();
-            p.dragonTether.userData.marsPos = p.mars.position.clone();
+    // Shell explosion fragments — visible during stabilization
+    const showFragments = (id === 'stabilization');
+    p.marsFragments.visible = showFragments;
+    if (showFragments) {
+        // Set explosion origin to Mars position
+        p.marsFragments.userData.origin = p.mars.position.clone();
+        // Progress of explosion (0→1 over the stabilization period)
+        const dur = cfg.yearEnd - cfg.yearStart;
+        p.marsFragments.userData.progress = Math.min(1, elapsed / dur);
+
+        // Mars becomes smaller + darker after losing shell
+        const shellLoss = Math.min(1, elapsed / dur);
+        p.mars.scale.setScalar(1.0 - shellLoss * 0.3); // shrinks to 0.7
+        p.mars.material.color.set(
+            new THREE.Color(0xff4422).lerp(new THREE.Color(0x993311), shellLoss)
+        );
+    } else if (id === 'modern-solar') {
+        // Modern Mars — smaller, darker
+        p.mars.scale.setScalar(0.7);
+        p.mars.material.color.set(0x993311);
+    } else {
+        p.mars.scale.setScalar(1.0);
+    }
+}
+
+/** Dragon tether (Venus ↔ Mars electric arc) — visible in venus-returns phase */
+function updateDragonTetherPhase(p, cfg, year) {
+    const show = (cfg.id === 'venus-returns');
+    p.dragonTether.visible = show;
+    if (show && p.venus.visible && p.mars.visible) {
+        p.dragonTether.userData.venusPos = p.venus.position.clone();
+        p.dragonTether.userData.marsPos = p.mars.position.clone();
+    }
+}
+
+/** Birkeland currents — visible in collinear (golden-age) */
+function updateBirkelandPhase(p, cfg, style) {
+    p.birkelandCurrents.visible = (style === 'collinear');
+}
+
+// ── Collinear placement ──
+// The column is a rigid bar pointing radially toward the Sun.
+// It orbits Sun at radius COL.R in the XZ plane (y=0).
+// Each planet sits along the radial direction at its 'dist' from Sun.
+function placeCollinear(elapsed, cfg) {
+    const angle = (elapsed / COL.period) * Math.PI * 2;
+    // Unit vector pointing from Sun toward the column (outward)
+    const dx = Math.cos(angle);
+    const dz = Math.sin(angle);
+
+    p.sun.position.set(0, 0, 0);
+    sunLight.position.set(0, 0, 0);
+
+    // Helper: place planet along the radial line at distance 'dist' from Sun
+    const placeOnColumn = (mesh, label, dist, show) => {
+        if (show) {
+            mesh.visible = true;
+            if (label) label.visible = true;
+            mesh.position.set(dx * dist, 0, dz * dist);
+        } else {
+            mesh.visible = false;
+            if (label) label.visible = false;
         }
+    };
+
+    // Column order from Sun outward: Jupiter → Saturn → Venus → Mars → Earth → Mercury → …
+    placeOnColumn(p.jupiter, L.jupiter, COL.jupiter.dist, true);
+    placeOnColumn(p.saturn, L.saturn, COL.saturn.dist, true);
+    p.saturnGlow.material.opacity = (cfg.saturn?.glow || 0.5) * 0.3;
+    // No rings during Golden Age
+    p.saturnRings.visible = !!cfg.saturn?.rings;
+    p.saturnRings.material.opacity = cfg.saturn?.rings ? 0.5 : 0;
+
+    placeOnColumn(p.venus, L.venus, COL.venus.dist, !!cfg.venus);
+    // Venus star tracks Venus position on the column
+    if (p.venusStar?.visible) {
+        p.venusStar.position.set(dx * COL.venus.dist, 0, dz * COL.venus.dist);
     }
 
-    /** Birkeland currents — visible in collinear (golden-age) */
-    function updateBirkelandPhase(p, cfg, style) {
-        p.birkelandCurrents.visible = (style === 'collinear');
+    // Mars oscillation: gentle bobbing along the column axis
+    // Per Saturnian cosmology, Mars oscillated (approached/receded) in the polar column
+    const marsOscillation = 0.4 * Math.sin(elapsed * 0.8);
+    const marsDist = COL.mars.dist + marsOscillation;
+    placeOnColumn(p.mars, L.mars, marsDist, !!cfg.mars);
+
+    placeOnColumn(p.earth, L.earth, COL.earth.dist, !!cfg.earth);
+    placeOnColumn(p.mercury, L.mercury, COL.mercury.dist, true);
+    placeOnColumn(p.neptune, L.neptune, COL.neptune.dist, true);
+    placeOnColumn(p.uranus, L.uranus, COL.uranus.dist, true);
+}
+
+// ── Round Table placement ──
+// Saturn has left to outer solar system. Jupiter, Venus, Mars, Earth
+// orbit an EMPTY invisible barycenter. No planet at center.
+// Internal rotation: clockwise. Solar orbit: counterclockwise.
+// Both synchronous = 1 year. Mars oscillates (unstable).
+function placeRoundTable(elapsed, cfg) {
+    // Solar orbit angle (counterclockwise = positive)
+    const solarAngle = (elapsed / RT.solarPeriod) * Math.PI * 2;
+    // Internal rotation angle (clockwise = negative direction)
+    const intAngle = -(elapsed / RT.internalPeriod) * Math.PI * 2;
+
+    // Barycenter position orbiting the Sun
+    const bcX = RT.sunDist * Math.cos(solarAngle);
+    const bcZ = RT.sunDist * Math.sin(solarAngle);
+
+    // Sun at origin
+    p.sun.position.set(0, 0, 0);
+    sunLight.position.set(0, 0, 0);
+
+    // Place planet on the internal circle around the empty barycenter
+    const placeRT = (mesh, label, r, angleOffset, show) => {
+        if (!show) { mesh.visible = false; if (label) label.visible = false; return; }
+        mesh.visible = true; if (label) label.visible = true;
+        const a = intAngle + angleOffset;
+        mesh.position.set(
+            bcX + r * Math.cos(a),
+            0,
+            bcZ + r * Math.sin(a)
+        );
+    };
+
+    // Jupiter: opposite side of barycenter (carries most mass)
+    placeRT(p.jupiter, L.jupiter, RT.jupiter.r, Math.PI, true);
+
+    // Venus: inner-planets side
+    placeRT(p.venus, L.venus, RT.venus.r, 0.3, !!cfg.venus);
+
+    // Mars: unstable oscillator — wobbles between Venus and Earth
+    const marsProgress = Math.min(1, Math.abs(elapsed) / 700);
+    const marsWobble = marsProgress * 0.8 * Math.sin(elapsed * 0.15);
+    placeRT(p.mars, L.mars, RT.mars.r, -0.25 + marsWobble, !!cfg.mars);
+
+    // Earth: outermost on the inner-planets side
+    placeRT(p.earth, L.earth, RT.earth.r, -0.5, !!cfg.earth);
+
+    // Saturn: fled to outer solar system — visible but dim and far away
+    p.saturn.visible = true; L.saturn.visible = true;
+    p.saturn.position.set(...RT.saturnFarPos);
+    p.saturnGlow.material.opacity = 0.1;
+    p.saturnRings.material.opacity = 0;
+
+    // Mercury, Neptune, Uranus: not part of round table, hide
+    p.mercury.visible = false; L.mercury.visible = false;
+    p.neptune.visible = false; L.neptune.visible = false;
+    p.uranus.visible = false; L.uranus.visible = false;
+}
+
+// ── Modern placement (concentric around Sun) ──
+function placeModern(elapsed, cfg) {
+    p.sun.position.set(0, 0, 0);
+    sunLight.position.set(0, 0, 0);
+
+    const placeCircle = (mesh, label, def, show) => {
+        if (!show) { mesh.visible = false; if (label) label.visible = false; return; }
+        mesh.visible = true; if (label) label.visible = true;
+        const a = (elapsed / def.period) * Math.PI * 2;
+        mesh.position.set(def.r * Math.cos(a), 0, def.r * Math.sin(a));
+    };
+
+    placeCircle(p.mercury, L.mercury, MOD.mercury, true);
+    placeCircle(p.venus, L.venus, MOD.venus, !!cfg.venus);
+    placeCircle(p.earth, L.earth, MOD.earth, !!cfg.earth);
+    placeCircle(p.mars, L.mars, MOD.mars, !!cfg.mars);
+    placeCircle(p.jupiter, L.jupiter, MOD.jupiter, !!cfg.jupiter);
+    placeCircle(p.saturn, L.saturn, MOD.saturn, !!cfg.saturn);
+    if (cfg.saturn) {
+        p.saturnGlow.material.opacity = (cfg.saturn.glow || 0.05) * 0.6;
+        p.saturnRings.material.opacity = cfg.saturn.rings ? 0.5 : 0;
     }
+    placeCircle(p.uranus, L.uranus, MOD.uranus, true);
+    placeCircle(p.neptune, L.neptune, MOD.neptune, true);
+}
 
-    // ── Collinear placement ──
-    // The column is a rigid bar pointing radially toward the Sun.
-    // It orbits Sun at radius COL.R in the XZ plane (y=0).
-    // Each planet sits along the radial direction at its 'dist' from Sun.
-    function placeCollinear(elapsed, cfg) {
-        const angle = (elapsed / COL.period) * Math.PI * 2;
-        // Unit vector pointing from Sun toward the column (outward)
-        const dx = Math.cos(angle);
-        const dz = Math.sin(angle);
+// ── Fallback: transitional / chaotic phases ──
+function placeFallback(cfg) {
+    // Sun is hidden before -4077 (set in setYear); enforce here too
+    const sunVis = currentYear >= -4077;
+    p.sun.visible = sunVis;
+    L.sun.visible = sunVis;
+    sunLight.intensity = sunVis ? 3.0 : 0;
+    p.sun.position.set(0, -3, -5);
+    sunLight.position.set(0, -3, -5);
 
-        p.sun.position.set(0, 0, 0);
-        sunLight.position.set(0, 0, 0);
+    const lerp = (mesh, pos) => {
+        if (!pos) return;
+        mesh.position.lerp(new THREE.Vector3(pos[0], pos[1], pos[2]), 0.05);
+    };
 
-        // Helper: place planet along the radial line at distance 'dist' from Sun
-        const placeOnColumn = (mesh, label, dist, show) => {
-            if (show) {
-                mesh.visible = true;
-                if (label) label.visible = true;
-                mesh.position.set(dx * dist, 0, dz * dist);
-            } else {
-                mesh.visible = false;
-                if (label) label.visible = false;
-            }
-        };
-
-        // Column order toward Sun: Uranus(far) → Neptune → Mercury → Earth → Mars → Venus → Saturn → Jupiter(near Sun)
-        placeOnColumn(p.jupiter, L.jupiter, COL.jupiter.dist, true);
-        placeOnColumn(p.saturn, L.saturn, COL.saturn.dist, true);
-        p.saturnGlow.material.opacity = (cfg.saturn?.glow || 0.5) * 0.6;
-        p.saturnRings.material.opacity = cfg.saturn?.rings ? 0.5 : 0;
-
-        placeOnColumn(p.venus, L.venus, COL.venus.dist, !!cfg.venus);
-        // Venus star tracks Venus position on the column
-        if (p.venusStar?.visible) {
-            p.venusStar.position.set(dx * COL.venus.dist, 0, dz * COL.venus.dist);
-        }
-        placeOnColumn(p.mars, L.mars, COL.mars.dist, !!cfg.mars);
-        placeOnColumn(p.earth, L.earth, COL.earth.dist, !!cfg.earth);
-        placeOnColumn(p.mercury, L.mercury, COL.mercury.dist, true);
-        placeOnColumn(p.neptune, L.neptune, COL.neptune.dist, true);
-        placeOnColumn(p.uranus, L.uranus, COL.uranus.dist, true);
-    }
-
-    // ── Round Table placement ──
-    // Saturn has left to outer solar system. Jupiter, Venus, Mars, Earth
-    // orbit an EMPTY invisible barycenter. No planet at center.
-    // Internal rotation: clockwise. Solar orbit: counterclockwise.
-    // Both synchronous = 1 year. Mars oscillates (unstable).
-    function placeRoundTable(elapsed, cfg) {
-        // Solar orbit angle (counterclockwise = positive)
-        const solarAngle = (elapsed / RT.solarPeriod) * Math.PI * 2;
-        // Internal rotation angle (clockwise = negative direction)
-        const intAngle = -(elapsed / RT.internalPeriod) * Math.PI * 2;
-
-        // Barycenter position orbiting the Sun
-        const bcX = RT.sunDist * Math.cos(solarAngle);
-        const bcZ = RT.sunDist * Math.sin(solarAngle);
-
-        // Sun at origin
-        p.sun.position.set(0, 0, 0);
-        sunLight.position.set(0, 0, 0);
-
-        // Place planet on the internal circle around the empty barycenter
-        const placeRT = (mesh, label, r, angleOffset, show) => {
-            if (!show) { mesh.visible = false; if (label) label.visible = false; return; }
-            mesh.visible = true; if (label) label.visible = true;
-            const a = intAngle + angleOffset;
-            mesh.position.set(
-                bcX + r * Math.cos(a),
-                0,
-                bcZ + r * Math.sin(a)
-            );
-        };
-
-        // Jupiter: opposite side of barycenter (carries most mass)
-        placeRT(p.jupiter, L.jupiter, RT.jupiter.r, Math.PI, true);
-
-        // Venus: inner-planets side
-        placeRT(p.venus, L.venus, RT.venus.r, 0.3, !!cfg.venus);
-
-        // Mars: unstable oscillator — wobbles between Venus and Earth
-        const marsProgress = Math.min(1, Math.abs(elapsed) / 700);
-        const marsWobble = marsProgress * 0.8 * Math.sin(elapsed * 0.15);
-        placeRT(p.mars, L.mars, RT.mars.r, -0.25 + marsWobble, !!cfg.mars);
-
-        // Earth: outermost on the inner-planets side
-        placeRT(p.earth, L.earth, RT.earth.r, -0.5, !!cfg.earth);
-
-        // Saturn: fled to outer solar system — visible but dim and far away
+    if (cfg.saturn) {
         p.saturn.visible = true; L.saturn.visible = true;
-        p.saturn.position.set(...RT.saturnFarPos);
-        p.saturnGlow.material.opacity = 0.1;
-        p.saturnRings.material.opacity = 0;
-
-        // Mercury, Neptune, Uranus: not part of round table, hide
-        p.mercury.visible = false; L.mercury.visible = false;
-        p.neptune.visible = false; L.neptune.visible = false;
-        p.uranus.visible = false; L.uranus.visible = false;
+        lerp(p.saturn, cfg.saturn.position);
+        p.saturnGlow.material.opacity = (cfg.saturn.glow || 0.3) * 0.6;
+        p.saturnRings.material.opacity = cfg.saturn.rings ? 0.5 : 0;
     }
+    if (cfg.venus) { p.venus.visible = true; L.venus.visible = true; lerp(p.venus, cfg.venus.position); }
+    else { p.venus.visible = false; L.venus.visible = false; }
+    if (cfg.mars) { p.mars.visible = true; L.mars.visible = true; lerp(p.mars, cfg.mars.position); }
+    else { p.mars.visible = false; L.mars.visible = false; }
+    if (cfg.earth) { p.earth.visible = true; L.earth.visible = true; lerp(p.earth, cfg.earth.position); }
+    else { p.earth.visible = false; L.earth.visible = false; }
+    if (cfg.jupiter) { p.jupiter.visible = true; L.jupiter.visible = true; lerp(p.jupiter, cfg.jupiter.position); }
+    else { p.jupiter.visible = false; L.jupiter.visible = false; }
+    // Mercury, Neptune, Uranus — hide in chaotic phases
+    p.mercury.visible = false; L.mercury.visible = false;
+    p.neptune.visible = false; L.neptune.visible = false;
+    p.uranus.visible = false; L.uranus.visible = false;
+}
 
-    // ── Modern placement (concentric around Sun) ──
-    function placeModern(elapsed, cfg) {
-        p.sun.position.set(0, 0, 0);
-        sunLight.position.set(0, 0, 0);
+function getPhaseInfo() {
+    const c = planetaryConfigs.find(c => currentYear >= c.yearStart && currentYear <= c.yearEnd);
+    return c ? { label: c.label, description: c.description } : { label: '', description: '' };
+}
 
-        const placeCircle = (mesh, label, def, show) => {
-            if (!show) { mesh.visible = false; if (label) label.visible = false; return; }
-            mesh.visible = true; if (label) label.visible = true;
-            const a = (elapsed / def.period) * Math.PI * 2;
-            mesh.position.set(def.r * Math.cos(a), 0, def.r * Math.sin(a));
-        };
+function getOrbitInfo() { return { ...orbitCounts }; }
 
-        placeCircle(p.mercury, L.mercury, MOD.mercury, true);
-        placeCircle(p.venus, L.venus, MOD.venus, !!cfg.venus);
-        placeCircle(p.earth, L.earth, MOD.earth, !!cfg.earth);
-        placeCircle(p.mars, L.mars, MOD.mars, !!cfg.mars);
-        placeCircle(p.jupiter, L.jupiter, MOD.jupiter, !!cfg.jupiter);
-        placeCircle(p.saturn, L.saturn, MOD.saturn, !!cfg.saturn);
-        if (cfg.saturn) {
-            p.saturnGlow.material.opacity = (cfg.saturn.glow || 0.05) * 0.6;
-            p.saturnRings.material.opacity = cfg.saturn.rings ? 0.5 : 0;
-        }
-        placeCircle(p.uranus, L.uranus, MOD.uranus, true);
-        placeCircle(p.neptune, L.neptune, MOD.neptune, true);
+/** Update the HUD text from current state */
+function updateHUD() {
+    const cfg = planetaryConfigs.find(c => currentYear >= c.yearStart && currentYear <= c.yearEnd);
+    const yearStr = formatYear(currentYear);
+    const label = cfg ? cfg.label : '';
+    const desc = cfg ? cfg.description : '';
+    // Find nearest event
+    const bcEvents = timelineEvents.filter(e => e.type === 'planetary' || e.type === 'blip');
+    let nearest = null;
+    let nearestDist = Infinity;
+    for (const e of bcEvents) {
+        const d = Math.abs(e.year - currentYear);
+        if (d < nearestDist) { nearestDist = d; nearest = e; }
     }
+    const evtStr = (nearest && nearestDist <= 60) ? nearest.title : '';
+    hud.update(yearStr, label, desc, evtStr);
+}
 
-    // ── Fallback: transitional / chaotic phases ──
-    function placeFallback(cfg) {
-        p.sun.position.set(0, -3, -5);
-        sunLight.position.set(0, -3, -5);
+function resize() {
+    doResize();
+}
 
-        const lerp = (mesh, pos) => {
-            if (!pos) return;
-            mesh.position.lerp(new THREE.Vector3(pos[0], pos[1], pos[2]), 0.05);
-        };
+function destroy() {
+    if (animId) cancelAnimationFrame(animId);
+    window.removeEventListener('resize', doResize);
+    window.removeEventListener('keydown', onKeyDown);
+    if (resizeObserver) resizeObserver.disconnect();
+    hud.remove();
+    viewUI.remove();
+    renderer.dispose();
+}
 
-        if (cfg.saturn) {
-            p.saturn.visible = true; L.saturn.visible = true;
-            lerp(p.saturn, cfg.saturn.position);
-            p.saturnGlow.material.opacity = (cfg.saturn.glow || 0.3) * 0.6;
-            p.saturnRings.material.opacity = cfg.saturn.rings ? 0.5 : 0;
-        }
-        if (cfg.venus) { p.venus.visible = true; L.venus.visible = true; lerp(p.venus, cfg.venus.position); }
-        else { p.venus.visible = false; L.venus.visible = false; }
-        if (cfg.mars) { p.mars.visible = true; L.mars.visible = true; lerp(p.mars, cfg.mars.position); }
-        else { p.mars.visible = false; L.mars.visible = false; }
-        if (cfg.earth) { p.earth.visible = true; L.earth.visible = true; lerp(p.earth, cfg.earth.position); }
-        else { p.earth.visible = false; L.earth.visible = false; }
-        if (cfg.jupiter) { p.jupiter.visible = true; L.jupiter.visible = true; lerp(p.jupiter, cfg.jupiter.position); }
-        else { p.jupiter.visible = false; L.jupiter.visible = false; }
-        // Mercury, Neptune, Uranus — hide in chaotic phases
-        p.mercury.visible = false; L.mercury.visible = false;
-        p.neptune.visible = false; L.neptune.visible = false;
-        p.uranus.visible = false; L.uranus.visible = false;
+function setViewMode(mode) {
+    if (mode >= 1 && mode <= 3) {
+        viewMode = mode;
+        viewUI.setActive(viewMode);
     }
+}
 
-    function getPhaseInfo() {
-        const c = planetaryConfigs.find(c => currentYear >= c.yearStart && currentYear <= c.yearEnd);
-        return c ? { label: c.label, description: c.description } : { label: '', description: '' };
-    }
-
-    function getOrbitInfo() { return { ...orbitCounts }; }
-
-    function resize() {
-        doResize();
-    }
-
-    function destroy() {
-        if (animId) cancelAnimationFrame(animId);
-        window.removeEventListener('resize', doResize);
-        if (resizeObserver) resizeObserver.disconnect();
-        renderer.dispose();
-    }
-
-    return { setYear, getPhaseInfo, getOrbitInfo, resize, destroy };
+return { setYear, getPhaseInfo, getOrbitInfo, setViewMode, resize, destroy };
 }
 
 // ═══════════════════ Helper Functions ═══════════════════
+
+/**
+ * Build an HTML HUD overlay positioned on top of the canvas.
+ * Returns { update(year, label, desc, event), remove() }.
+ */
+function buildHUD(canvas) {
+    // Ensure we have a positioned container around the canvas
+    let parent = canvas.parentElement;
+    if (parent) {
+        const pos = getComputedStyle(parent).position;
+        if (pos === 'static' || !pos) parent.style.position = 'relative';
+    }
+    // If parent isn't available, fall back to document.body
+    const container = parent || document.body;
+
+    const el = document.createElement('div');
+    el.className = 'planet-hud';
+    Object.assign(el.style, {
+        position: 'absolute',
+        top: '0', left: '0', right: '0',
+        zIndex: '900',
+        padding: '10px 14px',
+        background: 'linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 60%, transparent 100%)',
+        pointerEvents: 'none',
+        fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif",
+        color: '#e0e0e0',
+    });
+
+    const yearEl = document.createElement('div');
+    Object.assign(yearEl.style, {
+        fontSize: '22px', fontWeight: '700',
+        color: '#c084fc', fontVariantNumeric: 'tabular-nums',
+        lineHeight: '1.2',
+    });
+
+    const labelEl = document.createElement('div');
+    Object.assign(labelEl.style, {
+        fontSize: '13px', fontWeight: '600',
+        color: '#e2e8f0', marginTop: '2px',
+    });
+
+    const descEl = document.createElement('div');
+    Object.assign(descEl.style, {
+        fontSize: '11px', color: '#94a3b8',
+        marginTop: '3px', lineHeight: '1.4',
+        maxWidth: '420px',
+    });
+
+    const eventEl = document.createElement('div');
+    Object.assign(eventEl.style, {
+        fontSize: '11px', color: '#d8b4fe',
+        marginTop: '3px', opacity: '0.85',
+    });
+
+    el.appendChild(yearEl);
+    el.appendChild(labelEl);
+    el.appendChild(descEl);
+    el.appendChild(eventEl);
+    container.appendChild(el);
+
+    let lastText = '';
+    return {
+        update(yearStr, label, desc, evtTitle) {
+            const key = yearStr + label;
+            if (key === lastText) return; // avoid unnecessary DOM writes
+            lastText = key;
+            yearEl.textContent = yearStr;
+            labelEl.textContent = label;
+            descEl.textContent = desc;
+            eventEl.textContent = evtTitle;
+        },
+        remove() {
+            el.remove();
+        },
+    };
+}
+
+/**
+ * Build the multi-view toggle UI (HTML overlay on canvas).
+ * Shows 3 mode buttons + PIP border/labels during collinear phase.
+ * Returns { setVisible(bool), setActive(mode), updatePIPPositions(...), remove() }.
+ */
+function buildViewToggleUI(canvas, onModeChange) {
+    let parent = canvas.parentElement;
+    if (parent) {
+        const pos = getComputedStyle(parent).position;
+        if (pos === 'static' || !pos) parent.style.position = 'relative';
+    }
+    const container = parent || document.body;
+
+    // ── Toggle button bar (top-left, below HUD) ──
+    const bar = document.createElement('div');
+    bar.className = 'view-toggle-bar';
+    Object.assign(bar.style, {
+        position: 'absolute',
+        bottom: '12px', left: '12px',
+        zIndex: '910',
+        display: 'none', // hidden until collinear
+        gap: '4px',
+        pointerEvents: 'auto',
+    });
+    bar.style.display = 'none';
+
+    const btnStyle = {
+        padding: '4px 10px',
+        fontSize: '11px',
+        fontWeight: '600',
+        fontFamily: "'Segoe UI', system-ui, sans-serif",
+        border: '1px solid rgba(96, 165, 250, 0.4)',
+        borderRadius: '4px',
+        background: 'rgba(0,0,0,0.6)',
+        color: '#94a3b8',
+        cursor: 'pointer',
+        transition: 'all 0.15s',
+    };
+    const activeBtnStyle = {
+        background: 'rgba(96, 165, 250, 0.2)',
+        color: '#e0f2fe',
+        borderColor: 'rgba(96, 165, 250, 0.8)',
+    };
+
+    const buttons = [];
+    const labels = ['1: Orbital', '2: North', '3: South'];
+    for (let i = 0; i < 3; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = labels[i];
+        Object.assign(btn.style, btnStyle);
+        if (i === 0) Object.assign(btn.style, activeBtnStyle);
+        btn.addEventListener('click', () => {
+            onModeChange(i + 1);
+            setActive(i + 1);
+        });
+        bar.appendChild(btn);
+        buttons.push(btn);
+    }
+    container.appendChild(bar);
+
+    // ── PIP border overlays + labels ──
+    const pip1Border = document.createElement('div');
+    const pip2Border = document.createElement('div');
+    const pip1Label = document.createElement('div');
+    const pip2Label = document.createElement('div');
+
+    const pipBorderStyle = {
+        position: 'absolute',
+        zIndex: '905',
+        border: '1px solid rgba(96, 165, 250, 0.5)',
+        borderRadius: '4px',
+        pointerEvents: 'none',
+        display: 'none',
+        boxShadow: '0 0 8px rgba(96, 165, 250, 0.15)',
+    };
+    Object.assign(pip1Border.style, pipBorderStyle);
+    Object.assign(pip2Border.style, pipBorderStyle);
+
+    const pipLabelStyle = {
+        position: 'absolute',
+        zIndex: '906',
+        fontSize: '9px',
+        fontWeight: '600',
+        fontFamily: "'Segoe UI', system-ui, sans-serif",
+        color: 'rgba(148, 163, 184, 0.8)',
+        pointerEvents: 'none',
+        display: 'none',
+        textShadow: '0 1px 3px rgba(0,0,0,0.8)',
+        letterSpacing: '0.5px',
+    };
+    Object.assign(pip1Label.style, pipLabelStyle);
+    Object.assign(pip2Label.style, pipLabelStyle);
+
+    container.appendChild(pip1Border);
+    container.appendChild(pip2Border);
+    container.appendChild(pip1Label);
+    container.appendChild(pip2Label);
+
+    function setActive(mode) {
+        for (let i = 0; i < 3; i++) {
+            if (i === mode - 1) {
+                Object.assign(buttons[i].style, activeBtnStyle);
+            } else {
+                Object.assign(buttons[i].style, {
+                    background: 'rgba(0,0,0,0.6)',
+                    color: '#94a3b8',
+                    borderColor: 'rgba(96, 165, 250, 0.4)',
+                });
+            }
+        }
+    }
+
+    function setVisible(visible) {
+        const disp = visible ? 'flex' : 'none';
+        bar.style.display = disp;
+        const pipDisp = visible ? 'block' : 'none';
+        pip1Border.style.display = pipDisp;
+        pip2Border.style.display = pipDisp;
+        pip1Label.style.display = pipDisp;
+        pip2Label.style.display = pipDisp;
+    }
+
+    /**
+     * Update PIP overlay positions to match the Three.js viewports.
+     * CSS coords are from top-left; Three.js viewport coords are from bottom-left.
+     */
+    function updatePIPPositions(canvasW, canvasH, pipW, pipH, pad, cams) {
+        // PIP 1: top-right corner
+        const p1Left = canvasW - pipW - pad;
+        const p1Top = pad;
+        Object.assign(pip1Border.style, {
+            left: p1Left + 'px', top: p1Top + 'px',
+            width: pipW + 'px', height: pipH + 'px',
+        });
+        Object.assign(pip1Label.style, {
+            left: (p1Left + 4) + 'px', top: (p1Top + 2) + 'px',
+        });
+        pip1Label.textContent = cams.c1Label;
+
+        // PIP 2: below PIP 1
+        const p2Top = p1Top + pipH + pad;
+        Object.assign(pip2Border.style, {
+            left: p1Left + 'px', top: p2Top + 'px',
+            width: pipW + 'px', height: pipH + 'px',
+        });
+        Object.assign(pip2Label.style, {
+            left: (p1Left + 4) + 'px', top: (p2Top + 2) + 'px',
+        });
+        pip2Label.textContent = cams.c2Label;
+    }
+
+    return { setVisible, setActive, updatePIPPositions, remove() {
+        bar.remove();
+        pip1Border.remove(); pip2Border.remove();
+        pip1Label.remove(); pip2Label.remove();
+    }};
+}
 
 function buildLabel(text, color, THREE) {
     const c = document.createElement('canvas');
@@ -877,9 +1304,9 @@ function buildSaturn(scene, p, THREE) {
     p.saturn = mesh;
     const glow = new THREE.Sprite(new THREE.SpriteMaterial({
         map: glowTex(0xff8833, THREE), color: 0xff8833,
-        transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending,
+        transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending,
     }));
-    glow.scale.set(5, 5, 1);
+    glow.scale.set(3, 3, 1);
     mesh.add(glow);
     p.saturnGlow = glow;
     const ring = new THREE.Mesh(
@@ -887,6 +1314,7 @@ function buildSaturn(scene, p, THREE) {
         new THREE.MeshBasicMaterial({ color: 0xccaa66, side: THREE.DoubleSide, transparent: true, opacity: 0 })
     );
     ring.rotation.x = Math.PI / 2.3;
+    ring.visible = false; // hidden by default, enabled per phase
     mesh.add(ring);
     p.saturnRings = ring;
 }
@@ -1421,8 +1849,8 @@ function animateBirkelandCurrents(p, t, THREE) {
     if (!p.birkelandCurrents?.visible) return;
     const positions = p.birkelandCurrents.geometry.attributes.position;
 
-    // Connect Sun → Jupiter → Saturn → Venus → Mars → Earth → Mercury → Neptune → Uranus
-    const bodies = [p.sun, p.jupiter, p.saturn, p.venus, p.mars, p.earth, p.mercury, p.neptune, p.uranus]
+    // Connect Jupiter → Saturn → Venus(star) → Mars → Earth → Mercury → Neptune → Uranus
+    const bodies = [p.jupiter, p.saturn, p.venusStar?.visible ? p.venusStar : p.venus, p.mars, p.earth, p.mercury, p.neptune, p.uranus]
         .filter(b => b?.visible);
 
     if (bodies.length < 2) return;

@@ -121,30 +121,9 @@ export function AnimationMapView({ onSelectEvent }: AnimationMapViewProps) {
     }, [updateYear])
 
     return (
-        <div className="flex flex-col h-full w-full bg-slate-950">
-            {/* Map container */}
-            <div ref={containerRef} className="flex-1 min-h-0 w-full" style={{ minHeight: 300 }} />
-
-            {/* Year overlay */}
-            {ready && (
-                <div className="absolute top-3 left-3 z-[800] bg-black/80 border border-slate-600 rounded-lg px-4 py-3 pointer-events-none">
-                    <div className="text-2xl font-bold text-orange-500 tabular-nums">{year} CE</div>
-                    <div className="text-xs text-slate-400 mt-0.5">{phase}</div>
-                </div>
-            )}
-
-            {/* Event feed */}
-            {nearbyEvents.length > 0 && (
-                <div className="absolute top-3 right-3 z-[800] bg-black/80 border border-slate-600 rounded-lg px-3 py-2 max-w-[260px] pointer-events-none">
-                    <div className="text-xs text-slate-500 mb-1">Nearby events</div>
-                    {nearbyEvents.slice(0, 4).map((evt: any, i: number) => (
-                        <div key={i} className="text-xs text-slate-300 py-0.5 border-t border-slate-700/50 first:border-0">
-                            <span className="text-orange-400 tabular-nums mr-1">{evt.year}</span>
-                            {evt.title}
-                        </div>
-                    ))}
-                </div>
-            )}
+        <div className="flex flex-col h-full w-full bg-slate-950 relative">
+            {/* Map container — the controller renders its own HUD overlay inside */}
+            <div ref={containerRef} className="flex-1 min-h-0 w-full relative" style={{ minHeight: 300 }} />
 
             {/* Timeline controls */}
             <div className="flex-shrink-0 flex items-center gap-3 px-3 py-2 bg-slate-900 border-t border-slate-700">

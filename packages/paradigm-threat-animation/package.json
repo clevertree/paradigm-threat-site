@@ -10,6 +10,10 @@
         "./data/*": "./data/*",
         "./style.css": "./src/style.css"
     },
+    "scripts": {
+        "dev": "vite --config demo/vite.config.js demo",
+        "build:demo": "vite build --config demo/vite.config.js demo"
+    },
     "peerDependencies": {
         "leaflet": ">=1.9.0",
         "three": ">=0.150.0"
@@ -21,5 +25,8 @@
         "three": {
             "optional": true
         }
+    },
+    "devDependencies": {
+        "vite": "^5.0.0"
     }
 }

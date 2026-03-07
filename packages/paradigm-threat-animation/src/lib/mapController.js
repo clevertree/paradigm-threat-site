@@ -98,6 +98,9 @@ export async function createMapController(container, geojsonData) {
         eventMarkers.push({ marker, evt });
     });
 
+    // ── HUD overlay ──
+    const hud = buildMapHUD(container);
+
     function setYear(year) {
         currentYear = year;
 
@@ -127,6 +130,18 @@ export async function createMapController(container, geojsonData) {
             const isVisible = evt.year <= year;
             marker.setOpacity(isVisible ? (isActive ? 1 : 0.3) : 0);
         });
+
+        // Update HUD
+        const phaseObj = empirePhases.find(p => currentYear >= p.yearStart && currentYear <= p.yearEnd);
+        const label = phaseObj ? phaseObj.label : '';
+        const ceEvents = timelineEvents.filter(e => e.type === 'map');
+        let nearest = null, nearestDist = Infinity;
+        for (const e of ceEvents) {
+            const d = Math.abs(e.year - year);
+            if (d < nearestDist) { nearestDist = d; nearest = e; }
+        }
+        const evtStr = (nearest && nearestDist <= 15) ? nearest.title : '';
+        hud.update(formatYear(year), label, evtStr);
     }
 
     function getPhaseLabel() {
@@ -135,10 +150,68 @@ export async function createMapController(container, geojsonData) {
     }
 
     function destroy() {
+        hud.remove();
         map.remove();
     }
 
     return { map, setYear, getPhaseLabel, destroy };
+}
+
+/** Build an HTML HUD overlay for the map view */
+function buildMapHUD(container) {
+    container.style.position = 'relative';
+
+    const el = document.createElement('div');
+    el.className = 'map-hud';
+    Object.assign(el.style, {
+        position: 'absolute',
+        top: '0', left: '0', right: '0',
+        zIndex: '900',
+        padding: '10px 14px',
+        background: 'linear-gradient(180deg, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.45) 70%, transparent 100%)',
+        pointerEvents: 'none',
+        fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif",
+        color: '#e0e0e0',
+    });
+
+    const yearEl = document.createElement('div');
+    Object.assign(yearEl.style, {
+        fontSize: '22px', fontWeight: '700',
+        color: '#f97316', fontVariantNumeric: 'tabular-nums',
+        lineHeight: '1.2',
+    });
+
+    const labelEl = document.createElement('div');
+    Object.assign(labelEl.style, {
+        fontSize: '13px', fontWeight: '600',
+        color: '#e2e8f0', marginTop: '2px',
+    });
+
+    const eventEl = document.createElement('div');
+    Object.assign(eventEl.style, {
+        fontSize: '11px', color: '#fdba74',
+        marginTop: '3px', opacity: '0.85',
+    });
+
+    el.appendChild(yearEl);
+    el.appendChild(labelEl);
+    el.appendChild(eventEl);
+    container.appendChild(el);
+
+    let lastText = '';
+    return {
+        update(yearStr, label, evtTitle) {
+            const key = yearStr + label;
+            if (key === lastText) return;
+            lastText = key;
+            yearEl.textContent = yearStr;
+            labelEl.textContent = label;
+            eventEl.textContent = evtTitle;
+        },
+        remove() {
+            el.remove();
+        },
+    };
 }
 
 function getPhaseColor(phaseId) {

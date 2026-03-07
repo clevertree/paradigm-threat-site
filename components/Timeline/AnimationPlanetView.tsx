@@ -119,43 +119,10 @@ export function AnimationPlanetView({ onSelectEvent }: AnimationPlanetViewProps)
 
     return (
         <div className="flex flex-col h-full w-full bg-slate-950 relative">
-            {/* 3D canvas */}
-            <canvas ref={canvasRef} className="flex-1 min-h-0 w-full block" style={{ minHeight: 300, width: '100%', height: '100%' }} />
-
-            {/* Phase overlay */}
-            {ready && (
-                <div className="absolute top-3 left-3 z-[800] bg-black/80 border border-slate-600 rounded-lg px-4 py-3 pointer-events-none max-w-[340px]">
-                    <div className="text-2xl font-bold text-purple-400 tabular-nums">{formatBCE(year)}</div>
-                    <div className="text-sm text-slate-200 mt-1 font-semibold">{phaseInfo.label}</div>
-                    <div className="text-xs text-slate-400 mt-1 leading-relaxed">{phaseInfo.description}</div>
-                </div>
-            )}
-
-            {/* Orbit counter */}
-            {ready && Object.keys(orbitInfo).length > 0 && (
-                <div className="absolute bottom-16 left-3 z-[800] bg-black/80 border border-slate-600 rounded-lg px-3 py-2 pointer-events-none">
-                    <div className="text-xs text-slate-500 mb-1">Orbits (this era)</div>
-                    {Object.entries(orbitInfo).map(([name, count]) => (
-                        <div key={name} className="text-xs text-slate-300 py-0.5 flex justify-between gap-3">
-                            <span className="text-purple-400 capitalize">{name}</span>
-                            <span className="tabular-nums">{count.toFixed(1)}</span>
-                        </div>
-                    ))}
-                </div>
-            )}
-
-            {/* Event feed */}
-            {nearbyEvents.length > 0 && (
-                <div className="absolute top-3 right-3 z-[800] bg-black/80 border border-slate-600 rounded-lg px-3 py-2 max-w-[260px] pointer-events-none">
-                    <div className="text-xs text-slate-500 mb-1">Nearby events</div>
-                    {nearbyEvents.slice(0, 4).map((evt: any, i: number) => (
-                        <div key={i} className="text-xs text-slate-300 py-0.5 border-t border-slate-700/50 first:border-0">
-                            <span className="text-purple-400 tabular-nums mr-1">{formatBCE(evt.year)}</span>
-                            {evt.title}
-                        </div>
-                    ))}
-                </div>
-            )}
+            {/* 3D canvas — the controller renders its own HUD overlay inside this container */}
+            <div className="flex-1 min-h-0 w-full relative" style={{ minHeight: 300 }}>
+                <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
+            </div>
 
             {/* Timeline controls */}
             <div className="flex-shrink-0 flex items-center gap-3 px-3 py-2 bg-slate-900 border-t border-slate-700">

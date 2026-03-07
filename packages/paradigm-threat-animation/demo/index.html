@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Paradigm Threat — Animated Timeline</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+    <!-- Mode toggle -->
+    <nav id="mode-bar">
+        <button id="btn-map" class="mode-btn active">Map (CE)</button>
+        <button id="btn-3d" class="mode-btn">Planetary (BC)</button>
+    </nav>
+
+    <!-- Map view container -->
+    <div id="map-view" class="view-panel active">
+        <div id="map"></div>
+        <div id="map-overlay">
+            <div id="map-year-display">1053 CE</div>
+            <div id="map-phase-label">No Empires / No Borders</div>
+        </div>
+    </div>
+
+    <!-- 3D planetary view container -->
+    <div id="planet-view" class="view-panel">
+        <canvas id="planet-canvas"></canvas>
+        <div id="planet-overlay">
+            <div id="planet-year-display">4077 BCE</div>
+            <div id="planet-phase-label">Golden Age — Collinear Configuration</div>
+            <div id="planet-description"></div>
+        </div>
+    </div>
+
+    <!-- Timeline slider (shared) -->
+    <div id="timeline-controls">
+        <div id="timeline-track">
+            <input type="range" id="timeline-slider" min="-5000" max="2026" value="1053" step="1" />
+            <div id="timeline-markers"></div>
+        </div>
+        <div id="timeline-buttons">
+            <button id="btn-play">▶ Play</button>
+            <button id="btn-pause" style="display:none">⏸ Pause</button>
+            <button id="btn-reset">⟲ Reset</button>
+            <select id="speed-select">
+                <option value="200">Slow</option>
+                <option value="80" selected>Normal</option>
+                <option value="30">Fast</option>
+            </select>
+        </div>
+        <div id="event-feed"></div>
+    </div>
+
+    <script type="module" src="./main.js"></script>
+</body>
+
+</html>

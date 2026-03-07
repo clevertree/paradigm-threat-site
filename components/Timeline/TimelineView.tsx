@@ -57,18 +57,23 @@ export function TimelineView() {
   const initialEventIdRef = useRef<string | null>(null)
   const [browserPath, setBrowserPath] = useState<string | null>(null)
 
-  // Read ?fullscreen=1 and event id from URL on mount
+  // Read ?fullscreen=1, ?view=<mode>, and event id from URL on mount
   // Supports both /timeline/<eventId> and /timeline?event=<eventId>
   // Also supports ?view=browser&path=... for deep linking to the file browser
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.get('fullscreen') === '1') setFullPage(true)
-    // Deep link to browser mode
-    if (params.get('view') === 'browser') {
-      setViewMode('browser')
-      setFullPage(true)
-      const p = params.get('path')
-      if (p) setBrowserPath(p)
+    // Restore view mode from URL
+    const viewParam = params.get('view') as TimelineViewMode | null
+    const validViews: TimelineViewMode[] = ['list', 'vis', 'timelinejs', 'custom', 'animation-map', 'animation-3d', 'browser']
+    if (viewParam && validViews.includes(viewParam)) {
+      setViewModeRaw(viewParam)
+      // Deep link to browser mode with optional path
+      if (viewParam === 'browser') {
+        setFullPage(true)
+        const p = params.get('path')
+        if (p) setBrowserPath(p)
+      }
     }
     // Prefer path-based event ID: /timeline/<eventId>
     const pathMatch = window.location.pathname.match(/^\/timeline\/(.+)$/)
@@ -115,21 +120,23 @@ export function TimelineView() {
   const [viewMode, setViewModeRaw] = useState<TimelineViewMode>('custom')
   const setViewMode = useCallback((mode: TimelineViewMode) => {
     setViewModeRaw(mode)
-    // When switching to browser, auto-enter fullscreen; update URL
+    const params = new URLSearchParams(window.location.search)
+    // Persist the view mode in the URL (use 'custom' as default — omit it)
+    if (mode === 'custom') {
+      params.delete('view')
+    } else {
+      params.set('view', mode)
+    }
+    // When switching to browser, auto-enter fullscreen
     if (mode === 'browser') {
       setFullPage(true)
-      const params = new URLSearchParams(window.location.search)
-      params.set('view', 'browser')
       params.set('fullscreen', '1')
-      const q = params.toString()
-      window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
     } else {
-      const params = new URLSearchParams(window.location.search)
-      params.delete('view')
+      // Clean up browser-specific params
       params.delete('path')
-      const q = params.toString()
-      window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
     }
+    const q = params.toString()
+    window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
   }, [])
   const [expansionMode, setExpansionMode] = useState<ExpansionMode>('none')
   const [selected, setSelected] = useState<TimelineEntry | null>(null)

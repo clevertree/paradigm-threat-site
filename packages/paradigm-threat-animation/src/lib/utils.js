@@ -5,8 +5,9 @@
 
 /** Format a year number as "YYYY BCE" or "YYYY CE" */
 export function formatYear(year) {
-    if (year < 0) return `${Math.abs(year)} BCE`;
-    return `${year} CE`;
+    const rounded = Math.round(year * 100) / 100;
+    if (rounded < 0) return `${Math.abs(rounded)} BCE`;
+    return `${rounded} CE`;
 }
 
 /**
