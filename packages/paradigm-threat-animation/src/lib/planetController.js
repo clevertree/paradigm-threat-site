@@ -147,6 +147,17 @@ export async function createPlanetController(canvas) {
     L.moon = buildLabel('MOON', '#cccccc', THREE);
     Object.values(L).forEach(s => scene.add(s));
 
+    // ── Earth horizon disc (visible in north/south multi-view only) ──
+    const horizonGeo = new THREE.CircleGeometry(6, 64);
+    const horizonMat = new THREE.MeshBasicMaterial({
+        color: 0x1a3322, transparent: true, opacity: 0.85, side: THREE.DoubleSide,
+        depthWrite: false,
+    });
+    const horizonDisc = new THREE.Mesh(horizonGeo, horizonMat);
+    horizonDisc.rotation.x = -Math.PI / 2; // lay flat in XZ plane
+    horizonDisc.visible = false;
+    scene.add(horizonDisc);
+
     // ── Orbital path lines (static geometry) ──
     const oLines = {};
     oLines.collinear = buildCollinearPaths(scene, THREE);
@@ -299,12 +310,12 @@ export async function createPlanetController(canvas) {
         camera.lookAt(camLookGoal);
 
         // ── Update North/South cameras to track column ──
-        // Elevated view from Earth's column position looking down at each group.
-        // Up-vector mapped to column direction so planets spread vertically on screen.
-        //   North = inner planets (Sun-ward): Jupiter(1.5), Saturn(4.0), Venus(6.5), Mars(8.5)
-        //     UP = inward (toward Sun) → Jupiter/Saturn at top, Mars at bottom
-        //   South = outer planets: Mercury(12.0), Neptune(13.5), Uranus(15.0)
-        //     UP = outward (away from Sun) → Uranus at top, Mercury at bottom
+        // Standing on Earth's surface looking along the column in each direction.
+        // Camera is at Earth's XZ position, just above ground (y = 0.3).
+        // The foreshortened view — near planets big, far planets small — is the
+        // correct surface perspective. A horizon disc below creates the ground line.
+        //   North = inner planets (Sun-ward): Mars(8.5)→Venus(6.5)→Saturn(4.0)→Jupiter(1.5)
+        //   South = outer planets: Mercury(12.0)→Neptune(13.5)→Uranus(15.0)
         if (multiViewActive && p.earth?.visible) {
             const earthPos = p.earth.position;
 
@@ -312,29 +323,34 @@ export async function createPlanetController(canvas) {
             const colDir = new THREE.Vector3(earthPos.x, 0, earthPos.z).normalize();
             // Inward direction (toward Sun)
             const inward = new THREE.Vector3(-colDir.x, 0, -colDir.z);
-            // Perpendicular to column in XZ plane (for slight camera offset)
-            const perpDir = new THREE.Vector3(-colDir.z, 0, colDir.x);
 
-            // North cam: elevated above Earth, looking down at inner planet group
-            // Slight perpendicular offset so the column appears as a line, not a dot
-            const northMid = (COL.jupiter.dist + COL.mars.dist) / 2;
-            northCam.position.set(
-                earthPos.x + perpDir.x * 2,
-                10,
-                earthPos.z + perpDir.z * 2
-            );
-            northCam.up.set(inward.x, 0, inward.z);
-            northCam.lookAt(colDir.x * northMid, 0, colDir.z * northMid);
+            // Position horizon disc at Earth, just below camera
+            horizonDisc.visible = true;
+            horizonDisc.position.set(earthPos.x, -0.05, earthPos.z);
 
-            // South cam: elevated above Earth, looking down at outer planet group
-            const southMid = (COL.mercury.dist + COL.uranus.dist) / 2;
-            southCam.position.set(
-                earthPos.x + perpDir.x * 2,
-                10,
-                earthPos.z + perpDir.z * 2
+            // North cam: standing on Earth, looking inward toward Saturn group
+            // Camera up = (0,1,0), look target slightly above column plane (y=0.8)
+            // so planets appear in upper half and horizon in lower half.
+            const northTarget = (COL.saturn.dist + COL.venus.dist) / 2; // ~5.25
+            northCam.position.set(earthPos.x, 0.3, earthPos.z);
+            northCam.up.set(0, 1, 0);
+            northCam.lookAt(
+                earthPos.x + inward.x * (COL.earth.dist - northTarget),
+                0.8,
+                earthPos.z + inward.z * (COL.earth.dist - northTarget)
             );
-            southCam.up.set(colDir.x, 0, colDir.z);
-            southCam.lookAt(colDir.x * southMid, 0, colDir.z * southMid);
+
+            // South cam: standing on Earth, looking outward toward Uranus group
+            const southTarget = (COL.mercury.dist + COL.uranus.dist) / 2; // ~13.5
+            southCam.position.set(earthPos.x, 0.3, earthPos.z);
+            southCam.up.set(0, 1, 0);
+            southCam.lookAt(
+                earthPos.x + colDir.x * (southTarget - COL.earth.dist),
+                0.8,
+                earthPos.z + colDir.z * (southTarget - COL.earth.dist)
+            );
+        } else {
+            horizonDisc.visible = false;
         }
 
         // ── Determine the active camera for label syncing ──
@@ -358,20 +374,9 @@ export async function createPlanetController(canvas) {
         syncLabel(L.uranus, p.uranus, 0.7, labelCam);
         syncLabel(L.moon, p.moon, 0.4, labelCam);
 
-        // ── Shift labels perpendicular to column in multi-view ──
-        // In the elevated north/south cameras, the Y-offset lands labels on top
-        // of planets. Shifting perpendicular makes them appear to the SIDE instead.
-        if (multiViewActive && p.earth?.visible) {
-            const colDir2 = new THREE.Vector3(p.earth.position.x, 0, p.earth.position.z).normalize();
-            const perpShift = new THREE.Vector3(-colDir2.z, 0, colDir2.x).multiplyScalar(1.2);
-            const allLabels = [L.sun, L.saturn, L.venus, L.mars, L.earth, L.jupiter, L.mercury, L.neptune, L.uranus, L.moon];
-            for (const lbl of allLabels) {
-                if (lbl?.visible) {
-                    lbl.position.x += perpShift.x;
-                    lbl.position.z += perpShift.z;
-                }
-            }
-        }
+        // ── Labels: Y-offset above planets works naturally with ground-level cams ──
+        // No perpendicular shift needed — standard Y-offset places labels above
+        // planets in the foreshortened ground-level view.
 
         // ── Render: multi-viewport during collinear, single otherwise ──
         if (multiViewActive) {
