@@ -299,35 +299,38 @@ export async function createPlanetController(canvas) {
         camera.lookAt(camLookGoal);
 
         // ── Update North/South cameras to track column ──
-        // Cameras simulate a person standing on Earth's surface looking UP at the sky.
-        // Position well below the column plane (y = -8) and look nearly straight up
-        // with a slight lean toward the target (Saturn inward / outer planets outward).
-        // This gives a comfortable ~80° sky-gazing elevation angle.
+        // The collinear column lies in the XZ plane (y=0). We position cameras
+        // perpendicular to the column axis, slightly elevated, aimed at the center
+        // of each planet group so they're visible in the PIP viewports.
+        //   North = inner planets closer to Sun: Jupiter(1.5), Saturn(4.0), Venus(6.5), Mars(8.5)
+        //   South = outer planets farther from Sun: Mercury(12.0), Neptune(13.5), Uranus(15.0)
         if (multiViewActive && p.earth?.visible) {
-            const earthPos = p.earth.position;
             const saturnPos = p.saturn.position;
 
-            // North cam: standing on Earth, looking up toward Saturn/Venus/Mars
-            // Lean slightly inward along column toward Saturn
-            const nDir = new THREE.Vector3().subVectors(saturnPos, earthPos).normalize();
-            northCam.position.set(earthPos.x, -8, earthPos.z);
-            // Look target: high above Earth with slight lean toward Saturn
-            northCam.lookAt(
-                earthPos.x + nDir.x * 2,
-                12,
-                earthPos.z + nDir.z * 2
-            );
+            // Column direction (unit vector from Sun outward along the radial bar)
+            const colDir = new THREE.Vector3(saturnPos.x, 0, saturnPos.z).normalize();
+            // Perpendicular to column in the XZ plane
+            const perpDir = new THREE.Vector3(-colDir.z, 0, colDir.x);
 
-            // South cam: standing on Earth, looking up toward Mercury/Neptune/Uranus
-            const uranusPos = p.uranus.position;
-            const sDir = new THREE.Vector3().subVectors(uranusPos, earthPos).normalize();
-            southCam.position.set(earthPos.x, -8, earthPos.z);
-            // Look target: high above Earth with slight lean toward outer planets
-            southCam.lookAt(
-                earthPos.x + sDir.x * 2,
-                12,
-                earthPos.z + sDir.z * 2
+            // North cam: frame inner planets (Jupiter → Mars, dist 1.5–8.5)
+            const northMid = (COL.jupiter.dist + COL.mars.dist) / 2; // ~5.0
+            const northCenter = new THREE.Vector3(colDir.x * northMid, 0, colDir.z * northMid);
+            northCam.position.set(
+                northCenter.x + perpDir.x * 12,
+                6,
+                northCenter.z + perpDir.z * 12
             );
+            northCam.lookAt(northCenter.x, 0, northCenter.z);
+
+            // South cam: frame outer planets (Mercury → Uranus, dist 12.0–15.0)
+            const southMid = (COL.mercury.dist + COL.uranus.dist) / 2; // ~13.5
+            const southCenter = new THREE.Vector3(colDir.x * southMid, 0, colDir.z * southMid);
+            southCam.position.set(
+                southCenter.x + perpDir.x * 8,
+                5,
+                southCenter.z + perpDir.z * 8
+            );
+            southCam.lookAt(southCenter.x, 0, southCenter.z);
         }
 
         // ── Determine the active camera for label syncing ──
