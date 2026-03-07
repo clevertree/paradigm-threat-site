@@ -221,8 +221,8 @@ export async function createPlanetController(canvas) {
         animId = requestAnimationFrame(animate);
         const t = performance.now() * 0.001;
 
-        // Enforce Sun visibility every frame (hidden before -4077 and during collinear)
-        if (currentYear < -4077 || curStyle === 'collinear') {
+        // Enforce Sun visibility every frame (hidden before -4077 only)
+        if (currentYear < -4077) {
             p.sun.visible = false;
             L.sun.visible = false;
         }
@@ -299,21 +299,35 @@ export async function createPlanetController(canvas) {
         camera.lookAt(camLookGoal);
 
         // ── Update North/South cameras to track column ──
+        // Cameras simulate a person standing on Earth's surface looking UP at the sky.
+        // Position well below the column plane (y = -8) and look nearly straight up
+        // with a slight lean toward the target (Saturn inward / outer planets outward).
+        // This gives a comfortable ~80° sky-gazing elevation angle.
         if (multiViewActive && p.earth?.visible) {
-            // North cam: at Earth, offset below column plane, look toward Saturn
             const earthPos = p.earth.position;
             const saturnPos = p.saturn.position;
-            northCam.position.set(earthPos.x, earthPos.y - 2, earthPos.z);
-            northCam.lookAt(saturnPos.x, saturnPos.y + 2, saturnPos.z);
 
-            // South cam: at Earth, offset below column plane, look outward toward Uranus
+            // North cam: standing on Earth, looking up toward Saturn/Venus/Mars
+            // Lean slightly inward along column toward Saturn
+            const nDir = new THREE.Vector3().subVectors(saturnPos, earthPos).normalize();
+            northCam.position.set(earthPos.x, -8, earthPos.z);
+            // Look target: high above Earth with slight lean toward Saturn
+            northCam.lookAt(
+                earthPos.x + nDir.x * 2,
+                12,
+                earthPos.z + nDir.z * 2
+            );
+
+            // South cam: standing on Earth, looking up toward Mercury/Neptune/Uranus
             const uranusPos = p.uranus.position;
-            const nepPos = p.neptune.position;
-            // Look at the midpoint between Mercury, Neptune, Uranus
-            const southTargetX = (p.mercury.position.x + nepPos.x + uranusPos.x) / 3;
-            const southTargetZ = (p.mercury.position.z + nepPos.z + uranusPos.z) / 3;
-            southCam.position.set(earthPos.x, earthPos.y - 2, earthPos.z);
-            southCam.lookAt(southTargetX, 2, southTargetZ);
+            const sDir = new THREE.Vector3().subVectors(uranusPos, earthPos).normalize();
+            southCam.position.set(earthPos.x, -8, earthPos.z);
+            // Look target: high above Earth with slight lean toward outer planets
+            southCam.lookAt(
+                earthPos.x + sDir.x * 2,
+                12,
+                earthPos.z + sDir.z * 2
+            );
         }
 
         // ── Determine the active camera for label syncing ──
@@ -440,12 +454,12 @@ export async function createPlanetController(canvas) {
         }
 
         // ── Sun visibility ──
-        // Hidden before 4077 BC AND during the Golden Age collinear phase
-        // (Sun was behind the column, not visible from Earth's polar perspective)
-        const sunVisible = (year >= -4077) && (style !== 'collinear');
+        // Sun visible during Golden Age at center of the system
+        // Hidden only before 4077 BC (before creation)
+        const sunVisible = (year >= -4077);
         p.sun.visible = sunVisible;
         L.sun.visible = sunVisible;
-        sunLight.intensity = sunVisible ? 3.0 : 0.6; // dim ambient even when hidden
+        sunLight.intensity = sunVisible ? 3.0 : 0.6; // dim ambient when hidden
 
         // ── Position by style ──
         if (style === 'collinear') placeCollinear(elapsed, cfg);
@@ -635,7 +649,6 @@ export async function createPlanetController(canvas) {
                     p.venusStar.position.set(cfg.venus.position[0], cfg.venus.position[1], cfg.venus.position[2]);
                 }
             }
-            p.venusStar.position.set(cfg.venus.position[0], cfg.venus.position[1], cfg.venus.position[2]);
         }
     }
 
