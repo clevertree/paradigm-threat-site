@@ -299,37 +299,42 @@ export async function createPlanetController(canvas) {
         camera.lookAt(camLookGoal);
 
         // ── Update North/South cameras to track column ──
-        // View from Earth's surface looking along the column toward each group.
-        // Camera sits at Earth's XZ position, slightly below the column plane (y = -1)
-        // to simulate looking upward from the ground. The look-target is the midpoint
-        // of each planet group at y = 1 (slight upward tilt = "sky gazing" feel).
-        //   North = inner planets closer to Sun: Jupiter(1.5), Saturn(4.0), Venus(6.5), Mars(8.5)
-        //   South = outer planets farther from Sun: Mercury(12.0), Neptune(13.5), Uranus(15.0)
+        // Elevated view from Earth's column position looking down at each group.
+        // Up-vector mapped to column direction so planets spread vertically on screen.
+        //   North = inner planets (Sun-ward): Jupiter(1.5), Saturn(4.0), Venus(6.5), Mars(8.5)
+        //     UP = inward (toward Sun) → Jupiter/Saturn at top, Mars at bottom
+        //   South = outer planets: Mercury(12.0), Neptune(13.5), Uranus(15.0)
+        //     UP = outward (away from Sun) → Uranus at top, Mercury at bottom
         if (multiViewActive && p.earth?.visible) {
             const earthPos = p.earth.position;
 
             // Column direction (unit vector from Sun outward along the radial bar)
             const colDir = new THREE.Vector3(earthPos.x, 0, earthPos.z).normalize();
+            // Inward direction (toward Sun)
+            const inward = new THREE.Vector3(-colDir.x, 0, -colDir.z);
+            // Perpendicular to column in XZ plane (for slight camera offset)
+            const perpDir = new THREE.Vector3(-colDir.z, 0, colDir.x);
 
-            // North cam: from Earth, looking inward along column toward Saturn group
-            // Midpoint between Jupiter(1.5) and Mars(8.5) ≈ 5.0
-            const northTarget = (COL.jupiter.dist + COL.mars.dist) / 2;
-            northCam.position.set(earthPos.x, -1, earthPos.z);
-            northCam.lookAt(
-                colDir.x * northTarget,
-                1,
-                colDir.z * northTarget
+            // North cam: elevated above Earth, looking down at inner planet group
+            // Slight perpendicular offset so the column appears as a line, not a dot
+            const northMid = (COL.jupiter.dist + COL.mars.dist) / 2;
+            northCam.position.set(
+                earthPos.x + perpDir.x * 2,
+                10,
+                earthPos.z + perpDir.z * 2
             );
+            northCam.up.set(inward.x, 0, inward.z);
+            northCam.lookAt(colDir.x * northMid, 0, colDir.z * northMid);
 
-            // South cam: from Earth, looking outward along column toward Uranus group
-            // Midpoint between Mercury(12.0) and Uranus(15.0) ≈ 13.5
-            const southTarget = (COL.mercury.dist + COL.uranus.dist) / 2;
-            southCam.position.set(earthPos.x, -1, earthPos.z);
-            southCam.lookAt(
-                colDir.x * southTarget,
-                1,
-                colDir.z * southTarget
+            // South cam: elevated above Earth, looking down at outer planet group
+            const southMid = (COL.mercury.dist + COL.uranus.dist) / 2;
+            southCam.position.set(
+                earthPos.x + perpDir.x * 2,
+                10,
+                earthPos.z + perpDir.z * 2
             );
+            southCam.up.set(colDir.x, 0, colDir.z);
+            southCam.lookAt(colDir.x * southMid, 0, colDir.z * southMid);
         }
 
         // ── Determine the active camera for label syncing ──
@@ -352,6 +357,21 @@ export async function createPlanetController(canvas) {
         syncLabel(L.neptune, p.neptune, 0.7, labelCam);
         syncLabel(L.uranus, p.uranus, 0.7, labelCam);
         syncLabel(L.moon, p.moon, 0.4, labelCam);
+
+        // ── Shift labels perpendicular to column in multi-view ──
+        // In the elevated north/south cameras, the Y-offset lands labels on top
+        // of planets. Shifting perpendicular makes them appear to the SIDE instead.
+        if (multiViewActive && p.earth?.visible) {
+            const colDir2 = new THREE.Vector3(p.earth.position.x, 0, p.earth.position.z).normalize();
+            const perpShift = new THREE.Vector3(-colDir2.z, 0, colDir2.x).multiplyScalar(1.2);
+            const allLabels = [L.sun, L.saturn, L.venus, L.mars, L.earth, L.jupiter, L.mercury, L.neptune, L.uranus, L.moon];
+            for (const lbl of allLabels) {
+                if (lbl?.visible) {
+                    lbl.position.x += perpShift.x;
+                    lbl.position.z += perpShift.z;
+                }
+            }
+        }
 
         // ── Render: multi-viewport during collinear, single otherwise ──
         if (multiViewActive) {
