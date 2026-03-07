@@ -4,6 +4,8 @@
 
 An investigation into alternate Earth history, correlating mainstream (Scaligerian) chronology with Fomenko's New Chronology, Saturnian Cosmology, and other timeline systems. The site presents research articles, media, and an interactive timeline spanning from before creation through the modern era.
 
+The Paradigm Threat project poses an intellectual challenge to the reigning paradigms of every discipline — history, cosmology, medicine, physics, religion, finance, governance. Armed with sourced research, cross-referenced chronologies, and a willingness to follow the evidence wherever it leads. Ready to debate.
+
 ## Features
 
 - **Interactive Timeline** — Browse events across multiple chronology systems with TTS narration and a Ken Burns slideshow with smooth crossfade transitions
