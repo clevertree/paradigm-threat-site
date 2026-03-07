@@ -76,10 +76,17 @@ export function TimelineView() {
     if (evtId) initialEventIdRef.current = evtId
   }, [])
 
+  // Track slideshowOpen in a ref so the Escape handler always sees the latest value
+  const slideshowOpenRef = useRef(false)
+  useEffect(() => { slideshowOpenRef.current = slideshowOpen }, [slideshowOpen])
+
   useEffect(() => {
     if (!fullPage) return
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        // If slideshow is open, let the overlay's own Escape handler close it;
+        // don't also exit fullscreen.
+        if (slideshowOpenRef.current) return
         setFullPage(false)
         const params = new URLSearchParams(window.location.search)
         params.delete('fullscreen')
@@ -181,12 +188,27 @@ export function TimelineView() {
     ttsStartIndexRef.current = idx >= 0 ? idx : 0
     tts.play(buildSegments(entry), 0)
     setSlideshowOpen(true)
+    // Push a history entry so the browser back button can close the slideshow
+    window.history.pushState({ slideshowOpen: true }, '')
   }, [events, tts, buildSegments])
 
   const handleStopTTS = useCallback(() => {
     tts.stop()
     tts.clearError()
     setSlideshowOpen(false)
+  }, [tts])
+
+  // Handle browser back button: close slideshow but stay in fullscreen
+  useEffect(() => {
+    const onPopState = (_e: PopStateEvent) => {
+      if (slideshowOpenRef.current) {
+        tts.stop()
+        tts.clearError()
+        setSlideshowOpen(false)
+      }
+    }
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
   }, [tts])
 
   /** Jump to an already-loaded segment without rebuilding the segment list */

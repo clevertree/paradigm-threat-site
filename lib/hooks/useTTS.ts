@@ -187,6 +187,10 @@ export function useTTS() {
     const currentSentenceIdxRef = useRef(0)
     const sentencesRef = useRef<string[]>([])
     const sentenceSpeakersRef = useRef<string[]>([])
+    /** Generation counter — incremented on every speak() call to invalidate stale callbacks */
+    const speakGenRef = useRef(0)
+    /** Piper pre-cache: maps "segIndex:sentenceIndex" → Blob for the next sentence's audio */
+    const piperCacheRef = useRef<Map<string, Blob>>(new Map())
     const voiceRef = useRef<SpeechSynthesisVoice | null>(null)
     const rateRef = useRef(1.0)
     const providerRef = useRef<TTSProvider>('piper')
@@ -367,11 +371,17 @@ export function useTTS() {
         }
         synth?.cancel()
         isPlayingRef.current = false
+        speakGenRef.current++          // invalidate any in-flight callbacks
         currentSentenceIdxRef.current = 0
         sentencesRef.current = []
         sentenceSpeakersRef.current = []
         releaseWakeLock()
         piperSegmentFailsRef.current = 0
+        // Clear Piper pre-cache
+        for (const url of piperCacheRef.current.values()) {
+            try { URL.revokeObjectURL(URL.createObjectURL(url)) } catch { /* ignore */ }
+        }
+        piperCacheRef.current.clear()
         // NOTE: error is intentionally NOT cleared here so it remains visible after stop
         setState(prev => ({
             ...prev,
@@ -403,6 +413,9 @@ export function useTTS() {
         if (!isPlayingRef.current) return
         segmentsRef.current = segments
 
+        // Stamp this invocation with a unique generation so stale callbacks are ignored
+        const gen = ++speakGenRef.current
+
         const seg = segments[segIndex]
 
         // On first sentence of a segment: load text and split into sentences
@@ -417,7 +430,7 @@ export function useTTS() {
                     seg.text = rawText // cache
                 } catch { rawText = '' }
             }
-            if (!isPlayingRef.current) return
+            if (!isPlayingRef.current || speakGenRef.current !== gen) return
 
             const blocks = parseSpeakerBlocks(rawText).map(block => ({
                 speaker: block.speaker,
@@ -449,6 +462,7 @@ export function useTTS() {
         const sentences = sentencesRef.current
         if (sentenceIndex >= sentences.length) {
             // All sentences spoken — advance to next segment
+            if (speakGenRef.current !== gen) return  // stale
             if (segIndex + 1 < segments.length) {
                 speak(segIndex + 1, segments, 0).catch((err) => {
                     console.error('TTS next-segment error:', err)
@@ -583,9 +597,55 @@ export function useTTS() {
                     throw lastErr
                 }
 
-                fetchWithRetry()
+                // ── Piper pre-cache helper ──
+                // Fire-and-forget: pre-fetch audio for the NEXT sentence so it's
+                // ready instantly when the current one finishes playing.
+                const prefetchNext = () => {
+                    const nextSentIdx = sentenceIndex + 1
+                    let nextSeg = segIndex
+                    let nextSent = nextSentIdx
+                    const curSentences = sentencesRef.current
+                    if (nextSent >= curSentences.length) {
+                        // Next sentence is in the next segment — we can't prefetch
+                        // until that segment's text is loaded, but we CAN pre-fetch
+                        // the segment text so it's cached for speak().
+                        if (segIndex + 1 < segments.length) {
+                            const nextSegObj = segments[segIndex + 1]
+                            if (!nextSegObj.text && nextSegObj.fetchText) {
+                                nextSegObj.fetchText().then(t => { nextSegObj.text = t }).catch(() => { })
+                            }
+                        }
+                        return
+                    }
+                    const cacheKey = `${nextSeg}:${nextSent}`
+                    if (piperCacheRef.current.has(cacheKey)) return  // already cached
+                    const nextText = curSentences[nextSent]
+                    if (!nextText) return
+                    const nextSpeaker = sentenceSpeakersRef.current[nextSent] ?? 'narrator'
+                    const nextVoiceId = nextSpeaker === 'quote' && quoteVoice
+                        ? quoteVoice
+                        : speakerMap[nextSpeaker] ?? piperVoiceIdRef.current
+                    if (!nextVoiceId) return
+                    fetch('/api/tts/piper', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text: nextText, voiceId: nextVoiceId, rate: rateRef.current }),
+                    })
+                        .then(res => res.ok ? res.blob() : null)
+                        .then(blob => { if (blob) piperCacheRef.current.set(cacheKey, blob) })
+                        .catch(() => { })  // best-effort, ignore errors
+                }
+
+                // Check pre-cache first
+                const cacheKey = `${segIndex}:${sentenceIndex}`
+                const cachedBlob = piperCacheRef.current.get(cacheKey)
+                if (cachedBlob) piperCacheRef.current.delete(cacheKey)
+
+                const blobPromise = cachedBlob ? Promise.resolve(cachedBlob) : fetchWithRetry()
+
+                blobPromise
                     .then(blob => {
-                        if (!isPlayingRef.current) return
+                        if (!isPlayingRef.current || speakGenRef.current !== gen) return  // stale
                         // Success — reset consecutive-fail counter
                         piperSegmentFailsRef.current = 0
                         if (!audioRef.current) {
@@ -600,7 +660,7 @@ export function useTTS() {
 
                         audioRef.current.src = url
                         audioRef.current.onended = () => {
-                            if (isPlayingRef.current) {
+                            if (isPlayingRef.current && speakGenRef.current === gen) {
                                 speak(segIndex, segments, sentenceIndex + 1).catch((err) => {
                                     console.error('TTS next-sentence error:', err)
                                     setState(prev => ({ ...prev, error: `TTS playback error: ${err instanceof Error ? err.message : String(err)}` }))
@@ -609,19 +669,25 @@ export function useTTS() {
                             }
                         }
                         audioRef.current.onerror = (e) => {
+                            if (speakGenRef.current !== gen) return  // stale
                             const mediaErr = audioRef.current?.error
                             const detail = mediaErr ? `${mediaErr.message} (code ${mediaErr.code})` : 'unknown'
                             console.error('Piper audio playback error:', detail, e)
                             handlePiperSegmentFail(`Audio playback failed: ${detail}`)
                         }
                         audioRef.current.play().catch((err) => {
+                            if (speakGenRef.current !== gen) return  // stale
                             console.error('Audio play() rejected:', err)
                             handlePiperSegmentFail(`Could not start audio: ${err instanceof Error ? err.message : 'Autoplay blocked?'}`)
                         })
+
+                        // Kick off pre-fetch for the next sentence
+                        prefetchNext()
                     })
                     .catch((err) => {
                         // Don't treat aborted fetches (user stopped) as errors
                         if (err instanceof DOMException && err.name === 'AbortError') return
+                        if (speakGenRef.current !== gen) return  // stale
                         console.error('[TTS] Piper fetch error (all retries exhausted):', err)
                         if (isPlayingRef.current) {
                             handlePiperSegmentFail(`Piper synthesis failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
@@ -637,7 +703,7 @@ export function useTTS() {
 
         // Small delay after cancel to let the synth settle
         cancelTimeoutRef.current = setTimeout(() => {
-            if (!isPlayingRef.current) return
+            if (!isPlayingRef.current || speakGenRef.current !== gen) return  // stale
 
             const text = sentences[sentenceIndex]
             setState(prev => ({
@@ -653,7 +719,8 @@ export function useTTS() {
             utt.volume = 1.0
 
             utt.onend = () => {
-                if (isPlayingRef.current) {
+                // Guard: only advance if this is still the active generation
+                if (isPlayingRef.current && speakGenRef.current === gen) {
                     speak(segIndex, segments, sentenceIndex + 1).catch((err) => {
                         console.error('TTS next-sentence error:', err)
                         setState(prev => ({ ...prev, error: `Speech API error: ${err instanceof Error ? err.message : String(err)}` }))
@@ -662,6 +729,7 @@ export function useTTS() {
                 }
             }
             utt.onerror = (e) => {
+                if (speakGenRef.current !== gen) return  // stale
                 if (e.error !== 'interrupted' && e.error !== 'canceled') {
                     console.error('TTS error:', e)
                     isPlayingRef.current = false
