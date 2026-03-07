@@ -76,10 +76,6 @@ export function TimelineView() {
     if (evtId) initialEventIdRef.current = evtId
   }, [])
 
-  // Track slideshowOpen in a ref so the Escape handler always sees the latest value
-  const slideshowOpenRef = useRef(false)
-  useEffect(() => { slideshowOpenRef.current = slideshowOpen }, [slideshowOpen])
-
   useEffect(() => {
     if (!fullPage) return
     const onKeyDown = (e: KeyboardEvent) => {
@@ -164,6 +160,9 @@ export function TimelineView() {
   // ── TTS ──────────────────────────────────────────────────────────────
   const tts = useTTS()
   const [slideshowOpen, setSlideshowOpen] = useState(false)
+  // Track slideshowOpen in a ref so the Escape handler always sees the latest value
+  const slideshowOpenRef = useRef(false)
+  useEffect(() => { slideshowOpenRef.current = slideshowOpen }, [slideshowOpen])
   const ttsStartIndexRef = useRef(0)
 
   /** Build TTS segments from a start event through all remaining events */

@@ -378,9 +378,6 @@ export function useTTS() {
         releaseWakeLock()
         piperSegmentFailsRef.current = 0
         // Clear Piper pre-cache
-        for (const url of piperCacheRef.current.values()) {
-            try { URL.revokeObjectURL(URL.createObjectURL(url)) } catch { /* ignore */ }
-        }
         piperCacheRef.current.clear()
         // NOTE: error is intentionally NOT cleared here so it remains visible after stop
         setState(prev => ({
