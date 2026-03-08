@@ -3,7 +3,7 @@
 import React, { useState, useEffect, memo } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Search, Home, MessageSquare, Video, Clock } from 'lucide-react'
+import { Menu, X, Search, Home, MessageSquare, Video, Clock, Heart } from 'lucide-react'
 import { ThemeToggle, FontToggle, DynamicNav } from '@/components'
 
 interface NavbarProps {
@@ -25,6 +25,7 @@ const Navbar = memo(function Navbar({ fileList }: NavbarProps) {
         { href: '/timeline', label: 'Timeline', icon: Clock },
         { href: '/chat', label: 'Chat', icon: MessageSquare },
         { href: 'https://www.bitchute.com/channel/paradigmthreat', label: 'Videos', icon: Video, external: true },
+        { href: 'https://www.patreon.com/c/ahsctimeline', label: 'Donate', icon: Heart, external: true },
     ]
 
     return (
