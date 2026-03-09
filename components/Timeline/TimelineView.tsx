@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react'
-import { Play, Square, FileDown, BookOpen, X } from 'lucide-react'
+import { Play, Square, FileDown, FileText, BookOpen, X, ChevronDown } from 'lucide-react'
 import { useTimeline } from '@/components/TimelineContext'
 import { ListView } from './ListView'
 import { VisTimelineView } from './VisTimelineView'
@@ -144,6 +144,27 @@ export function TimelineView() {
   const [isDragging, setIsDragging] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const [showContentDrawer, setShowContentDrawer] = useState(false)
+  const [docMenuOpen, setDocMenuOpen] = useState(false)
+  const docMenuRef = useRef<HTMLDivElement>(null)
+
+  // Close doc dropdown on outside click
+  useEffect(() => {
+    if (!docMenuOpen) return
+    const onClick = (e: MouseEvent) => {
+      if (docMenuRef.current && !docMenuRef.current.contains(e.target as Node)) {
+        setDocMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', onClick)
+    return () => document.removeEventListener('mousedown', onClick)
+  }, [docMenuOpen])
+
+  const docDropdownLinks = [
+    { label: 'Book PDF', href: `${baseUrl}/export/timeline-book.pdf` },
+    { label: 'Appendix PDF', href: `${baseUrl}/export/timeline-appendix.pdf` },
+    { label: 'Book (Google Docs)', href: 'https://docs.google.com/document/d/1nLm73Z-xCyQKOkNLQwH3hFia6H4Me3FW' },
+    { label: 'Appendix (Google Docs)', href: 'https://docs.google.com/document/d/1nLm73Z-xCyQKOkNLQwH3hFia6H4Me3FW' },
+  ]
 
   const eventIdToEvent = useMemo(
     () => new Map(events.map((e) => [e.id, e])),
@@ -164,6 +185,7 @@ export function TimelineView() {
   }, [events, selected])
 
   const leftScrollRef = useRef<HTMLDivElement>(null)
+  const initialScrollDoneRef = useRef(false)
 
   // ── TTS ──────────────────────────────────────────────────────────────
   const tts = useTTS()
@@ -305,18 +327,39 @@ export function TimelineView() {
     return result
   }, [entries])
 
+  // Scroll the left panel to the initially-selected item once on page load.
+  // CustomTimelineView expands parent nodes via its own effect, so the target
+  // element may not exist in the DOM on the first render pass.  We poll a few
+  // times (via rAF) to give the tree time to expand before giving up.
   useEffect(() => {
+    if (initialScrollDoneRef.current) return
     if (!selected?.id || !leftScrollRef.current) return
-    const el = document.getElementById(`timeline-item-${selected.id}`)
-    if (!el) return
     const container = leftScrollRef.current
-    const elRect = el.getBoundingClientRect()
-    const containerRect = container.getBoundingClientRect()
-    if (elRect.top < containerRect.top || elRect.bottom > containerRect.bottom) {
-      const scrollTop =
-        el.offsetTop - container.clientHeight / 2 + el.clientHeight / 2
-      container.scrollTo({ top: Math.max(0, scrollTop), behavior: 'smooth' })
+    const targetId = selected.id
+    let attempts = 0
+    const maxAttempts = 15 // ~250 ms at 60 fps — plenty for React to flush
+
+    function tryScroll() {
+      if (initialScrollDoneRef.current) return
+      const el = container.querySelector<HTMLElement>(`[id="timeline-item-${targetId}"]`)
+      if (!el) {
+        if (++attempts < maxAttempts) {
+          requestAnimationFrame(tryScroll)
+        }
+        return
+      }
+      initialScrollDoneRef.current = true
+      const elRect = el.getBoundingClientRect()
+      const containerRect = container.getBoundingClientRect()
+      if (elRect.top < containerRect.top || elRect.bottom > containerRect.bottom) {
+        const elTopRelative = elRect.top - containerRect.top + container.scrollTop
+        const scrollTop = elTopRelative - container.clientHeight / 2 + el.clientHeight / 2
+        container.scrollTo({ top: Math.max(0, scrollTop), behavior: 'smooth' })
+      }
     }
+
+    // Kick off on the next frame so React has a chance to commit the tree
+    requestAnimationFrame(tryScroll)
   }, [selected?.id])
 
   if (loading) {
@@ -351,7 +394,7 @@ export function TimelineView() {
            Shown: in fullscreen when viewport < 1000px (narrow)
            Now includes view mode selector + all views */}
       <div className={`flex flex-col flex-1 min-h-0 min-w-0 ${fullPage ? 'min-[1000px]:hidden' : ''}`}>
-        <div className="flex-shrink-0 px-2 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 space-y-2">
+        <div className={`flex-shrink-0 px-2 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 ${fullPage ? 'space-y-2' : ''}`}>
           <div className="flex items-center gap-2">
             <select
               id="timeline-event-select"
@@ -379,67 +422,112 @@ export function TimelineView() {
             >
               {fullPage ? 'Exit' : 'Full page'}
             </button>
-          </div>
-          {/* Action row: view mode + TTS + PDF + expand/collapse */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <label className="flex items-center gap-1.5 text-sm text-slate-500">
-              View:
-              <select
-                value={viewMode}
-                onChange={(e) => setViewMode(e.target.value as TimelineViewMode)}
-                className="rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-sm"
-              >
-                {(['list', 'vis', 'timelinejs', 'custom', 'animation-map', 'animation-3d', 'browser'] as const).map((m) => (
-                  <option key={m} value={m}>
-                    {VIEW_LABELS[m]}
-                  </option>
-                ))}
-              </select>
-            </label>
-            {viewMode === 'custom' && (
+            <div className="relative" ref={!fullPage ? docMenuRef : undefined}>
               <button
                 type="button"
-                onClick={() => setExpansionMode((m) => m === 'all' ? 'none' : 'all')}
-                className="rounded border px-2 py-1 text-xs transition-colors border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800"
+                onClick={() => setDocMenuOpen(o => !o)}
+                className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-2.5 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1"
+                title="Download documents"
               >
-                {expansionMode === 'all' ? 'Collapse' : 'Expand'}
+                <FileDown size={14} /> <ChevronDown size={12} />
               </button>
-            )}
-            <button
-              type="button"
-              title={tts.state.isPlaying ? 'Stop audio' : 'Listen (audio slideshow)'}
-              onClick={() => {
-                if (tts.state.isPlaying) handleStopTTS()
-                else if (selected) handlePlayEvent(selected)
-              }}
-              className={`shrink-0 rounded border px-2.5 py-1.5 text-sm transition-colors ${tts.state.isPlaying
-                ? 'bg-indigo-600 border-indigo-500 text-white hover:bg-indigo-700'
-                : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
-                }`}
-            >
-              {tts.state.isPlaying ? <Square size={14} fill="currentColor" /> : <Play size={14} />}
-            </button>
-            <a
-              href={`${baseUrl}/export/timeline.pdf`}
-              target="_blank"
-              rel="noopener noreferrer"
-              title="Open full timeline PDF in new tab"
-              className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-2.5 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1"
-            >
-              <FileDown size={14} />
-            </a>
-            {/* Content drawer toggle — only in fullscreen with full-canvas views */}
-            {fullPage && isFullCanvasView && (
+              {docMenuOpen && !fullPage && (
+                <div className="absolute right-0 top-full mt-1 z-50 min-w-[180px] rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 shadow-lg py-1">
+                  {docDropdownLinks.map(link => (
+                    <a
+                      key={link.label}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setDocMenuOpen(false)}
+                      className="block px-3 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700"
+                    >
+                      {link.label}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          {/* Action row: view mode + TTS + PDF + expand/collapse — only rendered in fullscreen */}
+          {fullPage && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <label className="flex items-center gap-1.5 text-sm text-slate-500">
+                View:
+                <select
+                  value={viewMode}
+                  onChange={(e) => setViewMode(e.target.value as TimelineViewMode)}
+                  className="rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-2 py-1 text-sm"
+                >
+                  {(['list', 'vis', 'timelinejs', 'custom', 'animation-map', 'animation-3d', 'browser'] as const).map((m) => (
+                    <option key={m} value={m}>
+                      {VIEW_LABELS[m]}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              {viewMode === 'custom' && (
+                <button
+                  type="button"
+                  onClick={() => setExpansionMode((m) => m === 'all' ? 'none' : 'all')}
+                  className="rounded border px-2 py-1 text-xs transition-colors border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800"
+                >
+                  {expansionMode === 'all' ? 'Collapse' : 'Expand'}
+                </button>
+              )}
               <button
                 type="button"
-                title="Show article content"
-                onClick={() => setShowContentDrawer(true)}
-                className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-2.5 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1"
+                title={tts.state.isPlaying ? 'Stop audio' : 'Listen (audio slideshow)'}
+                onClick={() => {
+                  if (tts.state.isPlaying) handleStopTTS()
+                  else if (selected) handlePlayEvent(selected)
+                }}
+                className={`shrink-0 rounded border px-2.5 py-1.5 text-sm transition-colors ${tts.state.isPlaying
+                  ? 'bg-indigo-600 border-indigo-500 text-white hover:bg-indigo-700'
+                  : 'border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800'
+                  }`}
               >
-                <BookOpen size={14} /> Content
+                {tts.state.isPlaying ? <Square size={14} fill="currentColor" /> : <Play size={14} />}
               </button>
-            )}
-          </div>
+              <div className="relative" ref={fullPage ? docMenuRef : undefined}>
+                <button
+                  type="button"
+                  onClick={() => setDocMenuOpen(o => !o)}
+                  className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-2.5 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1"
+                  title="Download documents"
+                >
+                  <FileDown size={14} /> <ChevronDown size={12} />
+                </button>
+                {docMenuOpen && fullPage && (
+                  <div className="absolute right-0 top-full mt-1 z-50 min-w-[180px] rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 shadow-lg py-1">
+                    {docDropdownLinks.map(link => (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setDocMenuOpen(false)}
+                        className="block px-3 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700"
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {/* Content drawer toggle — only in fullscreen with full-canvas views */}
+              {isFullCanvasView && (
+                <button
+                  type="button"
+                  title="Show article content"
+                  onClick={() => setShowContentDrawer(true)}
+                  className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-2.5 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1"
+                >
+                  <BookOpen size={14} /> Content
+                </button>
+              )}
+            </div>
+          )}
         </div>
         {/* Main content area: view fills the remaining space */}
         <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
@@ -461,27 +549,27 @@ export function TimelineView() {
           {/* For non-full-canvas views, show the carousel/list directly */}
           {!isFullCanvasView && (
             <>
-              {viewMode === 'list' && (
+              {fullPage && viewMode === 'list' && (
                 <div className="flex-1 min-h-0 overflow-y-auto">
                   <ListView onSelectEvent={handleSelectEvent} selectedId={selected?.id} />
                 </div>
               )}
-              {viewMode === 'vis' && (
+              {fullPage && viewMode === 'vis' && (
                 <div className="flex-1 min-h-0 overflow-y-auto">
                   <VisTimelineView onSelectEvent={handleSelectEvent} eventIdToEvent={eventIdToEvent} />
                 </div>
               )}
-              {viewMode === 'timelinejs' && (
+              {fullPage && viewMode === 'timelinejs' && (
                 <div className="flex-1 min-h-0 overflow-y-auto">
                   <TimelineJSView onSelectEvent={handleSelectEvent} eventIdToEvent={eventIdToEvent} />
                 </div>
               )}
-              {viewMode === 'custom' && (
+              {fullPage && viewMode === 'custom' && (
                 <div className="flex-1 min-h-0 overflow-y-auto">
                   <CustomTimelineView expansionMode={expansionMode} onSelectEvent={handleSelectEvent} selectedId={selected?.id} />
                 </div>
               )}
-              {/* Non-fullscreen: always show carousel below the view */}
+              {/* Non-fullscreen: only show the article carousel (dropdown handles navigation) */}
               {!fullPage && (
                 <TimelineGalleryProvider
                   events={events}
@@ -606,16 +694,33 @@ export function TimelineView() {
               >
                 {tts.state.isPlaying ? <Square size={14} fill="currentColor" /> : <Play size={14} />}
               </button>
-              {/* PDF download button */}
-              <a
-                href={`${baseUrl}/export/timeline.pdf`}
-                target="_blank"
-                rel="noopener noreferrer"
-                title="Open full timeline PDF in new tab"
-                className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-2.5 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1"
-              >
-                <FileDown size={14} />
-              </a>
+              {/* PDF + DOCX download dropdown */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setDocMenuOpen(o => !o)}
+                  className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-2.5 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1"
+                  title="Download documents"
+                >
+                  <FileDown size={14} /> <ChevronDown size={12} />
+                </button>
+                {docMenuOpen && (
+                  <div className="absolute right-0 top-full mt-1 z-50 min-w-[180px] rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 shadow-lg py-1">
+                    {docDropdownLinks.map(link => (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => setDocMenuOpen(false)}
+                        className="block px-3 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-700"
+                      >
+                        {link.label}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
             {viewMode === 'custom' && (
               <button
