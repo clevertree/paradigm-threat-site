@@ -163,7 +163,7 @@ export function TimelineView() {
     { label: 'Book PDF', href: `${baseUrl}/export/timeline-book.pdf` },
     { label: 'Appendix PDF', href: `${baseUrl}/export/timeline-appendix.pdf` },
     { label: 'Book (Google Docs)', href: 'https://docs.google.com/document/d/1nLm73Z-xCyQKOkNLQwH3hFia6H4Me3FW' },
-    { label: 'Appendix (Google Docs)', href: 'https://docs.google.com/document/d/1nLm73Z-xCyQKOkNLQwH3hFia6H4Me3FW' },
+    { label: 'Appendix (Google Docs)', href: 'https://docs.google.com/document/d/1vyxQlF7xjQtKX6xLyxpZWZzdJv6X-3tx' },
   ]
 
   const eventIdToEvent = useMemo(
