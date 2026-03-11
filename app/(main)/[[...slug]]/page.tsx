@@ -6,8 +6,8 @@ import { RemoteMDX } from '@/components/RemoteMDX';
 import { PopImage, useFiles, ArticleNav } from '@/components';
 import Link from 'next/link';
 import matter from 'gray-matter';
-import { Play, Pause, Square, ChevronUp } from 'lucide-react';
 import { ArticleTTSProvider } from '@/components/ArticleTTS/ArticleTTSProvider';
+import { ArticleTTSOverlay } from '@/components/ArticleTTS/ArticleTTSOverlay';
 import { ArticleTTSScrollSync } from '@/components/ArticleTTS/ArticleTTSScrollSync';
 import { stripMarkdownForTTS, buildParagraphStarts } from '@/components/Timeline/ttsHelpers';
 import { SuspenseLoader } from "@client";
@@ -209,7 +209,7 @@ const CatchAllPage = memo(function CatchAllPage() {
                 articleContent={content}
                 basePath={basePath}
             >
-                {({ onPlay, onPause, onStop, onPlayFromSentence, isPlaying, currentSentenceIndex, sentences, error, onClearError }) => {
+                {({ onPlay, onPause, onStop, onPlayFromSentence, isPlaying, currentSentenceIndex, sentences, onClearError, ttsState, availableVoices, availablePiperVoices, setVoice, setRate, setProvider, setPiperVoiceId, setPiperLang, setQuoteVoiceId, setSpeakerMapInput, setLangFilter, setLocalOnly, setSubtitleMode, switchToSpeechAndResume }) => {
                     const scrollToTop = () => window.scroll({ top: 0, left: 0, behavior: 'smooth' });
                     const handleArticleDoubleClick = (e: React.MouseEvent<HTMLElement>) => {
                         if (sentences.length === 0) return;
@@ -230,14 +230,6 @@ const CatchAllPage = memo(function CatchAllPage() {
                     };
                     return (
             <div className="space-y-12 relative">
-                {error && (
-                    <div className="rounded-lg bg-red-950/80 border border-red-500/50 text-red-100 px-4 py-3 flex items-center justify-between gap-4">
-                        <span className="text-sm">{error}</span>
-                        <button onClick={onClearError} className="text-red-300/60 hover:text-red-100 text-xs uppercase">
-                            Dismiss
-                        </button>
-                    </div>
-                )}
                 <article
                     ref={articleRef}
                     className="prose prose-slate dark:prose-invert max-w-none"
@@ -259,44 +251,28 @@ const CatchAllPage = memo(function CatchAllPage() {
                 />
                 <ArticleNav />
 
-                {/* Combined TTS + Back to top controls - always show both */}
-                <div className="fixed bottom-8 right-8 z-50 flex items-center gap-2">
-                    {isPlaying ? (
-                        <>
-                            <button
-                                onClick={onPause}
-                                className="w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-xl shadow-indigo-500/30 transition-all hover:scale-105"
-                                aria-label="Pause"
-                            >
-                                <Pause size={24} />
-                            </button>
-                            <button
-                                onClick={onStop}
-                                className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
-                                aria-label="Stop"
-                            >
-                                <Square size={18} fill="currentColor" />
-                            </button>
-                        </>
-                    ) : (
-                        <button
-                            onClick={() => { scrollToTop(); onPlay(); }}
-                            className="w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-xl shadow-indigo-500/30 transition-all hover:scale-105"
-                            aria-label="Play article"
-                        >
-                            <Play size={24} fill="currentColor" className="ml-1" />
-                        </button>
-                    )}
-                    {isScrolled && (
-                        <button
-                            onClick={scrollToTop}
-                            className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
-                            aria-label="Back to top"
-                        >
-                            <ChevronUp size={20} />
-                        </button>
-                    )}
-                </div>
+                <ArticleTTSOverlay
+                    ttsState={ttsState}
+                    availableVoices={availableVoices}
+                    availablePiperVoices={availablePiperVoices}
+                    onPlay={onPlay}
+                    onPause={onPause}
+                    onStop={onStop}
+                    onClearError={onClearError}
+                    onSetVoice={setVoice}
+                    onSetRate={setRate}
+                    onSetProvider={setProvider}
+                    onSetPiperVoiceId={setPiperVoiceId}
+                    onSetPiperLang={setPiperLang}
+                    onSetQuoteVoiceId={setQuoteVoiceId}
+                    onSetSpeakerMapInput={setSpeakerMapInput}
+                    onSetLangFilter={setLangFilter}
+                    onSetLocalOnly={setLocalOnly}
+                    onSetSubtitleMode={setSubtitleMode}
+                    onSwitchToSpeechAndResume={switchToSpeechAndResume}
+                    onScrollToTop={scrollToTop}
+                    isScrolled={isScrolled}
+                />
 
                 {unusedImages.length > 0 && (
                     <div className="space-y-8 pt-12 border-t border-slate-200 dark:border-slate-800">
