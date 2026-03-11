@@ -42,6 +42,21 @@ export function splitSentences(text: string): string[] {
 }
 
 /**
+ * Compute paragraph start indices: paragraphStarts[i] = first sentence index of paragraph i.
+ * Use: for sentence index s, paragraph index = largest i where paragraphStarts[i] <= s.
+ */
+export function buildParagraphStarts(text: string): number[] {
+  const paras = text.split(/\n\n+/).map(p => p.trim()).filter(Boolean)
+  const starts: number[] = [0]
+  let idx = 0
+  for (const para of paras) {
+    idx += splitSentences(para).length
+    starts.push(idx)
+  }
+  return starts
+}
+
+/**
  * Strip markdown formatting from an event's content so it can be read aloud.
  * - Removes YAML frontmatter
  * - Removes image tags

@@ -12,6 +12,7 @@ export interface ArticleTTSProviderProps {
     onPlay: () => void
     onPause: () => void
     onStop: () => void
+    onPlayFromSentence: (sentenceIndex: number) => void
     isPlaying: boolean
     currentSentenceIndex: number
     sentences: string[]
@@ -45,6 +46,10 @@ export function ArticleTTSProvider({
     tts.clearError()
   }, [tts])
 
+  const handlePlayFromSentence = useCallback((sentenceIndex: number) => {
+    tts.playFromSentence([segment], 0, sentenceIndex)
+  }, [tts, segment])
+
   useEffect(
     () => () => ttsRef.current.stop(),
     // eslint-disable-next-line react-hooks/exhaustive-deps -- cleanup on unmount only
@@ -57,6 +62,7 @@ export function ArticleTTSProvider({
         onPlay: handlePlay,
         onPause: tts.pause,
         onStop: handleStop,
+        onPlayFromSentence: handlePlayFromSentence,
         isPlaying: tts.state.isPlaying,
         currentSentenceIndex: tts.state.currentSentenceIndex,
         sentences: tts.state.sentences,

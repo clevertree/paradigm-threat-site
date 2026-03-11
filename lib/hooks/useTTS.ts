@@ -730,6 +730,36 @@ export function useTTS() {
         })
     }, [speak, stop])
 
+    /**
+     * Jump playback to a specific sentence within the current segment.
+     * Only valid when playback is active (sentences already loaded).
+     */
+    const playFromSentence = useCallback((segments: TTSSegment[], segIndex: number, sentenceIndex: number) => {
+        if (!segments[segIndex] || sentenceIndex < 0 || sentenceIndex >= (sentencesRef.current?.length ?? 0)) return
+        if (cancelTimeoutRef.current) clearTimeout(cancelTimeoutRef.current)
+        cancelTimeoutRef.current = null
+        fetchAbortRef.current?.abort()
+        fetchAbortRef.current = null
+        if (audioRef.current) {
+            audioRef.current.pause()
+            audioRef.current.currentTime = 0
+        }
+        if (audioUrlRef.current) {
+            URL.revokeObjectURL(audioUrlRef.current)
+            audioUrlRef.current = null
+        }
+        synthRef.current?.cancel()
+        speakGenRef.current++
+        isPlayingRef.current = true
+        acquireWakeLock()
+        setState(prev => ({ ...prev, isPlaying: true, currentSegmentIndex: segIndex, error: null }))
+        speak(segIndex, segments, sentenceIndex).catch((err) => {
+            console.error('TTS playFromSentence error:', err)
+            setState(prev => ({ ...prev, error: `TTS error: ${err instanceof Error ? err.message : String(err)}` }))
+            stop()
+        })
+    }, [speak, stop, acquireWakeLock])
+
     const pause = useCallback(() => {
         if (state.provider === 'piper') {
             if (state.isPlaying) {
@@ -882,7 +912,7 @@ export function useTTS() {
 
     return {
         state, availableVoices, availablePiperVoices,
-        play, pause, stop, next, prev, clearError, switchToSpeechAndResume,
+        play, playFromSentence, pause, stop, next, prev, clearError, switchToSpeechAndResume,
         setVoice, setRate, setLangFilter, setLocalOnly, setSubtitleMode,
         setProvider, setPiperVoiceId, setPiperLang, setQuoteVoiceId, setSpeakerMapInput,
     }

@@ -8,7 +8,8 @@ import Link from 'next/link';
 import matter from 'gray-matter';
 import { Play, Pause, Square, ChevronUp } from 'lucide-react';
 import { ArticleTTSProvider } from '@/components/ArticleTTS/ArticleTTSProvider';
-import { ArticleReadingView } from '@/components/ArticleTTS/ArticleReadingView';
+import { ArticleTTSScrollSync } from '@/components/ArticleTTS/ArticleTTSScrollSync';
+import { stripMarkdownForTTS, buildParagraphStarts } from '@/components/Timeline/ttsHelpers';
 import { SuspenseLoader } from "@client";
 
 const CatchAllPage = memo(function CatchAllPage() {
@@ -37,6 +38,7 @@ const CatchAllPage = memo(function CatchAllPage() {
 
     const path = useMemo(() => slugArray.join('/'), [slugArray]);
     const loadingPathRef = useRef<string | null>(null);
+    const articleRef = useRef<HTMLElement>(null);
 
     useEffect(() => {
         if (!fileList) return;
@@ -207,8 +209,25 @@ const CatchAllPage = memo(function CatchAllPage() {
                 articleContent={content}
                 basePath={basePath}
             >
-                {({ onPlay, onPause, onStop, isPlaying, currentSentenceIndex, sentences, error, onClearError }) => {
+                {({ onPlay, onPause, onStop, onPlayFromSentence, isPlaying, currentSentenceIndex, sentences, error, onClearError }) => {
                     const scrollToTop = () => window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+                    const handleArticleDoubleClick = (e: React.MouseEvent<HTMLElement>) => {
+                        if (sentences.length === 0) return;
+                        const target = e.target as Node;
+                        const container = articleRef.current;
+                        if (!container) return;
+                        const mdx = container.querySelector('.mdx-content');
+                        if (!mdx?.contains(target)) return;
+                        const block = (target as Element).closest?.('p, h2, h3, h4, blockquote, li');
+                        if (!block) return;
+                        const blocks = container.querySelectorAll('.mdx-content p, .mdx-content h2, .mdx-content h3, .mdx-content h4, .mdx-content blockquote, .mdx-content li');
+                        const paraIdx = Array.from(blocks).indexOf(block as Element);
+                        if (paraIdx < 0) return;
+                        const text = stripMarkdownForTTS(content, articleTitle);
+                        const starts = buildParagraphStarts(text);
+                        const sentenceIndex = starts[paraIdx] ?? 0;
+                        onPlayFromSentence(sentenceIndex);
+                    };
                     return (
             <div className="space-y-12 relative">
                 {error && (
@@ -219,20 +238,25 @@ const CatchAllPage = memo(function CatchAllPage() {
                         </button>
                     </div>
                 )}
-                <article className="prose prose-slate dark:prose-invert max-w-none">
-                    {isPlaying && sentences.length > 0 ? (
-                        <ArticleReadingView
-                            articleContent={content}
-                            articleTitle={articleTitle}
-                            currentSentenceIndex={currentSentenceIndex}
-                            sentences={sentences}
-                        />
-                    ) : compiledMdx ? (
+                <article
+                    ref={articleRef}
+                    className="prose prose-slate dark:prose-invert max-w-none"
+                    onDoubleClick={sentences.length > 0 ? handleArticleDoubleClick : undefined}
+                >
+                    {compiledMdx ? (
                         <RemoteMDX compiled={compiledMdx} basePath={basePath} />
                     ) : (
                         <div className="animate-pulse h-32 bg-slate-200/50 dark:bg-slate-800/50 rounded-xl" />
                     )}
                 </article>
+                <ArticleTTSScrollSync
+                    articleRef={articleRef}
+                    currentSentenceIndex={currentSentenceIndex}
+                    sentences={sentences}
+                    articleContent={content}
+                    articleTitle={articleTitle}
+                    isPlaying={isPlaying}
+                />
                 <ArticleNav />
 
                 {/* Combined TTS + Back to top controls - always show both */}
