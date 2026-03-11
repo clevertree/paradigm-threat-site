@@ -1,7 +1,5 @@
 import React, { useMemo, memo, useEffect } from 'react';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import remarkGfm from 'remark-gfm';
-import Link from 'next/link';
+import { MDXRemote } from 'next-mdx-remote';
 import * as componentsNamespace from '@/components';
 import { MarkdownLink } from './MarkdownLink';
 
@@ -54,28 +52,31 @@ const mdxComponents = (basePath: string) => ({
     },
 });
 
-export const RemoteMDX = memo(function RemoteMDX({ source, basePath = '' }: { source: string, basePath?: string }) {
+export interface RemoteMDXProps {
+    /** Pre-compiled MDX from /api/compile-mdx (avoids RSC-in-client warnings) */
+    compiled: { compiledSource: string; frontmatter?: Record<string, unknown>; scope?: Record<string, unknown> };
+    basePath?: string;
+}
+
+export const RemoteMDX = memo(function RemoteMDX({ compiled, basePath = '' }: RemoteMDXProps) {
     const components = useMemo(() => mdxComponents(basePath), [basePath]);
 
     // Notify DynamicIndex (sidebar TOC) to re-scan headers after this content is in the DOM
     useEffect(() => {
-        if (!source) return;
+        if (!compiled?.compiledSource) return;
         const id = setTimeout(() => {
             window.dispatchEvent(new Event('dynamic-index-update'));
         }, 150);
         return () => clearTimeout(id);
-    }, [source]);
+    }, [compiled]);
 
     return (
         <div className="mdx-content">
             <MDXRemote
-                source={source}
+                compiledSource={compiled.compiledSource}
+                frontmatter={compiled.frontmatter ?? {}}
+                scope={compiled.scope ?? {}}
                 components={components as any}
-                options={{
-                    mdxOptions: {
-                        remarkPlugins: [remarkGfm],
-                    },
-                }}
             />
         </div>
     );

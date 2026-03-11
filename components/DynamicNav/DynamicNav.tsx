@@ -95,11 +95,15 @@ const DynamicNav = memo(function DynamicNav({ directory: inputDirectory, childre
         let currentLevelPath = '/'
 
         for (const subPath of splitPath) {
-            if (directoryPointer[subPath] && Object.keys(directoryPointer[subPath]).length > 0) {
-                directoryPointer = directoryPointer[subPath]
+            const nextLevel = directoryPointer[subPath]
+            const linkKeys = nextLevel && typeof nextLevel === 'object'
+                ? Object.keys(nextLevel).filter(k => k !== '_count')
+                : []
+            if (nextLevel && linkKeys.length > 0) {
+                directoryPointer = nextLevel
                 currentLevelPath += subPath + '/'
 
-                // Add a visual separator if there are multiple levels
+                // Add a visual separator and links only when there are links to show
                 content.push(
                     <div key={`sep-${currentLevelPath}`} className="pt-2 pb-1 border-t border-slate-200 dark:border-slate-800 mt-2">
                         <div className="px-3 py-1 text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1 group">

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
+import { splitSentences } from '@/components/Timeline/ttsHelpers'
 
 export interface TTSSegment {
     id: string
@@ -56,59 +57,6 @@ const LS_PIPER_VOICE = 'tl-tts-piper-voice'
 const LS_PIPER_LANG = 'tl-tts-piper-lang'
 const LS_PIPER_QUOTE = 'tl-tts-piper-quote-voice'
 const LS_SPEAKER_MAP = 'tl-tts-speaker-map'
-
-/**
- * Split text into speakable sentences.
- * - Handles abbreviations like B.C., A.D., c., e.g., i.e., etc. without breaking
- * - Treats each line/paragraph as at least one sentence
- * - Merges very short fragments into the previous sentence
- */
-function splitSentences(text: string): string[] {
-    // Known abbreviations whose trailing period is NOT a sentence end.
-    // Protected by temporarily replacing their periods with a placeholder.
-    const ABBR_PLACEHOLDER = '\x00'
-    const ABBREVIATIONS = /\b(B\.C|A\.D|B\.C\.E|C\.E|A\.M|P\.M|e\.g|i\.e|etc|vs|approx|ca?|Mr|Mrs|Ms|Dr|Jr|Sr|St|Prof|Gen|Gov|Sgt|Lt|Col|Capt|Rev|Vol|No|Fig|Dept|Univ|approx|Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec)\./gi
-
-    let safe = text.replace(ABBREVIATIONS, (m) => m.slice(0, -1) + ABBR_PLACEHOLDER)
-
-    // Also protect single-capital-letter abbreviations like "S. Julius" or initials
-    safe = safe.replace(/\b([A-Z])\./g, '$1' + ABBR_PLACEHOLDER)
-
-    // Also protect decimal numbers like "3,147.5"
-    safe = safe.replace(/(\d)\.(\d)/g, '$1' + ABBR_PLACEHOLDER + '$2')
-
-    // Split into paragraphs/lines first (each line is at minimum one sentence)
-    const lines = safe.split(/\n+/).filter(l => l.trim())
-
-    const allSentences: string[] = []
-    for (const line of lines) {
-        // Split on sentence-ending punctuation followed by space or end-of-string
-        const raw = line.match(/[^.!?]*[.!?]+(?:\s+|$)/g)
-        if (!raw) {
-            const restored = line.trim().replaceAll(ABBR_PLACEHOLDER, '.')
-            if (restored) allSentences.push(restored)
-            continue
-        }
-        const joined = raw.join('')
-        const leftover = line.substring(joined.length).trim()
-        if (leftover) raw.push(leftover)
-        for (const s of raw) {
-            const restored = s.trim().replaceAll(ABBR_PLACEHOLDER, '.')
-            if (restored) allSentences.push(restored)
-        }
-    }
-
-    // Merge very short fragments (<30 chars) with the previous sentence
-    const merged: string[] = []
-    for (const s of allSentences) {
-        if (merged.length > 0 && s.length < 30) {
-            merged[merged.length - 1] += ' ' + s
-        } else {
-            merged.push(s)
-        }
-    }
-    return merged.filter(s => s.length > 0)
-}
 
 type SpeakerBlock = { speaker: string; text: string }
 

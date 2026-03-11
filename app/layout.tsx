@@ -78,7 +78,7 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
                 <PwaRedirect />
                 <Navbar fileList={fileList} />
 
-                <div className={`flex-1 min-h-0 flex flex-col overflow-auto`}>
+                <div className={`flex-1 min-h-0 flex flex-col overflow-auto scroll-smooth`}>
                     <ImageGalleryProvider>
                         {children}
                     </ImageGalleryProvider>

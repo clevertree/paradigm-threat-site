@@ -2,12 +2,14 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 interface FloatingDivProps {
-    children: React.ReactNode,
-    containerTag?: string,
+    children: React.ReactNode
+    containerTag?: string
     className?: string
+    /** When true, hide the floating Back to top button (e.g. when page has its own combined playback/scroll control) */
+    hideFloatingButtons?: boolean
 }
 
-export default function FloatingDiv({ children, containerTag, className }: FloatingDivProps) {
+export default function FloatingDiv({ children, containerTag, className, hideFloatingButtons }: FloatingDivProps) {
     const [isScrolling, setIsScrolling] = useState(false)
     const [activeSection, setActiveSection] = useState<string>('')
     const [headings, setHeadings] = useState<{ id: string, text: string, top: number }[]>([])
@@ -84,25 +86,6 @@ export default function FloatingDiv({ children, containerTag, className }: Float
         }
     }
 
-    function navigateSection(direction: number) {
-        const scrollPos = window.scrollY + 110 // offset
-        let targetIndex = -1
-
-        if (direction > 0) {
-            targetIndex = headings.findIndex(h => h.top > scrollPos)
-        } else {
-            targetIndex = headings.findLastIndex(h => h.top < scrollPos - 20)
-        }
-
-        if (targetIndex !== -1 && headings[targetIndex]) {
-            const target = headings[targetIndex]
-            window.scroll({
-                top: target.top - 100,
-                behavior: 'smooth'
-            })
-        }
-    }
-
     useEffect(() => {
         window.addEventListener('scroll', onScroll)
         onScroll()
@@ -138,35 +121,21 @@ export default function FloatingDiv({ children, containerTag, className }: Float
                 {children}
             </div>
 
+            {!hideFloatingButtons && (
             <div className={`fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2 transition-all duration-300 ${!isFloating ? 'translate-y-20 opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}`}>
                 {activeSection && (
                     <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-sm border border-slate-200 dark:border-slate-700 px-3 py-1.5 rounded-lg shadow-lg text-sm font-medium mb-1 max-w-[200px] truncate">
                         {activeSection}
                     </div>
                 )}
-                <div className="flex items-center gap-2">
-                    <button
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 shadow-lg hover:scale-110 active:scale-95 transition-all"
-                        onClick={() => navigateSection(-1)}
-                        title="Previous section"
-                    >
-                        -
-                    </button>
-                    <button
-                        className="w-10 h-10 flex items-center justify-center rounded-full bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 shadow-lg hover:scale-110 active:scale-95 transition-all"
-                        onClick={() => navigateSection(1)}
-                        title="Next section"
-                    >
-                        +
-                    </button>
-                    <button
-                        className="bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 px-4 py-2 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all text-sm font-bold"
-                        onClick={scrollToTop}
-                    >
-                        Back to top
-                    </button>
-                </div>
+                <button
+                    className="bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 px-4 py-2 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all text-sm font-bold"
+                    onClick={scrollToTop}
+                >
+                    Back to top
+                </button>
             </div>
+            )}
         </Container>
     )
 }

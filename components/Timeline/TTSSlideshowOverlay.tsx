@@ -48,6 +48,8 @@ interface TTSSlideshowOverlayProps {
     onSeekToSegment: (segmentIndex: number) => void
     /** Switch to Speech API and resume playback from the failed segment */
     onSwitchToSpeechAndResume?: () => void
+    /** When true, do not append the planet animation slide (e.g. for article pages) */
+    skipPlanetSlide?: boolean
 }
 
 const RATES = [0.75, 1.0, 1.25, 1.5, 2.0]
@@ -77,6 +79,7 @@ export function TTSSlideshowOverlay({
     onSelectEvent,
     onSeekToSegment,
     onSwitchToSpeechAndResume,
+    skipPlanetSlide = false,
 }: TTSSlideshowOverlayProps) {
     const [showControls, setShowControls] = useState(true)
     const lastInteractionRef = useRef(Date.now())
@@ -105,10 +108,12 @@ export function TTSSlideshowOverlay({
                 }
             })
         )
-        // Planet animation slide — appears after all chapter images, before wrap
-        imgs.push({ src: '', eventId: '__planet__', type: 'planet' })
+        // Planet animation slide — appears after all chapter images, before wrap (skip for article mode)
+        if (!skipPlanetSlide) {
+            imgs.push({ src: '', eventId: '__planet__', type: 'planet' })
+        }
         return imgs
-    }, [events, baseUrl, startEventIndex])
+    }, [events, baseUrl, startEventIndex, skipPlanetSlide])
 
     // Keep ref in sync for use inside setAnimCycle callback
     useEffect(() => { currentImgIndexRef.current = currentImgIndex }, [currentImgIndex])

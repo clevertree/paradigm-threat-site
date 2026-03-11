@@ -1,13 +1,14 @@
 'use client'
 
-import React, { useState, useEffect, useMemo, memo } from 'react';
+import React, { useState, useEffect, useMemo, memo, useRef } from 'react';
 import { useParams, usePathname } from 'next/navigation';
 import { RemoteMDX } from '@/components/RemoteMDX';
-import { PopImage, useFiles } from '@/components';
+import { PopImage, useFiles, ArticleNav } from '@/components';
 import Link from 'next/link';
 import matter from 'gray-matter';
-import { Play } from 'lucide-react';
+import { Play, Pause, Square, ChevronUp } from 'lucide-react';
 import { ArticleTTSProvider } from '@/components/ArticleTTS/ArticleTTSProvider';
+import { ArticleReadingView } from '@/components/ArticleTTS/ArticleReadingView';
 import { SuspenseLoader } from "@client";
 
 const CatchAllPage = memo(function CatchAllPage() {
@@ -15,9 +16,9 @@ const CatchAllPage = memo(function CatchAllPage() {
     const pathname = usePathname();
     const { fileList } = useFiles();
     const [content, setContent] = useState<string | null>(null);
+    const [compiledMdx, setCompiledMdx] = useState<{ compiledSource: string; frontmatter?: Record<string, unknown>; scope?: Record<string, unknown> } | null>(null);
     const [basePath, setBasePath] = useState('');
     const [articleTitle, setArticleTitle] = useState('');
-    const [allImagesInDir, setAllImagesInDir] = useState<string[]>([]);
     const [unusedImages, setUnusedImages] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const [filesIndex, setFilesIndex] = useState<any>(null);
@@ -27,6 +28,7 @@ const CatchAllPage = memo(function CatchAllPage() {
     const [mds, setMds] = useState<string[]>([]);
     const [mdContents, setMdContents] = useState<Record<string, { title: string, content: string }>>({});
     const [error, setError] = useState<string | null>(null);
+    const [isScrolled, setIsScrolled] = useState(false);
 
     const slugArray = useMemo(() => {
         if (!params.slug) return [];
@@ -34,6 +36,7 @@ const CatchAllPage = memo(function CatchAllPage() {
     }, [params.slug]);
 
     const path = useMemo(() => slugArray.join('/'), [slugArray]);
+    const loadingPathRef = useRef<string | null>(null);
 
     useEffect(() => {
         if (!fileList) return;
@@ -43,6 +46,8 @@ const CatchAllPage = memo(function CatchAllPage() {
         const version = typeof fileList?._version === 'string' ? fileList._version : '';
         const vParam = version ? `?v=${version}` : '';
 
+        const requestPath = path;
+        loadingPathRef.current = requestPath;
         let isMounted = true;
         const abortController = new AbortController();
 
@@ -51,40 +56,25 @@ const CatchAllPage = memo(function CatchAllPage() {
             try {
                 setLoading(true);
 
-                let targetPath = '';
-                let fileContent = null;
+                // Article: single API fetches from remote and compiles
+                const articleUrl = `/api/article?path=${encodeURIComponent(requestPath)}${version ? `&v=${encodeURIComponent(version)}` : ''}`;
+                const articleRes = await fetch(articleUrl, { signal: abortController.signal });
 
-                // 1. Try to load as a direct file
-                if (path && (path.endsWith('.md') || path.endsWith('.mdx'))) {
-                    try {
-                        const response = await fetch(`${baseUrl}/${path}${vParam}`, { signal: abortController.signal });
-                        if (response.ok) {
-                            fileContent = await response.text();
-                            targetPath = path;
-                        }
-                    } catch (err) { }
-                }
-                // 2. Try page.md
-                else {
-                    const p = path ? `${path}/page.md` : 'page.md';
-                    try {
-                        const response = await fetch(`${baseUrl}/${p}${vParam}`, { signal: abortController.signal });
-                        if (response.ok) {
-                            fileContent = await response.text();
-                            targetPath = p;
-                        }
-                    } catch (err) { }
-                }
+                // Ignore response if we've navigated away (stale response guard)
+                if (loadingPathRef.current !== requestPath || !isMounted) return;
 
-                if (fileContent) {
-                    const { content: mdxSource, data: frontMatter } = matter(fileContent);
-                    const calcBasePath = targetPath.includes('/') ? targetPath.split('/').slice(0, -1).join('/') : '';
-                    const titleFromPath = calcBasePath ? calcBasePath.split('/').pop()?.replace(/_/g, ' ') : 'Article';
+                if (articleRes.ok) {
+                    const data = await articleRes.json();
 
-                    if (isMounted) {
-                        setBasePath(calcBasePath);
+                    if (loadingPathRef.current !== requestPath || !isMounted) return;
+
+                    const { compiledSource, frontmatter, scope, content: mdxSource, title: articleTitle, basePath: calcBasePath } = data;
+
+                    if (isMounted && loadingPathRef.current === requestPath) {
+                        setBasePath(calcBasePath || '');
                         setContent(mdxSource);
-                        setArticleTitle(frontMatter?.title || titleFromPath || 'Article');
+                        setCompiledMdx({ compiledSource, frontmatter, scope });
+                        setArticleTitle(articleTitle || 'Article');
                         setDirectFiles([]);
                         setSubDirs([]);
                         setImages([]);
@@ -96,7 +86,7 @@ const CatchAllPage = memo(function CatchAllPage() {
 
                     // Find gallery images in the same folder using the tree
                     let current = fileList;
-                    for (const s of calcBasePath.split('/').filter(Boolean)) {
+                    for (const s of (calcBasePath || '').split('/').filter(Boolean)) {
                         if (current && current[s]) current = current[s];
                         else { current = null; break; }
                     }
@@ -113,12 +103,7 @@ const CatchAllPage = memo(function CatchAllPage() {
                             const regex = new RegExp(`[\\(/\\s"'.]${escapedImg}([\\?\\s"')]|$)`, 'i');
                             return !regex.test(mdxSource);
                         });
-                        if (isMounted) {
-                            setAllImagesInDir(imagesInDir);
-                            setUnusedImages(unused);
-                        }
-                    } else if (isMounted) {
-                        setAllImagesInDir([]);
+                        if (isMounted && loadingPathRef.current === requestPath) setUnusedImages(unused);
                     }
                 } else {
                     // CASE B: Directory Listing
@@ -133,7 +118,7 @@ const CatchAllPage = memo(function CatchAllPage() {
                         const files: string[] = [];
 
                         Object.keys(current).forEach(key => {
-                            if (key === '_count') return;
+                            if (key === '_count' || key.startsWith('_')) return; // skip metadata keys
                             const val = current[key];
                             const isFile = val !== null && typeof val === 'object' && !('_count' in val);
                             if (isFile) {
@@ -144,10 +129,10 @@ const CatchAllPage = memo(function CatchAllPage() {
                         });
 
 
-                        if (isMounted) {
+                        if (isMounted && loadingPathRef.current === requestPath) {
                             setContent(null);
+                            setCompiledMdx(null);
                             setArticleTitle('');
-                            setAllImagesInDir([]);
                             setDirectFiles(files.sort());
                             setSubDirs(dirs.sort());
 
@@ -169,7 +154,7 @@ const CatchAllPage = memo(function CatchAllPage() {
 
                             // Only fetch if title is missing
                             await Promise.all(mdFiles.map(async (f) => {
-                                if (!isMounted) return;
+                                if (!isMounted || loadingPathRef.current !== requestPath) return;
                                 const fullPath = path ? `${path}/${f}` : f;
                                 try {
                                     const response = await fetch(`${baseUrl}/${fullPath}${vParam}`, { signal: abortController.signal });
@@ -183,28 +168,37 @@ const CatchAllPage = memo(function CatchAllPage() {
                                     }
                                 } catch (e) { }
                             }));
-                            if (isMounted) setMdContents(contents);
+                            if (isMounted && loadingPathRef.current === requestPath) setMdContents(contents);
                         }
                     }
                 }
             } catch (e) {
-                if ((e as Error).name !== 'AbortError' && isMounted) {
+                if ((e as Error).name !== 'AbortError' && isMounted && loadingPathRef.current === requestPath) {
                     setError(String(e));
                 }
             } finally {
-                if (isMounted) setLoading(false);
+                if (loadingPathRef.current === requestPath) setLoading(false);
             }
         };
 
         loadPage();
-        return () => { isMounted = false; abortController.abort(); };
-    }, [path, slugArray, fileList, pathname]);
+        return () => {
+            isMounted = false;
+            loadingPathRef.current = null;
+            abortController.abort();
+        };
+    }, [path, slugArray, fileList]);
+
+    useEffect(() => {
+        const onScroll = () => setIsScrolled(window.scrollY > 50);
+        onScroll(); // initial check
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
 
     if (loading) {
         return <div className="flex items-center justify-center min-h-screen"><SuspenseLoader /></div>;
     }
-
-    const filesBaseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://files.paradigmthreat.net';
 
     if (content) {
         return (
@@ -212,23 +206,73 @@ const CatchAllPage = memo(function CatchAllPage() {
                 articleTitle={articleTitle}
                 articleContent={content}
                 basePath={basePath}
-                allImagesInDir={allImagesInDir}
-                baseUrl={filesBaseUrl}
             >
-                {({ onPlay }) => (
+                {({ onPlay, onPause, onStop, isPlaying, currentSentenceIndex, sentences, error, onClearError }) => {
+                    const scrollToTop = () => window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+                    return (
             <div className="space-y-12 relative">
+                {error && (
+                    <div className="rounded-lg bg-red-950/80 border border-red-500/50 text-red-100 px-4 py-3 flex items-center justify-between gap-4">
+                        <span className="text-sm">{error}</span>
+                        <button onClick={onClearError} className="text-red-300/60 hover:text-red-100 text-xs uppercase">
+                            Dismiss
+                        </button>
+                    </div>
+                )}
                 <article className="prose prose-slate dark:prose-invert max-w-none">
-                    <RemoteMDX source={content} basePath={basePath} />
+                    {isPlaying && sentences.length > 0 ? (
+                        <ArticleReadingView
+                            articleContent={content}
+                            articleTitle={articleTitle}
+                            currentSentenceIndex={currentSentenceIndex}
+                            sentences={sentences}
+                        />
+                    ) : compiledMdx ? (
+                        <RemoteMDX compiled={compiledMdx} basePath={basePath} />
+                    ) : (
+                        <div className="animate-pulse h-32 bg-slate-200/50 dark:bg-slate-800/50 rounded-xl" />
+                    )}
                 </article>
+                <ArticleNav />
 
-                {/* Play article TTS - FAB */}
-                <button
-                    onClick={onPlay}
-                    className="fixed bottom-8 right-8 z-50 w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-xl shadow-indigo-500/30 transition-all hover:scale-105"
-                    aria-label="Play article"
-                >
-                    <Play size={24} fill="currentColor" className="ml-1" />
-                </button>
+                {/* Combined TTS + Back to top controls - always show both */}
+                <div className="fixed bottom-8 right-8 z-50 flex items-center gap-2">
+                    {isPlaying ? (
+                        <>
+                            <button
+                                onClick={onPause}
+                                className="w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-xl shadow-indigo-500/30 transition-all hover:scale-105"
+                                aria-label="Pause"
+                            >
+                                <Pause size={24} />
+                            </button>
+                            <button
+                                onClick={onStop}
+                                className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
+                                aria-label="Stop"
+                            >
+                                <Square size={18} fill="currentColor" />
+                            </button>
+                        </>
+                    ) : (
+                        <button
+                            onClick={() => { scrollToTop(); onPlay(); }}
+                            className="w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-xl shadow-indigo-500/30 transition-all hover:scale-105"
+                            aria-label="Play article"
+                        >
+                            <Play size={24} fill="currentColor" className="ml-1" />
+                        </button>
+                    )}
+                    {isScrolled && (
+                        <button
+                            onClick={scrollToTop}
+                            className="w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center"
+                            aria-label="Back to top"
+                        >
+                            <ChevronUp size={20} />
+                        </button>
+                    )}
+                </div>
 
                 {unusedImages.length > 0 && (
                     <div className="space-y-8 pt-12 border-t border-slate-200 dark:border-slate-800">
@@ -261,7 +305,8 @@ const CatchAllPage = memo(function CatchAllPage() {
                     </div>
                 )}
             </div>
-                )}
+                    );
+                }}
             </ArticleTTSProvider>
         );
     }
