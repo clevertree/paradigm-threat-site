@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { DynamicNav, FloatingDiv, ThemeToggle, Navbar, ImageGalleryProvider, DynamicIndex, FilesProvider, useFiles } from "@/components";
@@ -30,36 +30,11 @@ export default function RootLayout(
 
 function RootLayoutInner({ children }: { children: React.ReactNode }) {
     const { fileList } = useFiles();
-    const [isHydrated, setIsHydrated] = useState(false);
     const pathname = usePathname();
-
-    useEffect(() => {
-        setIsHydrated(true);
-    }, []);
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [pathname]);
-
-    if (!isHydrated) {
-        return (
-            <html lang="en" className="dark font-['Titillium_Web']" suppressHydrationWarning>
-                <head>
-                    <title>Paradigm Threat</title>
-                    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-                    <link rel="icon" type="image/svg+xml" href="/site/favicon.svg" />
-                    <link rel="manifest" href="/manifest.json" />
-                    <meta name="theme-color" content="#0f172a" />
-                    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-                </head>
-                <body className="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
-                    <div className="flex items-center justify-center min-h-screen">
-                        <SuspenseLoader />
-                    </div>
-                </body>
-            </html>
-        );
-    }
 
     return (
         <html lang="en" className="dark font-['Titillium_Web']" suppressHydrationWarning>

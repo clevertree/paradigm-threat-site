@@ -1,6 +1,6 @@
 'use client'
 
-import React, { Suspense, useState, useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { DynamicNav, FloatingDiv, DynamicIndex, useFiles } from "@/components";
 import { SuspenseLoader } from "@client";
@@ -14,16 +14,6 @@ export default function MainLayout({
     const { fileList } = useFiles();
     // Hide FloatingDiv's Back to top on article pages (2+ path segments) where the Play FAB handles scroll-to-top
     const hideFloatingButtons = pathname ? pathname.split('/').filter(Boolean).length >= 2 : false;
-
-    const [isHydrated, setIsHydrated] = useState(false);
-
-    useEffect(() => {
-        setIsHydrated(true);
-    }, []);
-
-    if (!isHydrated) {
-        return <div className="flex items-center justify-center min-h-screen"><SuspenseLoader /></div>;
-    }
 
     return (
         <div className="flex-grow flex justify-center w-full px-4 py-8 relative">
