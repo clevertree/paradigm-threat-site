@@ -14,7 +14,8 @@ const {
     ImageGalleryProvider,
     FloatingDiv,
     ThemeToggle,
-    Navbar
+    Navbar,
+    AutoIndex
 } = componentsNamespace;
 
 const mdxComponents = (basePath: string) => ({
@@ -42,6 +43,7 @@ const mdxComponents = (basePath: string) => ({
     img: (props: any) => <PopImage {...props} basePath={basePath} />,
     AutoContent: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
     Auto: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
+    AutoIndex: (props: any) => <AutoIndex {...props} currentPath={basePath} />,
     a: (props: any) => {
         let href = props.href || '';
         // Resolve relative links against basePath so they work regardless of trailing slash

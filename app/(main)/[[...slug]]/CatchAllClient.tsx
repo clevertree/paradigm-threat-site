@@ -135,9 +135,8 @@ export const CatchAllClient = memo(function CatchAllClient () {
 
               const imgFiles = files.filter((f: string) => /\.(jpg|jpeg|png|gif|svg|webp)$/i.test(f))
               const mdFiles = files.filter((f: string) => f.endsWith('.md') && f !== 'page.md' && !f.endsWith('.auto.md'))
-
               setImages(imgFiles)
-              setMds(mdFiles)
+              setMds([...mdFiles].sort((a, b) => -a.localeCompare(b)))
 
               const contents: Record<string, { title: string; content: string }> = {}
 
@@ -379,7 +378,9 @@ export const CatchAllClient = memo(function CatchAllClient () {
                   <h2 className="text-2xl font-bold text-slate-900 dark:text-white uppercase tracking-wider">Documents</h2>
                 </div>
                 <div className="grid grid-cols-1 gap-4">
-                  {mds.map(file => (
+                  {mds.map(file => {
+                    const title = mdContents[file]?.title || file.replace(/_/g, ' ').replace(/\.md$/, '')
+                    return (
                     <Link
                       key={file}
                       href={`/${path ? `${path}/${file}` : file}`}
@@ -387,21 +388,19 @@ export const CatchAllClient = memo(function CatchAllClient () {
                     >
                       <div className="flex items-center justify-between font-bold text-slate-900 dark:text-white">
                         <div className="flex flex-col">
-                          {mdContents[file]?.title && (
-                            <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-1">
-                              {mdContents[file]?.title}
-                            </span>
-                          )}
-                          <span className="text-lg group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                            {file.replace(/_/g, ' ')}
+                          <span className="text-[11px] font-normal text-slate-500 dark:text-slate-400 mb-1">
+                            {file}
+                          </span>
+                          <span className="text-xl group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                            {title}
                           </span>
                         </div>
-                        <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                       </div>
                     </Link>
-                  ))}
+                  )})}
                 </div>
               </div>
             )}

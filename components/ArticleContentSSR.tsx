@@ -18,7 +18,8 @@ const {
   DynamicNav,
   EmbedFile,
   ThemeToggle,
-  Navbar
+  Navbar,
+  AutoIndex
 } = componentsNamespace
 
 function mdxComponents (basePath: string): Record<string, React.ComponentType<any>> {
@@ -43,6 +44,7 @@ function mdxComponents (basePath: string): Record<string, React.ComponentType<an
     img: (props: any) => <PopImage {...props} basePath={basePath} />,
     AutoContent: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
     Auto: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
+    AutoIndex: (props: any) => <AutoIndex {...props} currentPath={basePath} />,
     a: (props: any) => {
       let href = props.href || ''
       if (href && !href.startsWith('/') && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:')) {
