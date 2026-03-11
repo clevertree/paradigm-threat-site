@@ -44,7 +44,14 @@ const mdxComponents = (basePath: string) => ({
     img: (props: any) => <PopImage {...props} basePath={basePath} />,
     AutoContent: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
     Auto: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
-    a: MarkdownLink,
+    a: (props: any) => {
+        let href = props.href || '';
+        // Resolve relative links against basePath so they work regardless of trailing slash
+        if (href && !href.startsWith('/') && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:')) {
+            href = basePath ? `/${basePath}/${href}` : `/${href}`;
+        }
+        return <MarkdownLink {...props} href={href} />;
+    },
 });
 
 export const RemoteMDX = memo(function RemoteMDX({ source, basePath = '' }: { source: string, basePath?: string }) {
