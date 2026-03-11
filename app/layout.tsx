@@ -4,6 +4,7 @@ import React, { Suspense, useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { DynamicNav, FloatingDiv, ThemeToggle, Navbar, ImageGalleryProvider, DynamicIndex, FilesProvider, useFiles } from "@/components";
+import PwaRedirect from "@/components/PwaRedirect";
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
@@ -47,6 +48,9 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
                     <title>Paradigm Threat</title>
                     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
                     <link rel="icon" type="image/svg+xml" href="/site/favicon.svg" />
+                    <link rel="manifest" href="/manifest.json" />
+                    <meta name="theme-color" content="#0f172a" />
+                    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
                 </head>
                 <body className="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-300">
                     <div className="flex items-center justify-center min-h-screen">
@@ -63,11 +67,15 @@ function RootLayoutInner({ children }: { children: React.ReactNode }) {
                 <title>Paradigm Threat</title>
                 <link rel="icon" type="image/x-icon" href="/favicon.ico" />
                 <link rel="icon" type="image/svg+xml" href="/site/favicon.svg" />
+                <link rel="manifest" href="/manifest.json" />
+                <meta name="theme-color" content="#0f172a" />
+                <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
                 <script dangerouslySetInnerHTML={{
                     __html: `try{if(localStorage.theme==='dark'||(!('theme' in localStorage)&&window.matchMedia('(prefers-color-scheme: dark)').matches)){document.documentElement.classList.add('dark')}else{document.documentElement.classList.remove('dark')}}catch(_){}`,
                 }} />
             </head>
             <body className={`bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col transition-colors duration-300`}>
+                <PwaRedirect />
                 <Navbar fileList={fileList} />
 
                 <div className={`flex-1 min-h-0 flex flex-col overflow-auto`}>

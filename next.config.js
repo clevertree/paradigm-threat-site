@@ -14,6 +14,56 @@ const withMDX = require('@next/mdx')({
   }
 })
 
+const withPWA = require('@ducanh2912/next-pwa').default({
+  dest: 'public',
+  disable: process.env.NODE_ENV === 'development',
+  register: true,
+  skipWaiting: true,
+  cacheOnFrontEndNav: true,
+  publicExcludes: ['**/*.pdf'],
+  workboxOptions: {
+    disableDevLogs: true,
+    runtimeCaching: [
+      {
+        urlPattern: /^https:\/\/files\.paradigmthreat\.net\/index\.json(\?.*)?$/i,
+        handler: 'StaleWhileRevalidate',
+        options: {
+          cacheName: 'pt-index',
+          expiration: { maxEntries: 5, maxAgeSeconds: 3600 },
+          cacheableResponse: { statuses: [0, 200] },
+        },
+      },
+      {
+        urlPattern: /^https:\/\/clevertree\.github\.io\/paradigm-threat-files\/index\.json(\?.*)?$/i,
+        handler: 'StaleWhileRevalidate',
+        options: {
+          cacheName: 'pt-index-gh',
+          expiration: { maxEntries: 5, maxAgeSeconds: 3600 },
+          cacheableResponse: { statuses: [0, 200] },
+        },
+      },
+      {
+        urlPattern: /^https:\/\/files\.paradigmthreat\.net\/[^?]+\.(md|mdx)(\?.*)?$/i,
+        handler: 'StaleWhileRevalidate',
+        options: {
+          cacheName: 'pt-articles',
+          expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 7 },
+          cacheableResponse: { statuses: [0, 200] },
+        },
+      },
+      {
+        urlPattern: /^https:\/\/clevertree\.github\.io\/paradigm-threat-files\/[^?]+\.(md|mdx)(\?.*)?$/i,
+        handler: 'StaleWhileRevalidate',
+        options: {
+          cacheName: 'pt-articles-gh',
+          expiration: { maxEntries: 100, maxAgeSeconds: 60 * 60 * 24 * 7 },
+          cacheableResponse: { statuses: [0, 200] },
+        },
+      },
+    ],
+  },
+})
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Transpile the local animation package (ESM, needs Next.js compilation)
@@ -70,5 +120,5 @@ const nextConfig = {
   },
 }
 
-// Merge MDX config with Next.js config
-module.exports = withMDX(nextConfig)
+// Merge MDX config, then PWA
+module.exports = withPWA(withMDX(nextConfig))

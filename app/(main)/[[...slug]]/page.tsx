@@ -1,18 +1,23 @@
 'use client'
 
 import React, { useState, useEffect, useMemo, memo } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { RemoteMDX } from '@/components/RemoteMDX';
 import { PopImage, useFiles } from '@/components';
 import Link from 'next/link';
 import matter from 'gray-matter';
+import { Play } from 'lucide-react';
+import { ArticleTTSProvider } from '@/components/ArticleTTS/ArticleTTSProvider';
 import { SuspenseLoader } from "@client";
 
 const CatchAllPage = memo(function CatchAllPage() {
     const params = useParams();
+    const pathname = usePathname();
     const { fileList } = useFiles();
     const [content, setContent] = useState<string | null>(null);
     const [basePath, setBasePath] = useState('');
+    const [articleTitle, setArticleTitle] = useState('');
+    const [allImagesInDir, setAllImagesInDir] = useState<string[]>([]);
     const [unusedImages, setUnusedImages] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const [filesIndex, setFilesIndex] = useState<any>(null);
@@ -35,6 +40,8 @@ const CatchAllPage = memo(function CatchAllPage() {
         setFilesIndex(fileList);
 
         const baseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://files.paradigmthreat.net';
+        const version = typeof fileList?._version === 'string' ? fileList._version : '';
+        const vParam = version ? `?v=${version}` : '';
 
         let isMounted = true;
         const abortController = new AbortController();
@@ -50,7 +57,7 @@ const CatchAllPage = memo(function CatchAllPage() {
                 // 1. Try to load as a direct file
                 if (path && (path.endsWith('.md') || path.endsWith('.mdx'))) {
                     try {
-                        const response = await fetch(`${baseUrl}/${path}`, { signal: abortController.signal });
+                        const response = await fetch(`${baseUrl}/${path}${vParam}`, { signal: abortController.signal });
                         if (response.ok) {
                             fileContent = await response.text();
                             targetPath = path;
@@ -61,7 +68,7 @@ const CatchAllPage = memo(function CatchAllPage() {
                 else {
                     const p = path ? `${path}/page.md` : 'page.md';
                     try {
-                        const response = await fetch(`${baseUrl}/${p}`, { signal: abortController.signal });
+                        const response = await fetch(`${baseUrl}/${p}${vParam}`, { signal: abortController.signal });
                         if (response.ok) {
                             fileContent = await response.text();
                             targetPath = p;
@@ -70,16 +77,21 @@ const CatchAllPage = memo(function CatchAllPage() {
                 }
 
                 if (fileContent) {
-                    const { content: mdxSource } = matter(fileContent);
+                    const { content: mdxSource, data: frontMatter } = matter(fileContent);
                     const calcBasePath = targetPath.includes('/') ? targetPath.split('/').slice(0, -1).join('/') : '';
+                    const titleFromPath = calcBasePath ? calcBasePath.split('/').pop()?.replace(/_/g, ' ') : 'Article';
 
                     if (isMounted) {
                         setBasePath(calcBasePath);
                         setContent(mdxSource);
+                        setArticleTitle(frontMatter?.title || titleFromPath || 'Article');
                         setDirectFiles([]);
                         setSubDirs([]);
                         setImages([]);
                         setMds([]);
+                        try {
+                            if (pathname) localStorage.setItem('pt-last-read-path', pathname);
+                        } catch (_) {}
                     }
 
                     // Find gallery images in the same folder using the tree
@@ -90,18 +102,23 @@ const CatchAllPage = memo(function CatchAllPage() {
                     }
 
                     if (current && typeof current === 'object') {
-                        const allImagesInDir = Object.keys(current).filter(k => {
+                        const imagesInDir = Object.keys(current).filter(k => {
                             if (k === '_count') return false;
                             const val = current[k];
                             const isFile = val !== null && typeof val === 'object' && !('_count' in val);
                             return isFile && /\.(jpg|jpeg|png|gif|svg|webp)$/i.test(k);
                         });
-                        const unused = allImagesInDir.filter((img: string) => {
+                        const unused = imagesInDir.filter((img: string) => {
                             const escapedImg = img.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                             const regex = new RegExp(`[\\(/\\s"'.]${escapedImg}([\\?\\s"')]|$)`, 'i');
                             return !regex.test(mdxSource);
                         });
-                        if (isMounted) setUnusedImages(unused);
+                        if (isMounted) {
+                            setAllImagesInDir(imagesInDir);
+                            setUnusedImages(unused);
+                        }
+                    } else if (isMounted) {
+                        setAllImagesInDir([]);
                     }
                 } else {
                     // CASE B: Directory Listing
@@ -129,6 +146,8 @@ const CatchAllPage = memo(function CatchAllPage() {
 
                         if (isMounted) {
                             setContent(null);
+                            setArticleTitle('');
+                            setAllImagesInDir([]);
                             setDirectFiles(files.sort());
                             setSubDirs(dirs.sort());
 
@@ -153,7 +172,7 @@ const CatchAllPage = memo(function CatchAllPage() {
                                 if (!isMounted) return;
                                 const fullPath = path ? `${path}/${f}` : f;
                                 try {
-                                    const response = await fetch(`${baseUrl}/${fullPath}`, { signal: abortController.signal });
+                                    const response = await fetch(`${baseUrl}/${fullPath}${vParam}`, { signal: abortController.signal });
                                     if (response.ok) {
                                         const text = await response.text();
                                         const { content: mdxSource, data: frontMatter } = matter(text);
@@ -179,18 +198,37 @@ const CatchAllPage = memo(function CatchAllPage() {
 
         loadPage();
         return () => { isMounted = false; abortController.abort(); };
-    }, [path, slugArray, fileList]);
+    }, [path, slugArray, fileList, pathname]);
 
     if (loading) {
         return <div className="flex items-center justify-center min-h-screen"><SuspenseLoader /></div>;
     }
 
+    const filesBaseUrl = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://files.paradigmthreat.net';
+
     if (content) {
         return (
-            <div className="space-y-12">
+            <ArticleTTSProvider
+                articleTitle={articleTitle}
+                articleContent={content}
+                basePath={basePath}
+                allImagesInDir={allImagesInDir}
+                baseUrl={filesBaseUrl}
+            >
+                {({ onPlay }) => (
+            <div className="space-y-12 relative">
                 <article className="prose prose-slate dark:prose-invert max-w-none">
                     <RemoteMDX source={content} basePath={basePath} />
                 </article>
+
+                {/* Play article TTS - FAB */}
+                <button
+                    onClick={onPlay}
+                    className="fixed bottom-8 right-8 z-50 w-14 h-14 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white flex items-center justify-center shadow-xl shadow-indigo-500/30 transition-all hover:scale-105"
+                    aria-label="Play article"
+                >
+                    <Play size={24} fill="currentColor" className="ml-1" />
+                </button>
 
                 {unusedImages.length > 0 && (
                     <div className="space-y-8 pt-12 border-t border-slate-200 dark:border-slate-800">
@@ -223,6 +261,8 @@ const CatchAllPage = memo(function CatchAllPage() {
                     </div>
                 )}
             </div>
+                )}
+            </ArticleTTSProvider>
         );
     }
 
