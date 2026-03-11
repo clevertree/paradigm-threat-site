@@ -363,8 +363,8 @@ export function useTTS() {
 
         const seg = segments[segIndex]
 
-        // On first sentence of a segment: load text and split into sentences
-        if (sentenceIndex === 0) {
+        // On first sentence of segment, or when seeking (sentenceIndex > 0) with unloaded segment: load text and split into sentences
+        if (sentenceIndex === 0 || sentencesRef.current.length === 0) {
             setState(prev => ({ ...prev, currentSegmentIndex: segIndex, isPlaying: true }))
             setState(prev => ({ ...prev, error: null }))
 
@@ -401,7 +401,7 @@ export function useTTS() {
             })
             sentencesRef.current = sentences
             sentenceSpeakersRef.current = resolvedSpeakers
-            setState(prev => ({ ...prev, sentences, currentSentenceIndex: 0 }))
+            setState(prev => ({ ...prev, sentences, currentSentenceIndex: sentenceIndex }))
         }
 
         const sentences = sentencesRef.current
@@ -455,10 +455,73 @@ export function useTTS() {
                 const controller = new AbortController()
                 fetchAbortRef.current = controller
 
+                /** Retry the same sentence up to 3 times before failing (on fetch or playback error) */
+                const SENTENCE_RETRY_MAX = 3
+                const trySentence = (attempt: number, cachedBlob: Blob | null): void => {
+                    const blobPromise = cachedBlob ? Promise.resolve(cachedBlob) : fetchWithRetry()
+                    blobPromise
+                        .then(blob => {
+                            if (!isPlayingRef.current || speakGenRef.current !== gen) return
+                            piperSegmentFailsRef.current = 0
+                            if (!audioRef.current) {
+                                setState(prev => ({ ...prev, error: 'Audio element not available. Try reloading the page.' }))
+                                stop()
+                                return
+                            }
+
+                            const url = URL.createObjectURL(blob)
+                            if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current)
+                            audioUrlRef.current = url
+
+                            audioRef.current.src = url
+                            audioRef.current.onended = () => {
+                                if (isPlayingRef.current && speakGenRef.current === gen) {
+                                    speak(segIndex, segments, sentenceIndex + 1).catch((err) => {
+                                        console.error('TTS next-sentence error:', err)
+                                        setState(prev => ({ ...prev, error: `TTS playback error: ${err instanceof Error ? err.message : String(err)}` }))
+                                        stop()
+                                    })
+                                }
+                            }
+                            audioRef.current.onerror = (e) => {
+                                if (speakGenRef.current !== gen) return
+                                const mediaErr = audioRef.current?.error
+                                const detail = mediaErr ? `${mediaErr.message} (code ${mediaErr.code})` : 'unknown'
+                                console.error('Piper audio playback error:', detail, e)
+                                handlePiperSegmentFail(`Audio playback failed: ${detail}`, attempt)
+                            }
+                            audioRef.current.play().catch((err) => {
+                                if (speakGenRef.current !== gen) return
+                                console.error('Audio play() rejected:', err)
+                                handlePiperSegmentFail(`Could not start audio: ${err instanceof Error ? err.message : 'Autoplay blocked?'}`, attempt)
+                            })
+
+                            prefetchNext()
+                        })
+                        .catch((err) => {
+                            if (err instanceof DOMException && err.name === 'AbortError') return
+                            if (speakGenRef.current !== gen) return
+                            console.error('[TTS] Piper fetch error (all retries exhausted):', err)
+                            if (isPlayingRef.current) {
+                                handlePiperSegmentFail(`Piper synthesis failed: ${err instanceof Error ? err.message : 'Unknown error'}`, attempt)
+                            }
+                        })
+                }
+
                 // Helper: when Piper fails for a sentence (after retries), skip to
                 // the next segment.  After 2 consecutive segment failures, pause and
                 // offer the user a "Switch to Speech API & Resume" button.
-                const handlePiperSegmentFail = (errorMsg: string) => {
+                const handlePiperSegmentFail = (errorMsg: string, attempt: number = 0) => {
+                    if (attempt < SENTENCE_RETRY_MAX) {
+                        const delayMs = Math.min(1000 * (attempt + 1), 4000)
+                        console.warn(`[TTS] Sentence failed (attempt ${attempt + 1}/${SENTENCE_RETRY_MAX}), retrying in ${delayMs}ms`)
+                        setState(prev => ({ ...prev, error: `Retrying… (${attempt + 1}/${SENTENCE_RETRY_MAX})` }))
+                        setTimeout(() => {
+                            if (!isPlayingRef.current || speakGenRef.current !== gen) return
+                            trySentence(attempt + 1, null)
+                        }, delayMs)
+                        return
+                    }
                     piperSegmentFailsRef.current++
                     const fails = piperSegmentFailsRef.current
 
@@ -586,58 +649,7 @@ export function useTTS() {
                 const cachedBlob = piperCacheRef.current.get(cacheKey)
                 if (cachedBlob) piperCacheRef.current.delete(cacheKey)
 
-                const blobPromise = cachedBlob ? Promise.resolve(cachedBlob) : fetchWithRetry()
-
-                blobPromise
-                    .then(blob => {
-                        if (!isPlayingRef.current || speakGenRef.current !== gen) return  // stale
-                        // Success — reset consecutive-fail counter
-                        piperSegmentFailsRef.current = 0
-                        if (!audioRef.current) {
-                            setState(prev => ({ ...prev, error: 'Audio element not available. Try reloading the page.' }))
-                            stop()
-                            return
-                        }
-
-                        const url = URL.createObjectURL(blob)
-                        if (audioUrlRef.current) URL.revokeObjectURL(audioUrlRef.current)
-                        audioUrlRef.current = url
-
-                        audioRef.current.src = url
-                        audioRef.current.onended = () => {
-                            if (isPlayingRef.current && speakGenRef.current === gen) {
-                                speak(segIndex, segments, sentenceIndex + 1).catch((err) => {
-                                    console.error('TTS next-sentence error:', err)
-                                    setState(prev => ({ ...prev, error: `TTS playback error: ${err instanceof Error ? err.message : String(err)}` }))
-                                    stop()
-                                })
-                            }
-                        }
-                        audioRef.current.onerror = (e) => {
-                            if (speakGenRef.current !== gen) return  // stale
-                            const mediaErr = audioRef.current?.error
-                            const detail = mediaErr ? `${mediaErr.message} (code ${mediaErr.code})` : 'unknown'
-                            console.error('Piper audio playback error:', detail, e)
-                            handlePiperSegmentFail(`Audio playback failed: ${detail}`)
-                        }
-                        audioRef.current.play().catch((err) => {
-                            if (speakGenRef.current !== gen) return  // stale
-                            console.error('Audio play() rejected:', err)
-                            handlePiperSegmentFail(`Could not start audio: ${err instanceof Error ? err.message : 'Autoplay blocked?'}`)
-                        })
-
-                        // Kick off pre-fetch for the next sentence
-                        prefetchNext()
-                    })
-                    .catch((err) => {
-                        // Don't treat aborted fetches (user stopped) as errors
-                        if (err instanceof DOMException && err.name === 'AbortError') return
-                        if (speakGenRef.current !== gen) return  // stale
-                        console.error('[TTS] Piper fetch error (all retries exhausted):', err)
-                        if (isPlayingRef.current) {
-                            handlePiperSegmentFail(`Piper synthesis failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
-                        }
-                    })
+                trySentence(0, cachedBlob ?? null)
 
                 return
             }
@@ -692,6 +704,22 @@ export function useTTS() {
         }, 20)
     }, [stop])
 
+    /** Restart playback from the failed or current segment (e.g. after an error) */
+    const retry = useCallback(() => {
+        const segments = segmentsRef.current
+        if (!segments.length) return
+        const segIndex = state.piperFallbackOffer?.segIndex ?? Math.max(0, state.currentSegmentIndex)
+        piperSegmentFailsRef.current = 0
+        setState(prev => ({ ...prev, error: null, piperFallbackOffer: null, isPlaying: true }))
+        isPlayingRef.current = true
+        acquireWakeLock()
+        speak(segIndex, segments, 0).catch((err) => {
+            console.error('TTS retry error:', err)
+            setState(prev => ({ ...prev, error: `TTS error: ${err instanceof Error ? err.message : String(err)}` }))
+            stop()
+        })
+    }, [state.piperFallbackOffer, state.currentSegmentIndex, speak, stop, acquireWakeLock])
+
     const switchToSpeechAndResume = useCallback(() => {
         const offer = state.piperFallbackOffer
         if (!offer) return
@@ -735,7 +763,9 @@ export function useTTS() {
      * Only valid when playback is active (sentences already loaded).
      */
     const playFromSentence = useCallback((segments: TTSSegment[], segIndex: number, sentenceIndex: number) => {
-        if (!segments[segIndex] || sentenceIndex < 0 || sentenceIndex >= (sentencesRef.current?.length ?? 0)) return
+        if (!segments[segIndex] || sentenceIndex < 0) return
+        const loadedLen = sentencesRef.current?.length ?? 0
+        if (loadedLen > 0 && sentenceIndex >= loadedLen) return  // only enforce upper bound when sentences are loaded
         if (cancelTimeoutRef.current) clearTimeout(cancelTimeoutRef.current)
         cancelTimeoutRef.current = null
         fetchAbortRef.current?.abort()
@@ -912,7 +942,7 @@ export function useTTS() {
 
     return {
         state, availableVoices, availablePiperVoices,
-        play, playFromSentence, pause, stop, next, prev, clearError, switchToSpeechAndResume,
+        play, playFromSentence, pause, stop, next, prev, retry, clearError, switchToSpeechAndResume,
         setVoice, setRate, setLangFilter, setLocalOnly, setSubtitleMode,
         setProvider, setPiperVoiceId, setPiperLang, setQuoteVoiceId, setSpeakerMapInput,
     }

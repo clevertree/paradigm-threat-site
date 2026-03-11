@@ -14,6 +14,10 @@ export interface ArticleTTSOverlayProps {
   onPause: () => void
   onStop: () => void
   onClearError: () => void
+  onSeekToSentence: (sentenceIndex: number) => void
+  sentences: string[]
+  currentSentenceIndex: number
+  onRetry?: () => void
   onSetVoice: (v: SpeechSynthesisVoice | null) => void
   onSetRate: (r: number) => void
   onSetProvider: (p: TTSProvider) => void
@@ -27,6 +31,10 @@ export interface ArticleTTSOverlayProps {
   onSwitchToSpeechAndResume?: () => void
   onScrollToTop: () => void
   isScrolled: boolean
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value))
 }
 
 export function ArticleTTSOverlay({
@@ -50,8 +58,15 @@ export function ArticleTTSOverlay({
   onSwitchToSpeechAndResume,
   onScrollToTop,
   isScrolled,
+  onSeekToSentence,
+  sentences,
+  currentSentenceIndex,
+  onRetry,
 }: ArticleTTSOverlayProps) {
   const [expanded, setExpanded] = useState(false)
+  const [seekValue, setSeekValue] = useState<number | null>(null)
+  const totalSentences = sentences.length
+  const displayIndex = seekValue !== null ? seekValue : currentSentenceIndex
 
   const filteredVoices = availableVoices
     .filter(v => ttsState.langFilter === 'all' || v.lang.startsWith(ttsState.langFilter))
@@ -66,6 +81,14 @@ export function ArticleTTSOverlay({
         <div className="mx-4 mb-2 rounded-lg bg-red-950/90 border border-red-500/50 text-red-100 px-4 py-3 flex items-center justify-between gap-4 shadow-xl">
           <span className="text-sm flex-1 min-w-0 truncate">{ttsState.error}</span>
           <div className="flex items-center gap-2 shrink-0">
+            {onRetry && (
+              <button
+                onClick={onRetry}
+                className="text-xs uppercase font-bold bg-amber-600/80 hover:bg-amber-500/90 px-2 py-1 rounded text-amber-100"
+              >
+                Retry
+              </button>
+            )}
             {ttsState.provider === 'piper' && ttsState.piperFallbackOffer && onSwitchToSpeechAndResume && (
               <button
                 onClick={onSwitchToSpeechAndResume}
@@ -127,6 +150,36 @@ export function ArticleTTSOverlay({
             >
               <ChevronUp size={20} />
             </button>
+          )}
+          {totalSentences > 0 && (
+            <div className="flex-1 min-w-0 flex items-center gap-2 mx-2">
+              <input
+                type="range"
+                min={0}
+                max={totalSentences - 1}
+                step={1}
+                value={clamp(displayIndex, 0, totalSentences - 1)}
+                onChange={(e) => setSeekValue(parseInt(e.target.value, 10))}
+                onPointerDown={() => setSeekValue(displayIndex)}
+                onPointerUp={() => {
+                  if (seekValue !== null) {
+                    onSeekToSentence(seekValue)
+                    setSeekValue(null)
+                  }
+                }}
+                onTouchEnd={() => {
+                  if (seekValue !== null) {
+                    onSeekToSentence(seekValue)
+                    setSeekValue(null)
+                  }
+                }}
+                className="w-full h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-indigo-500 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-indigo-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow"
+                aria-label="Seek position in article"
+              />
+              <span className="text-xs text-slate-400 tabular-nums shrink-0">
+                {displayIndex + 1} / {totalSentences}
+              </span>
+            </div>
           )}
           <button
             onClick={() => setExpanded(!expanded)}

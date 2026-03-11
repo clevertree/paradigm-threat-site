@@ -29,6 +29,7 @@ export interface ArticleTTSContext {
   setLocalOnly: (b: boolean) => void
   setSubtitleMode: (m: SubtitleMode) => void
   switchToSpeechAndResume?: () => void
+  retry: () => void
 }
 
 export interface ArticleTTSProviderProps {
@@ -99,6 +100,7 @@ export function ArticleTTSProvider({
         setLocalOnly: tts.setLocalOnly,
         setSubtitleMode: tts.setSubtitleMode,
         switchToSpeechAndResume: tts.switchToSpeechAndResume,
+        retry: tts.retry,
       })}
     </>
   )

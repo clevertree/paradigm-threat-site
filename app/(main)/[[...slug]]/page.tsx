@@ -209,7 +209,7 @@ const CatchAllPage = memo(function CatchAllPage() {
                 articleContent={content}
                 basePath={basePath}
             >
-                {({ onPlay, onPause, onStop, onPlayFromSentence, isPlaying, currentSentenceIndex, sentences, onClearError, ttsState, availableVoices, availablePiperVoices, setVoice, setRate, setProvider, setPiperVoiceId, setPiperLang, setQuoteVoiceId, setSpeakerMapInput, setLangFilter, setLocalOnly, setSubtitleMode, switchToSpeechAndResume }) => {
+                {({ onPlay, onPause, onStop, onPlayFromSentence, isPlaying, currentSentenceIndex, sentences, onClearError, ttsState, availableVoices, availablePiperVoices, setVoice, setRate, setProvider, setPiperVoiceId, setPiperLang, setQuoteVoiceId, setSpeakerMapInput, setLangFilter, setLocalOnly, setSubtitleMode, switchToSpeechAndResume, retry }) => {
                     const scrollToTop = () => window.scroll({ top: 0, left: 0, behavior: 'smooth' });
                     const handleArticleDoubleClick = (e: React.MouseEvent<HTMLElement>) => {
                         if (sentences.length === 0) return;
@@ -259,6 +259,10 @@ const CatchAllPage = memo(function CatchAllPage() {
                     onPause={onPause}
                     onStop={onStop}
                     onClearError={onClearError}
+                    onSeekToSentence={onPlayFromSentence}
+                    sentences={sentences}
+                    currentSentenceIndex={currentSentenceIndex}
+                    onRetry={retry}
                     onSetVoice={setVoice}
                     onSetRate={setRate}
                     onSetProvider={setProvider}
