@@ -1,8 +1,6 @@
 'use client'
 
 import React, { useEffect, useRef, useState, useCallback } from 'react'
-import { onToggle } from '@/components/helpers/inputHelper'
-
 interface FloatingDivProps {
     children: React.ReactNode,
     containerTag?: string,
@@ -10,7 +8,6 @@ interface FloatingDivProps {
 }
 
 export default function FloatingDiv({ children, containerTag, className }: FloatingDivProps) {
-    const [isDisabled, setIsDisabled] = useState(false)
     const [isScrolling, setIsScrolling] = useState(false)
     const [activeSection, setActiveSection] = useState<string>('')
     const [headings, setHeadings] = useState<{ id: string, text: string, top: number }[]>([])
@@ -20,7 +17,7 @@ export default function FloatingDiv({ children, containerTag, className }: Float
     const refContainer = useRef<HTMLElement>(null)
     const headingsRef = useRef(headings)
     const isScrollingRef = useRef(isScrolling)
-    const isFloating = !isDisabled && isScrolling;
+    const isFloating = isScrolling;
 
     useEffect(() => { headingsRef.current = headings }, [headings])
     useEffect(() => { isScrollingRef.current = isScrolling }, [isScrolling])
@@ -139,17 +136,6 @@ export default function FloatingDiv({ children, containerTag, className }: Float
                 style={isFloating ? { left: `${leftPosition}px`, width: `${containerWidth}px` } : undefined}
             >
                 {children}
-                {isFloating && (
-                    <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                        <div
-                            {...onToggle(() => setIsDisabled(true))}
-                            title='temporarily hide header'
-                            className="w-6 h-6 flex items-center justify-center rounded-full bg-black/20 hover:bg-black/40 dark:bg-white/20 dark:hover:bg-white/40 cursor-pointer text-sm leading-none"
-                        >
-                            &#x00d7;
-                        </div>
-                    </div>
-                )}
             </div>
 
             <div className={`fixed bottom-4 right-4 z-50 flex flex-col items-end gap-2 transition-all duration-300 ${!isFloating ? 'translate-y-20 opacity-0 pointer-events-none' : 'translate-y-0 opacity-100'}`}>
@@ -175,7 +161,7 @@ export default function FloatingDiv({ children, containerTag, className }: Float
                     </button>
                     <button
                         className="bg-slate-800 dark:bg-slate-100 text-white dark:text-slate-900 px-4 py-2 rounded-full shadow-lg hover:scale-105 active:scale-95 transition-all text-sm font-bold"
-                        {...onToggle(scrollToTop)}
+                        onClick={scrollToTop}
                     >
                         Back to top
                     </button>
