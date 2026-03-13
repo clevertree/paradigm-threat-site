@@ -1,6 +1,8 @@
 'use client'
 
 import React, { useEffect, useState, useCallback } from 'react'
+import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import { ErrorBoundary, SuspenseLoader } from '@client'
 import Markdown, { MarkdownToJSX } from 'markdown-to-jsx'
 import { Send, User, MessageSquare, AlertCircle, RefreshCcw } from 'lucide-react'
@@ -14,6 +16,7 @@ interface ChatRoomProps {
 
 interface ChannelEntry {
     id: number,
+    user_id?: number,
     username: string,
     created: string,
     content: string,
@@ -34,13 +37,25 @@ interface ChannelInfo {
 interface ChannelList extends Array<ChannelInfo> {
 }
 
+function formatPostTime(created: string): string {
+    const d = new Date(created)
+    const now = new Date()
+    const isToday = d.getDate() === now.getDate() && d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear()
+    if (isToday) {
+        return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+    }
+    return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' · ' + d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
+}
+
 export default function ChatRoom({ channel, title, className, mode }: ChatRoomProps) {
+    const searchParams = useSearchParams()
+    const channelFromUrl = searchParams?.get('channel') || ''
     const [channelContent, setChannelContent] = useState<ChannelContent | null>(null)
     const [channelList, setChannelList] = useState<ChannelList>([])
     const [loading, setLoading] = useState(true)
     const [disabled, setDisabled] = useState<boolean>(false)
     const [postCount, setPostCount] = useState<number>(0)
-    const [currentChannelName, setCurrentChannelName] = useState<string>(channel)
+    const [currentChannelName, setCurrentChannelName] = useState<string>(channelFromUrl || channel)
     const [currentUserName, setCurrentUserName] = useState<string>('')
 
     const addError = useCallback((error: string) => {
@@ -93,13 +108,17 @@ export default function ChatRoom({ channel, title, className, mode }: ChatRoomPr
             setLoading(true);
             fetch(`/api/chat/getChannels`)
                 .then(res => res.json())
-                .then((data) => {
-                    if (data.error) {
+                .then((data: ChannelInfo[] | { error: string }) => {
+                    if (data && 'error' in data) {
                         addError(data.error)
                     } else {
-                        setChannelList(data)
-                        if (!currentChannelName && data.length > 0) {
-                            setCurrentChannelName(data[0].name)
+                        const channels = data as ChannelInfo[]
+                        setChannelList(channels)
+                        if (channels.length > 0) {
+                            const validFromUrl = channelFromUrl && channels.some((c) => c.name === channelFromUrl)
+                            setCurrentChannelName((prev) =>
+                                validFromUrl ? channelFromUrl : (prev && channels.some((c) => c.name === prev) ? prev : channels[0].name)
+                            )
                         }
                     }
                 }).catch(error => {
@@ -206,11 +225,20 @@ export default function ChatRoom({ channel, title, className, mode }: ChatRoomPr
                             className={`flex flex-col ${post.isError ? 'bg-red-500/10 border border-red-500/20 p-4 rounded-xl shadow-inner' : ''}`}
                         >
                             <div className="flex items-center gap-2 mb-1">
-                                <span className={`font-bold text-sm ${post.isError ? 'text-red-500' : 'text-blue-600 dark:text-blue-400'}`}>
-                                    {post.username}
-                                </span>
+                                {post.user_id != null && !post.isError ? (
+                                    <Link
+                                        href={`/chat/user/${post.user_id}`}
+                                        className="font-bold text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                                    >
+                                        {post.username}
+                                    </Link>
+                                ) : (
+                                    <span className={`font-bold text-sm ${post.isError ? 'text-red-500' : 'text-blue-600 dark:text-blue-400'}`}>
+                                        {post.username}
+                                    </span>
+                                )}
                                 <span className="text-[10px] text-slate-400 font-mono">
-                                    {new Date(post.created).toLocaleTimeString()}
+                                    {formatPostTime(post.created)}
                                 </span>
                                 {post.isError && <AlertCircle size={14} className="text-red-500" />}
                             </div>

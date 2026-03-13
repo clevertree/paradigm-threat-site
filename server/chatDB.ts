@@ -92,3 +92,27 @@ export async function getOrCreateUserInfo(username: string) {
     }
     return userInfo;
 }
+
+export async function getUserById(id: number) {
+    const { rows } = await sql`
+        SELECT * FROM users WHERE id = ${id};
+    `;
+    return rows[0] as UserInfo | undefined;
+}
+
+export interface UserPostWithChannel extends PostInfo {
+    channel_name: string;
+}
+
+export async function getUserRecentPosts(userId: number, limit: number = 20) {
+    const { rows } = await sql`
+        SELECT p.*, u.username, u.email as user_email, c.name as channel_name
+        FROM posts p
+        JOIN users u ON p.user_id = u.id
+        JOIN channels c ON p.channel_id = c.id
+        WHERE p.user_id = ${userId}
+        ORDER BY p.created DESC
+        LIMIT ${limit};
+    `;
+    return rows as Array<UserPostWithChannel>;
+}
