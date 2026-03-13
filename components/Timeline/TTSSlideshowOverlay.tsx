@@ -652,7 +652,7 @@ export function TTSSlideshowOverlay({
 function PlanetSlideCanvas({ active }: { active: boolean }) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const ctrlRef = useRef<any>(null)
-    const rafRef = useRef<number>()
+    const rafRef = useRef<number | undefined>(undefined)
 
     useEffect(() => {
         if (!active) {

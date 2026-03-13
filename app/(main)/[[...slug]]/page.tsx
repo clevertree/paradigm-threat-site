@@ -7,7 +7,7 @@ import { SuspenseLoader } from '@client'
 import type { Metadata } from 'next'
 
 interface PageProps {
-  params: { slug?: string | string[] }
+  params: Promise<{ slug?: string | string[] }>
 }
 
 function getPathFromParams (params: { slug?: string | string[] }): string {
@@ -17,7 +17,8 @@ function getPathFromParams (params: { slug?: string | string[] }): string {
 }
 
 export async function generateMetadata ({ params }: PageProps): Promise<Metadata> {
-  const path = getPathFromParams(params)
+  const resolved = await params
+  const path = getPathFromParams(resolved)
   if (!path) return { title: 'Paradigm Threat' }
 
   const article = await fetchArticle(path)
@@ -30,7 +31,8 @@ export async function generateMetadata ({ params }: PageProps): Promise<Metadata
 }
 
 export default async function CatchAllPage ({ params }: PageProps) {
-  const path = getPathFromParams(params)
+  const resolved = await params
+  const path = getPathFromParams(resolved)
 
   // Try to fetch article server-side for SSR (crawlers get full HTML)
   const article = path ? await fetchArticle(path) : null
