@@ -10,7 +10,7 @@ export default function AutoGeneratePage() {
         // Redirect to the new search page with the path as query
         const query = pathname.split('/').pop() || ''
         if (query) {
-            router.replace(`/search?q=${encodeURIComponent(query)}`)
+            router.replace(`/search/${encodeURIComponent(query)}`)
         }
     }, [pathname, router])
 

@@ -5,13 +5,17 @@ import { getFilesIndex, getRemoteFile } from '@/server/remoteFiles'
 import { SearchHeader, FolderGrid, ArticleStack, ImageGallery } from '@/components/search'
 import matter from 'gray-matter'
 import { Loader2, Search } from 'lucide-react'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams, useParams } from 'next/navigation'
 import { flattenFilesIndex } from '@/components/helpers/indexHelper'
 
 function SearchContent() {
     const router = useRouter()
+    const params = useParams()
     const searchParams = useSearchParams()
-    const query = searchParams.get('q') || ''
+    const topicFromPath = Array.isArray(params?.topic) ? params.topic[0] : (params?.topic as string)
+    const queryFromPath = topicFromPath ? decodeURIComponent(topicFromPath) : ''
+    const queryFromSearch = searchParams.get('q') || ''
+    const query = queryFromPath || queryFromSearch
 
     const [filesIndex, setFilesIndex] = useState<string[]>([])
     const [renderedMds, setRenderedMds] = useState<any[]>([])
@@ -90,14 +94,14 @@ function SearchContent() {
     }, [searchResults])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value
-        const params = new URLSearchParams(window.location.search)
-        if (val) {
-            params.set('q', val)
+        const val = e.target.value.trim()
+        if (val && !val.includes(' ')) {
+            router.replace(`/search/${encodeURIComponent(val)}`, { scroll: false })
+        } else if (val) {
+            router.replace(`/search?q=${encodeURIComponent(val)}`, { scroll: false })
         } else {
-            params.delete('q')
+            router.replace('/search', { scroll: false })
         }
-        router.replace(`/search?${params.toString()}`, { scroll: false })
     }
 
     // Extract unique folders
