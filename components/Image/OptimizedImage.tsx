@@ -84,8 +84,8 @@ export default function OptimizedImage({ children, className, ...props }: Optimi
                 />
             </div>
             {children
-                ? <figcaption className="mt-2 text-sm text-slate-500 dark:text-slate-400 italic text-center px-2">{children}</figcaption>
-                : alt ? <figcaption className="mt-2 text-sm text-slate-500 dark:text-slate-400 italic text-center px-2">{alt}</figcaption> : null
+                ? <figcaption className="mt-2 text-xs text-slate-500 dark:text-slate-400 italic text-justify px-2">{children}</figcaption>
+                : alt ? <figcaption className="mt-2 text-xs text-slate-500 dark:text-slate-400 italic text-justify px-2">{alt}</figcaption> : null
             }
         </figure>
     )

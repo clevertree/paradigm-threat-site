@@ -1,7 +1,0 @@
-'use client'
-
-import ChatUserPage from '@/components/ChatUserPage'
-
-export default function ChatUserRoute() {
-    return <ChatUserPage />
-}

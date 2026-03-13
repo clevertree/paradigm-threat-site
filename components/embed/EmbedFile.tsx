@@ -16,7 +16,7 @@ export default function EmbedFile({ children, className, ...props }: EmbedFilePr
                 className="w-full flex-1 bg-white rounded-lg shadow-inner"
                 {...srcProps}
             />
-            <div className="mt-2 text-sm italic opacity-80">
+            <div className="mt-2 text-xs italic opacity-80 text-justify">
                 {children}
             </div>
             <a
