@@ -88,8 +88,8 @@ export default function DynamicIndex({ mode = 'inline', ...props }: DynamicIndex
     return (
         <ul
             className={`dynamic-index-container space-y-0 p-5 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl transition-all duration-300 shadow-xl overflow-y-auto max-h-[calc(100vh-10rem)] ${mode === 'sidebar'
-                ? 'hidden lg:block w-full'
-                : 'block lg:hidden mb-8 max-w-2xl'
+                ? 'hidden toc:block w-full'
+                : 'block toc:hidden mb-8 max-w-2xl'
                 }`}
             ref={container}
         >

@@ -37,10 +37,10 @@ export default function MainLayout({
                     </Suspense>
                 </main>
 
-                {/* Right sidebar for Table of Contents - hidden on chat page */}
+                {/* Right sidebar for Table of Contents - hidden on chat page, switches to inline below 1400px */}
                 {!isChatPage && (
-                <aside id="sidebar-right" className="hidden lg:block w-80 flex-shrink-0 p-4" aria-label="Table of contents">
-                    <div className="lg:fixed lg:right-8 lg:top-24 lg:w-72 lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto">
+                <aside id="sidebar-right" className="hidden toc:block w-80 flex-shrink-0 p-4" aria-label="Table of contents">
+                    <div className="toc:fixed toc:right-8 toc:top-24 toc:w-72 toc:max-h-[calc(100vh-8rem)] toc:overflow-y-auto">
                         <DynamicIndex mode="sidebar" />
                     </div>
                 </aside>

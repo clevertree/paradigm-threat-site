@@ -12,6 +12,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        toc: '1400px', // TOC sidebar shows above this; inline/mobile below
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':

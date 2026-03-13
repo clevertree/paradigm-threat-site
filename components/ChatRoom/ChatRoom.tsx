@@ -142,8 +142,8 @@ export default function ChatRoom({ channel: channelProp, title, className, mode 
                             setCurrentChannelName((prev) =>
                                 validFromPath ? channelFromPath : (prev && channels.some((c) => c.name === prev) ? prev : channels[0].name)
                             )
-                            if (!validFromPath && !channelFromPath) {
-                                const redirectBase = pathname?.startsWith(CHAT_FULL_PREFIX) ? CHAT_FULL_PREFIX : '/chat'
+                            if (!validFromPath && !channelFromPath && pathname?.startsWith('/chat')) {
+                                const redirectBase = pathname.startsWith(CHAT_FULL_PREFIX) ? CHAT_FULL_PREFIX : '/chat'
                                 router.replace(`${redirectBase}/${encodeURIComponent(channels[0].name)}`)
                             }
                         }
