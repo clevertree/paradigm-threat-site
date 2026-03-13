@@ -47,6 +47,7 @@
     "postcss": "^8.4.29",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "rehype-unwrap-images": "^1.0.0",
     "remark-gfm": "^4.0.1",
     "sass": "^1.67.0",
     "sharp": "^0.32.6",

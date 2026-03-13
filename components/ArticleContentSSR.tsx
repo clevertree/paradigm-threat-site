@@ -5,7 +5,9 @@
 
 import React from 'react'
 import { compileMDX } from 'next-mdx-remote/rsc'
+import rehypeUnwrapImages from 'rehype-unwrap-images'
 import remarkGfm from 'remark-gfm'
+import rehypeUnwrapFigures from '@/lib/rehypeUnwrapFigures'
 import * as componentsNamespace from '@/components'
 import { MarkdownLink } from './MarkdownLink'
 
@@ -64,7 +66,10 @@ export async function ArticleContentSSR ({ mdxSource, basePath }: ArticleContent
   const { content } = await compileMDX({
     source: mdxSource,
     options: {
-      mdxOptions: { remarkPlugins: [remarkGfm] }
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [rehypeUnwrapImages, rehypeUnwrapFigures],
+      },
     },
     components: mdxComponents(basePath)
   })

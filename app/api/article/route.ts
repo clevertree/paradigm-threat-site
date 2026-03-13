@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import matter from 'gray-matter'
 import { serialize } from 'next-mdx-remote/serialize'
+import rehypeUnwrapImages from 'rehype-unwrap-images'
 import remarkGfm from 'remark-gfm'
+import rehypeUnwrapFigures from '@/lib/rehypeUnwrapFigures'
 
 const FILES_BASE_URL =
   process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://clevertree.github.io/paradigm-threat-files'
@@ -77,7 +79,10 @@ export async function GET(req: NextRequest) {
     const title = (frontMatter?.title as string) || titleFromPath || 'Article'
 
     const { compiledSource, frontmatter, scope } = await serialize(mdxSource, {
-      mdxOptions: { remarkPlugins: [remarkGfm] },
+      mdxOptions: {
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [rehypeUnwrapImages, rehypeUnwrapFigures],
+      },
     })
 
     return NextResponse.json({
