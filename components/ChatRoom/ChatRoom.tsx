@@ -2,13 +2,13 @@
 
 import React, { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { ErrorBoundary, SuspenseLoader } from '@client'
 import Markdown, { MarkdownToJSX } from 'markdown-to-jsx'
-import { Send, User, MessageSquare, AlertCircle, RefreshCcw } from 'lucide-react'
+import { Send, User, MessageSquare, AlertCircle, RefreshCcw, Maximize2, Minimize2 } from 'lucide-react'
 
 interface ChatRoomProps {
-    channel: string,
+    channel?: string,
     title?: string,
     className?: string,
     mode?: 'full'
@@ -47,16 +47,32 @@ function formatPostTime(created: string): string {
     return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' · ' + d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })
 }
 
-export default function ChatRoom({ channel, title, className, mode }: ChatRoomProps) {
-    const searchParams = useSearchParams()
-    const channelFromUrl = searchParams?.get('channel') || ''
+import { CHAT_FULL_PREFIX, getChatBasePath } from '@/lib/chatPaths'
+
+function getChannelFromPath(pathname: string | null): string | null {
+    if (!pathname) return null
+    const segments = pathname.split('/').filter(Boolean)
+    if (segments[0] !== 'chat') return null
+    const offset = segments[1] === 'full' ? 2 : 1
+    const segment = segments[offset]
+    if (segment && segment !== 'recent' && segment !== 'user') return segment
+    return null
+}
+
+export default function ChatRoom({ channel: channelProp, title, className, mode }: ChatRoomProps) {
+    const pathname = usePathname()
+    const router = useRouter()
+    const channelFromPath = getChannelFromPath(pathname)
     const [channelContent, setChannelContent] = useState<ChannelContent | null>(null)
     const [channelList, setChannelList] = useState<ChannelList>([])
     const [loading, setLoading] = useState(true)
     const [disabled, setDisabled] = useState<boolean>(false)
     const [postCount, setPostCount] = useState<number>(0)
-    const [currentChannelName, setCurrentChannelName] = useState<string>(channelFromUrl || channel)
+    const [currentChannelName, setCurrentChannelName] = useState<string>(channelFromPath || channelProp || '')
     const [currentUserName, setCurrentUserName] = useState<string>('')
+
+    const basePath = getChatBasePath(pathname)
+    const isExpanded = pathname?.startsWith(CHAT_FULL_PREFIX) ?? false
 
     const addError = useCallback((error: string) => {
         setChannelContent(prev => {
@@ -104,6 +120,13 @@ export default function ChatRoom({ channel, title, className, mode }: ChatRoomPr
     }, [fetchPosts, postCount])
 
     useEffect(() => {
+        if (channelFromPath && channelFromPath !== currentChannelName) {
+            setCurrentChannelName(channelFromPath)
+            setChannelContent(null)
+        }
+    }, [channelFromPath])
+
+    useEffect(() => {
         if (mode === "full") {
             setLoading(true);
             fetch(`/api/chat/getChannels`)
@@ -115,10 +138,14 @@ export default function ChatRoom({ channel, title, className, mode }: ChatRoomPr
                         const channels = data as ChannelInfo[]
                         setChannelList(channels)
                         if (channels.length > 0) {
-                            const validFromUrl = channelFromUrl && channels.some((c) => c.name === channelFromUrl)
+                            const validFromPath = channelFromPath && channels.some((c) => c.name === channelFromPath)
                             setCurrentChannelName((prev) =>
-                                validFromUrl ? channelFromUrl : (prev && channels.some((c) => c.name === prev) ? prev : channels[0].name)
+                                validFromPath ? channelFromPath : (prev && channels.some((c) => c.name === prev) ? prev : channels[0].name)
                             )
+                            if (!validFromPath && !channelFromPath) {
+                                const redirectBase = pathname?.startsWith(CHAT_FULL_PREFIX) ? CHAT_FULL_PREFIX : '/chat'
+                                router.replace(`${redirectBase}/${encodeURIComponent(channels[0].name)}`)
+                            }
                         }
                     }
                 }).catch(error => {
@@ -128,7 +155,7 @@ export default function ChatRoom({ channel, title, className, mode }: ChatRoomPr
                     setLoading(false);
                 })
         }
-    }, [mode, currentChannelName, addError])
+    }, [mode, channelFromPath, pathname, router, addError])
 
     async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault()
@@ -149,10 +176,24 @@ export default function ChatRoom({ channel, title, className, mode }: ChatRoomPr
                 body: JSON.stringify({ username, content, channel: currentChannelName })
             })
 
+            const json = await res.json()
             if (!res.ok) {
-                const json = await res.json()
                 throw new Error(json.error || 'Failed to post message')
             }
+
+            const post = json as { id: number; user_id: number; created: string; content: string }
+            const newEntry: ChannelEntry = {
+                id: post.id,
+                user_id: post.user_id,
+                username,
+                created: post.created,
+                content: post.content,
+            }
+            setChannelContent((prev) =>
+                prev
+                    ? { ...prev, posts: [newEntry, ...prev.posts] }
+                    : { channel: currentChannelName, posts: [newEntry] }
+            )
 
             form.reset()
             setPostCount(prev => prev + 1)
@@ -165,7 +206,7 @@ export default function ChatRoom({ channel, title, className, mode }: ChatRoomPr
 
     return (
         <ErrorBoundary assetName="ChatRoom">
-            <div className={`flex flex-col h-[70vh] bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xl ${className || ''} select-none`}>
+            <div className={`flex flex-col bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xl ${className || ''} ${isExpanded ? 'fixed inset-0 z-[110] min-h-0' : 'h-[70vh]'} select-none`}>
                 {/* Copy Placeholder - invisible but selectable */}
                 <span className="absolute opacity-0 pointer-events-none select-text">
                     [Paradigm Threat Live Chat: {title || currentChannelName}]
@@ -187,11 +228,20 @@ export default function ChatRoom({ channel, title, className, mode }: ChatRoomPr
 
                     <div className="flex items-center gap-2">
                         {mode === 'full' && (
+                            <>
+                            <Link
+                                href={`${basePath}/recent`}
+                                className="px-3 py-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:underline"
+                            >
+                                Recent
+                            </Link>
                             <select
                                 value={currentChannelName}
                                 onChange={e => {
-                                    setCurrentChannelName(e.target.value)
+                                    const val = e.target.value
+                                    setCurrentChannelName(val)
                                     setChannelContent(null)
+                                    router.push(`${basePath}/${encodeURIComponent(val)}`)
                                 }}
                                 className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-1.5 text-sm font-medium outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
                             >
@@ -199,7 +249,18 @@ export default function ChatRoom({ channel, title, className, mode }: ChatRoomPr
                                     <option key={c.name} value={c.name}>{c.name}</option>
                                 ))}
                             </select>
+                            </>
                         )}
+                        <button
+                            onClick={() => {
+                                const target = isExpanded ? `/chat/${encodeURIComponent(currentChannelName)}` : `${CHAT_FULL_PREFIX}/${encodeURIComponent(currentChannelName)}`
+                                router.push(target)
+                            }}
+                            className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-500"
+                            title={isExpanded ? 'Shrink' : 'Expand to fill window'}
+                        >
+                            {isExpanded ? <Minimize2 size={20} /> : <Maximize2 size={20} />}
+                        </button>
                         <button
                             onClick={() => setPostCount(prev => prev + 1)}
                             className="p-2 hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors text-slate-500"
@@ -227,7 +288,7 @@ export default function ChatRoom({ channel, title, className, mode }: ChatRoomPr
                             <div className="flex items-center gap-2 mb-1">
                                 {post.user_id != null && !post.isError ? (
                                     <Link
-                                        href={`/chat/user/${post.user_id}`}
+                                        href={`${basePath}/user/${post.user_id}`}
                                         className="font-bold text-sm text-blue-600 dark:text-blue-400 hover:underline"
                                     >
                                         {post.username}

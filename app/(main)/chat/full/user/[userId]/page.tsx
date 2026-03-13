@@ -2,6 +2,6 @@
 
 import ChatUserPage from '@/components/ChatUserPage'
 
-export default function ChatUserRoute() {
+export default function ChatFullUserRoute() {
     return <ChatUserPage />
 }

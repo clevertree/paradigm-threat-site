@@ -116,3 +116,15 @@ export async function getUserRecentPosts(userId: number, limit: number = 20) {
     `;
     return rows as Array<UserPostWithChannel>;
 }
+
+export async function getAllRecentPosts(limit: number = 50) {
+    const { rows } = await sql`
+        SELECT p.*, u.username, u.email as user_email, c.name as channel_name
+        FROM posts p
+        JOIN users u ON p.user_id = u.id
+        JOIN channels c ON p.channel_id = c.id
+        ORDER BY p.created DESC
+        LIMIT ${limit};
+    `;
+    return rows as Array<UserPostWithChannel>;
+}

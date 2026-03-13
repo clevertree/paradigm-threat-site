@@ -2,6 +2,18 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { splitSentences } from '@/components/Timeline/ttsHelpers'
+import {
+    startSpeechKeepalive,
+    stopSpeechKeepalive,
+    startAudioWatchdog,
+    clearAudioWatchdog,
+    startUtteranceWatchdog,
+    clearUtteranceWatchdog,
+    isPageHidePersisted,
+    type KeepaliveHandle,
+    type WatchdogHandle,
+    type UtteranceWatchdogHandle,
+} from '@/lib/tts/ttsResilience'
 
 export interface TTSSegment {
     id: string
@@ -132,6 +144,7 @@ export function useTTS() {
     const audioUrlRef = useRef<string | null>(null)
     const fetchAbortRef = useRef<AbortController | null>(null)
     const isPlayingRef = useRef(false)
+    const currentSegmentIdxRef = useRef(-1)
     const currentSentenceIdxRef = useRef(0)
     const sentencesRef = useRef<string[]>([])
     const sentenceSpeakersRef = useRef<string[]>([])
@@ -147,6 +160,16 @@ export function useTTS() {
     const quoteVoiceIdRef = useRef<string>('')
     const speakerMapRef = useRef<Record<string, string>>({})
     const wakeLockRef = useRef<WakeLockSentinel | null>(null)
+    /** Chrome Speech API keepalive (pause/resume every 10s to prevent silent cancel) */
+    const speechKeepAliveRef = useRef<KeepaliveHandle | null>(null)
+    /** Piper audio element watchdog — detects silent stalls */
+    const audioWatchdogRef = useRef<WatchdogHandle | null>(null)
+    /** Web Speech utterance watchdog — detects onend non-delivery */
+    const uttWatchdogRef = useRef<UtteranceWatchdogHandle | null>(null)
+    /** Web Speech sentence-level retry counter */
+    const webSpeechRetryRef = useRef(0)
+    /** Whether playback was active before a pagehide event (for resume on visibility change) */
+    const wasPlayingBeforeHideRef = useRef(false)
     /** Tracks consecutive Piper segment failures for auto-skip / fallback logic */
     const piperSegmentFailsRef = useRef(0)
     const segmentsRef = useRef<TTSSegment[]>([])
@@ -174,19 +197,38 @@ export function useTTS() {
         }
     }, [])
 
-    // Stop on page unload
+    // Stop on page unload, pause on mobile tab-switch (pagehide with bfcache)
     useEffect(() => {
-        const handleStop = () => {
+        const handleBeforeUnload = () => {
             isPlayingRef.current = false
             synthRef.current?.cancel()
+            if (audioRef.current) { audioRef.current.pause(); audioRef.current.currentTime = 0 }
+            speechKeepAliveRef.current = stopSpeechKeepalive(speechKeepAliveRef.current)
+            audioWatchdogRef.current = clearAudioWatchdog(audioWatchdogRef.current)
+            uttWatchdogRef.current = clearUtteranceWatchdog(uttWatchdogRef.current)
             if (cancelTimeoutRef.current) clearTimeout(cancelTimeoutRef.current)
         }
-        window.addEventListener('beforeunload', handleStop)
-        window.addEventListener('pagehide', handleStop)
+        const handlePageHide = (e: PageTransitionEvent) => {
+            if (isPageHidePersisted(e)) {
+                // bfcache / mobile tab switch — just pause, don't stop
+                if (isPlayingRef.current) {
+                    wasPlayingBeforeHideRef.current = true
+                    isPlayingRef.current = false
+                    synthRef.current?.pause()
+                    audioRef.current?.pause()
+                    speechKeepAliveRef.current = stopSpeechKeepalive(speechKeepAliveRef.current)
+                }
+            } else {
+                // True navigation away — stop everything
+                handleBeforeUnload()
+            }
+        }
+        window.addEventListener('beforeunload', handleBeforeUnload)
+        window.addEventListener('pagehide', handlePageHide as EventListener)
         return () => {
-            handleStop()
-            window.removeEventListener('beforeunload', handleStop)
-            window.removeEventListener('pagehide', handleStop)
+            handleBeforeUnload()
+            window.removeEventListener('beforeunload', handleBeforeUnload)
+            window.removeEventListener('pagehide', handlePageHide as EventListener)
         }
     }, [])
 
@@ -284,15 +326,6 @@ export function useTTS() {
         return () => { mounted = false }
     }, [])
 
-    // Re-acquire wake lock when tab becomes visible again (browser auto-releases on hide)
-    useEffect(() => {
-        const onVisChange = () => {
-            if (document.visibilityState === 'visible' && isPlayingRef.current) acquireWakeLock()
-        }
-        document.addEventListener('visibilitychange', onVisChange)
-        return () => document.removeEventListener('visibilitychange', onVisChange)
-    }, [acquireWakeLock])
-
     // Keep refs in sync
     useEffect(() => {
         voiceRef.current = state.voice
@@ -320,11 +353,18 @@ export function useTTS() {
         synth?.cancel()
         isPlayingRef.current = false
         speakGenRef.current++          // invalidate any in-flight callbacks
+        currentSegmentIdxRef.current = -1
         currentSentenceIdxRef.current = 0
         sentencesRef.current = []
         sentenceSpeakersRef.current = []
         releaseWakeLock()
         piperSegmentFailsRef.current = 0
+        webSpeechRetryRef.current = 0
+        wasPlayingBeforeHideRef.current = false
+        // Clear resilience timers
+        speechKeepAliveRef.current = stopSpeechKeepalive(speechKeepAliveRef.current)
+        audioWatchdogRef.current = clearAudioWatchdog(audioWatchdogRef.current)
+        uttWatchdogRef.current = clearUtteranceWatchdog(uttWatchdogRef.current)
         // Clear Piper pre-cache
         piperCacheRef.current.clear()
         // NOTE: error is intentionally NOT cleared here so it remains visible after stop
@@ -365,6 +405,7 @@ export function useTTS() {
 
         // On first sentence of segment, or when seeking (sentenceIndex > 0) with unloaded segment: load text and split into sentences
         if (sentenceIndex === 0 || sentencesRef.current.length === 0) {
+            currentSegmentIdxRef.current = segIndex
             setState(prev => ({ ...prev, currentSegmentIndex: segIndex, isPlaying: true }))
             setState(prev => ({ ...prev, error: null }))
 
@@ -474,7 +515,10 @@ export function useTTS() {
                             audioUrlRef.current = url
 
                             audioRef.current.src = url
+                            // Clear any previous watchdog
+                            audioWatchdogRef.current = clearAudioWatchdog(audioWatchdogRef.current)
                             audioRef.current.onended = () => {
+                                audioWatchdogRef.current = clearAudioWatchdog(audioWatchdogRef.current)
                                 if (isPlayingRef.current && speakGenRef.current === gen) {
                                     speak(segIndex, segments, sentenceIndex + 1).catch((err) => {
                                         console.error('TTS next-sentence error:', err)
@@ -484,6 +528,7 @@ export function useTTS() {
                                 }
                             }
                             audioRef.current.onerror = (e) => {
+                                audioWatchdogRef.current = clearAudioWatchdog(audioWatchdogRef.current)
                                 if (speakGenRef.current !== gen) return
                                 const mediaErr = audioRef.current?.error
                                 const detail = mediaErr ? `${mediaErr.message} (code ${mediaErr.code})` : 'unknown'
@@ -491,9 +536,21 @@ export function useTTS() {
                                 handlePiperSegmentFail(`Audio playback failed: ${detail}`, attempt)
                             }
                             audioRef.current.play().catch((err) => {
+                                audioWatchdogRef.current = clearAudioWatchdog(audioWatchdogRef.current)
                                 if (speakGenRef.current !== gen) return
                                 console.error('Audio play() rejected:', err)
                                 handlePiperSegmentFail(`Could not start audio: ${err instanceof Error ? err.message : 'Autoplay blocked?'}`, attempt)
+                            })
+
+                            // Start audio watchdog — detects silent stalls where neither
+                            // onended nor onerror fires (browser resource pressure, mobile bg)
+                            audioWatchdogRef.current = startAudioWatchdog(audioRef.current, {
+                                rate: rateRef.current,
+                                onStall: () => {
+                                    if (speakGenRef.current !== gen) return
+                                    console.warn('[TTS] Audio watchdog fired — retrying sentence')
+                                    handlePiperSegmentFail('Audio playback stalled (watchdog)', attempt)
+                                },
                             })
 
                             prefetchNext()
@@ -656,10 +713,15 @@ export function useTTS() {
         }
 
         if (cancelTimeoutRef.current) clearTimeout(cancelTimeoutRef.current)
+        // Clear previous keepalive/watchdog
+        speechKeepAliveRef.current = stopSpeechKeepalive(speechKeepAliveRef.current)
+        uttWatchdogRef.current = clearUtteranceWatchdog(uttWatchdogRef.current)
         synth.cancel()
 
-        // Small delay after cancel to let the synth settle
-        cancelTimeoutRef.current = setTimeout(() => {
+        // Sentence-level retry constant for Web Speech API
+        const WEB_SPEECH_RETRY_MAX = 3
+
+        const tryWebSpeechSentence = (attempt: number) => {
             if (!isPlayingRef.current || speakGenRef.current !== gen) return  // stale
 
             const text = sentences[sentenceIndex]
@@ -676,6 +738,10 @@ export function useTTS() {
             utt.volume = 1.0
 
             utt.onend = () => {
+                // Clear watchdog + keepalive for this sentence
+                uttWatchdogRef.current = clearUtteranceWatchdog(uttWatchdogRef.current)
+                speechKeepAliveRef.current = stopSpeechKeepalive(speechKeepAliveRef.current)
+                webSpeechRetryRef.current = 0
                 // Guard: only advance if this is still the active generation
                 if (isPlayingRef.current && speakGenRef.current === gen) {
                     speak(segIndex, segments, sentenceIndex + 1).catch((err) => {
@@ -686,23 +752,110 @@ export function useTTS() {
                 }
             }
             utt.onerror = (e) => {
+                uttWatchdogRef.current = clearUtteranceWatchdog(uttWatchdogRef.current)
+                speechKeepAliveRef.current = stopSpeechKeepalive(speechKeepAliveRef.current)
                 if (speakGenRef.current !== gen) return  // stale
-                if (e.error !== 'interrupted' && e.error !== 'canceled') {
-                    console.error('TTS error:', e)
+                if (e.error === 'interrupted' || e.error === 'canceled') return
+
+                console.error(`[TTS] Speech API error (attempt ${attempt + 1}/${WEB_SPEECH_RETRY_MAX}):`, e.error)
+
+                if (attempt < WEB_SPEECH_RETRY_MAX - 1) {
+                    const delayMs = Math.min(1000 * 2 ** attempt, 4000)
+                    console.warn(`[TTS] Retrying Web Speech sentence in ${delayMs}ms`)
+                    setState(prev => ({ ...prev, error: `Speech API error — retrying… (${attempt + 1}/${WEB_SPEECH_RETRY_MAX})` }))
+                    webSpeechRetryRef.current = attempt + 1
+                    setTimeout(() => {
+                        if (!isPlayingRef.current || speakGenRef.current !== gen) return
+                        synth.cancel()
+                        tryWebSpeechSentence(attempt + 1)
+                    }, delayMs)
+                } else {
+                    // All retries exhausted
+                    webSpeechRetryRef.current = 0
                     isPlayingRef.current = false
                     setState(prev => ({
                         ...prev,
                         isPlaying: false,
                         currentChunkText: null,
-                        error: 'Speech API error. Try Piper or reload.',
+                        error: 'Speech API failed after 3 retries. Try Piper or reload.',
                     }))
                 }
             }
 
             utteranceRef.current = utt
             synth.speak(utt)
+
+            // Start Chrome keepalive (pause/resume every 10s to prevent silent cancel)
+            speechKeepAliveRef.current = startSpeechKeepalive(synth)
+
+            // Start utterance watchdog — detects onend/onerror non-delivery
+            uttWatchdogRef.current = startUtteranceWatchdog(text, rateRef.current, () => {
+                if (speakGenRef.current !== gen) return
+                speechKeepAliveRef.current = stopSpeechKeepalive(speechKeepAliveRef.current)
+                console.warn('[TTS] Utterance watchdog fired — sentence may have silently failed')
+                synth.cancel()  // force-cancel the stuck utterance
+
+                if (attempt < WEB_SPEECH_RETRY_MAX - 1) {
+                    const delayMs = Math.min(1000 * 2 ** attempt, 4000)
+                    console.warn(`[TTS] Retrying Web Speech sentence in ${delayMs}ms (watchdog)`)
+                    setState(prev => ({ ...prev, error: `Speech stalled — retrying… (${attempt + 1}/${WEB_SPEECH_RETRY_MAX})` }))
+                    webSpeechRetryRef.current = attempt + 1
+                    setTimeout(() => {
+                        if (!isPlayingRef.current || speakGenRef.current !== gen) return
+                        tryWebSpeechSentence(attempt + 1)
+                    }, delayMs)
+                } else {
+                    // Watchdog exhausted all retries — try advancing to next sentence
+                    webSpeechRetryRef.current = 0
+                    console.warn('[TTS] Watchdog retries exhausted, advancing to next sentence')
+                    setState(prev => ({ ...prev, error: null }))
+                    if (isPlayingRef.current && speakGenRef.current === gen) {
+                        speak(segIndex, segments, sentenceIndex + 1).catch((err) => {
+                            console.error('TTS next-sentence error:', err)
+                            setState(prev => ({ ...prev, error: `Speech API error: ${err instanceof Error ? err.message : String(err)}` }))
+                            stop()
+                        })
+                    }
+                }
+            })
+        }
+
+        // Small delay after cancel to let the synth settle
+        cancelTimeoutRef.current = setTimeout(() => {
+            webSpeechRetryRef.current = 0
+            tryWebSpeechSentence(0)
         }, 20)
     }, [stop])
+
+    // Re-acquire wake lock and resume playback when tab becomes visible again
+    // (must be declared after speak/stop to reference them)
+    useEffect(() => {
+        const onVisChange = () => {
+            if (document.visibilityState === 'visible') {
+                if (isPlayingRef.current) {
+                    acquireWakeLock()
+                } else if (wasPlayingBeforeHideRef.current) {
+                    // Was paused by pagehide (mobile tab switch) — resume
+                    wasPlayingBeforeHideRef.current = false
+                    isPlayingRef.current = true
+                    acquireWakeLock()
+                    const segments = segmentsRef.current
+                    const segIdx = currentSegmentIdxRef.current
+                    const sentIdx = currentSentenceIdxRef.current
+                    if (segments.length > 0 && segIdx >= 0) {
+                        setState(prev => ({ ...prev, isPlaying: true }))
+                        speak(segIdx, segments, sentIdx).catch((err) => {
+                            console.error('[TTS] Resume after visibility change failed:', err)
+                            setState(prev => ({ ...prev, error: `Resume failed: ${err instanceof Error ? err.message : String(err)}` }))
+                            stop()
+                        })
+                    }
+                }
+            }
+        }
+        document.addEventListener('visibilitychange', onVisChange)
+        return () => document.removeEventListener('visibilitychange', onVisChange)
+    }, [acquireWakeLock, speak, stop])
 
     /** Restart playback from the failed or current segment (e.g. after an error) */
     const retry = useCallback(() => {
@@ -782,6 +935,7 @@ export function useTTS() {
         speakGenRef.current++
         isPlayingRef.current = true
         acquireWakeLock()
+        currentSegmentIdxRef.current = segIndex
         setState(prev => ({ ...prev, isPlaying: true, currentSegmentIndex: segIndex, error: null }))
         speak(segIndex, segments, sentenceIndex).catch((err) => {
             console.error('TTS playFromSentence error:', err)
