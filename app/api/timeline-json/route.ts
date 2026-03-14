@@ -4,10 +4,22 @@ const TIMELINE_BASE =
   process.env.NEXT_PUBLIC_TIMELINE_BASE_URL ||
   'https://clevertree.github.io/paradigm-threat-timeline'
 
-function getEventYear(evt: { dates?: { start?: number; value?: number }[] }): number | null {
+const UNKNOWN_START_YEAR = -50000
+
+function getEventYear(evt: { dates?: { start?: number | null; end?: number; value?: number }[] }): number | null {
   const d = evt.dates?.[0]
   if (!d) return null
-  return d.start ?? (d as { value?: number }).value ?? null
+  const start = d.start ?? (d as { value?: number }).value
+  if (start != null) return start
+  return d.end ?? null
+}
+
+function getEventStartYear(evt: { dates?: { start?: number | null; end?: number }[] }): number | null {
+  const d = evt.dates?.[0]
+  if (!d) return null
+  if (d.start != null) return d.start
+  if (d.end != null) return UNKNOWN_START_YEAR
+  return null
 }
 
 function flattenEntries(entries: { children?: unknown[] }[]): object[] {
@@ -50,7 +62,7 @@ export async function GET(request: Request) {
     if (!res.ok) throw new Error('Failed to fetch events')
     const data = await res.json()
     const entries = data.entries || []
-    type Entry = { id: string; title: string; dates?: { start?: number; end?: number }[] }
+    type Entry = { id: string; title: string; dates?: { start?: number | null; end?: number }[] }
     const events = flattenEntries(entries) as Entry[]
 
     const eraEvents = ERAS.map((e) => ({
@@ -60,14 +72,14 @@ export async function GET(request: Request) {
     }))
     const slideEvents = events
       .map((evt: Entry) => {
-        const year = getEventYear(evt)
-        if (year == null) return null
-        const d = evt.dates?.[0]
-        const endYear = d?.end ?? year
+        const startYear = getEventStartYear(evt)
+        const endYear = evt.dates?.[0]?.end ?? getEventYear(evt)
+        if (startYear == null && endYear == null) return null
+        const year = endYear ?? startYear!
         return {
           unique_id: evt.id,
-          start_date: { year },
-          end_date: endYear !== year ? { year: endYear } : undefined,
+          start_date: { year: startYear ?? year },
+          end_date: endYear != null && endYear !== (startYear ?? year) ? { year: endYear } : undefined,
           text: { headline: evt.title },
           group: groupForYear(year),
         }

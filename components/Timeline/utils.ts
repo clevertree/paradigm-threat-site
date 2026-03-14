@@ -8,10 +8,24 @@ export function yearToDate(year: number): Date {
   return new Date(year * MS_PER_YEAR)
 }
 
-export function getEventYear(evt: { dates?: { start?: number; value?: number }[] }): number | null {
+/** Sentinel year for unknown start (before creation, undatable). Used for timeline positioning. */
+export const UNKNOWN_START_YEAR = -50000
+
+/** Return effective start year for timeline positioning. Uses UNKNOWN_START_YEAR when start is unknown. */
+export function getEventStartYear(evt: { dates?: { start?: number | null; end?: number }[] }): number | null {
   const d = evt.dates?.[0]
   if (!d) return null
-  return d.start ?? (d as { value?: number }).value ?? null
+  if (d.start != null) return d.start
+  if (d.end != null) return UNKNOWN_START_YEAR
+  return null
+}
+
+export function getEventYear(evt: { dates?: { start?: number | null; end?: number; value?: number }[] }): number | null {
+  const d = evt.dates?.[0]
+  if (!d) return null
+  const start = d.start ?? (d as { value?: number }).value
+  if (start != null) return start
+  return d.end ?? null
 }
 
 function formatYear(year: number, _calendar?: string): string {
@@ -20,14 +34,18 @@ function formatYear(year: number, _calendar?: string): string {
   return `${absYear} ${era}`
 }
 
-export function formatDateRange(evt: { type?: 'article' | 'event'; dates?: { start?: number; end?: number; calendar?: string; value?: number }[] }): string {
+export function formatDateRange(evt: { type?: 'article' | 'event'; dates?: { start?: number | null; end?: number; calendar?: string; value?: number; start_label?: string }[] }): string {
   if (evt.type === 'article') return '—'
   const d = evt.dates?.[0]
   if (!d) return '—'
   const start = d.start ?? (d as { value?: number }).value
-  if (start == null) return '—'
   const end = d.end
   const cal = d.calendar
+  if (start == null && end != null) {
+    const label = d.start_label ?? 'unknown'
+    return `${label} – ${formatYear(end, cal)}`
+  }
+  if (start == null) return '—'
   const startStr = formatYear(start, cal)
   if (end != null && end !== start) {
     return `${startStr} – ${formatYear(end, cal)}`

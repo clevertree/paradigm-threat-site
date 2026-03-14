@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react'
 import { useTimeline } from '@/components/TimelineContext'
-import { yearToDate, getEventYear } from './utils'
+import { yearToDate, getEventYear, getEventStartYear, UNKNOWN_START_YEAR } from './utils'
 import type { TimelineEntry } from '@/components/TimelineContext'
 import 'vis-timeline/styles/vis-timeline-graph2d.css'
 
@@ -50,12 +50,12 @@ export function VisTimelineView({
 
       const items = events
         .map((evt) => {
-          const year = getEventYear(evt)
-          if (year == null) return null
-          const d = evt.dates?.[0]
-          const endYear = d?.end ?? year
-          const start = yearToDate(year)
-          const end = yearToDate(endYear)
+          const startYear = getEventStartYear(evt)
+          const endYear = evt.dates?.[0]?.end ?? getEventYear(evt)
+          if (startYear == null && endYear == null) return null
+          const year = endYear ?? startYear!
+          const start = yearToDate(startYear ?? year)
+          const end = yearToDate(endYear ?? year)
           return {
             id: evt.id,
             group: groupForYear(year),
@@ -77,12 +77,14 @@ export function VisTimelineView({
       const itemsData = new DataSet(items)
 
       const years = events.flatMap((e) => {
-        const y = getEventYear(e)
-        if (y == null) return []
-        const end = e.dates?.[0]?.end ?? y
-        return [y, end]
+        const start = getEventStartYear(e)
+        const end = e.dates?.[0]?.end ?? getEventYear(e)
+        const out: number[] = []
+        if (start != null) out.push(start)
+        if (end != null) out.push(end)
+        return out
       })
-      const minYear = years.length ? Math.min(...years, -5000) : -5000
+      const minYear = years.length ? Math.min(...years, UNKNOWN_START_YEAR) : UNKNOWN_START_YEAR
       const maxYear = years.length ? Math.max(...years, 2100) : 2100
       const yearMs = 365.25 * 24 * 60 * 60 * 1000
 
