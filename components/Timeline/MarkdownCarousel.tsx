@@ -5,6 +5,7 @@ import Markdown from 'markdown-to-jsx'
 import type { TimelineEntry } from '@/components/TimelineContext'
 import { PopImage } from '@/components'
 import { transformImageCaptions } from './markdownTransform'
+import { formatDateRange } from './utils'
 
 /** Strip H1 title and YAML frontmatter before rendering. */
 function prepareMarkdownContent(md: string): string {
@@ -64,12 +65,26 @@ export function MarkdownCarousel({
   return (
     <aside className={`flex flex-col min-w-0 w-full min-h-0 flex-1 border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/30 overflow-hidden ${fullPageControl ? 'border-t' : 'border-l'}`} style={{ minHeight: 0 }}>
       {/* Content: single markdown, scrollable */}
-      <div className="flex-1 min-h-0 overflow-y-scroll overflow-x-hidden px-4 py-4 overscroll-contain touch-pan-y" style={{ minHeight: 0, WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' } as React.CSSProperties}>
+      <div className="flex-1 min-h-0 overflow-y-scroll overflow-x-hidden px-2 py-2 md:px-4 md:py-4 overscroll-contain touch-pan-y" style={{ minHeight: 0, WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' } as React.CSSProperties}>
         {currentEntry ? (
           <>
-            <div className="flex items-start justify-between gap-2 mb-4">
+            <div className="flex items-start justify-between gap-2 md:mb-4">
               <h2 className={`font-semibold text-slate-900 dark:text-slate-100 text-left select-text flex-1 min-w-0 ${currentEntry.type === 'article' ? 'text-sm' : 'text-lg'}`}>
-                {currentEntry.title}
+                {(() => {
+                  const dateStr = currentEntry.dates ? formatDateRange(currentEntry) : null
+                  const seps = [' — ', ' – '] as const
+                  const sep = seps.find((s) => dateStr && dateStr !== '—' && currentEntry.title.startsWith(dateStr + s))
+                  const hasDatePrefix = !!sep
+                  const titleRest = hasDatePrefix ? currentEntry.title.slice((dateStr! + sep!).length) : currentEntry.title
+                  return (
+                    <>
+                      {hasDatePrefix && (
+                        <span className="hidden md:inline">{dateStr}{sep}</span>
+                      )}
+                      {titleRest}
+                    </>
+                  )
+                })()}
               </h2>
               {onPlayEvent && (
                 <button

@@ -19,9 +19,9 @@ import { stripMarkdownForTTS } from './ttsHelpers'
 import type { TimelineEntry } from '@/components/TimelineContext'
 
 const STORAGE_KEY = 'paradigm-threat-timeline-left-panel-pct'
-const DEFAULT_LEFT_PCT = 50
+const DEFAULT_LEFT_PCT = 35
 const MIN_LEFT_PCT = 20
-const MAX_LEFT_PCT = 80
+const MAX_LEFT_PCT = 50
 
 export type TimelineViewMode = 'list' | 'vis' | 'timelinejs' | 'custom' | 'animation-map' | 'animation-3d' | 'browser'
 
@@ -391,9 +391,9 @@ export function TimelineView() {
     }>
       {/* ══════════ COMPACT / MOBILE LAYOUT ══════════
            Shown: always when NOT fullscreen
-           Shown: in fullscreen when viewport < 1000px (narrow)
-           Now includes view mode selector + all views */}
-      <div className={`flex flex-col flex-1 min-h-0 min-w-0 ${fullPage ? 'min-[1000px]:hidden' : ''}`}>
+           Shown: in fullscreen when viewport < sm (640px)
+           Below sm: just show article, no sidebar */}
+      <div className={`flex flex-col flex-1 min-h-0 min-w-0 ${fullPage ? 'sm:hidden' : ''}`}>
         <div className={`flex-shrink-0 px-2 py-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50 ${fullPage ? 'space-y-2' : ''}`}>
           <div className="flex items-center gap-2">
             <select
@@ -546,48 +546,23 @@ export function TimelineView() {
               <AnimationPlanetView />
             </div>
           )}
-          {/* For non-full-canvas views, show the carousel/list directly */}
+          {/* For non-full-canvas views: below sm show article only; non-fullscreen always article */}
           {!isFullCanvasView && (
-            <>
-              {fullPage && viewMode === 'list' && (
-                <div className="flex-1 min-h-0 overflow-y-auto">
-                  <ListView onSelectEvent={handleSelectEvent} selectedId={selected?.id} />
-                </div>
-              )}
-              {fullPage && viewMode === 'vis' && (
-                <div className="flex-1 min-h-0 overflow-y-auto">
-                  <VisTimelineView onSelectEvent={handleSelectEvent} eventIdToEvent={eventIdToEvent} />
-                </div>
-              )}
-              {fullPage && viewMode === 'timelinejs' && (
-                <div className="flex-1 min-h-0 overflow-y-auto">
-                  <TimelineJSView onSelectEvent={handleSelectEvent} eventIdToEvent={eventIdToEvent} />
-                </div>
-              )}
-              {fullPage && viewMode === 'custom' && (
-                <div className="flex-1 min-h-0 overflow-y-auto">
-                  <CustomTimelineView expansionMode={expansionMode} onSelectEvent={handleSelectEvent} selectedId={selected?.id} />
-                </div>
-              )}
-              {/* Non-fullscreen: only show the article carousel (dropdown handles navigation) */}
-              {!fullPage && (
-                <TimelineGalleryProvider
-                  events={events}
-                  baseUrl={baseUrl}
-                  selectedEventId={selected?.id ?? null}
-                  onSelectEvent={handleSelectEvent}
-                >
-                  <MarkdownCarousel
-                    events={events}
-                    baseUrl={baseUrl}
-                    selectedId={selected?.id ?? null}
-                    onSelectEvent={handleSelectEvent}
-                    ttsIsPlaying={tts.state.isPlaying && tts.state.segments[tts.state.currentSegmentIndex]?.id === selected?.id}
-                    onPlayEvent={() => selected && (tts.state.isPlaying ? handleStopTTS() : handlePlayEvent(selected))}
-                  />
-                </TimelineGalleryProvider>
-              )}
-            </>
+            <TimelineGalleryProvider
+              events={events}
+              baseUrl={baseUrl}
+              selectedEventId={selected?.id ?? null}
+              onSelectEvent={handleSelectEvent}
+            >
+              <MarkdownCarousel
+                events={events}
+                baseUrl={baseUrl}
+                selectedId={selected?.id ?? null}
+                onSelectEvent={handleSelectEvent}
+                ttsIsPlaying={tts.state.isPlaying && tts.state.segments[tts.state.currentSegmentIndex]?.id === selected?.id}
+                onPlayEvent={() => selected && (tts.state.isPlaying ? handleStopTTS() : handlePlayEvent(selected))}
+              />
+            </TimelineGalleryProvider>
           )}
         </div>
         {/* Content drawer overlay — slides up over the view in narrow fullscreen */}
@@ -625,10 +600,10 @@ export function TimelineView() {
       </div>
 
       {/* ══════════ DESKTOP SPLIT-PANEL LAYOUT ══════════
-           Only in fullscreen when viewport >= 1000px */}
+           Only in fullscreen when viewport >= sm (640px) */}
       <div
         ref={containerRef}
-        className={`flex-1 min-h-0 w-full overflow-hidden hidden ${fullPage ? 'min-[1000px]:flex' : ''}`}
+        className={`flex-1 min-h-0 w-full overflow-hidden hidden ${fullPage ? 'sm:flex' : ''}`}
         style={{ minHeight: 0 }}
       >
         {/* Browser view takes over the entire container */}
@@ -792,8 +767,8 @@ export function TimelineView() {
             type="button"
             role="slider"
             aria-orientation="vertical"
-            aria-valuemin={20}
-            aria-valuemax={80}
+            aria-valuemin={MIN_LEFT_PCT}
+            aria-valuemax={MAX_LEFT_PCT}
             aria-valuenow={leftPct}
             aria-label="Resize panels"
             onMouseDown={handleSeparatorMouseDown}

@@ -154,7 +154,7 @@ function TreeEntry({
           <Calendar className="shrink-0 w-4 h-4 text-slate-500 dark:text-slate-400" aria-hidden />
         )}
         {!isArticle && (
-          <span className={`tabular-nums shrink-0 min-w-[7rem] text-left ${levelDate}`}>
+          <span className={`hidden md:inline tabular-nums shrink-0 min-w-[7rem] text-left ${levelDate}`}>
             {dateStr}
           </span>
         )}

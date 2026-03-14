@@ -62,7 +62,7 @@ export async function GET(request: Request) {
     if (!res.ok) throw new Error('Failed to fetch events')
     const data = await res.json()
     const entries = data.entries || []
-    type Entry = { id: string; title: string; dates?: { start?: number | null; end?: number }[] }
+    type Entry = { id: string; title: string; md_path?: string; dates?: { start?: number | null; end?: number }[] }
     const events = flattenEntries(entries) as Entry[]
 
     const eraEvents = ERAS.map((e) => ({
@@ -70,7 +70,7 @@ export async function GET(request: Request) {
       end_date: { year: e.end },
       text: { headline: e.name },
     }))
-    const slideEvents = events
+    const candidates = events
       .map((evt: Entry) => {
         const startYear = getEventStartYear(evt)
         const endYear = evt.dates?.[0]?.end ?? getEventYear(evt)
@@ -78,13 +78,26 @@ export async function GET(request: Request) {
         const year = endYear ?? startYear!
         return {
           unique_id: evt.id,
+          md_path: evt.md_path,
           start_date: { year: startYear ?? year },
           end_date: endYear != null && endYear !== (startYear ?? year) ? { year: endYear } : undefined,
           text: { headline: evt.title },
           group: groupForYear(year),
+          _startYear: startYear ?? year,
         }
       })
-      .filter(Boolean)
+      .filter(Boolean) as { unique_id: string; md_path?: string; start_date: { year: number }; end_date?: { year: number }; text: { headline: string }; group: string; _startYear: number }[]
+
+    // Deduplicate by md_path: keep one event per article (earliest start year)
+    const byPath = new Map<string, typeof candidates[0]>()
+    for (const c of candidates) {
+      const key = c.md_path || c.unique_id
+      const existing = byPath.get(key)
+      if (!existing || c._startYear < existing._startYear) {
+        byPath.set(key, c)
+      }
+    }
+    const slideEvents = Array.from(byPath.values()).map(({ _startYear, ...rest }) => rest)
 
     const json = {
       scale: 'cosmological',

@@ -56,13 +56,16 @@ export default function OptimizedImage({ children, className, ...props }: Optimi
         return () => observer.disconnect()
     }, [priority])
 
-    if (blurDataURL) {
-        finalProps.style = { backgroundImage: `url('${blurDataURL}')` }
-    }
-
     if (optimizedSrc) {
         finalProps['data-original-src'] = finalProps.src;
         finalProps.src = optimizedSrc
+    }
+
+    const containerStyle: React.CSSProperties = finalProps.width && finalProps.height ? { aspectRatio: `${finalProps.width}/${finalProps.height}` } : { minHeight: '100px' }
+    if (blurDataURL) {
+        containerStyle.backgroundImage = `url('${blurDataURL}')`
+        containerStyle.backgroundSize = 'cover'
+        containerStyle.backgroundPosition = 'center'
     }
 
     return (
@@ -72,7 +75,7 @@ export default function OptimizedImage({ children, className, ...props }: Optimi
         >
             <div
                 className={`relative w-full bg-slate-100 dark:bg-slate-900 overflow-hidden ${!isVisible ? 'animate-pulse' : ''}`}
-                style={finalProps.width && finalProps.height ? { aspectRatio: `${finalProps.width}/${finalProps.height}` } : { minHeight: '100px' }}
+                style={containerStyle}
             >
                 <img
                     ref={ref}

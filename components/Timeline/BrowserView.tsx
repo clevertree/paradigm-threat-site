@@ -6,6 +6,7 @@ import { ChevronRight, FileText, Folder, FolderOpen } from 'lucide-react'
 import { useTimeline } from '@/components/TimelineContext'
 import { PopImage } from '@/components'
 import { transformImageCaptions } from './markdownTransform'
+import { getLqipFromIndex, resolveImagePath } from '@/components/helpers/imageHelper'
 
 /* ── Types ──────────────────────────────────────────────────────── */
 
@@ -378,19 +379,31 @@ export function BrowserView({ initialPath }: BrowserViewProps) {
                 <Markdown
                   options={{
                     overrides: {
-                      img: (props) => (
-                        <PopImage
-                          {...props}
-                          basePath={baseUrl}
-                          className={props.className}
-                        />
-                      ),
-                      PopImage: (props: { children?: React.ReactNode; [key: string]: unknown }) => {
-                        const captionText = typeof props.children === 'string' ? props.children : null
+                      img: (props) => {
+                        const contentDir = selectedPath?.includes('/') ? selectedPath.replace(/\/[^/]+$/, '') : ''
+                        const base = contentDir ? `${baseUrl.replace(/\/$/, '')}/${contentDir}` : baseUrl
+                        const resolved = typeof props.src === 'string' ? resolveImagePath(props.src, base).split('?')[0] : ''
+                        const lqip = index && resolved ? getLqipFromIndex(index, resolved) : undefined
                         return (
                           <PopImage
                             {...props}
-                            basePath={baseUrl}
+                            basePath={base}
+                            lqip={lqip}
+                            className={props.className}
+                          />
+                        )
+                      },
+                      PopImage: (props: { children?: React.ReactNode; [key: string]: unknown }) => {
+                        const captionText = typeof props.children === 'string' ? props.children : null
+                        const contentDir = selectedPath?.includes('/') ? selectedPath.replace(/\/[^/]+$/, '') : ''
+                        const base = contentDir ? `${baseUrl.replace(/\/$/, '')}/${contentDir}` : baseUrl
+                        const resolved = typeof props.src === 'string' ? resolveImagePath(props.src as string, base).split('?')[0] : ''
+                        const lqip = index && resolved ? getLqipFromIndex(index, resolved) : undefined
+                        return (
+                          <PopImage
+                            {...props}
+                            basePath={base}
+                            lqip={lqip}
                             className={props.className as string}
                           >
                             {captionText ? (

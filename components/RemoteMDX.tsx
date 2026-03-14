@@ -2,6 +2,8 @@ import React, { useMemo, memo, useEffect } from 'react';
 import { MDXRemote } from 'next-mdx-remote';
 import * as componentsNamespace from '@/components';
 import { MarkdownLink } from './MarkdownLink';
+import { useFiles } from './FilesContext';
+import { getLqipFromIndex, resolveImagePath } from './helpers/imageHelper';
 
 const {
     PopImage,
@@ -17,6 +19,15 @@ const {
     Navbar,
     AutoIndex
 } = componentsNamespace;
+
+/** Renders img with LQIP looked up from index before image loads */
+function ImageWithLqip({ basePath, ...props }: { basePath: string; [k: string]: any }) {
+    const { fileList } = useFiles();
+    const src = props.src;
+    const resolvedPath = typeof src === 'string' ? resolveImagePath(src, basePath).split('?')[0] : '';
+    const lqip = fileList && resolvedPath ? getLqipFromIndex(fileList, resolvedPath) : undefined;
+    return <PopImage {...props} basePath={basePath} lqip={lqip} />;
+}
 
 const mdxComponents = (basePath: string) => ({
     PopImage: (props: any) => <PopImage {...props} basePath={basePath} />,
@@ -40,7 +51,7 @@ const mdxComponents = (basePath: string) => ({
     FloatingDiv,
     ThemeToggle,
     Navbar,
-    img: (props: any) => <PopImage {...props} basePath={basePath} />,
+    img: (props: any) => <ImageWithLqip {...props} basePath={basePath} />,
     AutoContent: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
     Auto: (props: any) => <DynamicIndex {...props} mode="inline" currentPath={basePath} />,
     AutoIndex: (props: any) => <AutoIndex {...props} currentPath={basePath} />,

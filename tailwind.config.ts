@@ -13,7 +13,7 @@ const config: Config = {
   theme: {
     extend: {
       screens: {
-        toc: '1400px', // TOC sidebar shows above this; inline/mobile below
+        toc: '87.5rem', // 1400px equivalent; rem respects zoom/user font-size
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

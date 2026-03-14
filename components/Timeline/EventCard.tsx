@@ -29,7 +29,7 @@ export function EventCard({ event, onSelect, isSelected }: EventCardProps) {
         }`}
     >
       {!isArticle && (
-        <div className="text-xs text-slate-500 dark:text-slate-400 font-mono tabular-nums text-left">{dateStr}</div>
+        <div className="hidden md:block text-xs text-slate-500 dark:text-slate-400 font-mono tabular-nums text-left">{dateStr}</div>
       )}
       <div className={`font-medium text-slate-900 dark:text-slate-100 text-left ${isArticle ? 'text-sm' : ''}`}>{event.title}</div>
     </button>

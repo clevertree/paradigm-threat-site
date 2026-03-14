@@ -30,6 +30,31 @@ export async function checkFileExists(path: string): Promise<boolean> {
     }
 }
 
+/**
+ * Look up LQIP (blur placeholder) from the index tree by image path.
+ * Index structure: index.media["01.before-creation"]["before-creation.png"]._lqip
+ * Path can be "/media/01.before-creation/before-creation.png", "media/01.before-creation/before-creation.png", or full URL
+ */
+export function getLqipFromIndex(index: any, imagePath: string): string | undefined {
+    if (!index || typeof imagePath !== 'string') return undefined
+    let clean = imagePath.split('?')[0]
+    if (clean.startsWith('http')) {
+        try {
+            clean = new URL(clean).pathname
+        } catch {
+            return undefined
+        }
+    }
+    clean = clean.replace(/^\//, '')
+    if (!clean) return undefined
+    const parts = clean.split('/').filter(Boolean)
+    let curr: any = index
+    for (let i = 0; i < parts.length && curr; i++) {
+        curr = curr[parts[i]]
+    }
+    return curr && typeof curr === 'object' && typeof curr._lqip === 'string' ? curr._lqip : undefined
+}
+
 export function resolveImagePath(src: string, basePath?: string): string {
     if (typeof src !== 'string') return '';
     if (!src) return '';
