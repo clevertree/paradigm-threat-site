@@ -6,6 +6,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://paradigmthreat.net
 
 /** Max chars for Twitter/X text param (URL counts toward limit when combined) */
 const TWITTER_TEXT_MAX = 200
+/** Bluesky compose has 300 char limit */
+const BLUESKY_MAX_CHARS = 300
 
 export interface ShareLinksProps {
   url: string
@@ -32,6 +34,11 @@ function buildShareHrefs(
   const truncatedText = text.length > TWITTER_TEXT_MAX ? text.slice(0, TWITTER_TEXT_MAX - 3) + '...' : text
   const encodedText = encodeURIComponent(truncatedText)
 
+  // Bluesky only has 'text' param — must include URL in the body (300 char limit)
+  const bskyMaxTitle = Math.max(0, BLUESKY_MAX_CHARS - absUrl.length - 2)
+  const bskyText = `${text.length > bskyMaxTitle ? text.slice(0, bskyMaxTitle - 3) + '...' : text}\n${absUrl}`
+  const encodedBskyText = encodeURIComponent(bskyText)
+
   return [
     {
       platform: 'X',
@@ -51,7 +58,7 @@ function buildShareHrefs(
     },
     {
       platform: 'Bluesky',
-      href: `https://bsky.app/intent/compose?text=${encodedText}`
+      href: `https://bsky.app/intent/compose?text=${encodedBskyText}`
     }
   ]
 }
