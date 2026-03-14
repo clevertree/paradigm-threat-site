@@ -5,12 +5,14 @@ import { ArticleTTSProvider } from '@/components/ArticleTTS/ArticleTTSProvider'
 import { ArticleTTSOverlay } from '@/components/ArticleTTS/ArticleTTSOverlay'
 import { ArticleTTSScrollSync } from '@/components/ArticleTTS/ArticleTTSScrollSync'
 import { stripMarkdownForTTS, buildParagraphStarts } from '@/components/Timeline/ttsHelpers'
-import { ArticleNav } from '@/components'
+import { ArticleNav, ShareLinks } from '@/components'
 
 export interface ArticleClientShellProps {
   articleTitle: string
   articleContent: string
   basePath: string
+  articlePath?: string
+  articleDescription?: string
   children: React.ReactNode
 }
 
@@ -18,6 +20,8 @@ export function ArticleClientShell ({
   articleTitle,
   articleContent,
   basePath,
+  articlePath,
+  articleDescription,
   children
 }: ArticleClientShellProps) {
   const articleRef = useRef<HTMLElement>(null)
@@ -96,6 +100,13 @@ export function ArticleClientShell ({
               onDoubleClick={sentences.length > 0 ? handleArticleDoubleClick : undefined}
             >
               {children}
+              {articlePath && (
+                <ShareLinks
+                  url={`/${articlePath}`}
+                  title={articleTitle}
+                  description={articleDescription}
+                />
+              )}
             </article>
             <ArticleTTSScrollSync
               articleRef={articleRef}

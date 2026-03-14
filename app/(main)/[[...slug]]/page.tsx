@@ -6,6 +6,8 @@ import { CatchAllClient } from './CatchAllClient'
 import { SuspenseLoader } from '@client'
 import type { Metadata } from 'next'
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://paradigmthreat.net'
+
 interface PageProps {
   params: Promise<{ slug?: string | string[] }>
 }
@@ -24,9 +26,26 @@ export async function generateMetadata ({ params }: PageProps): Promise<Metadata
   const article = await fetchArticle(path)
   if (!article) return { title: 'Paradigm Threat' }
 
+  const title = `${article.title} | Paradigm Threat`
+  const description = (article.frontmatter.description as string) || `Read ${article.title} on Paradigm Threat`
+  const canonicalUrl = `${SITE_URL.replace(/\/$/, '')}/${path}`
+
   return {
-    title: `${article.title} | Paradigm Threat`,
-    description: (article.frontmatter.description as string) || `Read ${article.title} on Paradigm Threat`
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url: canonicalUrl,
+      siteName: 'Paradigm Threat',
+      ...(article.ogImageUrl && { images: [{ url: article.ogImageUrl }] })
+    },
+    twitter: {
+      card: article.ogImageUrl ? 'summary_large_image' : 'summary',
+      title,
+      description,
+      ...(article.ogImageUrl && { images: [article.ogImageUrl] })
+    }
   }
 }
 
@@ -38,11 +57,14 @@ export default async function CatchAllPage ({ params }: PageProps) {
   const article = path ? await fetchArticle(path) : null
 
   if (article) {
+    const description = (article.frontmatter.description as string) || undefined
     return (
       <ArticleClientShell
         articleTitle={article.title}
         articleContent={article.mdxSource}
         basePath={article.basePath}
+        articlePath={path}
+        articleDescription={description}
       >
         <Suspense fallback={<div className="animate-pulse h-32 bg-slate-200/50 dark:bg-slate-800/50 rounded-xl" />}>
           <ArticleContentSSR mdxSource={article.mdxSource} basePath={article.basePath} />

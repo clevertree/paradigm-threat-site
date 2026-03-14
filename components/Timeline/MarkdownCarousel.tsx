@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Markdown from 'markdown-to-jsx'
 import type { TimelineEntry } from '@/components/TimelineContext'
-import { PopImage } from '@/components'
+import { PopImage, ShareLinks } from '@/components'
 import { transformImageCaptions } from './markdownTransform'
 import { formatDateRange } from './utils'
 
@@ -146,6 +146,10 @@ export function MarkdownCarousel({
                 >
                   {transformImageCaptions(prepareMarkdownContent(typeof mdContent === 'string' ? mdContent : ''))}
                 </Markdown>
+                <ShareLinks
+                  url={`/timeline/${currentEntry.id}`}
+                  title={currentEntry.title}
+                />
               </div>
             ) : null}
           </>

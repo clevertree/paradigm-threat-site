@@ -12,6 +12,22 @@ export interface ArticleData {
   title: string
   basePath: string
   frontmatter: Record<string, unknown>
+  /** Absolute URL for OG image, or undefined */
+  ogImageUrl?: string
+}
+
+/** Extract first markdown image URL: ![alt](url) */
+function extractFirstImageUrl(md: string, basePath: string): string | undefined {
+  const match = md.match(/!\[[^\]]*\]\(([^)]+)\)/)
+  if (!match) return undefined
+  let src = match[1].trim().split('?')[0]
+  if (src.startsWith('http')) return src
+  if (src.startsWith('/')) src = src.slice(1)
+  else if (src.startsWith('./')) src = src.slice(2)
+  const prefix = basePath ? (basePath.endsWith('/') ? basePath : basePath + '/') : ''
+  const path = (prefix + src).replace(/\/+/g, '/')
+  const base = process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://clevertree.github.io/paradigm-threat-files'
+  return `${base.replace(/\/$/, '')}/${path.replace(/^\//, '')}`
 }
 
 export async function fetchArticle(path: string): Promise<ArticleData | null> {
@@ -69,11 +85,29 @@ export async function fetchArticle(path: string): Promise<ArticleData | null> {
   // Same autolink transform as API (MDX treats < as JSX)
   const mdxSource = rawContent.replace(/<(https?:\/\/[^>]+)>/g, (_, url) => `[${url}](${url})`)
 
+  // OG image: frontmatter.image or first image in content
+  const filesBase = (process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://clevertree.github.io/paradigm-threat-files').replace(/\/$/, '')
+  let ogImageUrl: string | undefined
+  if (frontMatter?.image && typeof frontMatter.image === 'string') {
+    const img = frontMatter.image as string
+    if (img.startsWith('http')) {
+      ogImageUrl = img
+    } else if (img.startsWith('/')) {
+      ogImageUrl = `${filesBase}${img}`
+    } else {
+      const rel = basePath ? `${basePath}/${img.replace(/^\.\//, '')}` : img.replace(/^\.\//, '')
+      ogImageUrl = `${filesBase}/${rel}`.replace(/\/+/g, '/')
+    }
+  } else {
+    ogImageUrl = extractFirstImageUrl(rawContent, basePath)
+  }
+
   return {
     mdxSource,
     targetPath,
     title,
     basePath,
     frontmatter: frontMatter as Record<string, unknown>,
+    ogImageUrl
   }
 }
