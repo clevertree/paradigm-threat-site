@@ -29,6 +29,7 @@ const MAX_YEAR = 3000  // CE years use modern solar config
 
 export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = [], events = [] }: AnimationPlanetViewProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
+    const containerRef = useRef<HTMLDivElement>(null)
     const ctrlRef = useRef<any>(null)
     const eventYear = getEventYearForSim(selectedEvent, entries)
     const [year, setYear] = useState(() => eventYear)
@@ -121,6 +122,17 @@ export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = []
         if (ctrlRef.current.getOrbitInfo) setOrbitInfo(ctrlRef.current.getOrbitInfo())
     }, [])
 
+    // Resize planet viewport when container size changes (e.g. divider drag)
+    useEffect(() => {
+        if (!ready || !containerRef.current || !ctrlRef.current?.resize) return
+        const el = containerRef.current
+        const ro = new ResizeObserver(() => {
+            requestAnimationFrame(() => ctrlRef.current?.resize?.())
+        })
+        ro.observe(el)
+        return () => ro.disconnect()
+    }, [ready])
+
     // Sync year only when user selects a different event — never overwrite manual slider drag.
     const selectedId = selectedEvent?.id ?? null
     const prevSelectedIdRef = useRef<string | null>(null)
@@ -210,7 +222,7 @@ export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = []
     return (
         <div className="flex flex-col h-full w-full bg-slate-950 relative">
             {/* 3D canvas — explicit min-height so canvas gets dimensions even when flex parent is 0 */}
-            <div className="flex-1 min-h-[300px] w-full relative" style={{ minHeight: 300 }}>
+            <div ref={containerRef} className="flex-1 min-h-[300px] w-full relative" style={{ minHeight: 300 }}>
                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
             </div>
 
