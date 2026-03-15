@@ -243,6 +243,12 @@ export function TimelineView() {
         setShowContentDrawer(false)
       } else {
         setFullPage(false)
+        const params = new URLSearchParams(window.location.search)
+        if (params.get('fullscreen')) {
+          params.delete('fullscreen')
+          const q = params.toString()
+          window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
+        }
       }
     }
     window.addEventListener('popstate', onPopState)

@@ -22,9 +22,7 @@ interface SlideshowImage {
 const PLANET_ANIM_PASSES = 8  // ~64s at 1.0× rate → several orbits
 const PLANET_MIN = -5000
 const PLANET_MAX = -670
-const PLANET_FIRST_AFTER = 3   // Planet never appears sooner than the Nth image
-const PLANET_INTERVAL_MIN = 3 // Then every 3–5 images
-const PLANET_INTERVAL_MAX = 5
+// Per-chapter order: 1st image → planet sim → remaining images → loop (see ANIMATION_TRACKER §2.7)
 
 interface TTSSlideshowOverlayProps {
     ttsState: TTSState
@@ -110,51 +108,31 @@ export function TTSSlideshowOverlay({
     const scrollContainerRef = useRef<HTMLDivElement>(null)
     const activeSentenceRef = useRef<HTMLParagraphElement>(null)
 
+    // Only current chapter's slides — loop within chapter, no cross-chapter (ANIMATION_TRACKER §2.7)
     const allImages = useMemo<SlideshowImage[]>(() => {
-        const slice = events.slice(startEventIndex)
+        const seg = ttsState.currentSegmentIndex
+        const eventId = ttsState.segments[seg]?.id
+        const ev = eventId ? events.find(e => e.id === eventId) : null
+        if (!ev) return []
         if (skipPlanetSlide) {
-            return slice.flatMap(ev =>
-                (ev.media || []).map(entry => {
-                    const p = typeof entry === 'string' ? entry : (entry as any)?.path ?? ''
-                    return { src: `${baseUrl}${p}`, eventId: ev.id }
-                })
-            )
-        }
-        // Build flat list of images, then insert planet slides: no sooner than 3rd image,
-        // then every 3–5 images. Planet eventId = next image's event (for date sync).
-        const flat: SlideshowImage[] = []
-        for (const ev of slice) {
-            const imgs = (ev.media || []).map(entry => {
+            return (ev.media || []).map(entry => {
                 const p = typeof entry === 'string' ? entry : (entry as any)?.path ?? ''
                 return { src: `${baseUrl}${p}`, eventId: ev.id }
             })
-            flat.push(...imgs)
         }
-        if (flat.length === 0) return []
-        const result: SlideshowImage[] = []
-        let i = 0
-        let imagesUntilPlanet = PLANET_FIRST_AFTER
-        let planetCount = 0
-        while (i < flat.length) {
-            while (imagesUntilPlanet > 0 && i < flat.length) {
-                result.push(flat[i])
-                i++
-                imagesUntilPlanet--
-            }
-            if (i < flat.length) {
-                result.push({ src: '', eventId: flat[i].eventId, type: 'planet' })
-                planetCount++
-                imagesUntilPlanet = [4, 3, 5][planetCount % 3]  // alternate 4, 3, 5 images between planets
-            }
+        const imgs = (ev.media || []).map(entry => {
+            const p = typeof entry === 'string' ? entry : (entry as any)?.path ?? ''
+            return { src: `${baseUrl}${p}`, eventId: ev.id }
+        })
+        if (imgs.length === 0) {
+            return [{ src: '', eventId: ev.id, type: 'planet' }]  // chapter with no images: planet only
         }
-        // Ensure at least one planet slide when we have 1–3 images (main loop inserts none).
-        // Append at end so sim always shows; with 2+ images this keeps planet at 3rd+ position.
-        if (planetCount === 0 && flat.length > 0) {
-            const eventId = flat[flat.length - 1].eventId
-            result.push({ src: '', eventId, type: 'planet' })
-        }
-        return result
-    }, [events, baseUrl, startEventIndex, skipPlanetSlide])
+        return [
+            imgs[0],                                    // 1. first image
+            { src: '', eventId: ev.id, type: 'planet' }, // 2. planet sim
+            ...imgs.slice(1),                           // 3. remaining images
+        ]
+    }, [events, baseUrl, ttsState.currentSegmentIndex, ttsState.segments, skipPlanetSlide])
 
     // Keep ref in sync for use inside setAnimCycle callback
     useEffect(() => { currentImgIndexRef.current = currentImgIndex }, [currentImgIndex])
@@ -171,31 +149,16 @@ export function TTSSlideshowOverlay({
         return y
     }, [isPlanetSlide, currentImgIndex, allImages, events, entries])
 
-    // Map event → index of first *image* (not planet) so chapter advance shows image first
-    const eventToFirstImgIndex = useMemo(() => {
-        const map = new Map<string, number>()
-        allImages.forEach((img, i) => {
-            if (img.type === 'planet') return
-            if (!map.has(img.eventId)) map.set(img.eventId, i)
-        })
-        return map
-    }, [allImages])
-
-    // When TTS moves to a new segment, jump to that event's first image
+    // When TTS moves to a new segment, reset to first slide (image) of that chapter
     const prevSegIndexRef = useRef(ttsState.currentSegmentIndex)
     useEffect(() => {
         const seg = ttsState.currentSegmentIndex
         if (seg === prevSegIndexRef.current || seg < 0) return
         prevSegIndexRef.current = seg
-        const event = ttsState.segments[seg]
-        if (!event) return
-        const imgIdx = eventToFirstImgIndex.get(event.id)
-        if (imgIdx != null) {
-            prevImgIndexRef.current = currentImgIndex
-            setCurrentImgIndex(imgIdx)
-            setAnimCycle(0)
-        }
-    }, [ttsState.currentSegmentIndex, ttsState.segments, eventToFirstImgIndex, currentImgIndex])
+        prevImgIndexRef.current = currentImgIndex
+        setCurrentImgIndex(0)
+        setAnimCycle(0)
+    }, [ttsState.currentSegmentIndex, currentImgIndex])
 
     // Cycle animations on interval; each image gets ANIM_PASSES different animations before advancing
     // Planet slide gets PLANET_ANIM_PASSES (longer duration for several orbits)
@@ -530,7 +493,11 @@ export function TTSSlideshowOverlay({
                         </select>
                     )}
                     <button
-                        onClick={e => { e.stopPropagation(); onStop() }}
+                        onClick={e => {
+                            e.stopPropagation()
+                            onStop()
+                            if (window.history.state?.slideshowOpen) window.history.back()
+                        }}
                         className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-all pointer-events-auto"
                         aria-label="Close"
                     >
