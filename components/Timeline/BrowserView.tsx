@@ -5,6 +5,7 @@ import Markdown from 'markdown-to-jsx'
 import { ChevronRight, FileText, Folder, FolderOpen } from 'lucide-react'
 import { useTimeline } from '@/components/TimelineContext'
 import { PopImage } from '@/components'
+import { TimelineAwareLink } from '@/components/Timeline/TimelineAwareLink'
 import { transformImageCaptions } from './markdownTransform'
 import { getLqipFromIndex, resolveImagePath } from '@/components/helpers/imageHelper'
 
@@ -410,7 +411,7 @@ export function BrowserView({ initialPath }: BrowserViewProps) {
                               <Markdown
                                 options={{
                                   overrides: {
-                                    a: { props: { target: '_blank', rel: 'noopener' } },
+                                    a: (props: { href?: string; children?: React.ReactNode; [key: string]: unknown }) => <TimelineAwareLink {...props} />,
                                   },
                                 }}
                               >
@@ -420,7 +421,7 @@ export function BrowserView({ initialPath }: BrowserViewProps) {
                           </PopImage>
                         )
                       },
-                      a: { props: { target: '_blank', rel: 'noopener' } },
+                      a: (props: { href?: string; children?: React.ReactNode; [key: string]: unknown }) => <TimelineAwareLink {...props} />,
                     },
                   }}
                 >

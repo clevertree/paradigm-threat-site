@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Markdown from 'markdown-to-jsx'
 import { PopImage, DynamicIndex } from '@/components'
+import { MarkdownLink } from '@/components/MarkdownLink'
 import { transformImageCaptions } from '@/components/Timeline/markdownTransform'
 
 /** Strip H1 title and YAML frontmatter before rendering. */
@@ -77,7 +78,7 @@ export function RemoteMarkdown({ src, baseUrl, title, className = '' }: RemoteMa
                   <Markdown
                     options={{
                       overrides: {
-                        a: { props: { target: '_blank', rel: 'noopener' } },
+                        a: (props: { href?: string; children?: React.ReactNode; [key: string]: unknown }) => <MarkdownLink {...props} />,
                       },
                     }}
                   >
@@ -86,7 +87,7 @@ export function RemoteMarkdown({ src, baseUrl, title, className = '' }: RemoteMa
                 ) : null}
               </PopImage>
             ),
-            a: { props: { target: '_blank', rel: 'noopener' } },
+            a: (props: { href?: string; children?: React.ReactNode; [key: string]: unknown }) => <MarkdownLink {...props} />,
             DynamicIndex: (props: { [key: string]: unknown }) => <DynamicIndex {...props} mode="inline" currentPath={baseUrl} />,
             dynamicindex: (props: { [key: string]: unknown }) => <DynamicIndex {...props} mode="inline" currentPath={baseUrl} />,
           },

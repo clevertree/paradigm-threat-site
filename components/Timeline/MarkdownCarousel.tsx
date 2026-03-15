@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import Markdown from 'markdown-to-jsx'
 import type { TimelineEntry } from '@/components/TimelineContext'
 import { PopImage, ShareLinks } from '@/components'
+import { TimelineAwareLink } from '@/components/Timeline/TimelineAwareLink'
 import { getLqipFromIndex, resolveImagePath } from '@/components/helpers/imageHelper'
 import { transformImageCaptions } from './markdownTransform'
 import { formatDateRange } from './utils'
@@ -148,7 +149,7 @@ export function MarkdownCarousel({
                               <Markdown
                                 options={{
                                   overrides: {
-                                    a: { props: { target: '_blank', rel: 'noopener' } },
+                                    a: (props: { href?: string; children?: React.ReactNode; [key: string]: unknown }) => <TimelineAwareLink {...props} />,
                                   },
                                 }}
                               >
@@ -158,7 +159,7 @@ export function MarkdownCarousel({
                           </PopImage>
                         )
                       },
-                      a: { props: { target: '_blank', rel: 'noopener' } },
+                      a: (props: { href?: string; children?: React.ReactNode; [key: string]: unknown }) => <TimelineAwareLink {...props} />,
                     },
                   }}
                 >

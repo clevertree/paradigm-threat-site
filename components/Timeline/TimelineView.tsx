@@ -13,6 +13,7 @@ import { TTSSlideshowOverlay } from './TTSSlideshowOverlay'
 import { AnimationMapView } from './AnimationMapView'
 import { AnimationPlanetView } from './AnimationPlanetView'
 import { BrowserView } from './BrowserView'
+import { TimelineLinkProvider } from './TimelineLinkContext'
 import { formatDateRange } from './utils'
 import { useTTS } from '@/lib/hooks/useTTS'
 import { stripMarkdownForTTS } from './ttsHelpers'
@@ -260,6 +261,16 @@ export function TimelineView() {
     window.history.replaceState(null, '', `/timeline/${evt.id}` + (q ? '?' + q : ''))
   }, [])
 
+  const timelineLinkContextValue = useMemo(
+    () => ({
+      onTimelineNavigate: (eventId: string) => {
+        const entry = eventIdToEvent.get(eventId)
+        if (entry) handleSelectEvent(entry)
+      },
+    }),
+    [eventIdToEvent, handleSelectEvent]
+  )
+
   // When TTS auto-advances to a new segment, sync the carousel
   const prevTTSSegRef = useRef(-1)
   useEffect(() => {
@@ -384,6 +395,7 @@ export function TimelineView() {
   const isFullCanvasView = viewMode === 'animation-map' || viewMode === 'animation-3d' || viewMode === 'browser'
 
   return (
+    <TimelineLinkProvider value={timelineLinkContextValue}>
     <div className={
       fullPage
         ? 'fixed inset-0 z-[110] flex flex-col bg-white dark:bg-slate-950 overflow-hidden p-4 select-none'
@@ -827,5 +839,6 @@ export function TimelineView() {
         />
       )}
     </div>
+    </TimelineLinkProvider>
   )
 }
