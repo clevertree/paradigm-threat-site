@@ -110,11 +110,13 @@ export function TimelineView() {
       const params = new URLSearchParams(window.location.search)
       if (next) {
         params.set('fullscreen', '1')
+        const q = params.toString()
+        window.history.pushState({ fullscreen: true }, '', window.location.pathname + (q ? '?' + q : ''))
       } else {
         params.delete('fullscreen')
+        const q = params.toString()
+        window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
       }
-      const q = params.toString()
-      window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
       return next
     })
   }, [])
@@ -145,6 +147,8 @@ export function TimelineView() {
   const [isDragging, setIsDragging] = useState(false)
   const containerRef = useRef<HTMLDivElement>(null)
   const [showContentDrawer, setShowContentDrawer] = useState(false)
+  const showContentDrawerRef = useRef(false)
+  useEffect(() => { showContentDrawerRef.current = showContentDrawer }, [showContentDrawer])
   const [docMenuOpen, setDocMenuOpen] = useState(false)
   const docMenuRef = useRef<HTMLDivElement>(null)
 
@@ -228,13 +232,17 @@ export function TimelineView() {
     setSlideshowOpen(false)
   }, [tts])
 
-  // Handle browser back button: close slideshow but stay in fullscreen
+  // Handle browser back button: close slideshow, then content drawer, then exit fullscreen
   useEffect(() => {
     const onPopState = (_e: PopStateEvent) => {
       if (slideshowOpenRef.current) {
         tts.stop()
         tts.clearError()
         setSlideshowOpen(false)
+      } else if (showContentDrawerRef.current) {
+        setShowContentDrawer(false)
+      } else {
+        setFullPage(false)
       }
     }
     window.addEventListener('popstate', onPopState)
@@ -335,8 +343,12 @@ export function TimelineView() {
       }
     }
     visit(entries, 0)
+    // Fallback: if entries tree is empty (e.g. during load), use flat events
+    if (result.length === 0 && events.length > 0) {
+      return events.map((e) => ({ entry: e, depth: 0 }))
+    }
     return result
-  }, [entries])
+  }, [entries, events])
 
   // Scroll the left panel to the initially-selected item once on page load.
   // CustomTimelineView expands parent nodes via its own effect, so the target
@@ -532,7 +544,10 @@ export function TimelineView() {
                 <button
                   type="button"
                   title="Show article content"
-                  onClick={() => setShowContentDrawer(true)}
+                  onClick={() => {
+                    setShowContentDrawer(true)
+                    window.history.pushState({ contentDrawer: true }, '')
+                  }}
                   className="shrink-0 rounded border border-slate-300 dark:border-slate-600 px-2.5 py-1.5 text-sm hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center gap-1"
                 >
                   <BookOpen size={14} /> Content
@@ -581,11 +596,29 @@ export function TimelineView() {
         {fullPage && showContentDrawer && (
           <div className="absolute inset-0 z-[120] flex flex-col bg-white dark:bg-slate-950">
             <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
-              <h3 className="text-sm font-semibold flex-1">Article Content</h3>
+              <select
+                value={selected?.id ?? ''}
+                onChange={(e) => {
+                  const evt = events.find((x) => x.id === e.target.value)
+                  if (evt) handleSelectEvent(evt)
+                }}
+                className="flex-1 min-w-0 rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2 text-sm"
+              >
+                {hierarchicalOptions.map(({ entry: evt, depth }) => {
+                  const indent = '\u00A0\u00A0\u00A0\u00A0'.repeat(depth)
+                  const label = evt.type === 'article' ? evt.title : `${formatDateRange(evt)} — ${evt.title}`
+                  return (
+                    <option key={evt.id} value={evt.id}>
+                      {indent}{label}
+                    </option>
+                  )
+                })}
+              </select>
               <button
                 type="button"
-                onClick={() => setShowContentDrawer(false)}
+                onClick={(e) => { e.stopPropagation(); setShowContentDrawer(false) }}
                 className="shrink-0 rounded border border-slate-300 dark:border-slate-600 p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800"
+                aria-label="Close"
               >
                 <X size={16} />
               </button>
@@ -836,6 +869,7 @@ export function TimelineView() {
           startEventIndex={ttsStartIndexRef.current}
           onSelectEvent={handleSelectEvent}
           onSeekToSegment={handleSeekToSegment}
+          onRestartFromEvent={handlePlayEvent}
           onSwitchToSpeechAndResume={tts.switchToSpeechAndResume}
         />
       )}

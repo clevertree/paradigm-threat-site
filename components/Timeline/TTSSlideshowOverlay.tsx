@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { X, Play, Pause, SkipBack, SkipForward } from 'lucide-react'
 import type { TTSState, SubtitleMode, PiperVoice, TTSProvider } from '@/lib/hooks/useTTS'
 import type { TimelineEntry } from '@/components/TimelineContext'
-import { getEventYearWithInheritance } from './utils'
+import { getEventYearWithInheritance, formatDateRange } from './utils'
 
 const KEN_BURNS = [
     'animate-ken-burns-zoom-in',
@@ -22,6 +22,9 @@ interface SlideshowImage {
 const PLANET_ANIM_PASSES = 8  // ~64s at 1.0× rate → several orbits
 const PLANET_MIN = -5000
 const PLANET_MAX = -670
+const PLANET_FIRST_AFTER = 3   // Planet never appears sooner than the Nth image
+const PLANET_INTERVAL_MIN = 3 // Then every 3–5 images
+const PLANET_INTERVAL_MAX = 5
 
 interface TTSSlideshowOverlayProps {
     ttsState: TTSState
@@ -51,6 +54,8 @@ interface TTSSlideshowOverlayProps {
     onSelectEvent: (entry: TimelineEntry) => void
     /** Jump TTS to a specific segment index without rebuilding the segment list */
     onSeekToSegment: (segmentIndex: number) => void
+    /** Restart TTS from an event before the current start (rebuilds segments) */
+    onRestartFromEvent?: (entry: TimelineEntry) => void
     /** Switch to Speech API and resume playback from the failed segment */
     onSwitchToSpeechAndResume?: () => void
     /** When true, do not append the planet animation slide (e.g. for article pages) */
@@ -84,6 +89,7 @@ export function TTSSlideshowOverlay({
     startEventIndex,
     onSelectEvent,
     onSeekToSegment,
+    onRestartFromEvent,
     onSwitchToSpeechAndResume,
     skipPlanetSlide = false,
 }: TTSSlideshowOverlayProps) {
@@ -114,17 +120,38 @@ export function TTSSlideshowOverlay({
                 })
             )
         }
-        // Put a planet slide before each event's images so segment sync lands on it
-        // (otherwise we jump over planets when TTS advances to the next segment)
-        const result: SlideshowImage[] = []
+        // Build flat list of images, then insert planet slides: no sooner than 3rd image,
+        // then every 3–5 images. Planet eventId = next image's event (for date sync).
+        const flat: SlideshowImage[] = []
         for (const ev of slice) {
             const imgs = (ev.media || []).map(entry => {
                 const p = typeof entry === 'string' ? entry : (entry as any)?.path ?? ''
                 return { src: `${baseUrl}${p}`, eventId: ev.id }
             })
-            if (imgs.length === 0) continue
-            result.push({ src: '', eventId: ev.id, type: 'planet' })
-            result.push(...imgs)
+            flat.push(...imgs)
+        }
+        if (flat.length === 0) return []
+        const result: SlideshowImage[] = []
+        let i = 0
+        let imagesUntilPlanet = PLANET_FIRST_AFTER
+        let planetCount = 0
+        while (i < flat.length) {
+            while (imagesUntilPlanet > 0 && i < flat.length) {
+                result.push(flat[i])
+                i++
+                imagesUntilPlanet--
+            }
+            if (i < flat.length) {
+                result.push({ src: '', eventId: flat[i].eventId, type: 'planet' })
+                planetCount++
+                imagesUntilPlanet = [4, 3, 5][planetCount % 3]  // alternate 4, 3, 5 images between planets
+            }
+        }
+        // Ensure at least one planet slide when we have 1–3 images (main loop inserts none).
+        // Append at end so sim always shows; with 2+ images this keeps planet at 3rd+ position.
+        if (planetCount === 0 && flat.length > 0) {
+            const eventId = flat[flat.length - 1].eventId
+            result.push({ src: '', eventId, type: 'planet' })
         }
         return result
     }, [events, baseUrl, startEventIndex, skipPlanetSlide])
@@ -144,9 +171,11 @@ export function TTSSlideshowOverlay({
         return y
     }, [isPlanetSlide, currentImgIndex, allImages, events, entries])
 
+    // Map event → index of first *image* (not planet) so chapter advance shows image first
     const eventToFirstImgIndex = useMemo(() => {
         const map = new Map<string, number>()
         allImages.forEach((img, i) => {
+            if (img.type === 'planet') return
             if (!map.has(img.eventId)) map.set(img.eventId, i)
         })
         return map
@@ -367,11 +396,8 @@ export function TTSSlideshowOverlay({
 
     const filteredPiperVoices = availablePiperVoices
 
-    // Current event for jump select
-    const segmentEvents = ttsState.segments.map(seg => {
-        const idx = startEventIndex + ttsState.segments.findIndex(s => s.id === seg.id)
-        return { seg, entry: events[idx] ?? null }
-    })
+    // Current segment's event id for select value
+    const currentSegId = ttsState.segments[ttsState.currentSegmentIndex]?.id ?? null
 
     return (
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
@@ -476,25 +502,31 @@ export function TTSSlideshowOverlay({
                 </div>
 
                 <div className="flex items-center gap-3 shrink-0">
-                    {/* Jump-to-event select */}
-                    {ttsState.segments.length > 1 && (
+                    {/* Jump-to-event select — all events so user can jump to any chapter */}
+                    {events.length > 0 && (
                         <select
-                            value={ttsState.currentSegmentIndex}
+                            value={currentSegId ?? events[0]?.id ?? ''}
                             onChange={e => {
-                                const idx = parseInt(e.target.value)
-                                if (isNaN(idx) || idx < 0 || idx >= ttsState.segments.length) return
-                                // Look up the timeline entry by id — never use positional offset
-                                const segId = ttsState.segments[idx]?.id
-                                const entry = segId ? events.find(ev => ev.id === segId) : undefined
-                                if (entry) onSelectEvent(entry)
-                                // Actually jump TTS to the chosen segment
-                                onSeekToSegment(idx)
+                                const eventId = e.target.value
+                                if (!eventId) return
+                                const entry = events.find(ev => ev.id === eventId)
+                                if (!entry) return
+                                onSelectEvent(entry)
+                                const segIdx = ttsState.segments.findIndex(s => s.id === eventId)
+                                if (segIdx >= 0) {
+                                    onSeekToSegment(segIdx)
+                                } else if (onRestartFromEvent) {
+                                    onRestartFromEvent(entry)
+                                }
                             }}
-                            className="bg-black/50 border border-white/20 text-white text-xs rounded px-2 py-1 max-w-[160px] truncate"
+                            className="bg-black/50 border border-white/20 text-white text-xs rounded px-2 py-1 max-w-[200px] truncate"
                         >
-                            {ttsState.segments.map((seg, i) => (
-                                <option key={seg.id} value={i} className="bg-slate-900">{seg.title}</option>
-                            ))}
+                            {events.map(evt => {
+                                const label = evt.type === 'article' ? evt.title : `${formatDateRange(evt)} — ${evt.title}`
+                                return (
+                                    <option key={evt.id} value={evt.id} className="bg-slate-900">{label}</option>
+                                )
+                            })}
                         </select>
                     )}
                     <button
