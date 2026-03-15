@@ -36,7 +36,7 @@ export function TimelineAwareLink({
       : href
 
   // In-app navigation: update selection + URL without full page load
-  if (eventId && onTimelineNavigate) {
+  if (eventId && onTimelineNavigate && typeof preservedHref === 'string') {
     return (
       <Link
         href={preservedHref}

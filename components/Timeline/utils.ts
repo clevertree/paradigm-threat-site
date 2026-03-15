@@ -46,10 +46,10 @@ function findParentEntry(entries: EntryWithChildren[], childId: string): EntryWi
 
 /** Get event year, falling back to parent's year when event has no dates (e.g. child articles) */
 export function getEventYearWithInheritance(
-  evt: { id: string; dates?: { start?: number | null; end?: number; value?: number }[] } | null | undefined,
+  evt: { id?: string; dates?: { start?: number | null; end?: number; value?: number }[] } | null | undefined,
   entries: EntryWithChildren[]
 ): number | null {
-  if (!evt) return null
+  if (!evt?.id) return null
   const y = getEventYear(evt)
   if (y != null) return y
   let parent = findParentEntry(entries, evt.id)
@@ -88,14 +88,17 @@ export function getEventYearForSim(
   return getDefaultSimYearForChapter(ch)
 }
 
-/** Find the event whose year is closest to the given sim year. Uses getEventYearWithInheritance. */
-export function findNearestEventToYear(
-  events: { id: string; md_path?: string; dates?: { start?: number | null; end?: number; value?: number }[] }[],
+/** Minimal shape needed for getEventYearWithInheritance in findNearestEventToYear */
+type EventWithYear = { id: string; md_path?: string; dates?: { start?: number | null; end?: number; value?: number }[] }
+
+/** Find the event whose year is closest to the given sim year. Uses getEventYearWithInheritance. Returns same element type as input. */
+export function findNearestEventToYear<T extends EventWithYear>(
+  events: T[],
   year: number,
-  entries: { id: string; dates?: { start?: number | null; end?: number }[]; children?: unknown[] }[] = []
-): typeof events[0] | null {
+  entries: EntryWithChildren[] = []
+): T | null {
   if (events.length === 0) return null
-  let best: typeof events[0] | null = null
+  let best: T | null = null
   let bestDist = Infinity
   for (const evt of events) {
     const y = getEventYearWithInheritance(evt, entries)
@@ -114,7 +117,7 @@ export function getEventStartYearWithFallback(
   evt: { id?: string; md_path?: string; dates?: { start?: number | null; end?: number }[] } | null | undefined,
   entries: EntryWithChildren[] = []
 ): number | null {
-  const s = getEventStartYear(evt)
+  const s = evt ? getEventStartYear(evt) : null
   if (s != null) return s
   const y = evt ? getEventYearWithInheritance(evt, entries) : null
   if (y != null) return y
