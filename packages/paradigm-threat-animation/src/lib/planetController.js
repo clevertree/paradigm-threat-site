@@ -378,6 +378,11 @@ export async function createPlanetController(canvas) {
         if (multiViewActive) {
             renderMultiView();
         } else {
+            // Reset viewport to full canvas (was left at PIP size after last multi-view)
+            const w = canvas.clientWidth, h = canvas.clientHeight;
+            const pixelRatio = renderer.getPixelRatio();
+            renderer.setScissorTest(false);
+            renderer.setViewport(0, 0, w * pixelRatio, h * pixelRatio);
             renderer.render(scene, camera);
         }
     }
@@ -998,7 +1003,10 @@ export async function createPlanetController(canvas) {
             if (d < nearestDist) { nearestDist = d; nearest = e; }
         }
         const evtStr = (nearest && nearestDist <= 60) ? nearest.title : '';
-        hud.update(yearStr, label, desc, evtStr);
+        const orbitStr = Object.entries(orbitCounts)
+            .map(([k, v]) => `${k}: ${v.toFixed(1)}`)
+            .join(' · ');
+        hud.update(yearStr, label, desc, evtStr, orbitStr);
     }
 
     function resize() {
@@ -1028,8 +1036,8 @@ export async function createPlanetController(canvas) {
 // ═══════════════════ Helper Functions ═══════════════════
 
 /**
- * Build an HTML HUD overlay positioned on top of the canvas.
- * Returns { update(year, label, desc, event), remove() }.
+ * Build an HTML HUD overlay positioned at bottom of the canvas.
+ * Returns { update(year, label, desc, event, orbits?), remove() }.
  */
 function buildHUD(canvas) {
     // Ensure we have a positioned container around the canvas
@@ -1045,20 +1053,20 @@ function buildHUD(canvas) {
     el.className = 'planet-hud';
     Object.assign(el.style, {
         position: 'absolute',
-        top: '0', left: '0', right: '0',
+        bottom: '0', left: '0', right: '0',
         zIndex: '900',
         padding: '10px 14px',
-        background: 'linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 60%, transparent 100%)',
+        background: 'linear-gradient(0deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.5) 60%, transparent 100%)',
         pointerEvents: 'none',
         fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif",
         color: '#e0e0e0',
     });
 
-    // Work in progress badge (top-right)
+    // Work in progress badge (bottom-right)
     const wipEl = document.createElement('div');
     Object.assign(wipEl.style, {
         position: 'absolute',
-        top: '10px', right: '14px',
+        bottom: '10px', right: '14px',
         fontSize: '11px',
         color: '#94a3b8',
         opacity: '0.9',
@@ -1095,22 +1103,31 @@ function buildHUD(canvas) {
         marginTop: '3px', opacity: '0.85',
     });
 
+    const orbitEl = document.createElement('div');
+    Object.assign(orbitEl.style, {
+        fontSize: '10px', color: '#94a3b8',
+        marginTop: '4px', fontVariantNumeric: 'tabular-nums',
+        opacity: '0.9',
+    });
+
     el.appendChild(yearEl);
     el.appendChild(labelEl);
     el.appendChild(descEl);
     el.appendChild(eventEl);
+    el.appendChild(orbitEl);
     container.appendChild(el);
 
     let lastText = '';
     return {
-        update(yearStr, label, desc, evtTitle) {
-            const key = yearStr + label;
+        update(yearStr, label, desc, evtTitle, orbitStr = '') {
+            const key = yearStr + label + orbitStr;
             if (key === lastText) return; // avoid unnecessary DOM writes
             lastText = key;
             yearEl.textContent = yearStr;
             labelEl.textContent = label;
             descEl.textContent = desc;
             eventEl.textContent = evtTitle;
+            orbitEl.textContent = orbitStr;
         },
         remove() {
             el.remove();

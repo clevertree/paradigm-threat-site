@@ -46,7 +46,7 @@ function groupForYear(year: number): string {
 const ERAS = [
   { start: -5000, end: -4078, name: 'Before Creation' },
   { start: -4077, end: -3148, name: 'The Golden Age' },
-  { start: -3147, end: -687, name: 'The Dark Ages' },
+  { start: -3147, end: -670, name: 'The Dark Ages' },
   { start: -670, end: 1053, name: 'Iron Age / Blip' },
   { start: 1053, end: 1499, name: 'CE 1053-1499' },
   { start: 1500, end: 1799, name: 'CE 1500-1799' },

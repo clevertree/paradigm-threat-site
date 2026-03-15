@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { X, Play, Pause, SkipBack, SkipForward } from 'lucide-react'
 import type { TTSState, SubtitleMode, PiperVoice, TTSProvider } from '@/lib/hooks/useTTS'
 import type { TimelineEntry } from '@/components/TimelineContext'
-import { getEventYearWithInheritance, formatDateRange } from './utils'
+import { getEventYearForSim, formatDateRange } from './utils'
 
 const KEN_BURNS = [
     'animate-ken-burns-zoom-in',
@@ -20,8 +20,8 @@ interface SlideshowImage {
 }
 
 const PLANET_ANIM_PASSES = 8  // ~64s at 1.0× rate → several orbits
-const PLANET_MIN = -5000
-const PLANET_MAX = -670
+const PLANET_BC_MIN = -5000
+const PLANET_BC_MAX = -670
 // Per-chapter order: 1st image → planet sim → remaining images → loop (see ANIMATION_TRACKER §2.7)
 
 interface TTSSlideshowOverlayProps {
@@ -140,13 +140,11 @@ export function TTSSlideshowOverlay({
     const isPlanetSlide = allImages[currentImgIndex]?.type === 'planet'
 
     const planetInitialYear = useMemo(() => {
-        if (!isPlanetSlide) return PLANET_MIN
+        if (!isPlanetSlide) return PLANET_BC_MIN
         const eventId = allImages[currentImgIndex]?.eventId
-        if (!eventId) return PLANET_MIN
+        if (!eventId) return PLANET_BC_MIN
         const evt = events.find(e => e.id === eventId)
-        const y = getEventYearWithInheritance(evt ?? null, entries)
-        if (y == null || y < PLANET_MIN || y > PLANET_MAX) return PLANET_MIN
-        return y
+        return getEventYearForSim(evt ?? null, entries)
     }, [isPlanetSlide, currentImgIndex, allImages, events, entries])
 
     // When TTS moves to a new segment, reset to first slide (image) of that chapter
@@ -380,8 +378,12 @@ export function TTSSlideshowOverlay({
                 ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-slate-900 to-slate-950" />
                 )}
-                {/* Planet animation canvas overlay */}
-                <PlanetSlideCanvas active={isPlanetSlide} initialYear={planetInitialYear} />
+                {/* Planet animation canvas overlay — fixed inset-0 + z-[5] so it fills viewport and stays above crossfade layers (z 1–2) */}
+                {isPlanetSlide && (
+                    <div className="fixed inset-0 z-[5]">
+                        <PlanetSlideCanvas active initialYear={planetInitialYear} />
+                    </div>
+                )}
                 {/* Dark vignette (skip when planet canvas is showing) */}
                 {!isPlanetSlide && <div className="absolute inset-0 bg-black/40" />}
             </div>
@@ -700,12 +702,34 @@ function PlanetSlideCanvas({ active, initialYear }: { active: boolean; initialYe
         async function init() {
             const { createPlanetController } = await import('paradigm-threat-animation')
             if (cancelled || !canvasRef.current) return
+            // Wait for layout: canvas may be 0×0 on first paint when conditionally mounted
+            await new Promise<void>(resolve => {
+                let frames = 0
+                const maxFrames = 20
+                const check = () => {
+                    if (cancelled || !canvasRef.current || frames++ >= maxFrames) return resolve()
+                    const w = canvasRef.current.clientWidth
+                    const h = canvasRef.current.clientHeight
+                    if (w > 0 && h > 0) return resolve()
+                    requestAnimationFrame(check)
+                }
+                requestAnimationFrame(check)
+            })
+            if (cancelled || !canvasRef.current) return
             const ctrl = await createPlanetController(canvasRef.current)
             if (cancelled) { ctrl.destroy(); return }
             ctrlRef.current = ctrl
             ctrl.setYear(yearRef.current)
+            if (ctrl.resize) ctrl.resize()
 
+            const isModernEra = initialYear > PLANET_BC_MAX  // -670: loop within Dark Age; only CE stays fixed
+            // Loop within era containing initialYear — never jump to 5000 BCE for dark/golden age events
+            const loopStart = initialYear <= -4077 ? PLANET_BC_MIN
+                : initialYear <= -3147 ? -4077
+                : initialYear <= PLANET_BC_MAX ? -3147
+                : initialYear
             let lastT = performance.now()
+
             function tick() {
                 if (cancelled) return
                 const now = performance.now()
@@ -713,7 +737,11 @@ function PlanetSlideCanvas({ active, initialYear }: { active: boolean; initialYe
                 lastT = now
                 // 1× speed: 0.1 years per second → 1 full Earth orbit every 10 seconds
                 yearRef.current += 0.1 * dt
-                if (yearRef.current > PLANET_MAX) yearRef.current = PLANET_MIN  // loop
+                if (isModernEra) {
+                    yearRef.current = Math.min(yearRef.current, initialYear)
+                } else {
+                    if (yearRef.current > PLANET_BC_MAX) yearRef.current = loopStart
+                }
                 ctrl.setYear(yearRef.current)
                 rafRef.current = requestAnimationFrame(tick)
             }
@@ -727,14 +755,14 @@ function PlanetSlideCanvas({ active, initialYear }: { active: boolean; initialYe
             ctrlRef.current?.destroy()
             ctrlRef.current = null
         }
-    }, [active])
+    }, [active, initialYear])
 
     if (!active) return null
 
     return (
         <canvas
             ref={canvasRef}
-            className="absolute inset-0 w-full h-full"
+            className="absolute inset-0 w-full h-full block"
             style={{ zIndex: 3 }}
         />
     )

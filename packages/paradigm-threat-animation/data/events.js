@@ -275,7 +275,7 @@ export const planetaryConfigs = [
     {
         id: "modern-solar",
         yearStart: -670,
-        yearEnd: 1053,
+        yearEnd: 3000,
         label: "Modern Solar System — Phantom Period (The Blip)",
         description: "Solar system stable. 7th c. BCE to 10th c. CE is phantom time per Fomenko.",
         saturn: { glow: 0.05, rings: true, position: [12, 7, 0], color: "#ccaa66" },

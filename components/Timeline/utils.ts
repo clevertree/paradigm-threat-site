@@ -61,6 +61,46 @@ export function getEventYearWithInheritance(
   return null
 }
 
+/** Parse chapter number from md_path (e.g. "content/03.the-dark-ages/..." → 3) */
+export function getChapterFromMdPath(mdPath: string | undefined): number {
+  if (!mdPath) return 0
+  const m = mdPath.match(/content\/(\d{2})\./)
+  return m ? parseInt(m[1], 10) : 0
+}
+
+/** Default sim year per chapter when event has no dates. Ensures correct planetary config. */
+export function getDefaultSimYearForChapter(chapter: number): number {
+  if (chapter <= 1) return -4500  // Before Creation / intro
+  if (chapter === 2) return -3600  // Golden Age
+  if (chapter === 3) return -2000  // Dark Ages
+  if (chapter === 4) return 1053   // The Blip — transition to CE (post-blip)
+  return new Date().getFullYear()   // CE chapters (5+)
+}
+
+/** Year for planet sim: event year when in range, else chapter-based default. */
+export function getEventYearForSim(
+  evt: { id?: string; md_path?: string; dates?: { start?: number | null; end?: number; value?: number }[] } | null | undefined,
+  entries: EntryWithChildren[] = []
+): number {
+  const y = evt ? getEventYearWithInheritance(evt, entries) : null
+  if (y != null) return y
+  const ch = getChapterFromMdPath(evt?.md_path)
+  return getDefaultSimYearForChapter(ch)
+}
+
+/** Start year for timeline positioning, with chapter fallback when no dates. */
+export function getEventStartYearWithFallback(
+  evt: { id?: string; md_path?: string; dates?: { start?: number | null; end?: number }[] } | null | undefined,
+  entries: EntryWithChildren[] = []
+): number | null {
+  const s = getEventStartYear(evt)
+  if (s != null) return s
+  const y = evt ? getEventYearWithInheritance(evt, entries) : null
+  if (y != null) return y
+  const ch = getChapterFromMdPath(evt?.md_path)
+  return getDefaultSimYearForChapter(ch)
+}
+
 function formatYear(year: number, _calendar?: string): string {
   const era = year <= 0 ? 'BCE' : 'CE'
   const absYear = Math.abs(year)

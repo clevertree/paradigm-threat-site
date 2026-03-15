@@ -575,7 +575,7 @@ export function TimelineView() {
             </div>
           )}
           {viewMode === 'animation-3d' && (
-            <div className="relative w-full flex-1 min-h-0">
+            <div className="relative w-full flex-1 min-h-[400px]" style={{ minHeight: 400 }}>
               <AnimationPlanetView selectedEvent={selected} entries={entries} />
             </div>
           )}
@@ -805,7 +805,7 @@ export function TimelineView() {
               </div>
             )}
             {viewMode === 'animation-3d' && (
-              <div className="relative w-full h-full">
+              <div className="relative w-full h-full min-h-[400px]" style={{ minHeight: 400 }}>
                 <AnimationPlanetView selectedEvent={selected} entries={entries} />
               </div>
             )}

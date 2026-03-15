@@ -12,7 +12,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { Play, Pause, RotateCcw } from 'lucide-react'
 import type { TimelineEntry } from '@/components/TimelineContext'
-import { getEventYearWithInheritance } from './utils'
+import { getEventYearForSim } from './utils'
 
 interface AnimationPlanetViewProps {
     onSelectEvent?: (id: string) => void
@@ -23,37 +23,68 @@ interface AnimationPlanetViewProps {
 }
 
 const MIN_YEAR = -5000
-const MAX_YEAR = -670
-
-function yearFromEvent(evt: TimelineEntry | null | undefined, entries: TimelineEntry[] = []): number | null {
-    if (!evt) return null
-    const y = getEventYearWithInheritance(evt, entries)
-    if (y == null) return null
-    if (y >= MIN_YEAR && y <= MAX_YEAR) return y
-    return null
-}
+const MAX_YEAR = 3000  // CE years use modern solar config
 
 export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = [] }: AnimationPlanetViewProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const ctrlRef = useRef<any>(null)
-    const eventYear = yearFromEvent(selectedEvent, entries)
-    const [year, setYear] = useState(() => eventYear ?? MIN_YEAR)
+    const eventYear = getEventYearForSim(selectedEvent, entries)
+    const [year, setYear] = useState(() => eventYear)
     const [phaseInfo, setPhaseInfo] = useState<{ label: string; description: string }>({ label: '', description: '' })
     const [ready, setReady] = useState(false)
     const [playing, setPlaying] = useState(false)
     const [speed, setSpeed] = useState(1)
     const playRef = useRef(false)
-    const yearRef = useRef(MIN_YEAR)
+    const yearRef = useRef(eventYear)
     const [nearbyEvents, setNearbyEvents] = useState<any[]>([])
     const [orbitInfo, setOrbitInfo] = useState<Record<string, number>>({})
 
     // Initialise planet controller
     useEffect(() => {
         let cancelled = false
-        const initialYear = eventYear ?? MIN_YEAR
+        const initialYear = eventYear
 
         async function init() {
             const { createPlanetController } = await import('paradigm-threat-animation')
+            if (cancelled || !canvasRef.current) return
+
+            // Wait for layout: canvas may be 0×0 on first paint (e.g. fullscreen flex layout)
+            const hasSize = await new Promise<boolean>((resolve) => {
+                let resolved = false
+                const done = (ok: boolean) => {
+                    if (resolved) return
+                    resolved = true
+                    resolve(ok)
+                }
+                const check = () => {
+                    if (cancelled || !canvasRef.current) return done(false)
+                    const w = canvasRef.current.clientWidth
+                    const h = canvasRef.current.clientHeight
+                    if (w > 0 && h > 0) return done(true)
+                    return false
+                }
+                if (check()) return
+                if (typeof ResizeObserver !== 'undefined' && canvasRef.current) {
+                    const ro = new ResizeObserver(() => {
+                        if (check()) { ro.disconnect(); done(true) }
+                    })
+                    ro.observe(canvasRef.current)
+                    setTimeout(() => {
+                        ro.disconnect()
+                        done(canvasRef.current ? canvasRef.current.clientWidth > 0 && canvasRef.current.clientHeight > 0 : false)
+                    }, 3000)
+                } else {
+                    let frames = 0
+                    const loop = () => {
+                        if (check() || cancelled || !canvasRef.current || frames++ >= 120) {
+                            if (!resolved) done(!!canvasRef.current && canvasRef.current.clientWidth > 0 && canvasRef.current.clientHeight > 0)
+                            return
+                        }
+                        requestAnimationFrame(loop)
+                    }
+                    requestAnimationFrame(loop)
+                }
+            })
             if (cancelled || !canvasRef.current) return
 
             const ctrl = await createPlanetController(canvasRef.current)
@@ -78,14 +109,7 @@ export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = []
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    // Sync year when selected event changes and has a year in sim range (4077 and below).
-    // Also sync when controller becomes ready (eventYear may have been set before init finished).
-    useEffect(() => {
-        if (eventYear == null || !ready) return
-        updateYear(eventYear)
-    }, [eventYear, updateYear, ready])
-
-    // Update scene when year changes
+    // Update scene when year changes (must be declared before use in effects)
     const updateYear = useCallback((y: number) => {
         yearRef.current = y
         setYear(y)
@@ -94,6 +118,16 @@ export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = []
         setPhaseInfo(ctrlRef.current.getPhaseInfo())
         if (ctrlRef.current.getOrbitInfo) setOrbitInfo(ctrlRef.current.getOrbitInfo())
     }, [])
+
+    // Sync year only when user selects a different event — never overwrite manual slider drag.
+    const selectedId = selectedEvent?.id ?? null
+    const prevSelectedIdRef = useRef<string | null>(null)
+    useEffect(() => {
+        if (!ready || selectedId == null) return
+        if (prevSelectedIdRef.current === selectedId) return
+        prevSelectedIdRef.current = selectedId
+        updateYear(eventYear)
+    }, [selectedId, eventYear, updateYear, ready])
 
     // Update nearby events when year changes
     useEffect(() => {
@@ -106,10 +140,18 @@ export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = []
         return () => { cancelled = true }
     }, [year])
 
-    // Playback loop — time-based: 1× = 1 Earth orbit per 10 seconds
+    // Playback loop — time-based: 1× = 1 Earth orbit per 10 seconds. BC loops within era; CE plays forward to present.
+    const BC_MAX = -670
+    const CE_END_YEAR = MAX_YEAR  // 3000 — modern-solar config supports to 3000
     useEffect(() => {
         if (!playing) return
         playRef.current = true
+        const initialYear = yearRef.current
+        const loopStart = initialYear <= -4077 ? MIN_YEAR
+            : initialYear <= -3147 ? -4077
+            : initialYear <= BC_MAX ? -3147
+            : initialYear
+        const isModernEra = initialYear > BC_MAX
         let raf: number
         let lastT = performance.now()
 
@@ -120,11 +162,17 @@ export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = []
             lastT = now
             // Base rate: 0.1 years/sec at 1×  (1 full orbit in 10 sec)
             const advance = 0.1 * speed * dt
-            const next = yearRef.current + advance
-            if (next > MAX_YEAR) {
-                updateYear(MAX_YEAR)
-                setPlaying(false)
-                return
+            let next = yearRef.current + advance
+            if (isModernEra) {
+                // CE: play forward; stop at CE_END_YEAR (3000)
+                next = Math.min(next, CE_END_YEAR)
+                if (next >= CE_END_YEAR) {
+                    updateYear(CE_END_YEAR)
+                    setPlaying(false)
+                    return
+                }
+            } else {
+                if (next > BC_MAX) next = loopStart
             }
             updateYear(next)
             raf = requestAnimationFrame(tick)
@@ -139,15 +187,28 @@ export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = []
 
     const handleReset = useCallback(() => {
         setPlaying(false)
-        updateYear(MIN_YEAR)
-    }, [updateYear])
+        updateYear(eventYear)
+    }, [updateYear, eventYear])
 
-    const formatBCE = (y: number) => `${Math.abs(Math.round(y))} BCE`
+    // Space toggles Play/Pause (useful when overlay blocks button clicks)
+    useEffect(() => {
+        const onKeyDown = (e: KeyboardEvent) => {
+            if (e.key !== ' ' || !ready) return
+            const target = e.target as HTMLElement
+            if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT') return
+            e.preventDefault()
+            setPlaying(p => !p)
+        }
+        window.addEventListener('keydown', onKeyDown)
+        return () => window.removeEventListener('keydown', onKeyDown)
+    }, [ready])
+
+    const formatYearLabel = (y: number) => y < 0 ? `${Math.abs(Math.round(y))} BCE` : `${Math.round(y)} CE`
 
     return (
         <div className="flex flex-col h-full w-full bg-slate-950 relative">
-            {/* 3D canvas — the controller renders its own HUD overlay inside this container */}
-            <div className="flex-1 min-h-0 w-full relative" style={{ minHeight: 300 }}>
+            {/* 3D canvas — explicit min-height so canvas gets dimensions even when flex parent is 0 */}
+            <div className="flex-1 min-h-[300px] w-full relative" style={{ minHeight: 300 }}>
                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full block" />
             </div>
 
@@ -179,7 +240,7 @@ export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = []
                     className="flex-1 accent-purple-500 cursor-pointer"
                 />
 
-                <span className="text-xs text-slate-400 tabular-nums w-20 text-right">{formatBCE(year)}</span>
+                <span className="text-xs text-slate-400 tabular-nums w-20 text-right">{formatYearLabel(year)}</span>
 
                 <select
                     value={speed}
