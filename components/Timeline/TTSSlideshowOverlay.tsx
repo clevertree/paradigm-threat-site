@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { X, Play, Pause, SkipBack, SkipForward } from 'lucide-react'
 import type { TTSState, SubtitleMode, PiperVoice, TTSProvider } from '@/lib/hooks/useTTS'
 import type { TimelineEntry } from '@/components/TimelineContext'
+import { getEventYearWithInheritance } from './utils'
 
 const KEN_BURNS = [
     'animate-ken-burns-zoom-in',
@@ -19,6 +20,8 @@ interface SlideshowImage {
 }
 
 const PLANET_ANIM_PASSES = 8  // ~64s at 1.0× rate → several orbits
+const PLANET_MIN = -5000
+const PLANET_MAX = -670
 
 interface TTSSlideshowOverlayProps {
     ttsState: TTSState
@@ -40,6 +43,8 @@ interface TTSSlideshowOverlayProps {
     onSetQuoteVoiceId: (id: string) => void
     onSetSpeakerMapInput: (input: string) => void
     events: TimelineEntry[]
+    /** Hierarchical entries for parent-year inheritance; omit if not available */
+    entries?: TimelineEntry[]
     baseUrl: string
     /** Index into `events` where TTS started */
     startEventIndex: number
@@ -74,6 +79,7 @@ export function TTSSlideshowOverlay({
     onSetQuoteVoiceId,
     onSetSpeakerMapInput,
     events,
+    entries = [],
     baseUrl,
     startEventIndex,
     onSelectEvent,
@@ -99,26 +105,44 @@ export function TTSSlideshowOverlay({
     const activeSentenceRef = useRef<HTMLParagraphElement>(null)
 
     const allImages = useMemo<SlideshowImage[]>(() => {
-        const imgs: SlideshowImage[] = events.slice(startEventIndex).flatMap(ev =>
-            (ev.media || []).map(entry => {
-                const p = typeof entry === 'string' ? entry : (entry as any)?.path ?? ''
-                return {
-                    src: `${baseUrl}${p}`,
-                    eventId: ev.id,
-                }
-            })
-        )
-        // Planet animation slide — appears after all chapter images, before wrap (skip for article mode)
-        if (!skipPlanetSlide) {
-            imgs.push({ src: '', eventId: '__planet__', type: 'planet' })
+        const slice = events.slice(startEventIndex)
+        if (skipPlanetSlide) {
+            return slice.flatMap(ev =>
+                (ev.media || []).map(entry => {
+                    const p = typeof entry === 'string' ? entry : (entry as any)?.path ?? ''
+                    return { src: `${baseUrl}${p}`, eventId: ev.id }
+                })
+            )
         }
-        return imgs
+        // Put a planet slide before each event's images so segment sync lands on it
+        // (otherwise we jump over planets when TTS advances to the next segment)
+        const result: SlideshowImage[] = []
+        for (const ev of slice) {
+            const imgs = (ev.media || []).map(entry => {
+                const p = typeof entry === 'string' ? entry : (entry as any)?.path ?? ''
+                return { src: `${baseUrl}${p}`, eventId: ev.id }
+            })
+            if (imgs.length === 0) continue
+            result.push({ src: '', eventId: ev.id, type: 'planet' })
+            result.push(...imgs)
+        }
+        return result
     }, [events, baseUrl, startEventIndex, skipPlanetSlide])
 
     // Keep ref in sync for use inside setAnimCycle callback
     useEffect(() => { currentImgIndexRef.current = currentImgIndex }, [currentImgIndex])
 
     const isPlanetSlide = allImages[currentImgIndex]?.type === 'planet'
+
+    const planetInitialYear = useMemo(() => {
+        if (!isPlanetSlide) return PLANET_MIN
+        const eventId = allImages[currentImgIndex]?.eventId
+        if (!eventId) return PLANET_MIN
+        const evt = events.find(e => e.id === eventId)
+        const y = getEventYearWithInheritance(evt ?? null, entries)
+        if (y == null || y < PLANET_MIN || y > PLANET_MAX) return PLANET_MIN
+        return y
+    }, [isPlanetSlide, currentImgIndex, allImages, events, entries])
 
     const eventToFirstImgIndex = useMemo(() => {
         const map = new Map<string, number>()
@@ -368,7 +392,7 @@ export function TTSSlideshowOverlay({
                     <div className="absolute inset-0 bg-gradient-to-br from-slate-900 to-slate-950" />
                 )}
                 {/* Planet animation canvas overlay */}
-                <PlanetSlideCanvas active={isPlanetSlide} />
+                <PlanetSlideCanvas active={isPlanetSlide} initialYear={planetInitialYear} />
                 {/* Dark vignette (skip when planet canvas is showing) */}
                 {!isPlanetSlide && <div className="absolute inset-0 bg-black/40" />}
             </div>
@@ -649,10 +673,19 @@ export function TTSSlideshowOverlay({
 }
 
 // ── Inline sub-component: renders the Three.js planet animation as a fullscreen canvas ──
-function PlanetSlideCanvas({ active }: { active: boolean }) {
+function PlanetSlideCanvas({ active, initialYear }: { active: boolean; initialYear: number }) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const ctrlRef = useRef<any>(null)
     const rafRef = useRef<number | undefined>(undefined)
+    const yearRef = useRef(initialYear)
+
+    // Sync year when segment changes (e.g. new planet slide for different event)
+    useEffect(() => {
+        if (active) {
+            yearRef.current = initialYear
+            ctrlRef.current?.setYear(initialYear)
+        }
+    }, [active, initialYear])
 
     useEffect(() => {
         if (!active) {
@@ -663,7 +696,7 @@ function PlanetSlideCanvas({ active }: { active: boolean }) {
         }
 
         let cancelled = false
-        let year = -5000
+        yearRef.current = initialYear
 
         async function init() {
             const { createPlanetController } = await import('paradigm-threat-animation')
@@ -671,7 +704,7 @@ function PlanetSlideCanvas({ active }: { active: boolean }) {
             const ctrl = await createPlanetController(canvasRef.current)
             if (cancelled) { ctrl.destroy(); return }
             ctrlRef.current = ctrl
-            ctrl.setYear(year)
+            ctrl.setYear(yearRef.current)
 
             let lastT = performance.now()
             function tick() {
@@ -680,9 +713,9 @@ function PlanetSlideCanvas({ active }: { active: boolean }) {
                 const dt = (now - lastT) / 1000
                 lastT = now
                 // 1× speed: 0.1 years per second → 1 full Earth orbit every 10 seconds
-                year += 0.1 * dt
-                if (year > -670) year = -5000  // loop
-                ctrl.setYear(year)
+                yearRef.current += 0.1 * dt
+                if (yearRef.current > PLANET_MAX) yearRef.current = PLANET_MIN  // loop
+                ctrl.setYear(yearRef.current)
                 rafRef.current = requestAnimationFrame(tick)
             }
             rafRef.current = requestAnimationFrame(tick)

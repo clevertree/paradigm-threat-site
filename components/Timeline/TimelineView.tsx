@@ -555,7 +555,7 @@ export function TimelineView() {
           )}
           {viewMode === 'animation-3d' && (
             <div className="relative w-full flex-1 min-h-0">
-              <AnimationPlanetView />
+              <AnimationPlanetView selectedEvent={selected} entries={entries} />
             </div>
           )}
           {/* For non-full-canvas views: below sm show article only; non-fullscreen always article */}
@@ -767,7 +767,7 @@ export function TimelineView() {
             )}
             {viewMode === 'animation-3d' && (
               <div className="relative w-full h-full">
-                <AnimationPlanetView />
+                <AnimationPlanetView selectedEvent={selected} entries={entries} />
               </div>
             )}
           </div>
@@ -831,6 +831,7 @@ export function TimelineView() {
           onSetQuoteVoiceId={tts.setQuoteVoiceId}
           onSetSpeakerMapInput={tts.setSpeakerMapInput}
           events={events}
+          entries={entries}
           baseUrl={baseUrl}
           startEventIndex={ttsStartIndexRef.current}
           onSelectEvent={handleSelectEvent}

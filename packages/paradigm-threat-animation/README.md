@@ -3,7 +3,7 @@
 Interactive animated visualizations of the Paradigm Threat Timeline:
 
 - **Map view (CE)** — Leaflet map showing Rus-Horde empire expansion/fragmentation from the 11th to 21st century, with empire phase overlays and event markers
-- **Planetary view (BC)** — Three.js 3D scene showing the Saturnian collinear configuration and its breakup through the Golden Age, Dark Ages, and into the modern solar system
+- **Planetary view (BC)** — Three.js 3D scene showing the Saturnian collinear configuration and its breakup through the Golden Age, Dark Ages (Saturn hidden; 5-planet circle, Moon 1×/month), and into the modern solar system
 
 ## Architecture
 

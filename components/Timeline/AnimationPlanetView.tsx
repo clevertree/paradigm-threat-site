@@ -6,22 +6,38 @@
  * Jupiter's assault, the Deluge, and eventual solar system stabilization.
  *
  * Uses dynamic imports for SSR safety (Three.js requires canvas/WebGL).
+ * Syncs to selectedEvent's year when in range (4077 and below).
  */
 
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { Play, Pause, RotateCcw } from 'lucide-react'
+import type { TimelineEntry } from '@/components/TimelineContext'
+import { getEventYearWithInheritance } from './utils'
 
 interface AnimationPlanetViewProps {
     onSelectEvent?: (id: string) => void
+    /** When set and event has a year in [-5000, -670], sync planet sim to that year */
+    selectedEvent?: TimelineEntry | null
+    /** Hierarchical entries; used to inherit parent year when event has no dates */
+    entries?: TimelineEntry[]
 }
 
 const MIN_YEAR = -5000
 const MAX_YEAR = -670
 
-export function AnimationPlanetView({ onSelectEvent }: AnimationPlanetViewProps) {
+function yearFromEvent(evt: TimelineEntry | null | undefined, entries: TimelineEntry[] = []): number | null {
+    if (!evt) return null
+    const y = getEventYearWithInheritance(evt, entries)
+    if (y == null) return null
+    if (y >= MIN_YEAR && y <= MAX_YEAR) return y
+    return null
+}
+
+export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = [] }: AnimationPlanetViewProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const ctrlRef = useRef<any>(null)
-    const [year, setYear] = useState(MIN_YEAR)
+    const eventYear = yearFromEvent(selectedEvent, entries)
+    const [year, setYear] = useState(() => eventYear ?? MIN_YEAR)
     const [phaseInfo, setPhaseInfo] = useState<{ label: string; description: string }>({ label: '', description: '' })
     const [ready, setReady] = useState(false)
     const [playing, setPlaying] = useState(false)
@@ -34,6 +50,7 @@ export function AnimationPlanetView({ onSelectEvent }: AnimationPlanetViewProps)
     // Initialise planet controller
     useEffect(() => {
         let cancelled = false
+        const initialYear = eventYear ?? MIN_YEAR
 
         async function init() {
             const { createPlanetController } = await import('paradigm-threat-animation')
@@ -43,7 +60,9 @@ export function AnimationPlanetView({ onSelectEvent }: AnimationPlanetViewProps)
             if (cancelled) { ctrl.destroy(); return }
 
             ctrlRef.current = ctrl
-            ctrl.setYear(MIN_YEAR)
+            ctrl.setYear(initialYear)
+            yearRef.current = initialYear
+            setYear(initialYear)
             setPhaseInfo(ctrl.getPhaseInfo())
             // Trigger initial resize to match container
             if (ctrl.resize) ctrl.resize()
@@ -56,7 +75,15 @@ export function AnimationPlanetView({ onSelectEvent }: AnimationPlanetViewProps)
             ctrlRef.current?.destroy()
             ctrlRef.current = null
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    // Sync year when selected event changes and has a year in sim range (4077 and below).
+    // Also sync when controller becomes ready (eventYear may have been set before init finished).
+    useEffect(() => {
+        if (eventYear == null || !ready) return
+        updateYear(eventYear)
+    }, [eventYear, updateYear, ready])
 
     // Update scene when year changes
     const updateYear = useCallback((y: number) => {

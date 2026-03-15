@@ -6,10 +6,9 @@
  *  - Venus = GREEN, Saturn = ORANGE
  *  - Full collinear column: Uranus → Neptune → Mercury → Earth → Mars → Venus → Saturn → Jupiter → Sun
  *    The column always POINTS TOWARD the Sun and orbits around it as a rigid unit
- *    Uranus is always furthest from the Sun
- *  - Three orbital styles with animated motion
- *  - Moon appears at -3147 (Earth capture) with rapid decaying orbit
- *  - Mercury, Neptune, Uranus added as column members
+ *  - Dark Age (-3147 to -670): Saturn hidden; Earth, Venus, Mars, Mercury, Jupiter form a rotating
+ *    circle (nothing in center); circle rotates 4×/year, orbits Sun 1×/year; Moon orbits Earth 1×/month
+ *  - Moon appears at -3147 (Earth capture)
  *  - Orbit counting per planet per era
  */
 import { planetaryConfigs, timelineEvents } from '../../data/events.js';
@@ -64,6 +63,20 @@ const RT = {
     earth: { r: 4.5 },   // outermost on inner side
     mars: { r: 3.5 },   // between Venus and Earth (unstable oscillator)
     saturnFarPos: [25, 2, -15],  // Saturn receding in outer solar system
+};
+
+/* ── Dark Age config (3147 to 670 BCE) ──
+ * Saturn is NOT visible (no longer seen).
+ * Earth, Venus, Mars, Mercury, Jupiter form a rotating circle with nothing in center.
+ * Circle rotates 4x per year. Circle orbits Sun once per year.
+ * Moon orbits Earth once per month.
+ */
+const DA = {
+    sunDist: 12,           // distance from barycenter to Sun
+    circleRadius: 4.0,     // radius of the 5-planet circle
+    internalPeriod: 0.25,   // circle rotates 4x per year
+    solarPeriod: 1.0,      // circle orbits Sun once per year
+    moonPeriod: 1 / 12,    // Moon orbits Earth once per month (in years)
 };
 
 /* ── Modern config ──
@@ -146,17 +159,6 @@ export async function createPlanetController(canvas) {
     L.uranus = buildLabel('URANUS', '#66dddd', THREE);
     L.moon = buildLabel('MOON', '#cccccc', THREE);
     Object.values(L).forEach(s => scene.add(s));
-
-    // ── Earth horizon disc (visible in north/south multi-view only) ──
-    const horizonGeo = new THREE.CircleGeometry(6, 64);
-    const horizonMat = new THREE.MeshBasicMaterial({
-        color: 0x1a3322, transparent: true, opacity: 0.85, side: THREE.DoubleSide,
-        depthWrite: false,
-    });
-    const horizonDisc = new THREE.Mesh(horizonGeo, horizonMat);
-    horizonDisc.rotation.x = -Math.PI / 2; // lay flat in XZ plane
-    horizonDisc.visible = false;
-    scene.add(horizonDisc);
 
     // ── Orbital path lines (static geometry) ──
     const oLines = {};
@@ -313,7 +315,7 @@ export async function createPlanetController(canvas) {
         // Standing on Earth's surface looking along the column in each direction.
         // Camera is at Earth's XZ position, just above ground (y = 0.3).
         // The foreshortened view — near planets big, far planets small — is the
-        // correct surface perspective. A horizon disc below creates the ground line.
+        // correct surface perspective.
         //   North = inner planets (Sun-ward): Mars(8.5)→Venus(6.5)→Saturn(4.0)→Jupiter(1.5)
         //   South = outer planets: Mercury(12.0)→Neptune(13.5)→Uranus(15.0)
         if (multiViewActive && p.earth?.visible) {
@@ -323,10 +325,6 @@ export async function createPlanetController(canvas) {
             const colDir = new THREE.Vector3(earthPos.x, 0, earthPos.z).normalize();
             // Inward direction (toward Sun)
             const inward = new THREE.Vector3(-colDir.x, 0, -colDir.z);
-
-            // Position horizon disc at Earth, just below camera
-            horizonDisc.visible = true;
-            horizonDisc.position.set(earthPos.x, -0.05, earthPos.z);
 
             // North cam: standing on Earth, looking inward toward Saturn group
             // Camera up = (0,1,0), look target slightly above column plane (y=0.8)
@@ -349,8 +347,6 @@ export async function createPlanetController(canvas) {
                 0.8,
                 earthPos.z + colDir.z * (southTarget - COL.earth.dist)
             );
-        } else {
-            horizonDisc.visible = false;
         }
 
         // ── Determine the active camera for label syncing ──
@@ -450,14 +446,16 @@ export async function createPlanetController(canvas) {
         const elapsed = year - cfg.yearStart;
 
         // ── Determine orbital style ──
+        const darkAgeConfigs = ['breakup', 'round-table', 'deluge', 'post-deluge', 'venus-returns', 'stabilization'];
+        const isDarkAge = darkAgeConfigs.includes(cfg.id);
         let style = 'none';
         if (cfg.id === 'golden-age') style = 'collinear';
-        else if (cfg.id === 'round-table') style = 'roundTable';
-        else if (cfg.id === 'stabilization' || cfg.id === 'modern-solar') style = 'modern';
+        else if (isDarkAge) style = 'darkAge';
+        else if (cfg.id === 'modern-solar') style = 'modern';
 
         if (style !== curStyle) {
             setGroupVis(oLines.collinear, style === 'collinear');
-            setGroupVis(oLines.roundTable, style === 'roundTable');
+            setGroupVis(oLines.roundTable, style === 'darkAge' || style === 'roundTable');
             setGroupVis(oLines.modern, style === 'modern');
             curStyle = style;
 
@@ -468,7 +466,7 @@ export async function createPlanetController(canvas) {
             if (style === 'collinear') {
                 camPosGoal.set(0, 22, 28);
                 camLookGoal.set(0, 0, 0);
-            } else if (style === 'roundTable') {
+            } else if (style === 'darkAge' || style === 'roundTable') {
                 camPosGoal.set(0, 22, 22);
                 camLookGoal.set(0, 0, 0);
             } else if (style === 'modern') {
@@ -490,14 +488,23 @@ export async function createPlanetController(canvas) {
 
         // ── Position by style ──
         if (style === 'collinear') placeCollinear(elapsed, cfg);
+        else if (style === 'darkAge') placeDarkAge(elapsed, cfg);
         else if (style === 'roundTable') placeRoundTable(elapsed, cfg);
         else if (style === 'modern') placeModern(elapsed, cfg);
         else placeFallback(cfg);
 
         // ═══════════ PLANET ANIMATION STATE PER PHASE ═══════════
 
-        // ── Saturn: Wheel of Heaven + ring transition ──
-        updateSaturnPhase(p, cfg, year, elapsed);
+        // ── Saturn: hidden in Dark Age (no longer seen); Wheel of Heaven + ring transition otherwise ──
+        if (style === 'darkAge') {
+            p.saturn.visible = false;
+            L.saturn.visible = false;
+            p.saturnGlow.visible = false;
+            p.saturnRings.visible = false;
+            p.wheelOfHeaven.visible = false;  // Wheel of Heaven (spoked star near Sun) — Golden Age only
+        } else {
+            updateSaturnPhase(p, cfg, year, elapsed);
+        }
 
         // ── Venus: plasmoid star / comet / dragon ──
         updateVenusPhase(p, cfg, year, elapsed);
@@ -515,10 +522,16 @@ export async function createPlanetController(canvas) {
         if (year >= MOON_CAPTURE_YEAR && p.earth.visible) {
             p.moon.visible = true;
             L.moon.visible = true;
-            const frac = Math.min(1, (year - MOON_CAPTURE_YEAR) / (-670 - MOON_CAPTURE_YEAR));
-            const periodDays = 10 + (27.3 - 10) * frac;
-            const daysElapsed = (year - MOON_CAPTURE_YEAR) * yl;
-            const moonAngle = (daysElapsed / periodDays) * Math.PI * 2;
+            let moonAngle;
+            if (style === 'darkAge') {
+                // Dark Age: Moon orbits Earth once per month (period = 1/12 year)
+                moonAngle = (elapsed / DA.moonPeriod) * Math.PI * 2;
+            } else {
+                const frac = Math.min(1, (year - MOON_CAPTURE_YEAR) / (-670 - MOON_CAPTURE_YEAR));
+                const periodDays = 10 + (27.3 - 10) * frac;
+                const daysElapsed = (year - MOON_CAPTURE_YEAR) * yl;
+                moonAngle = (daysElapsed / periodDays) * Math.PI * 2;
+            }
             p.moon.position.set(
                 p.earth.position.x + MOON_ORBIT_RADIUS * Math.cos(moonAngle),
                 p.earth.position.y + MOON_ORBIT_RADIUS * Math.sin(moonAngle) * 0.25,
@@ -540,9 +553,10 @@ export async function createPlanetController(canvas) {
         if (style === 'collinear') {
             orbitCounts.column = Math.abs(elapsed); // entire column orbits once per Earth year
             orbitCounts.earth = Math.abs(elapsed);
+        } else if (style === 'darkAge') {
+            orbitCounts['solar orbit'] = Math.abs(elapsed / DA.solarPeriod);
+            orbitCounts['circle rotation'] = Math.abs(elapsed / DA.internalPeriod);
         } else if (style === 'roundTable') {
-            // Synchronous: all planets orbit barycenter once per year
-            // AND the whole array orbits Sun once per year
             orbitCounts['solar orbit'] = Math.abs(elapsed / RT.solarPeriod);
             orbitCounts['internal rot'] = Math.abs(elapsed / RT.internalPeriod);
         } else if (style === 'modern') {
@@ -554,9 +568,13 @@ export async function createPlanetController(canvas) {
             orbitCounts.saturn = Math.abs(elapsed / 29.46);
         }
         if (year >= MOON_CAPTURE_YEAR) {
-            const frac = Math.min(1, (year - MOON_CAPTURE_YEAR) / (-670 - MOON_CAPTURE_YEAR));
-            const periodDays = 10 + (27.3 - 10) * frac;
-            orbitCounts.moon = Math.abs((year - MOON_CAPTURE_YEAR) * yl / periodDays);
+            if (style === 'darkAge') {
+                orbitCounts.moon = Math.abs(elapsed / DA.moonPeriod);
+            } else {
+                const frac = Math.min(1, (year - MOON_CAPTURE_YEAR) / (-670 - MOON_CAPTURE_YEAR));
+                const periodDays = 10 + (27.3 - 10) * frac;
+                orbitCounts.moon = Math.abs((year - MOON_CAPTURE_YEAR) * yl / periodDays);
+            }
         }
 
         // ── Update HUD overlay ──
@@ -610,9 +628,10 @@ export async function createPlanetController(canvas) {
         const isModern = (id === 'modern-solar');
         const isDormant = (id === 'post-deluge');
 
-        // Plasmoid star (morphing 4-8 sides)
-        p.venusStar.visible = isGolden || isBreakup;
-        if (p.venusStarGlow) p.venusStarGlow.visible = isGolden || isBreakup;
+        // Plasmoid star only in Golden Age; in Dark Age show Venus as sphere on the circle (no star)
+        const showPlasmoidStar = (curStyle !== 'darkAge') && (isGolden || isBreakup);
+        p.venusStar.visible = showPlasmoidStar;
+        if (p.venusStarGlow) p.venusStarGlow.visible = showPlasmoidStar;
         if (isGolden) {
             p.venusStar.material.color.set(0xffffff);
             p.venusStar.material.emissive.set(0xffffff);
@@ -639,10 +658,10 @@ export async function createPlanetController(canvas) {
             p.cometTail.material.opacity = 0.5 * (1 - progress);
         }
 
-        // Standard sphere Venus — hide when star or dormant
+        // Standard sphere Venus — hide when star shown (except in Dark Age: show sphere on circle)
         if (isGolden || isBreakup) {
-            p.venus.visible = false;
-            p.venusGlow.visible = false;
+            p.venus.visible = (curStyle === 'darkAge') && !!cfg.venus;
+            p.venusGlow.visible = (curStyle === 'darkAge') && !!cfg.venus;
         } else if (isDormant) {
             p.venus.visible = true;
             p.venusGlow.visible = false;
@@ -667,9 +686,10 @@ export async function createPlanetController(canvas) {
 
         // Sync Venus star position to Venus sphere position (golden-age / breakup)
         if (p.venusStar.visible) {
-            // During collinear, placeCollinear already set the Venus star position
-            // on the column — don't override it here.
-            if (curStyle !== 'collinear') {
+            if (curStyle === 'darkAge') {
+                // Dark Age: placeDarkAge already set p.venus.position on the circle
+                p.venusStar.position.copy(p.venus.position);
+            } else if (curStyle !== 'collinear') {
                 if (p.venus.visible) {
                     p.venusStar.position.copy(p.venus.position);
                 } else if (cfg.venus?.position) {
@@ -859,6 +879,42 @@ export async function createPlanetController(canvas) {
         p.uranus.visible = false; L.uranus.visible = false;
     }
 
+    // ── Dark Age placement (-3147 to -670) ──
+    // Saturn hidden (no longer seen). Earth, Venus, Mars, Mercury, Jupiter form a circle
+    // with nothing in center. Circle rotates 4x/year. Circle orbits Sun once per year.
+    function placeDarkAge(elapsed, cfg) {
+        const solarAngle = (elapsed / DA.solarPeriod) * Math.PI * 2;
+        const intAngle = (elapsed / DA.internalPeriod) * Math.PI * 2;  // 4 rotations per year
+
+        const bcX = DA.sunDist * Math.cos(solarAngle);
+        const bcZ = DA.sunDist * Math.sin(solarAngle);
+
+        p.sun.position.set(0, 0, 0);
+        sunLight.position.set(0, 0, 0);
+
+        const placeDA = (mesh, label, angleOffset, show) => {
+            if (!show) { mesh.visible = false; if (label) label.visible = false; return; }
+            mesh.visible = true; if (label) label.visible = true;
+            const a = intAngle + angleOffset;
+            mesh.position.set(
+                bcX + DA.circleRadius * Math.cos(a),
+                0,
+                bcZ + DA.circleRadius * Math.sin(a)
+            );
+        };
+
+        placeDA(p.earth, L.earth, 0, !!cfg.earth);
+        placeDA(p.venus, L.venus, (2 * Math.PI / 5) * 1, !!cfg.venus);
+        placeDA(p.mars, L.mars, (2 * Math.PI / 5) * 2, !!cfg.mars);
+        placeDA(p.mercury, L.mercury, (2 * Math.PI / 5) * 3, true);
+        placeDA(p.jupiter, L.jupiter, (2 * Math.PI / 5) * 4, true);  // always show Jupiter in Dark Age circle
+
+        if (p.venusStar?.visible) p.venusStar.position.copy(p.venus.position);
+
+        p.neptune.visible = false; L.neptune.visible = false;
+        p.uranus.visible = false; L.uranus.visible = false;
+    }
+
     // ── Modern placement (concentric around Sun) ──
     function placeModern(elapsed, cfg) {
         p.sun.position.set(0, 0, 0);
@@ -997,6 +1053,21 @@ function buildHUD(canvas) {
         fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif",
         color: '#e0e0e0',
     });
+
+    // Work in progress badge (top-right)
+    const wipEl = document.createElement('div');
+    Object.assign(wipEl.style, {
+        position: 'absolute',
+        top: '10px', right: '14px',
+        fontSize: '11px',
+        color: '#94a3b8',
+        opacity: '0.9',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '4px',
+    });
+    wipEl.innerHTML = '&#128295;&#65039; Work in progress';  // wrench emoji + text
+    el.appendChild(wipEl);
 
     const yearEl = document.createElement('div');
     Object.assign(yearEl.style, {

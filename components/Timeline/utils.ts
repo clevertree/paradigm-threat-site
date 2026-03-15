@@ -28,6 +28,39 @@ export function getEventYear(evt: { dates?: { start?: number | null; end?: numbe
   return d.end ?? null
 }
 
+interface EntryWithChildren {
+  id: string
+  dates?: { start?: number | null; end?: number; value?: number }[]
+  children?: EntryWithChildren[]
+}
+
+/** Find the parent entry that contains the given child id in the tree */
+function findParentEntry(entries: EntryWithChildren[], childId: string): EntryWithChildren | null {
+  for (const e of entries) {
+    if (e.children?.some(c => c.id === childId)) return e
+    const found = findParentEntry(e.children || [], childId)
+    if (found) return found
+  }
+  return null
+}
+
+/** Get event year, falling back to parent's year when event has no dates (e.g. child articles) */
+export function getEventYearWithInheritance(
+  evt: { id: string; dates?: { start?: number | null; end?: number; value?: number }[] } | null | undefined,
+  entries: EntryWithChildren[]
+): number | null {
+  if (!evt) return null
+  const y = getEventYear(evt)
+  if (y != null) return y
+  let parent = findParentEntry(entries, evt.id)
+  while (parent) {
+    const py = getEventYear(parent)
+    if (py != null) return py
+    parent = findParentEntry(entries, parent.id)
+  }
+  return null
+}
+
 function formatYear(year: number, _calendar?: string): string {
   const era = year <= 0 ? 'BCE' : 'CE'
   const absYear = Math.abs(year)
