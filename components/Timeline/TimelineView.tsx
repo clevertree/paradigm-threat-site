@@ -262,6 +262,22 @@ export function TimelineView() {
     tts.play(segments, segmentIndex)
   }, [tts])
 
+  /** Skip Back: when at first segment, go to previous event in timeline (restart TTS from there) */
+  const handleSlideshowPrev = useCallback(() => {
+    const { currentSegmentIndex, segments } = tts.state
+    if (currentSegmentIndex <= 0 && segments.length > 0) {
+      const currentId = segments[0]?.id
+      if (currentId) {
+        const idx = events.findIndex(e => e.id === currentId)
+        if (idx > 0) {
+          handlePlayEvent(events[idx - 1]!)
+          return
+        }
+      }
+    }
+    tts.prev()
+  }, [tts, events, handlePlayEvent])
+
   // Stop TTS when the component unmounts
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => () => { tts.stop() }, [])
@@ -576,7 +592,7 @@ export function TimelineView() {
           )}
           {viewMode === 'animation-3d' && (
             <div className="relative w-full flex-1 min-h-[400px]" style={{ minHeight: 400 }}>
-              <AnimationPlanetView selectedEvent={selected} entries={entries} />
+              <AnimationPlanetView selectedEvent={selected} entries={entries} events={events} onSelectEvent={handleSelectEvent} />
             </div>
           )}
           {/* For non-full-canvas views: below sm show article only; non-fullscreen always article */}
@@ -806,7 +822,7 @@ export function TimelineView() {
             )}
             {viewMode === 'animation-3d' && (
               <div className="relative w-full h-full min-h-[400px]" style={{ minHeight: 400 }}>
-                <AnimationPlanetView selectedEvent={selected} entries={entries} />
+                <AnimationPlanetView selectedEvent={selected} entries={entries} events={events} onSelectEvent={handleSelectEvent} />
               </div>
             )}
           </div>
@@ -856,7 +872,7 @@ export function TimelineView() {
           availablePiperVoices={tts.availablePiperVoices}
           onPause={tts.pause}
           onNext={tts.next}
-          onPrev={tts.prev}
+          onPrev={handleSlideshowPrev}
           onStop={handleStopTTS}
           onClearError={tts.clearError}
           onSetVoice={tts.setVoice}

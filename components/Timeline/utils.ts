@@ -88,6 +88,27 @@ export function getEventYearForSim(
   return getDefaultSimYearForChapter(ch)
 }
 
+/** Find the event whose year is closest to the given sim year. Uses getEventYearWithInheritance. */
+export function findNearestEventToYear(
+  events: { id: string; md_path?: string; dates?: { start?: number | null; end?: number; value?: number }[] }[],
+  year: number,
+  entries: { id: string; dates?: { start?: number | null; end?: number }[]; children?: unknown[] }[] = []
+): typeof events[0] | null {
+  if (events.length === 0) return null
+  let best: typeof events[0] | null = null
+  let bestDist = Infinity
+  for (const evt of events) {
+    const y = getEventYearWithInheritance(evt, entries)
+    if (y == null) continue
+    const dist = Math.abs(y - year)
+    if (dist < bestDist) {
+      bestDist = dist
+      best = evt
+    }
+  }
+  return best
+}
+
 /** Start year for timeline positioning, with chapter fallback when no dates. */
 export function getEventStartYearWithFallback(
   evt: { id?: string; md_path?: string; dates?: { start?: number | null; end?: number }[] } | null | undefined,

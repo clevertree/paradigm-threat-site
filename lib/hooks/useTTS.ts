@@ -985,24 +985,35 @@ export function useTTS() {
 
     const next = useCallback(() => {
         const { currentSegmentIndex, segments } = state
+        if (segments.length === 0) {
+            console.error('[TTS] Skip Forward: no segments loaded')
+            return
+        }
         if (currentSegmentIndex + 1 < segments.length) {
             speak(currentSegmentIndex + 1, segments, 0).catch((err) => {
-                console.error('TTS next error:', err)
+                console.error('[TTS] Skip Forward failed:', err)
                 setState(prev => ({ ...prev, error: `TTS error: ${err instanceof Error ? err.message : String(err)}` }))
                 stop()
             })
-        } else stop()
+        } else {
+            stop()
+        }
     }, [state, speak, stop])
 
     const prev = useCallback(() => {
         const { currentSegmentIndex, segments } = state
+        if (segments.length === 0) {
+            console.error('[TTS] Skip Back: no segments loaded')
+            return
+        }
         if (currentSegmentIndex > 0) {
             speak(currentSegmentIndex - 1, segments, 0).catch((err) => {
-                console.error('TTS prev error:', err)
+                console.error('[TTS] Skip Back failed:', err)
                 setState(prev => ({ ...prev, error: `TTS error: ${err instanceof Error ? err.message : String(err)}` }))
                 stop()
             })
         }
+        // At first segment: no-op (expected); no log to avoid noise
     }, [state, speak, stop])
 
     const setVoice = useCallback((voice: SpeechSynthesisVoice | null) => {

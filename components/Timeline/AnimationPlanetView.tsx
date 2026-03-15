@@ -12,20 +12,22 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { Play, Pause, RotateCcw } from 'lucide-react'
 import type { TimelineEntry } from '@/components/TimelineContext'
-import { getEventYearForSim } from './utils'
+import { getEventYearForSim, findNearestEventToYear } from './utils'
 
 interface AnimationPlanetViewProps {
-    onSelectEvent?: (id: string) => void
+    onSelectEvent?: (entry: TimelineEntry) => void
     /** When set and event has a year in [-5000, -670], sync planet sim to that year */
     selectedEvent?: TimelineEntry | null
     /** Hierarchical entries; used to inherit parent year when event has no dates */
     entries?: TimelineEntry[]
+    /** All events; used to select nearest event when year slider changes */
+    events?: TimelineEntry[]
 }
 
 const MIN_YEAR = -5000
 const MAX_YEAR = 3000  // CE years use modern solar config
 
-export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = [] }: AnimationPlanetViewProps) {
+export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = [], events = [] }: AnimationPlanetViewProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const ctrlRef = useRef<any>(null)
     const eventYear = getEventYearForSim(selectedEvent, entries)
@@ -236,7 +238,14 @@ export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = []
                     min={MIN_YEAR}
                     max={MAX_YEAR}
                     value={year}
-                    onChange={e => updateYear(+e.target.value)}
+                    onChange={e => {
+                        const y = +e.target.value
+                        updateYear(y)
+                        if (onSelectEvent && events.length > 0) {
+                            const nearest = findNearestEventToYear(events, y, entries)
+                            if (nearest) onSelectEvent(nearest)
+                        }
+                    }}
                     className="flex-1 accent-purple-500 cursor-pointer"
                 />
 

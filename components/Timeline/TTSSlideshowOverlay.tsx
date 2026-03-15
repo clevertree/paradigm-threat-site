@@ -517,7 +517,14 @@ export function TTSSlideshowOverlay({
                 {/* Transport */}
                 <div className="flex items-center gap-6 pointer-events-auto">
                     <button
-                        onClick={e => { e.stopPropagation(); onPrev() }}
+                        onClick={e => {
+                            e.stopPropagation()
+                            try {
+                                onPrev()
+                            } catch (err) {
+                                console.error('[TTS Slideshow] Skip Back failed:', err)
+                            }
+                        }}
                         className="text-white/60 hover:text-white transition-colors"
                         aria-label="Previous event"
                     >
@@ -534,7 +541,14 @@ export function TTSSlideshowOverlay({
                         }
                     </button>
                     <button
-                        onClick={e => { e.stopPropagation(); onNext() }}
+                        onClick={e => {
+                            e.stopPropagation()
+                            try {
+                                onNext()
+                            } catch (err) {
+                                console.error('[TTS Slideshow] Skip Forward failed:', err)
+                            }
+                        }}
                         className="text-white/60 hover:text-white transition-colors"
                         aria-label="Next event"
                     >
@@ -722,7 +736,8 @@ function PlanetSlideCanvas({ active, initialYear }: { active: boolean; initialYe
             ctrl.setYear(yearRef.current)
             if (ctrl.resize) ctrl.resize()
 
-            const isModernEra = initialYear > PLANET_BC_MAX  // -670: loop within Dark Age; only CE stays fixed
+            const isModernEra = initialYear > PLANET_BC_MAX  // -670: CE plays forward to 3000
+            const CE_END_YEAR = 3000
             // Loop within era containing initialYear — never jump to 5000 BCE for dark/golden age events
             const loopStart = initialYear <= -4077 ? PLANET_BC_MIN
                 : initialYear <= -3147 ? -4077
@@ -738,7 +753,7 @@ function PlanetSlideCanvas({ active, initialYear }: { active: boolean; initialYe
                 // 1× speed: 0.1 years per second → 1 full Earth orbit every 10 seconds
                 yearRef.current += 0.1 * dt
                 if (isModernEra) {
-                    yearRef.current = Math.min(yearRef.current, initialYear)
+                    yearRef.current = Math.min(yearRef.current, CE_END_YEAR)
                 } else {
                     if (yearRef.current > PLANET_BC_MAX) yearRef.current = loopStart
                 }
