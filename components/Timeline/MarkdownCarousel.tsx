@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import Markdown from 'markdown-to-jsx'
 import type { TimelineEntry } from '@/components/TimelineContext'
 import { PopImage, ShareLinks } from '@/components'
+import { getLqipFromIndex, resolveImagePath } from '@/components/helpers/imageHelper'
 import { transformImageCaptions } from './markdownTransform'
 import { formatDateRange } from './utils'
 
@@ -40,6 +41,7 @@ export function MarkdownCarousel({
 }: MarkdownCarouselProps) {
   const [mdContent, setMdContent] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
+  const [index, setIndex] = useState<Record<string, unknown> | null>(null)
 
   const currentIndex = events.findIndex((e) => e.id === selectedId)
   const currentEntry = currentIndex >= 0 ? events[currentIndex]! : null
@@ -47,6 +49,14 @@ export function MarkdownCarousel({
   const hasNext = currentIndex >= 0 && currentIndex < events.length - 1
   const prevEntry = hasPrev ? events[currentIndex! - 1]! : null
   const nextEntry = hasNext ? events[currentIndex! + 1]! : null
+
+  useEffect(() => {
+    if (!baseUrl) return
+    fetch(`${baseUrl}/index.json`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => setIndex(data ?? null))
+      .catch(() => setIndex(null))
+  }, [baseUrl])
 
   useEffect(() => {
     if (!currentEntry) {
@@ -111,19 +121,27 @@ export function MarkdownCarousel({
                 <Markdown
                   options={{
                     overrides: {
-                      img: (props) => (
-                        <PopImage
-                          {...props}
-                          basePath={baseUrl}
-                          className={props.className}
-                        />
-                      ),
-                      PopImage: (props: { children?: React.ReactNode;[key: string]: unknown }) => {
-                        const captionText = typeof props.children === 'string' ? props.children : null
+                      img: (props) => {
+                        const resolved = typeof props.src === 'string' ? resolveImagePath(props.src, baseUrl).split('?')[0] : ''
+                        const lqip = index && resolved ? getLqipFromIndex(index, resolved) : undefined
                         return (
                           <PopImage
                             {...props}
                             basePath={baseUrl}
+                            lqip={lqip}
+                            className={props.className}
+                          />
+                        )
+                      },
+                      PopImage: (props: { children?: React.ReactNode;[key: string]: unknown }) => {
+                        const captionText = typeof props.children === 'string' ? props.children : null
+                        const resolved = typeof props.src === 'string' ? resolveImagePath(props.src as string, baseUrl).split('?')[0] : ''
+                        const lqip = index && resolved ? getLqipFromIndex(index, resolved) : undefined
+                        return (
+                          <PopImage
+                            {...props}
+                            basePath={baseUrl}
+                            lqip={lqip}
                             className={props.className as string}
                           >
                             {captionText ? (

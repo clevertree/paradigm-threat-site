@@ -13,6 +13,9 @@ interface OptimizedImageProps {
 /** DOM-safe subset of props to pass to <img> (exclude custom/React-only props). */
 const IMG_ATTRS = new Set(['src', 'alt', 'width', 'height', 'loading', 'title', 'style', 'referrerPolicy', 'sizes', 'crossOrigin', 'decoding', 'fetchPriority'])
 
+/** 1x1 transparent GIF — use instead of empty string to avoid browser "download whole page" warning */
+const EMPTY_SRC_PLACEHOLDER = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
+
 export default function OptimizedImage({ children, className, ...props }: OptimizedImageProps) {
     const srcProps: OptimizedImageProps = processImageProps({ ...props, className }, props.basePath)
     const [isVisible, setIsVisible] = useState(false)
@@ -83,7 +86,7 @@ export default function OptimizedImage({ children, className, ...props }: Optimi
                     alt={alt}
                     className={`w-full h-auto transition-opacity duration-700 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
                     {...finalProps}
-                    src={isVisible ? (finalProps.src as string | undefined) : ''}
+                    src={isVisible && finalProps.src ? (finalProps.src as string) : EMPTY_SRC_PLACEHOLDER}
                 />
             </div>
             {children
