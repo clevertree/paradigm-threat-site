@@ -12,7 +12,7 @@ import { ArticleTTSScrollSync } from '@/components/ArticleTTS/ArticleTTSScrollSy
 import { stripMarkdownForTTS, buildParagraphStarts } from '@/components/Timeline/ttsHelpers'
 import { SuspenseLoader } from '@client'
 
-export const CatchAllClient = memo(function CatchAllClient () {
+export const CatchAllClient = memo(function CatchAllClient() {
   const params = useParams()
   const pathname = usePathname()
   const { fileList } = useFiles()
@@ -81,7 +81,7 @@ export const CatchAllClient = memo(function CatchAllClient () {
             setMds([])
             try {
               if (pathname) localStorage.setItem('pt-last-read-path', pathname)
-            } catch (_) {}
+            } catch (_) { }
           }
 
           let current = fileList
@@ -160,7 +160,7 @@ export const CatchAllClient = memo(function CatchAllClient () {
                       content: mdxSource
                     }
                   }
-                } catch (e) {}
+                } catch (e) { }
               }))
               if (isMounted && loadingPathRef.current === requestPath) setMdContents(contents)
             }
@@ -381,26 +381,27 @@ export const CatchAllClient = memo(function CatchAllClient () {
                   {mds.map(file => {
                     const title = mdContents[file]?.title || file.replace(/_/g, ' ').replace(/\.md$/, '')
                     return (
-                    <Link
-                      key={file}
-                      href={`/${path ? `${path}/${file}` : file}`}
-                      className="group p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-emerald-500 dark:hover:border-emerald-500 transition-all shadow-sm hover:shadow-md"
-                    >
-                      <div className="flex items-center justify-between font-bold text-slate-900 dark:text-white">
-                        <div className="flex flex-col">
-                          <span className="text-[11px] font-normal text-slate-500 dark:text-slate-400 mb-1">
-                            {file}
-                          </span>
-                          <span className="text-xl group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                            {title}
-                          </span>
+                      <Link
+                        key={file}
+                        href={`/${path ? `${path}/${file}` : file}`}
+                        className="group p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-emerald-500 dark:hover:border-emerald-500 transition-all shadow-sm hover:shadow-md"
+                      >
+                        <div className="flex items-center justify-between font-bold text-slate-900 dark:text-white">
+                          <div className="flex flex-col">
+                            <span className="text-[11px] font-normal text-slate-500 dark:text-slate-400 mb-1">
+                              {file}
+                            </span>
+                            <span className="text-xl group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                              {title}
+                            </span>
+                          </div>
+                          <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
                         </div>
-                        <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </div>
-                    </Link>
-                  )})}
+                      </Link>
+                    )
+                  })}
                 </div>
               </div>
             )}

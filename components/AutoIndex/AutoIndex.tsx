@@ -204,47 +204,42 @@ export default function AutoIndex({
 
       {showDocs && mdFiles.length > 0 && (
         <div className="space-y-6">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="w-1 h-8 bg-emerald-500 rounded-full" />
-            <h2 className="text-2xl font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-              Documents
-            </h2>
-          </div>
           <div className="grid grid-cols-1 gap-4">
             {mdFiles.map((file) => {
               const fileName = file.replace(/_/g, ' ').replace(/\.md$/, '')
               const title = mdContents[file]?.title || fileName
               return (
-              <Link
-                key={file}
-                href={`${hrefBase}/${file}`}
-                className="group p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-emerald-500 dark:hover:border-emerald-500 transition-all shadow-sm hover:shadow-md"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex flex-col font-bold text-slate-900 dark:text-white">
-                    <span className="doc-filename text-[11px] font-normal text-slate-500 dark:text-slate-400 mb-1">
-                      {file}
-                    </span>
-                    <span className="doc-title text-xl group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                      {title}
-                    </span>
+                <Link
+                  key={file}
+                  href={`${hrefBase}/${file}`}
+                  className="group p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-emerald-500 dark:hover:border-emerald-500 transition-all shadow-sm hover:shadow-md"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col font-bold text-slate-900 dark:text-white">
+                      <span className="doc-filename text-[11px] font-normal text-slate-500 dark:text-slate-400 mb-1">
+                        {file}
+                      </span>
+                      <span className="doc-title text-xl group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+                        {title}
+                      </span>
+                    </div>
+                    <svg
+                      className="w-5 h-5 shrink-0 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
                   </div>
-                  <svg
-                    className="w-5 h-5 shrink-0 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </div>
-              </Link>
-            )})}
+                </Link>
+              )
+            })}
           </div>
         </div>
       )}

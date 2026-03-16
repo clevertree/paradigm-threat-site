@@ -5,7 +5,7 @@ import { FileText, Calendar, ChevronRight } from 'lucide-react'
 import { useTimeline } from '@/components/TimelineContext'
 import { formatDateRange } from './utils'
 import type { TimelineEntry } from '@/components/TimelineContext'
-import type { ExpansionMode } from './TimelineView'
+import type { ExpansionMode } from './constants'
 
 /* ── Depth-aware visual tokens ─────────────────────────────────── */
 
