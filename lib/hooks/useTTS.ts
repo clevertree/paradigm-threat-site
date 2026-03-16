@@ -377,7 +377,7 @@ export function useTTS() {
             currentSentenceIndex: -1,
             piperFallbackOffer: null,
         }))
-    }, [])
+    }, [releaseWakeLock])
 
     const clearError = useCallback(() => {
         setState(prev => ({ ...prev, error: null }))
@@ -909,7 +909,7 @@ export function useTTS() {
             setState(prev => ({ ...prev, error: `TTS error: ${err instanceof Error ? err.message : String(err)}` }))
             stop()
         })
-    }, [speak, stop])
+    }, [speak, stop, acquireWakeLock])
 
     /**
      * Jump playback to a specific sentence within the current segment.
@@ -981,7 +981,7 @@ export function useTTS() {
                 stop()
             })
         }
-    }, [state.isPlaying, state.currentSegmentIndex, state.segments, speak, stop])
+    }, [state.isPlaying, state.currentSegmentIndex, state.segments, state.provider, speak, stop, acquireWakeLock, releaseWakeLock])
 
     const next = useCallback(() => {
         const { currentSegmentIndex, segments } = state

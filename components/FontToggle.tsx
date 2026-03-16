@@ -16,24 +16,26 @@ const FONT_STYLES: Record<FontKey, string> = {
     mono: "'JetBrains Mono', 'Courier New', monospace",
 }
 
+function applyFont(key: FontKey) {
+    if (key === 'garamond') {
+        document.documentElement.removeAttribute('data-font')
+    } else {
+        document.documentElement.setAttribute('data-font', key)
+    }
+}
+
 export default function FontToggle() {
     const [font, setFont] = useState<FontKey>('garamond')
 
     useEffect(() => {
         const saved = localStorage.getItem('content-font') as FontKey | null
         if (saved && FONTS.some(f => f.key === saved)) {
-            setFont(saved)
-            applyFont(saved)
+            queueMicrotask(() => {
+                setFont(saved)
+                applyFont(saved)
+            })
         }
     }, [])
-
-    function applyFont(key: FontKey) {
-        if (key === 'garamond') {
-            document.documentElement.removeAttribute('data-font')
-        } else {
-            document.documentElement.setAttribute('data-font', key)
-        }
-    }
 
     const cycleFont = () => {
         const idx = FONTS.findIndex(f => f.key === font)

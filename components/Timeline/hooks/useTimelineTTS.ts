@@ -67,7 +67,9 @@ export function useTimelineTTS({
   }, [tts])
 
   const ttsRef = useRef(tts)
-  ttsRef.current = tts
+  useEffect(() => {
+    ttsRef.current = tts
+  }, [tts])
   useEffect(() => {
     const onPopState = (_e: PopStateEvent) => {
       if (slideshowOpenRef.current) {
@@ -88,7 +90,7 @@ export function useTimelineTTS({
     }
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
-  }, [setFullPage, setShowContentDrawer])
+  }, [setFullPage, setShowContentDrawer, showContentDrawerRef])
 
   const handleSeekToSegment = useCallback(
     (segmentIndex: number) => {

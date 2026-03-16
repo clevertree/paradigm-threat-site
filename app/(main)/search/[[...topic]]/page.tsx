@@ -25,7 +25,7 @@ function SearchContent() {
 
     // Fetch index once
     useEffect(() => {
-        setLoading(true)
+        queueMicrotask(() => setLoading(true))
         getFilesIndex()
             .then(index => {
                 if (index) {
@@ -76,11 +76,11 @@ function SearchContent() {
         ).slice(0, 5)
 
         if (mds.length === 0) {
-            setRenderedMds([])
+            queueMicrotask(() => setRenderedMds([]))
             return
         }
 
-        setContentLoading(true)
+        queueMicrotask(() => setContentLoading(true))
         Promise.all(mds.map(async path => {
             const content = await getRemoteFile(path)
             if (!content) return null

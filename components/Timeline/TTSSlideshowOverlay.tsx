@@ -177,7 +177,7 @@ export function TTSSlideshowOverlay({
             })
         }, intervalMs)
         return () => clearInterval(t)
-    }, [allImages.length, intervalMs, ANIM_PASSES])
+    }, [allImages, intervalMs, ANIM_PASSES])
 
     // Preload the next few images so crossfade never reveals an unloaded src
     useEffect(() => {
@@ -361,7 +361,7 @@ export function TTSSlideshowOverlay({
     const currentSegId = ttsState.segments[ttsState.currentSegmentIndex]?.id ?? null
 
     return (
-        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+         
         <div
             className="fixed inset-0 z-[300] bg-black overflow-hidden"
             onMouseMove={handleInteraction}

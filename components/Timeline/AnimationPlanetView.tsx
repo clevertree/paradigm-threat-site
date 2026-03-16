@@ -197,7 +197,7 @@ export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = []
             playRef.current = false
             cancelAnimationFrame(raf)
         }
-    }, [playing, speed, updateYear])
+    }, [playing, speed, updateYear, BC_MAX, CE_END_YEAR])
 
     const handleReset = useCallback(() => {
         setPlaying(false)

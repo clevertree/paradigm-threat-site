@@ -14,7 +14,7 @@
     "cypress:e2e:prod": "CYPRESS_BASE_URL=http://localhost:8081 cypress run --e2e",
     "cypress:open": "cypress open",
     "cypress-prod:run": "CYPRESS_BASE_URL=https://paradigmthreat.net cypress run",
-    "lint": "next lint",
+    "lint": "eslint . --max-warnings 0",
     "standard": "npx standard --fix",
     "prepare": "husky install"
   },

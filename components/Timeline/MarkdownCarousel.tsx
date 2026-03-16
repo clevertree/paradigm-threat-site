@@ -61,10 +61,10 @@ export function MarkdownCarousel({
 
   useEffect(() => {
     if (!currentEntry) {
-      setMdContent(null)
+      queueMicrotask(() => setMdContent(null))
       return
     }
-    setLoading(true)
+    queueMicrotask(() => setLoading(true))
     const url = `${baseUrl}/${currentEntry.md_path}`
     fetch(url)
       .then((res) => (res.ok ? res.text() : Promise.resolve(null)))

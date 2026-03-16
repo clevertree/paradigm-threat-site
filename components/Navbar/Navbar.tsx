@@ -16,7 +16,7 @@ const Navbar = memo(function Navbar({ fileList }: NavbarProps) {
 
     // Close menu when path changes
     useEffect(() => {
-        setIsOpen(false)
+        queueMicrotask(() => setIsOpen(false))
     }, [pathname])
 
     const navLinks = [
@@ -34,6 +34,7 @@ const Navbar = memo(function Navbar({ fileList }: NavbarProps) {
                 <div className="flex justify-between items-center h-16 md:h-20">
                     <div className="flex items-center gap-8">
                         <Link href="/" className="hover:opacity-80 transition-opacity flex-shrink-0">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src="/site/header.png" alt="Header Logo" className="h-10 md:h-14 w-auto" />
                         </Link>
 

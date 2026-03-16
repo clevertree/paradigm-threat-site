@@ -103,7 +103,7 @@ async function readTextFileKeywords(relativeFilePath) {
   const strippedFileContent = fileContent.replace(TEXT_LINE_IGNORE_PATTERN, '')
 
   let match; const keywordObj = {}
-  // eslint-disable-next-line no-cond-assign
+   
   while (match = TEXT_KEYWORD_PATTERN.exec(strippedFileContent)) {
     const keyword = match[0].toLowerCase()
     if (!TEXT_KEYWORD_IGNORE_PATTERN.test(keyword)) {

@@ -47,7 +47,9 @@ export function ArticleTTSProvider({
 }: ArticleTTSProviderProps) {
   const tts = useTTS()
   const ttsRef = useRef(tts)
-  ttsRef.current = tts
+  useEffect(() => {
+    ttsRef.current = tts
+  }, [tts])
 
   const segment = useMemo(() => ({
     id: 'article',
@@ -70,7 +72,7 @@ export function ArticleTTSProvider({
 
   useEffect(
     () => () => ttsRef.current.stop(),
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- cleanup on unmount only
+     
     []
   )
 

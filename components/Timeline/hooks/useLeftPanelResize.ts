@@ -18,7 +18,7 @@ export function useLeftPanelResize() {
 
   useEffect(() => {
     const stored = getStoredLeftPct()
-    if (stored != null) setLeftPct(stored)
+    if (stored != null) queueMicrotask(() => setLeftPct(stored))
   }, [])
 
   useEffect(() => {

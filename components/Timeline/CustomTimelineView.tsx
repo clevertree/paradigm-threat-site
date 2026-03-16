@@ -197,17 +197,19 @@ export function CustomTimelineView({ expansionMode, onSelectEvent, selectedId }:
   const [expandedOverrides, setExpandedOverrides] = useState<Record<string, boolean>>({})
 
   useEffect(() => {
-    setExpandedOverrides({})
+    queueMicrotask(() => setExpandedOverrides({}))
   }, [expansionMode])
 
   useEffect(() => {
     if (!selectedId) return
     const path = findPathToEntry(entries, selectedId)
     if (!path?.length) return
-    setExpandedOverrides((prev) => {
-      const next = { ...prev }
-      for (const id of path) next[id] = true
-      return next
+    queueMicrotask(() => {
+      setExpandedOverrides((prev) => {
+        const next = { ...prev }
+        for (const id of path) next[id] = true
+        return next
+      })
     })
   }, [selectedId, entries])
 

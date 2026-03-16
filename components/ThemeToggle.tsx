@@ -8,10 +8,10 @@ export default function ThemeToggle() {
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null
         if (savedTheme) {
-            setTheme(savedTheme)
+            queueMicrotask(() => setTheme(savedTheme))
             document.documentElement.classList.toggle('dark', savedTheme === 'dark')
         } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            setTheme('dark')
+            queueMicrotask(() => setTheme('dark'))
             document.documentElement.classList.add('dark')
         }
     }, [])

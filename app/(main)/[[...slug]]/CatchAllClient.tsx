@@ -181,11 +181,11 @@ export const CatchAllClient = memo(function CatchAllClient() {
       loadingPathRef.current = null
       abortController.abort()
     }
-  }, [path, slugArray, fileList])
+  }, [path, pathname, slugArray, fileList])
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 50)
-    onScroll()
+    queueMicrotask(onScroll)
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])

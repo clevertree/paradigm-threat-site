@@ -65,17 +65,16 @@ export function TimelineGalleryProvider({
 
     const [currentIndex, setCurrentIndex] = useState(-1)
     const [isOpen, setIsOpen] = useState(false)
+    const [imagesState, setImagesState] = useState<GalleryImage[]>([...globalImages])
 
     // Use a ref for the mutable images array to avoid re-render loops during registration.
     const imagesRef = useRef<GalleryImage[]>([...globalImages])
 
-    // When globalImages changes (events reload), reset the ref
+    // When globalImages changes (events reload), reset the ref and state
     useEffect(() => {
         imagesRef.current = [...globalImages]
-        setImagesState([...globalImages])
+        queueMicrotask(() => setImagesState([...globalImages]))
     }, [globalImages])
-
-    const [imagesState, setImagesState] = useState<GalleryImage[]>([...globalImages])
 
     /**
      * registerImage: When PopImage mounts, it calls this.

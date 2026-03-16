@@ -132,6 +132,7 @@ function GalleryImageItem({
             style={{ willChange: 'transform, opacity', maxHeight: 'calc(100vh - 8rem)' }}
         >
             <div className="relative flex items-center justify-center min-h-[200px] w-full" style={{ maxHeight: 'calc(100vh - 8rem)' }}>
+                {/* eslint-disable-next-line @next/next/no-img-element -- gallery overlay: dynamic highResSrc, next/image not used here */}
                 <img
                     ref={imgRef}
                     src={image.highResSrc || image.src}
@@ -197,11 +198,11 @@ export function ImageGalleryOverlay() {
                         .then(text => setRemoteCaption(text))
                         .catch(() => setRemoteCaption(null));
                 } else {
-                    setRemoteCaption(null);
+                    queueMicrotask(() => setRemoteCaption(null));
                 }
             });
         } else {
-            setRemoteCaption(null);
+            queueMicrotask(() => setRemoteCaption(null));
         }
     }, [isOpen, currentImage])
 
@@ -310,6 +311,7 @@ export function ImageGalleryOverlay() {
                                             whileHover={{ opacity: 0.5, scale: 1.05 }}
                                             className="relative h-[25vh] aspect-square hidden lg:flex items-center justify-center rounded-2xl overflow-hidden"
                                         >
+                                            {/* eslint-disable-next-line @next/next/no-img-element -- nav thumbnail: API proxy path */}
                                             <img
                                                 src={`/api/image?path=${encodeURIComponent(prevImage.src)}&w=400`}
                                                 className="absolute inset-0 w-full h-full object-cover"
@@ -347,6 +349,7 @@ export function ImageGalleryOverlay() {
                                             whileHover={{ opacity: 0.5, scale: 1.05 }}
                                             className="relative h-[25vh] aspect-square hidden lg:flex items-center justify-center rounded-2xl overflow-hidden"
                                         >
+                                            {/* eslint-disable-next-line @next/next/no-img-element -- nav thumbnail: API proxy path */}
                                             <img
                                                 src={`/api/image?path=${encodeURIComponent(nextImage.src)}&w=400`}
                                                 className="absolute inset-0 w-full h-full object-cover"

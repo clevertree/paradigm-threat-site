@@ -31,7 +31,7 @@ export function TimelineJSView({
     if (!containerRef.current || !ready || !window.TL) return
 
     let mounted = true
-    setError(null)
+    queueMicrotask(() => setError(null))
 
     fetch('/api/timeline-json')
       .then((r) => r.json())

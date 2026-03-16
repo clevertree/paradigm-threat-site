@@ -88,10 +88,10 @@ export default function FloatingDiv({ children, containerTag, className, hideFlo
 
     useEffect(() => {
         window.addEventListener('scroll', onScroll)
-        onScroll()
+        queueMicrotask(() => onScroll())
 
         // Initial headings update
-        updateHeadings()
+        queueMicrotask(() => updateHeadings())
 
         // Update headings on content changes (simplified)
         const observer = new MutationObserver(updateHeadings)

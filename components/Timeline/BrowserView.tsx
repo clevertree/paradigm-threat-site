@@ -202,7 +202,7 @@ export function BrowserView({ initialPath }: BrowserViewProps) {
   // Fetch index.json
   useEffect(() => {
     let cancelled = false
-    setLoadingIndex(true)
+    queueMicrotask(() => setLoadingIndex(true))
     fetch(`${baseUrl}/index.json`)
       .then((res) => {
         if (!res.ok) throw new Error(`Failed to fetch index: ${res.status}`)
@@ -235,30 +235,34 @@ export function BrowserView({ initialPath }: BrowserViewProps) {
     if (!pathToUse) return
 
     if (!selectedPath) {
-      setSelectedPath(pathToUse)
+      queueMicrotask(() => setSelectedPath(pathToUse))
     }
 
     // Auto-expand ancestors of selected file
     const ancestors = Array.from(getAncestorPaths(pathToUse))
-    setExpandedDirs((prev) => {
-      const next = new Set(prev)
-      let changed = false
-      ancestors.forEach((a) => {
-        if (!next.has(a)) { next.add(a); changed = true }
+    queueMicrotask(() => {
+      setExpandedDirs((prev) => {
+        const next = new Set(prev)
+        let changed = false
+        ancestors.forEach((a) => {
+          if (!next.has(a)) { next.add(a); changed = true }
+        })
+        return changed ? next : prev
       })
-      return changed ? next : prev
     })
   }, [index, allFiles, selectedPath])
 
   // Handle initialPath changes (deep link)
   useEffect(() => {
     if (initialPath && index) {
-      setSelectedPath(initialPath)
+      queueMicrotask(() => setSelectedPath(initialPath))
       const ancestors = Array.from(getAncestorPaths(initialPath))
-      setExpandedDirs((prev) => {
-        const next = new Set(prev)
-        ancestors.forEach((a) => next.add(a))
-        return next
+      queueMicrotask(() => {
+        setExpandedDirs((prev) => {
+          const next = new Set(prev)
+          ancestors.forEach((a) => next.add(a))
+          return next
+        })
       })
     }
   }, [initialPath, index])
@@ -266,10 +270,10 @@ export function BrowserView({ initialPath }: BrowserViewProps) {
   // Fetch markdown content when selection changes
   useEffect(() => {
     if (!selectedPath) {
-      setMdContent(null)
+      queueMicrotask(() => setMdContent(null))
       return
     }
-    setLoadingContent(true)
+    queueMicrotask(() => setLoadingContent(true))
     const url = `${baseUrl}/${selectedPath}`
     fetch(url)
       .then((res) => (res.ok ? res.text() : Promise.resolve(null)))

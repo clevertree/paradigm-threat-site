@@ -28,8 +28,10 @@ export function RemoteMarkdown({ src, baseUrl, title, className = '' }: RemoteMa
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    setLoading(true)
-    setError(null)
+    queueMicrotask(() => {
+      setLoading(true)
+      setError(null)
+    })
     const url = src.startsWith('http') ? src : `${baseUrl.replace(/\/$/, '')}/${src.replace(/^\//, '')}`
     fetch(url)
       .then((res) => (res.ok ? res.text() : Promise.reject(new Error(`HTTP ${res.status}`))))

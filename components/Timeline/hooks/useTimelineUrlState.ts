@@ -14,16 +14,18 @@ export function useTimelineUrlState() {
   // Read ?fullscreen=1, ?view=<mode>, and event id from URL on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
-    if (params.get('fullscreen') === '1') setFullPage(true)
-    const viewParam = params.get('view') as TimelineViewMode | null
-    if (viewParam && (VIEW_MODES as readonly string[]).includes(viewParam)) {
-      setViewModeRaw(viewParam)
-      if (viewParam === 'browser') {
-        setFullPage(true)
-        const p = params.get('path')
-        if (p) setBrowserPath(p)
+    queueMicrotask(() => {
+      if (params.get('fullscreen') === '1') setFullPage(true)
+      const viewParam = params.get('view') as TimelineViewMode | null
+      if (viewParam && (VIEW_MODES as readonly string[]).includes(viewParam)) {
+        setViewModeRaw(viewParam)
+        if (viewParam === 'browser') {
+          setFullPage(true)
+          const p = params.get('path')
+          if (p) setBrowserPath(p)
+        }
       }
-    }
+    })
     const pathMatch = window.location.pathname.match(/^\/timeline\/(.+)$/)
     const evtId = pathMatch ? decodeURIComponent(pathMatch[1]) : params.get('event')
     if (evtId) initialEventIdRef.current = evtId

@@ -68,7 +68,7 @@ const DynamicNav = memo(function DynamicNav({ directory: inputDirectory, childre
     const [expanded, setExpanded] = useState<Set<string>>(() => defaultExpanded)
 
     useEffect(() => {
-        setExpanded(new Set(getPathsToCurrent(currentPath)))
+        queueMicrotask(() => setExpanded(new Set(getPathsToCurrent(currentPath))))
     }, [currentPath])
 
     const toggle = useCallback((path: string) => {

@@ -56,7 +56,7 @@ export function TimelineView() {
       const target = urlId ? (events.find((e) => e.id === urlId) ?? events[0]) : events[0]
       setSelected(target ?? null)
     }
-  }, [events, selected])
+  }, [events, selected, initialEventIdRef])
 
   const initialScrollDoneRef = useRef(false)
 
@@ -95,7 +95,7 @@ export function TimelineView() {
       document.removeEventListener('keydown', onKeyDown)
       document.body.style.overflow = ''
     }
-  }, [fullPage, setFullPage])
+  }, [fullPage, setFullPage, slideshowOpenRef])
 
   const handleSelectEvent = useCallback(
     (evt: TimelineEntry) => {
@@ -133,7 +133,8 @@ export function TimelineView() {
     if (!event) return
     const entry = eventsRef.current.find(e => e.id === event.id)
     if (entry && entry.id !== selectedIdRef.current) handleSelectEventRef.current(entry)
-  }, [tts.state.currentSegmentIndex])
+    // Omit tts.state.segments to avoid re-run loops when segment list reference changes
+  }, [tts.state.currentSegmentIndex]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const hierarchicalOptions = useMemo(() => {
     const result: { entry: TimelineEntry; depth: number }[] = []
@@ -184,7 +185,7 @@ export function TimelineView() {
 
     // Kick off on the next frame so React has a chance to commit the tree
     requestAnimationFrame(tryScroll)
-  }, [selected?.id])
+  }, [selected?.id, leftScrollRef])
 
   if (loading) {
     return (

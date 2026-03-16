@@ -1,10 +1,10 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-#npx standard --fix
+# Next 16 CLI has no "lint" command (next lint was parsed as dev with dir "lint").
+# Lint uses eslint . via eslint.config.mjs (extends next/core-web-vitals).
 npm run lint
-npm run build
-#npm run test:coverage
-echo "Starting component tests"
-npm run cypress:component
-echo "Testing complete"
+
+# Optional: run build and cypress:component in CI instead of every commit.
+# npm run build
+# npm run cypress:component

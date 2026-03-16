@@ -38,7 +38,7 @@ export default function OptimizedImage({ children, className, ...props }: Optimi
 
     useEffect(() => {
         if (priority) {
-            setIsVisible(true)
+            queueMicrotask(() => setIsVisible(true))
             return
         }
 
@@ -80,6 +80,8 @@ export default function OptimizedImage({ children, className, ...props }: Optimi
                 className={`relative w-full bg-slate-100 dark:bg-slate-900 overflow-hidden ${!isVisible ? 'animate-pulse' : ''}`}
                 style={containerStyle}
             >
+                {/* next/image not used: dynamic src/placeholder and aspect ratio from props */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                     ref={ref}
                     loading='lazy'

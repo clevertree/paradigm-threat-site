@@ -143,7 +143,7 @@ export default function ChatRoom({ channel: channelProp, title, className, mode 
             setCurrentChannelName(channelFromPath)
             setChannelContent(null)
         }
-    }, [channelFromPath])
+    }, [channelFromPath, currentChannelName])
 
     useEffect(() => {
         if (mode === 'full') {
