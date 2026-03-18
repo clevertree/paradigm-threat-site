@@ -173,6 +173,8 @@ export function useTTS() {
     /** Tracks consecutive Piper segment failures for auto-skip / fallback logic */
     const piperSegmentFailsRef = useRef(0)
     const segmentsRef = useRef<TTSSegment[]>([])
+    /** Dedupe Piper `ended` (some browsers fire twice; avoids double advance / replay) */
+    const piperEndedDedupeRef = useRef<{ key: string; t: number } | null>(null)
 
     /** Request screen wake lock (keeps screen on during playback) */
     const acquireWakeLock = useCallback(async () => {
@@ -519,13 +521,19 @@ export function useTTS() {
                             audioWatchdogRef.current = clearAudioWatchdog(audioWatchdogRef.current)
                             audioRef.current.onended = () => {
                                 audioWatchdogRef.current = clearAudioWatchdog(audioWatchdogRef.current)
-                                if (isPlayingRef.current && speakGenRef.current === gen) {
-                                    speak(segIndex, segments, sentenceIndex + 1).catch((err) => {
-                                        console.error('TTS next-sentence error:', err)
-                                        setState(prev => ({ ...prev, error: `TTS playback error: ${err instanceof Error ? err.message : String(err)}` }))
-                                        stop()
-                                    })
+                                if (!isPlayingRef.current || speakGenRef.current !== gen) return
+                                const dedupeKey = `${gen}:${segIndex}:${sentenceIndex}`
+                                const now = Date.now()
+                                const prev = piperEndedDedupeRef.current
+                                if (prev && prev.key === dedupeKey && now - prev.t < 900) {
+                                    return
                                 }
+                                piperEndedDedupeRef.current = { key: dedupeKey, t: now }
+                                speak(segIndex, segments, sentenceIndex + 1).catch((err) => {
+                                    console.error('TTS next-sentence error:', err)
+                                    setState(prev => ({ ...prev, error: `TTS playback error: ${err instanceof Error ? err.message : String(err)}` }))
+                                    stop()
+                                })
                             }
                             audioRef.current.onerror = (e) => {
                                 audioWatchdogRef.current = clearAudioWatchdog(audioWatchdogRef.current)
@@ -548,6 +556,15 @@ export function useTTS() {
                                 rate: rateRef.current,
                                 onStall: () => {
                                     if (speakGenRef.current !== gen) return
+                                    const el = audioRef.current
+                                    // Timer can fire while the clip is finishing (duration estimate vs decode).
+                                    // Retrying here replays the last sentence — classic "last paragraph twice" bug.
+                                    if (el && el.duration > 0 && isFinite(el.duration)) {
+                                        if (el.ended || el.currentTime >= el.duration - 0.45) {
+                                            console.warn('[TTS] Watchdog fired near clip end — ignoring (avoid duplicate sentence)')
+                                            return
+                                        }
+                                    }
                                     console.warn('[TTS] Audio watchdog fired — retrying sentence')
                                     handlePiperSegmentFail('Audio playback stalled (watchdog)', attempt)
                                 },
@@ -569,6 +586,8 @@ export function useTTS() {
                 // the next segment.  After 2 consecutive segment failures, pause and
                 // offer the user a "Switch to Speech API & Resume" button.
                 const handlePiperSegmentFail = (errorMsg: string, attempt: number = 0) => {
+                    // User paused/stopped or a newer speak() invalidated this generation
+                    if (!isPlayingRef.current || speakGenRef.current !== gen) return
                     if (attempt < SENTENCE_RETRY_MAX) {
                         const delayMs = Math.min(1000 * (attempt + 1), 4000)
                         console.warn(`[TTS] Sentence failed (attempt ${attempt + 1}/${SENTENCE_RETRY_MAX}), retrying in ${delayMs}ms`)
@@ -756,6 +775,7 @@ export function useTTS() {
                 speechKeepAliveRef.current = stopSpeechKeepalive(speechKeepAliveRef.current)
                 if (speakGenRef.current !== gen) return  // stale
                 if (e.error === 'interrupted' || e.error === 'canceled') return
+                if (!isPlayingRef.current) return
 
                 console.error(`[TTS] Speech API error (attempt ${attempt + 1}/${WEB_SPEECH_RETRY_MAX}):`, e.error)
 
@@ -770,7 +790,8 @@ export function useTTS() {
                         tryWebSpeechSentence(attempt + 1)
                     }, delayMs)
                 } else {
-                    // All retries exhausted
+                    // All retries exhausted (do not treat user pause/stop as failure)
+                    if (!isPlayingRef.current) return
                     webSpeechRetryRef.current = 0
                     isPlayingRef.current = false
                     setState(prev => ({
@@ -791,6 +812,7 @@ export function useTTS() {
             // Start utterance watchdog — detects onend/onerror non-delivery
             uttWatchdogRef.current = startUtteranceWatchdog(text, rateRef.current, () => {
                 if (speakGenRef.current !== gen) return
+                if (!isPlayingRef.current) return
                 speechKeepAliveRef.current = stopSpeechKeepalive(speechKeepAliveRef.current)
                 console.warn('[TTS] Utterance watchdog fired — sentence may have silently failed')
                 synth.cancel()  // force-cancel the stuck utterance
@@ -948,9 +970,12 @@ export function useTTS() {
         if (state.provider === 'piper') {
             if (state.isPlaying) {
                 isPlayingRef.current = false
+                fetchAbortRef.current?.abort()
+                fetchAbortRef.current = null
+                audioWatchdogRef.current = clearAudioWatchdog(audioWatchdogRef.current)
                 audioRef.current?.pause()
                 releaseWakeLock()
-                setState(prev => ({ ...prev, isPlaying: false }))
+                setState(prev => ({ ...prev, isPlaying: false, error: null }))
             } else if (state.currentSegmentIndex !== -1) {
                 isPlayingRef.current = true
                 acquireWakeLock()
@@ -968,9 +993,13 @@ export function useTTS() {
         if (!synth) return
         if (state.isPlaying) {
             isPlayingRef.current = false
+            if (cancelTimeoutRef.current) clearTimeout(cancelTimeoutRef.current)
+            cancelTimeoutRef.current = null
+            uttWatchdogRef.current = clearUtteranceWatchdog(uttWatchdogRef.current)
+            speechKeepAliveRef.current = stopSpeechKeepalive(speechKeepAliveRef.current)
             synth.cancel()
             releaseWakeLock()
-            setState(prev => ({ ...prev, isPlaying: false }))
+            setState(prev => ({ ...prev, isPlaying: false, error: null }))
         } else if (state.currentSegmentIndex !== -1) {
             isPlayingRef.current = true
             acquireWakeLock()

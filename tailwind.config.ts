@@ -1,5 +1,21 @@
 import type { Config } from 'tailwindcss'
 
+/**
+ * paradigm-threat-files has its own node_modules — never use ** from repo root
+ * (Tailwind would scan thousands of dependency files). Scope to content dirs only.
+ */
+const paradigmThreatFilesContent = [
+  '../paradigm-threat-files/blog/**/*.{md,mdx}',
+  '../paradigm-threat-files/docs/**/*.{md,mdx}',
+  '../paradigm-threat-files/governance/**/*.{md,mdx}',
+  '../paradigm-threat-files/history/**/*.{md,mdx}',
+  '../paradigm-threat-files/cosmos/**/*.{md,mdx}',
+  '../paradigm-threat-files/events/**/*.{md,mdx}',
+  '../paradigm-threat-files/influence/**/*.{md,mdx}',
+  '../paradigm-threat-files/science/**/*.{md,mdx}',
+  '../paradigm-threat-files/*.{md,mdx}', // root e.g. page.md
+] as const
+
 const config: Config = {
   darkMode: 'class',
   content: [
@@ -7,13 +23,13 @@ const config: Config = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './SAFELIST.txt',
-    '../paradigm-threat-files/**/*.md',
-    '../paradigm-threat-files/**/*.mdx',
+    ...paradigmThreatFilesContent,
   ],
   theme: {
     extend: {
       screens: {
-        toc: '87.5rem', // 1400px equivalent; rem respects zoom/user font-size
+        // px only: mixing rem with Tailwind’s default px screens breaks min-/max-* variants
+        toc: '1400px',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

@@ -101,6 +101,16 @@ export function useTimelineTTS({
     [tts]
   )
 
+  /** Jump to a sentence within the current chapter and resume playback (slideshow). */
+  const handlePlayFromSentence = useCallback((sentenceIndex: number) => {
+    const t = ttsRef.current
+    const { segments, currentSegmentIndex, sentences } = t.state
+    if (!segments[currentSegmentIndex] || sentenceIndex < 0) return
+    const len = sentences.length
+    const idx = len > 0 ? Math.min(sentenceIndex, len - 1) : sentenceIndex
+    t.playFromSentence(segments, currentSegmentIndex, idx)
+  }, [])
+
   const handleSlideshowPrev = useCallback(() => {
     const { currentSegmentIndex, segments } = tts.state
     if (currentSegmentIndex <= 0 && segments.length > 0) {
@@ -130,6 +140,7 @@ export function useTimelineTTS({
     handlePlayEvent,
     handleStopTTS,
     handleSeekToSegment,
+    handlePlayFromSentence,
     handleSlideshowPrev,
     ttsStartIndexRef,
   }

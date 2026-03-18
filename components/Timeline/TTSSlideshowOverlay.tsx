@@ -20,6 +20,10 @@ interface SlideshowImage {
 }
 
 const PLANET_ANIM_PASSES = 8  // ~64s at 1.0× rate → several orbits
+
+function clampSeek(value: number, min: number, max: number) {
+    return Math.min(Math.max(value, min), max)
+}
 const PLANET_BC_MIN = -5000
 const PLANET_BC_MAX = -670
 // Per-chapter order: 1st image → planet sim → remaining images → loop (see ANIMATION_TRACKER §2.7)
@@ -52,6 +56,8 @@ interface TTSSlideshowOverlayProps {
     onSelectEvent: (entry: TimelineEntry) => void
     /** Jump TTS to a specific segment index without rebuilding the segment list */
     onSeekToSegment: (segmentIndex: number) => void
+    /** Jump to sentence index in current chapter and resume playback */
+    onSeekToSentence: (sentenceIndex: number) => void
     /** Restart TTS from an event before the current start (rebuilds segments) */
     onRestartFromEvent?: (entry: TimelineEntry) => void
     /** Switch to Speech API and resume playback from the failed segment */
@@ -87,6 +93,7 @@ export function TTSSlideshowOverlay({
     startEventIndex,
     onSelectEvent,
     onSeekToSegment,
+    onSeekToSentence,
     onRestartFromEvent,
     onSwitchToSpeechAndResume,
     skipPlanetSlide = false,
@@ -94,6 +101,31 @@ export function TTSSlideshowOverlay({
     const [showControls, setShowControls] = useState(true)
     const lastInteractionRef = useRef(Date.now())
     const controlsFocusedRef = useRef(false)
+    /** Last pointer pos for idle — ignore sub-pixel jitter (F11 fullscreen never gets mouse-leave) */
+    const lastPointerForIdleRef = useRef<{ x: number; y: number } | null>(null)
+    const overlayRootRef = useRef<HTMLDivElement>(null)
+    const POINTER_IDLE_THRESHOLD_PX = 14
+
+    const [seekValue, setSeekValue] = useState<number | null>(null)
+    const seekScrubRef = useRef<number | null>(null)
+    const totalSentences = ttsState.sentences.length
+    const currentSentenceIndex = ttsState.currentSentenceIndex ?? 0
+    const displaySentenceIndex =
+        seekValue !== null ? seekValue : clampSeek(currentSentenceIndex, 0, Math.max(0, totalSentences - 1))
+
+    useEffect(() => {
+        setSeekValue(null)
+        seekScrubRef.current = null
+    }, [ttsState.currentSegmentIndex, totalSentences])
+
+    const commitSentenceSeek = useCallback(() => {
+        const v = seekScrubRef.current
+        seekScrubRef.current = null
+        setSeekValue(null)
+        if (v !== null && totalSentences > 0) {
+            onSeekToSentence(clampSeek(v, 0, totalSentences - 1))
+        }
+    }, [onSeekToSentence, totalSentences])
     const [currentImgIndex, setCurrentImgIndex] = useState(0)
     const currentImgIndexRef = useRef(0)
     const [animCycle, setAnimCycle] = useState(0)  // 0, 1, 2 — three animation passes per image
@@ -220,12 +252,36 @@ export function TTSSlideshowOverlay({
     // Auto-hide controls after 3s idle (skip while a dropdown/input is focused)
     useEffect(() => {
         const t = setInterval(() => {
-            if (!controlsFocusedRef.current && Date.now() - lastInteractionRef.current > 3000) setShowControls(false)
-        }, 1000)
+            if (controlsFocusedRef.current) return
+            if (Date.now() - lastInteractionRef.current <= 3000) return
+            setShowControls(false)
+            // Drop focus from selects/inputs so controlsFocusedRef cannot stay true off-screen
+            const root = overlayRootRef.current
+            const ae = document.activeElement
+            if (root && ae instanceof HTMLElement && root.contains(ae) && ae !== root) {
+                ae.blur()
+                controlsFocusedRef.current = false
+            }
+        }, 500)
         return () => clearInterval(t)
     }, [])
 
     const handleInteraction = useCallback(() => {
+        setShowControls(true)
+        lastInteractionRef.current = Date.now()
+    }, [])
+
+    const handlePointerMoveForIdle = useCallback((e: React.MouseEvent) => {
+        const { clientX: x, clientY: y } = e
+        const prev = lastPointerForIdleRef.current
+        if (prev == null) {
+            lastPointerForIdleRef.current = { x, y }
+            return
+        }
+        const dx = x - prev.x
+        const dy = y - prev.y
+        if (dx * dx + dy * dy < POINTER_IDLE_THRESHOLD_PX * POINTER_IDLE_THRESHOLD_PX) return
+        lastPointerForIdleRef.current = { x, y }
         setShowControls(true)
         lastInteractionRef.current = Date.now()
     }, [])
@@ -241,13 +297,30 @@ export function TTSSlideshowOverlay({
         lastInteractionRef.current = Date.now()
     }, [])
 
-    // Keyboard shortcuts
+    // Keyboard shortcuts (also surface controls like mouse click)
     useEffect(() => {
         const handler = (e: KeyboardEvent) => {
-            if (e.key === 'Escape') onStop()
-            if (e.key === ' ') { e.preventDefault(); onPause() }
-            if (e.key === 'ArrowRight') onNext()
-            if (e.key === 'ArrowLeft') onPrev()
+            if (e.key === 'Escape') {
+                setShowControls(true)
+                lastInteractionRef.current = Date.now()
+                onStop()
+            }
+            if (e.key === ' ') {
+                e.preventDefault()
+                setShowControls(true)
+                lastInteractionRef.current = Date.now()
+                onPause()
+            }
+            if (e.key === 'ArrowRight') {
+                setShowControls(true)
+                lastInteractionRef.current = Date.now()
+                onNext()
+            }
+            if (e.key === 'ArrowLeft') {
+                setShowControls(true)
+                lastInteractionRef.current = Date.now()
+                onPrev()
+            }
         }
         window.addEventListener('keydown', handler)
         return () => window.removeEventListener('keydown', handler)
@@ -363,9 +436,11 @@ export function TTSSlideshowOverlay({
     return (
          
         <div
+            ref={overlayRootRef}
             className="fixed inset-0 z-[300] bg-black overflow-hidden"
-            onMouseMove={handleInteraction}
+            onMouseMove={handlePointerMoveForIdle}
             onClick={handleInteraction}
+            onTouchStart={handleInteraction}
             style={{ cursor: showControls ? 'default' : 'none' }}
         >
             {/* ── Background Ken Burns Slideshow (dual-layer crossfade) ── */}
@@ -556,6 +631,38 @@ export function TTSSlideshowOverlay({
                     </button>
                 </div>
 
+                {totalSentences > 0 && (
+                    <div className="w-full max-w-lg flex items-center gap-3 pointer-events-auto px-2">
+                        <span className="text-white/40 text-[10px] uppercase font-bold shrink-0 hidden sm:inline">
+                            Paragraph
+                        </span>
+                        <input
+                            type="range"
+                            min={0}
+                            max={totalSentences - 1}
+                            step={1}
+                            value={clampSeek(displaySentenceIndex, 0, totalSentences - 1)}
+                            onChange={e => {
+                                const n = parseInt(e.target.value, 10)
+                                seekScrubRef.current = n
+                                setSeekValue(n)
+                            }}
+                            onPointerDown={() => {
+                                const start = clampSeek(currentSentenceIndex, 0, totalSentences - 1)
+                                seekScrubRef.current = start
+                                setSeekValue(start)
+                            }}
+                            onPointerUp={commitSentenceSeek}
+                            onPointerCancel={commitSentenceSeek}
+                            className="flex-1 min-w-0 h-2 bg-white/10 rounded-full appearance-none cursor-pointer accent-indigo-500 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-indigo-500 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow"
+                            aria-label="Seek position in current chapter"
+                        />
+                        <span className="text-white/50 text-xs tabular-nums shrink-0 w-14 text-right">
+                            {clampSeek(displaySentenceIndex, 0, totalSentences - 1) + 1} / {totalSentences}
+                        </span>
+                    </div>
+                )}
+
                 {/* Settings strip */}
                 <div className="flex flex-wrap items-center justify-center gap-3 pointer-events-auto">
                     <div className="flex items-center gap-1.5 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-2">
@@ -736,6 +843,20 @@ function PlanetSlideCanvas({ active, initialYear }: { active: boolean; initialYe
             ctrl.setYear(yearRef.current)
             if (ctrl.resize) ctrl.resize()
 
+            const canvasEl = canvasRef.current
+            const scheduleResize = () => {
+                if (cancelled || !canvasEl) return
+                requestAnimationFrame(() => {
+                    if (!cancelled) ctrlRef.current?.resize?.()
+                })
+            }
+            let ro: ResizeObserver | null = null
+            if (canvasEl && typeof ResizeObserver !== 'undefined') {
+                ro = new ResizeObserver(scheduleResize)
+                ro.observe(canvasEl)
+            }
+            window.addEventListener('resize', scheduleResize)
+
             const isModernEra = initialYear > PLANET_BC_MAX  // -670: CE plays forward to 3000
             const CE_END_YEAR = 3000
             // Loop within era containing initialYear — never jump to 5000 BCE for dark/golden age events
@@ -763,9 +884,25 @@ function PlanetSlideCanvas({ active, initialYear }: { active: boolean; initialYe
             rafRef.current = requestAnimationFrame(tick)
         }
 
-        init()
+        let resizeObserver: ResizeObserver | null = null
+        const winResize = () => {
+            if (cancelled) return
+            requestAnimationFrame(() => ctrlRef.current?.resize?.())
+        }
+        window.addEventListener('resize', winResize)
+
+        init().then(() => {
+            if (cancelled || !canvasRef.current) return
+            if (typeof ResizeObserver !== 'undefined') {
+                resizeObserver = new ResizeObserver(winResize)
+                resizeObserver.observe(canvasRef.current)
+            }
+        })
+
         return () => {
             cancelled = true
+            window.removeEventListener('resize', winResize)
+            resizeObserver?.disconnect()
             if (rafRef.current) cancelAnimationFrame(rafRef.current)
             ctrlRef.current?.destroy()
             ctrlRef.current = null

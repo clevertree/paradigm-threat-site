@@ -279,6 +279,7 @@ export const planetaryConfigs = [
         label: "Modern Solar System — Phantom Period (The Blip)",
         description: "Solar system stable. 7th c. BCE to 10th c. CE is phantom time per Fomenko.",
         saturn: { glow: 0.05, rings: true, position: [12, 7, 0], color: "#ccaa66" },
+        jupiter: { type: "planet" }, // concentric orbit in planetController placeModern
         venus: { type: "planet", position: [-4, 0, 0], color: "#ffcc88" },
         mars: { type: "planet", position: [3, 0, 0], color: "#cc3300" },
         earth: { position: [0, 0, 0], color: "#3366cc" },

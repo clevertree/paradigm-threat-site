@@ -33,25 +33,37 @@ export function useTimelineUrlState() {
 
   const setViewMode = useCallback((mode: TimelineViewMode) => {
     setViewModeRaw(mode)
-    const params = new URLSearchParams(window.location.search)
-    if (mode === 'custom') {
-      params.delete('view')
-    } else {
-      params.set('view', mode)
-    }
     if (mode === 'browser') {
       setFullPage(true)
-      params.set('fullscreen', '1')
     } else {
-      params.delete('path')
+      // path query only applies to browser mode
     }
-    const q = params.toString()
-    window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
+    queueMicrotask(() => {
+      const params = new URLSearchParams(window.location.search)
+      if (mode === 'custom') {
+        params.delete('view')
+      } else {
+        params.set('view', mode)
+      }
+      if (mode === 'browser') {
+        params.set('fullscreen', '1')
+      } else {
+        params.delete('path')
+      }
+      const q = params.toString()
+      window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
+    })
   }, [])
 
   const onToggleFullscreen = useCallback(() => {
+    // Never call history APIs inside setState updaters — React/Next may run them while
+    // TimelineView is rendering, which triggers "Cannot update Router while rendering".
+    let next = false
     setFullPage((p) => {
-      const next = !p
+      next = !p
+      return next
+    })
+    queueMicrotask(() => {
       const params = new URLSearchParams(window.location.search)
       if (next) {
         params.set('fullscreen', '1')
@@ -62,7 +74,6 @@ export function useTimelineUrlState() {
         const q = params.toString()
         window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
       }
-      return next
     })
   }, [])
 

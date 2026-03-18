@@ -91,6 +91,8 @@ const MOD = {
     saturn: { r: 13.0, period: 29.46 },
     uranus: { r: 16.0, period: 84 },
     neptune: { r: 19.0, period: 164 },
+    /** Kuiper belt object — shown only in modern-solar (placeModern) */
+    pluto: { r: 22.0, period: 248 },
 };
 
 /**
@@ -133,6 +135,7 @@ export async function createPlanetController(canvas) {
     buildMercury(scene, p, THREE);
     buildNeptune(scene, p, THREE);
     buildUranus(scene, p, THREE);
+    buildPluto(scene, p, THREE);
     buildMoon(scene, p, THREE);
     const plasma = buildPlasmaField(scene, THREE);
     buildStarfield(scene, THREE);
@@ -157,6 +160,7 @@ export async function createPlanetController(canvas) {
     L.mercury = buildLabel('MERCURY', '#bbaa88', THREE);
     L.neptune = buildLabel('NEPTUNE', '#4466ff', THREE);
     L.uranus = buildLabel('URANUS', '#66dddd', THREE);
+    L.pluto = buildLabel('PLUTO', '#b8a898', THREE);
     L.moon = buildLabel('MOON', '#cccccc', THREE);
     Object.values(L).forEach(s => scene.add(s));
 
@@ -249,6 +253,7 @@ export async function createPlanetController(canvas) {
         if (p.mercury?.visible) p.mercury.rotation.y += 0.006;
         if (p.neptune?.visible) p.neptune.rotation.y += 0.001;
         if (p.uranus?.visible) p.uranus.rotation.y += 0.001;
+        if (p.pluto?.visible) p.pluto.rotation.y += 0.002;
         if (plasma?.visible) {
             plasma.rotation.y += 0.0005;
             plasma.rotation.x = Math.sin(t * 0.1) * 0.05;
@@ -368,6 +373,7 @@ export async function createPlanetController(canvas) {
         syncLabel(L.mercury, p.mercury, 0.5, labelCam);
         syncLabel(L.neptune, p.neptune, 0.7, labelCam);
         syncLabel(L.uranus, p.uranus, 0.7, labelCam);
+        syncLabel(L.pluto, p.pluto, 0.35, labelCam);
         syncLabel(L.moon, p.moon, 0.4, labelCam);
 
         // ── Labels: Y-offset above planets works naturally with ground-level cams ──
@@ -498,6 +504,11 @@ export async function createPlanetController(canvas) {
         else if (style === 'modern') placeModern(elapsed, cfg);
         else placeFallback(cfg);
 
+        if (style !== 'modern' && p.pluto) {
+            p.pluto.visible = false;
+            L.pluto.visible = false;
+        }
+
         // ═══════════ PLANET ANIMATION STATE PER PHASE ═══════════
 
         // ── Saturn: hidden in Dark Age (no longer seen); Wheel of Heaven + ring transition otherwise ──
@@ -571,6 +582,9 @@ export async function createPlanetController(canvas) {
             orbitCounts.mars = Math.abs(elapsed / 1.88);
             orbitCounts.jupiter = Math.abs(elapsed / 11.86);
             orbitCounts.saturn = Math.abs(elapsed / 29.46);
+            orbitCounts.uranus = Math.abs(elapsed / 84);
+            orbitCounts.neptune = Math.abs(elapsed / 164);
+            orbitCounts.pluto = Math.abs(elapsed / 248);
         }
         if (year >= MOON_CAPTURE_YEAR) {
             if (style === 'darkAge') {
@@ -944,6 +958,7 @@ export async function createPlanetController(canvas) {
         }
         placeCircle(p.uranus, L.uranus, MOD.uranus, true);
         placeCircle(p.neptune, L.neptune, MOD.neptune, true);
+        placeCircle(p.pluto, L.pluto, MOD.pluto, true);
     }
 
     // ── Fallback: transitional / chaotic phases ──
@@ -1373,6 +1388,7 @@ function buildModernPaths(scene, THREE) {
         { r: MOD.saturn.r, color: 0xff8833 },
         { r: MOD.uranus.r, color: 0x66dddd },
         { r: MOD.neptune.r, color: 0x4466ff },
+        { r: MOD.pluto.r, color: 0xa09080 },
     ];
     for (const d of defs) {
         const pts = [];
@@ -1572,6 +1588,25 @@ function buildUranus(scene, p, THREE) {
         transparent: true, opacity: 0.25, blending: THREE.AdditiveBlending,
     }));
     glow.scale.set(2, 2, 1);
+    mesh.add(glow);
+}
+
+/** Pluto — modern-solar era only (Kuiper belt) */
+function buildPluto(scene, p, THREE) {
+    const mesh = new THREE.Mesh(
+        new THREE.SphereGeometry(0.18, 14, 14),
+        new THREE.MeshStandardMaterial({
+            color: 0xc4b8a8, emissive: 0x6a6058, emissiveIntensity: 0.25, roughness: 0.85,
+        })
+    );
+    mesh.visible = false;
+    scene.add(mesh);
+    p.pluto = mesh;
+    const glow = new THREE.Sprite(new THREE.SpriteMaterial({
+        map: glowTex(0xa09080, THREE), color: 0xa09080,
+        transparent: true, opacity: 0.15, blending: THREE.AdditiveBlending,
+    }));
+    glow.scale.set(0.9, 0.9, 1);
     mesh.add(glow);
 }
 

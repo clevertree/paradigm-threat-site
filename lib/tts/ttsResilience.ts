@@ -221,11 +221,12 @@ export function startUtteranceWatchdog(
     text: string,
     rate: number,
     onStall: () => void,
-    bufferMs: number = 10000
+    bufferMs: number = 15000
 ): UtteranceWatchdogHandle {
-    const words = text.split(/\s+/).length
-    const estimatedMs = (words / 150) * 60_000 / Math.max(rate, 0.1)
-    const timeoutMs = Math.max(estimatedMs * 1.5 + bufferMs, 15000)
+    const words = text.split(/\s+/).filter(Boolean).length
+    const estimatedMs = (words / 130) * 60_000 / Math.max(rate, 0.1)
+    // Generous margin: underestimating fires cancel+retry and replays the sentence (often the long last one).
+    const timeoutMs = Math.max(estimatedMs * 2.25 + bufferMs, 22_000)
 
     const timerId = setTimeout(() => {
         console.warn(`[TTS watchdog] Utterance did not complete within ${Math.round(timeoutMs / 1000)}s — treating as stall`)

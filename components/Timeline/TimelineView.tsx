@@ -67,6 +67,7 @@ export function TimelineView() {
     handlePlayEvent,
     handleStopTTS,
     handleSeekToSegment,
+    handlePlayFromSentence,
     handleSlideshowPrev,
     ttsStartIndexRef,
   } = useTimelineTTS({
@@ -293,6 +294,7 @@ export function TimelineView() {
             startEventIndex={ttsStartIndexRef.current}
             onSelectEvent={handleSelectEvent}
             onSeekToSegment={handleSeekToSegment}
+            onSeekToSentence={handlePlayFromSentence}
             onRestartFromEvent={handlePlayEvent}
             onSwitchToSpeechAndResume={tts.switchToSpeechAndResume}
           />
