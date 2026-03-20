@@ -1,12 +1,14 @@
 'use client'
 
-import React, { useEffect, useState, useMemo, Suspense } from 'react'
+import React, { useEffect, useState, useMemo, Suspense, useRef, useCallback } from 'react'
 import { getFilesIndex, getRemoteFile } from '@/server/remoteFiles'
 import { SearchHeader, FolderGrid, ArticleStack, ImageGallery } from '@/components/search'
 import matter from 'gray-matter'
 import { Loader2, Search } from 'lucide-react'
 import { useRouter, useSearchParams, useParams } from 'next/navigation'
 import { flattenFilesIndex } from '@/components/helpers/indexHelper'
+
+const DEBOUNCE_MS = 350
 
 function SearchContent() {
     const router = useRouter()
@@ -15,13 +17,24 @@ function SearchContent() {
     const topicFromPath = Array.isArray(params?.topic) ? params.topic[0] : (params?.topic as string)
     const queryFromPath = topicFromPath ? decodeURIComponent(topicFromPath) : ''
     const queryFromSearch = searchParams.get('q') || ''
-    const query = queryFromPath || queryFromSearch
+    const urlQuery = queryFromPath || queryFromSearch
+
+    // Local state for input - avoids router.replace on every keystroke (prevents mobile keyboard dismiss)
+    const [inputValue, setInputValue] = useState(urlQuery)
+    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const [filesIndex, setFilesIndex] = useState<string[]>([])
     const [renderedMds, setRenderedMds] = useState<any[]>([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState<string | null>(null)
     const [contentLoading, setContentLoading] = useState(false)
+
+    // Sync from URL to input only when URL changed externally (back/forward), not from our debounce
+    useEffect(() => {
+        if (urlQuery !== inputValue.trim()) {
+            setInputValue(urlQuery)
+        }
+    }, [urlQuery])
 
     // Fetch index once
     useEffect(() => {
@@ -54,7 +67,7 @@ function SearchContent() {
 
     const searchResults = useMemo(() => {
         if (!filesIndex || !Array.isArray(filesIndex)) return []
-        const cleanQuery = query.trim().toLowerCase()
+        const cleanQuery = inputValue.trim().toLowerCase()
         if (cleanQuery.length < 2) return []
 
         const searchTerms = cleanQuery.split(/\s+/).filter(Boolean)
@@ -64,7 +77,7 @@ function SearchContent() {
             const lowerPath = path.toLowerCase()
             return searchTerms.every(term => lowerPath.includes(term))
         })
-    }, [query, filesIndex])
+    }, [inputValue, filesIndex])
 
     // Fetch MD content for the top results when search results change
     useEffect(() => {
@@ -93,8 +106,7 @@ function SearchContent() {
         })
     }, [searchResults])
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const val = e.target.value.trim()
+    const updateUrl = useCallback((val: string) => {
         if (val && !val.includes(' ')) {
             router.replace(`/search/${encodeURIComponent(val)}`, { scroll: false })
         } else if (val) {
@@ -102,7 +114,22 @@ function SearchContent() {
         } else {
             router.replace('/search', { scroll: false })
         }
-    }
+    }, [router])
+
+    const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+        const val = e.target.value
+        setInputValue(val)
+        const trimmed = val.trim()
+        if (debounceRef.current) clearTimeout(debounceRef.current)
+        debounceRef.current = setTimeout(() => {
+            debounceRef.current = null
+            updateUrl(trimmed)
+        }, DEBOUNCE_MS)
+    }, [updateUrl])
+
+    useEffect(() => () => {
+        if (debounceRef.current) clearTimeout(debounceRef.current)
+    }, [])
 
     // Extract unique folders
     const folderPaths = Array.from(new Set(searchResults.map(path => {
@@ -117,7 +144,7 @@ function SearchContent() {
         <div className="w-full min-h-screen bg-white dark:bg-slate-950">
             <div className="max-w-[90rem] mx-auto px-4 py-12 space-y-16">
                 <SearchHeader
-                    query={query}
+                    query={inputValue}
                     loading={loading}
                     onChange={handleSearchChange}
                 />
@@ -135,13 +162,13 @@ function SearchContent() {
                     </div>
                 )}
 
-                {query.length > 0 && query.length < 2 && (
+                {inputValue.length > 0 && inputValue.trim().length < 2 && (
                     <div className="text-center py-20 text-slate-400">
                         Please enter at least 2 characters to search...
                     </div>
                 )}
 
-                {!loading && query.length >= 2 && searchResults.length === 0 && (
+                {!loading && inputValue.trim().length >= 2 && searchResults.length === 0 && (
                     <div className="text-center py-24 bg-slate-50 dark:bg-slate-900/30 rounded-3xl border-2 border-dashed border-slate-200 dark:border-slate-800 max-w-2xl mx-auto">
                         <Search size={48} className="mx-auto text-slate-300 dark:text-slate-700 mb-4" />
                         <div className="text-xl font-bold text-slate-900 dark:text-white mb-2">No matching files found</div>
