@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { X, Play, Pause, SkipBack, SkipForward } from 'lucide-react'
 import type { TTSState, SubtitleMode, PiperVoice, TTSProvider } from '@/lib/hooks/useTTS'
 import type { TimelineEntry } from '@/components/TimelineContext'
-import { getEventYearForSim, formatDateRange } from './utils'
+import { getEventYearForSim, formatEventLabelWithDate } from './utils'
 
 const KEN_BURNS = [
     'animate-ken-burns-zoom-in',
@@ -562,7 +562,7 @@ export function TTSSlideshowOverlay({
                             className="bg-black/50 border border-white/20 text-white text-xs rounded px-2 py-1 max-w-[200px] truncate"
                         >
                             {events.map(evt => {
-                                const label = evt.type === 'article' ? evt.title : `${formatDateRange(evt)} — ${evt.title}`
+                                const label = formatEventLabelWithDate(evt)
                                 return (
                                     <option key={evt.id} value={evt.id} className="bg-slate-900">{label}</option>
                                 )

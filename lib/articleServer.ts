@@ -3,6 +3,8 @@
  * Mirrors logic from app/api/article/route.ts.
  */
 
+import { isNonArticlePath } from '@/lib/isNonArticlePath'
+
 const FILES_BASE_URL =
   process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://clevertree.github.io/paradigm-threat-files'
 
@@ -31,6 +33,8 @@ function extractFirstImageUrl(md: string, basePath: string): string | undefined 
 }
 
 export async function fetchArticle(path: string): Promise<ArticleData | null> {
+  if (isNonArticlePath(path)) return null
+
   let targetPath = ''
   let fileContent: string | null = null
 

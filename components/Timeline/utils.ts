@@ -125,7 +125,11 @@ export function getEventStartYearWithFallback(
   return getDefaultSimYearForChapter(ch)
 }
 
-function formatYear(year: number, _calendar?: string): string {
+/**
+ * One timeline: signed years only (negative = BCE, positive = CE).
+ * Optional `calendar` on event dates is legacy metadata from events.json; era labels always come from the year value.
+ */
+function formatYear(year: number): string {
   const era = year <= 0 ? 'BCE' : 'CE'
   const absYear = Math.abs(year)
   return `${absYear} ${era}`
@@ -137,15 +141,61 @@ export function formatDateRange(evt: { type?: 'article' | 'event'; dates?: { sta
   if (!d) return '—'
   const start = d.start ?? (d as { value?: number }).value
   const end = d.end
-  const cal = d.calendar
   if (start == null && end != null) {
     const label = d.start_label ?? 'unknown'
-    return `${label} – ${formatYear(end, cal)}`
+    return `${label} – ${formatYear(end)}`
   }
   if (start == null) return '—'
-  const startStr = formatYear(start, cal)
+  const startStr = formatYear(start)
   if (end != null && end !== start) {
-    return `${startStr} – ${formatYear(end, cal)}`
+    return `${startStr} – ${formatYear(end)}`
   }
   return startStr
+}
+
+/**
+ * Dropdown only (sub-chapter rows): parenthetical date to prepend before title —
+ * `(1814 CE)` for one year, or `(1803 CE – 1815 CE)` when start ≠ end.
+ * Empty if no dates[0].start. Caller joins as `${paren} ${title}`.
+ */
+export function formatDropdownDateParenthetical(evt: {
+  dates?: { start?: number | null; end?: number; calendar?: string; value?: number; start_label?: string }[]
+}): string {
+  const d = evt.dates?.[0]
+  if (!d) return ''
+  const start = d.start ?? (d as { value?: number }).value
+  const end = d.end
+  if (start == null) {
+    if (end != null) {
+      const label = d.start_label ?? '∞'
+      return `[${label} – ${formatYear(end)}]`
+    }
+    return ''
+  }
+  if (end == null || start === end) {
+    return `[${formatYear(start)}]`
+  }
+  return `[${formatYear(start)} – ${formatYear(end)}]`
+}
+
+/**
+ * Label for dropdowns / jump lists: prepend formatted date unless the title already
+ * starts with that range (H1s are often "1421 CE — Event name", which would duplicate).
+ */
+export function formatEventLabelWithDate(evt: {
+  type?: 'article' | 'event'
+  title: string
+  dates?: { start?: number | null; end?: number; calendar?: string; value?: number; start_label?: string }[]
+}): string {
+  if (evt.type === 'article') return evt.title
+  const range = formatDateRange(evt)
+  const title = evt.title.trim()
+  if (range === '—' || !title) return title || range
+  if (title.startsWith(range)) {
+    const after = title.slice(range.length)
+    if (after === '' || /^\s*[—–-]\s/.test(after)) {
+      return title
+    }
+  }
+  return `${range} — ${title}`
 }

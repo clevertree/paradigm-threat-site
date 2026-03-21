@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState, useMemo, Suspense, useRef, useCallback } from 'react'
+import React, { useEffect, useState, useMemo, Suspense, useRef, useCallback, startTransition } from 'react'
 import { getFilesIndex, getRemoteFile } from '@/server/remoteFiles'
 import { SearchHeader, FolderGrid, ArticleStack, ImageGallery } from '@/components/search'
 import matter from 'gray-matter'
@@ -22,6 +22,7 @@ function SearchContent() {
     // Local state for input - avoids router.replace on every keystroke (prevents mobile keyboard dismiss)
     const [inputValue, setInputValue] = useState(urlQuery)
     const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const lastUrlUpdateRef = useRef<string>(urlQuery)
 
     const [filesIndex, setFilesIndex] = useState<string[]>([])
     const [renderedMds, setRenderedMds] = useState<any[]>([])
@@ -31,10 +32,16 @@ function SearchContent() {
 
     // Sync from URL to input only when URL changed externally (back/forward), not from our debounce
     useEffect(() => {
-        if (urlQuery !== inputValue.trim()) {
-            setInputValue(urlQuery)
+        // Only sync if URL changed externally (not from our own updateUrl call)
+        if (urlQuery !== lastUrlUpdateRef.current && urlQuery !== inputValue.trim()) {
+            // Use startTransition to mark this as a non-urgent update (syncing from external URL change)
+            startTransition(() => {
+                setInputValue(urlQuery)
+            })
         }
-    }, [urlQuery])
+        // Update ref to track what we expect the URL to be
+        lastUrlUpdateRef.current = urlQuery
+    }, [urlQuery, inputValue])
 
     // Fetch index once
     useEffect(() => {
@@ -107,6 +114,7 @@ function SearchContent() {
     }, [searchResults])
 
     const updateUrl = useCallback((val: string) => {
+        lastUrlUpdateRef.current = val
         if (val && !val.includes(' ')) {
             router.replace(`/search/${encodeURIComponent(val)}`, { scroll: false })
         } else if (val) {

@@ -38,7 +38,13 @@ export function splitSentences(text: string): string[] {
             merged.push(s)
         }
     }
-    return merged.filter(s => s.length > 0)
+    let result = merged.filter(s => s.length > 0)
+    // Recurring bug: last two TTS entries often showed same text. Strip trailing duplicate
+    // so the final two displayed sentences are never identical.
+    while (result.length >= 2 && result[result.length - 1] === result[result.length - 2]) {
+        result = result.slice(0, -1)
+    }
+    return result
 }
 
 /**

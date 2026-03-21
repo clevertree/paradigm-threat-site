@@ -4,6 +4,7 @@ import { serialize } from 'next-mdx-remote/serialize'
 import rehypeUnwrapImages from 'rehype-unwrap-images'
 import remarkGfm from 'remark-gfm'
 import rehypeUnwrapFigures from '@/lib/rehypeUnwrapFigures'
+import { isNonArticlePath } from '@/lib/isNonArticlePath'
 
 const FILES_BASE_URL =
   process.env.NEXT_PUBLIC_FILES_BASE_URL || 'https://clevertree.github.io/paradigm-threat-files'
@@ -17,6 +18,10 @@ export async function GET(req: NextRequest) {
     const path = req.nextUrl.searchParams.get('path') ?? ''
     const v = req.nextUrl.searchParams.get('v')
     const vParam = v ? `?v=${v}` : ''
+
+    if (isNonArticlePath(path)) {
+      return NextResponse.json({ error: 'Not found' }, { status: 404 })
+    }
 
     let targetPath = ''
     let fileContent: string | null = null

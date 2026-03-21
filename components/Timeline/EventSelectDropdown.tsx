@@ -1,8 +1,8 @@
 'use client'
 
 import React from 'react'
-import { formatDateRange } from './utils'
 import type { TimelineEntry } from '@/components/TimelineContext'
+import { formatDropdownDateParenthetical } from './utils'
 
 export interface EventSelectOption {
   entry: TimelineEntry
@@ -33,7 +33,9 @@ export function EventSelectDropdown({
     >
       {options.map(({ entry: evt, depth }) => {
         const indent = '\u00A0\u00A0\u00A0\u00A0'.repeat(depth)
-        const label = evt.type === 'article' ? evt.title : `${formatDateRange(evt)} — ${evt.title}`
+        // Sub-chapter rows only: prepend listed dates in parentheses (single year or span)
+        const dateParen = depth > 0 ? formatDropdownDateParenthetical(evt) : ''
+        const label = dateParen ? `${dateParen} ${evt.title}` : evt.title
         return (
           <option key={evt.id} value={evt.id}>
             {indent}{label}

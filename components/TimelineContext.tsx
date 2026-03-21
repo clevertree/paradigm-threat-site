@@ -5,7 +5,8 @@ import React, { createContext, useContext, useState, useEffect, ReactNode, useMe
 export interface TimelineDate {
   start: number
   end?: number
-  calendar: string
+  /** Legacy / metadata only; UI derives BCE vs CE from signed `start`/`end` years. */
+  calendar?: string
   source?: string
   confidence?: string
   note?: string
