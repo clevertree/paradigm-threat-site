@@ -3,7 +3,7 @@ import { MDXRemote } from 'next-mdx-remote';
 import * as componentsNamespace from '@/components';
 import { MarkdownLink } from './MarkdownLink';
 import { useFiles } from './FilesContext';
-import { getLqipFromIndex, resolveImagePath } from './helpers/imageHelper';
+import { getLqipFromIndex, getDimensionsFromIndex, resolveImagePath } from './helpers/imageHelper';
 
 const {
     PopImage,
@@ -26,7 +26,16 @@ function ImageWithLqip({ basePath, ...props }: { basePath: string; [k: string]: 
     const src = props.src;
     const resolvedPath = typeof src === 'string' ? resolveImagePath(src, basePath).split('?')[0] : '';
     const lqip = fileList && resolvedPath ? getLqipFromIndex(fileList, resolvedPath) : undefined;
-    return <PopImage {...props} basePath={basePath} lqip={lqip} />;
+    const dims = fileList && resolvedPath ? getDimensionsFromIndex(fileList, resolvedPath) : undefined;
+    return (
+        <PopImage
+            {...props}
+            basePath={basePath}
+            lqip={lqip}
+            intrinsicWidth={dims?.width}
+            intrinsicHeight={dims?.height}
+        />
+    );
 }
 
 const mdxComponents = (basePath: string) => ({

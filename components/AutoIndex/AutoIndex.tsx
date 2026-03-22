@@ -257,6 +257,8 @@ export default function AutoIndex({
               const imgNode = node?.[img]
               const title = imgNode?._title
               const lqip = imgNode?._lqip
+              const intrinsicWidth = imgNode?._width
+              const intrinsicHeight = imgNode?._height
               return (
                 <div key={img} className="flex flex-col gap-2">
                   <div className="aspect-square relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm transition-transform hover:-translate-y-1">
@@ -264,6 +266,8 @@ export default function AutoIndex({
                       src={img}
                       basePath={path}
                       lqip={lqip}
+                      intrinsicWidth={intrinsicWidth}
+                      intrinsicHeight={intrinsicHeight}
                       w={200}
                       className="w-full h-full object-cover"
                     />

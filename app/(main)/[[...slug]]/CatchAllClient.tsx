@@ -283,7 +283,10 @@ export const CatchAllClient = memo(function CatchAllClient() {
                       for (const p of baseParts) {
                         if (curr) curr = curr[p]
                       }
-                      const lqip = curr?.[img]?._lqip
+                      const imgNode = curr?.[img]
+                      const lqip = imgNode?._lqip
+                      const intrinsicWidth = imgNode?._width
+                      const intrinsicHeight = imgNode?._height
 
                       return (
                         <div key={img} className="group aspect-square relative transition-transform duration-300 hover:-translate-y-1">
@@ -291,6 +294,8 @@ export const CatchAllClient = memo(function CatchAllClient() {
                             src={img}
                             basePath={basePath}
                             lqip={lqip}
+                            intrinsicWidth={intrinsicWidth}
+                            intrinsicHeight={intrinsicHeight}
                             w={400}
                             className="w-full h-full object-cover rounded-xl shadow-sm border border-slate-100 dark:border-slate-900"
                           />

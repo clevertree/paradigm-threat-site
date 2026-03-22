@@ -55,6 +55,35 @@ export function getLqipFromIndex(index: any, imagePath: string): string | undefi
     return curr && typeof curr === 'object' && typeof curr._lqip === 'string' ? curr._lqip : undefined
 }
 
+/**
+ * Look up intrinsic dimensions (width, height) from the index tree by image path.
+ * Same path resolution as getLqipFromIndex. Used to reserve aspect ratio for LQIP placeholder.
+ */
+export function getDimensionsFromIndex(index: any, imagePath: string): { width: number; height: number } | undefined {
+    if (!index || typeof imagePath !== 'string') return undefined
+    let clean = imagePath.split('?')[0]
+    if (clean.startsWith('http')) {
+        try {
+            clean = new URL(clean).pathname
+        } catch {
+            return undefined
+        }
+    }
+    clean = clean.replace(/^\//, '')
+    if (!clean) return undefined
+    const parts = clean.split('/').filter(Boolean)
+    let curr: any = index
+    for (let i = 0; i < parts.length && curr; i++) {
+        curr = curr[parts[i]]
+    }
+    if (!curr || typeof curr !== 'object') return undefined
+    const w = curr._width
+    const h = curr._height
+    return typeof w === 'number' && w > 0 && typeof h === 'number' && h > 0
+        ? { width: w, height: h }
+        : undefined
+}
+
 export function resolveImagePath(src: string, basePath?: string): string {
     if (typeof src !== 'string') return '';
     if (!src) return '';
@@ -100,7 +129,7 @@ export function processImageProps(props: any, basePath?: string): ImagePropsForm
         return processImageProps(newProps, basePath)
     }
 
-    let { src, w, title, alt, className, ...finalProps } = props;
+    let { src, w, title, alt, className, intrinsicWidth, intrinsicHeight, ...finalProps } = props;
 
     // Parse JSON from title or alt
     const parseMeta = (str: string) => {
@@ -175,6 +204,11 @@ export function processImageProps(props: any, basePath?: string): ImagePropsForm
             // Default optimization width
             finalProps.optimizedSrc = `/api/image?path=${encodeURIComponent(pathForAPI)}&w=800`;
             finalProps.width = 800;
+        }
+
+        // Reserve correct aspect ratio for LQIP placeholder when intrinsic dimensions available
+        if (intrinsicWidth && intrinsicHeight && intrinsicWidth > 0 && intrinsicHeight > 0) {
+            finalProps.height = Math.round(finalProps.width * (intrinsicHeight / intrinsicWidth));
         }
 
         // High res for popout (full URL)
