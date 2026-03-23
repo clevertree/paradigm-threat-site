@@ -120,6 +120,83 @@ export function expandDatesForTTS(text: string): string {
     return s
 }
 
+/**
+ * Latin and scholarly Latinisms → English or omission. Piper often mispronounces Latin;
+ * Web Speech is inconsistent — same output for both so captions match audio.
+ * Longer / multi-word patterns first. Empty replace removes the phrase; whitespace collapsed at end.
+ */
+export function normalizeLatinForTTS(text: string): string {
+    let s = text
+    const rules: { pattern: RegExp; replace: string }[] = [
+        { pattern: /\[\s*sic\s*\]/gi, replace: '' },
+        { pattern: /\bexempli gratia\b/gi, replace: 'for example' },
+        { pattern: /\bid est\b/gi, replace: 'that is' },
+        { pattern: /\bet cetera\b/gi, replace: 'and so on' },
+        { pattern: /\bet alii\b/gi, replace: 'and others' },
+        { pattern: /\binter alia\b/gi, replace: 'among other things' },
+        { pattern: /\bmutatis mutandis\b/gi, replace: '' },
+        { pattern: /\bceteris paribus\b/gi, replace: '' },
+        { pattern: /\bsui generis\b/gi, replace: 'of its own kind' },
+        { pattern: /\bprima facie\b/gi, replace: 'at first sight' },
+        { pattern: /\bipso facto\b/gi, replace: 'by that very fact' },
+        { pattern: /\bstatus quo\b/gi, replace: 'existing state' },
+        { pattern: /\bde facto\b/gi, replace: 'in fact' },
+        { pattern: /\bde jure\b/gi, replace: 'in law' },
+        { pattern: /\bad hoc\b/gi, replace: 'for this purpose' },
+        { pattern: /\bad nauseam\b/gi, replace: '' },
+        { pattern: /\bbona fide\b/gi, replace: 'good faith' },
+        { pattern: /\bvice versa\b/gi, replace: 'the other way around' },
+        { pattern: /\bquid pro quo\b/gi, replace: 'exchange' },
+        { pattern: /\bhabeas corpus\b/gi, replace: '' },
+        { pattern: /\bmens rea\b/gi, replace: '' },
+        { pattern: /\bpro bono\b/gi, replace: 'for the public good' },
+        { pattern: /\bpro forma\b/gi, replace: 'as a formality' },
+        { pattern: /\bin vitro\b/gi, replace: 'in the lab' },
+        { pattern: /\bin vivo\b/gi, replace: 'in living tissue' },
+        { pattern: /\bin situ\b/gi, replace: 'in place' },
+        { pattern: /\bin memoriam\b/gi, replace: 'in memory of' },
+        { pattern: /\bpost mortem\b/gi, replace: 'after death' },
+        { pattern: /\bpost hoc\b/gi, replace: 'after the fact' },
+        { pattern: /\bargumentum ad hominem\b/gi, replace: '' },
+        { pattern: /\bargumentum ad nauseam\b/gi, replace: '' },
+        { pattern: /\bargumentum ad populum\b/gi, replace: '' },
+        { pattern: /\bab initio\b/gi, replace: 'from the beginning' },
+        { pattern: /\bex nihilo\b/gi, replace: 'from nothing' },
+        { pattern: /\bex hypothesi\b/gi, replace: '' },
+        { pattern: /\bex post facto\b/gi, replace: 'retroactive' },
+        { pattern: /\bsub judice\b/gi, replace: '' },
+        { pattern: /\bterra nullius\b/gi, replace: 'unclaimed land' },
+        { pattern: /\banno domini\b/gi, replace: '' },
+        // Latin "pace" (with respect to X's opinion) before a proper name — not English "pace"
+        { pattern: /\bpace\s+([A-Z][a-z]+)\b/gi, replace: 'with respect to $1' },
+        { pattern: /\bet al\.?\b/gi, replace: 'and others' },
+        { pattern: /\be\.?\s*g\.?\b/gi, replace: 'for example' },
+        { pattern: /\bi\.?\s*e\.?\b/gi, replace: 'that is' },
+        { pattern: /\betc\.?\b/gi, replace: 'and so on' },
+        { pattern: /\bcf\.?\b/gi, replace: 'compare' },
+        { pattern: /\bviz\.?\b/gi, replace: 'namely' },
+        { pattern: /\bibid\.?\b/gi, replace: '' },
+        { pattern: /\bop\.?\s*cit\.?\b/gi, replace: '' },
+        { pattern: /\bloc\.?\s*cit\.?\b/gi, replace: '' },
+        { pattern: /\bvs\.?\b/gi, replace: 'versus' },
+        { pattern: /\bv\.?\s*s\.?\b/gi, replace: 'versus' },
+        { pattern: /\bsic\b/gi, replace: '' },
+    ]
+    for (const { pattern, replace } of rules) {
+        s = s.replace(pattern, replace)
+    }
+    return s
+        .replace(/\s{2,}/g, ' ')
+        .replace(/\s+([,.!?;:])/g, '$1')
+        .replace(/([,.!?;:])\s*([,.!?;:])/g, '$1 $2')
+        .trim()
+}
+
+/** Dates then Latin — single entry point for TTS preprocessing. */
+export function preprocessSpeechText(text: string): string {
+    return normalizeLatinForTTS(expandDatesForTTS(text))
+}
+
 function centuryOrdinal(n: number): string {
     if (n < 1 || n > 99) return `${n}th`
     const o = [
@@ -248,5 +325,5 @@ export function stripMarkdownForTTS(md: string, title: string): string {
         .trim()
 
     const body = title ? `${title}. ${text}` : text
-    return expandDatesForTTS(body)
+    return preprocessSpeechText(body)
 }

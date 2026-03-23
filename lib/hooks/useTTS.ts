@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { splitSentences, expandDatesForTTS } from '@/components/Timeline/ttsHelpers'
+import { splitSentences, preprocessSpeechText } from '@/components/Timeline/ttsHelpers'
 import {
     startSpeechKeepalive,
     stopSpeechKeepalive,
@@ -418,7 +418,7 @@ export function useTTS() {
                     seg.text = rawText // cache
                 } catch { rawText = '' }
             }
-            rawText = expandDatesForTTS(rawText)
+            rawText = preprocessSpeechText(rawText)
             if (!isPlayingRef.current || speakGenRef.current !== gen) return
 
             const blocks = parseSpeakerBlocks(rawText).map(block => ({
