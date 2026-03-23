@@ -5,6 +5,7 @@ import { X, Play, Pause, SkipBack, SkipForward } from 'lucide-react'
 import type { TTSState, SubtitleMode, PiperVoice, TTSProvider } from '@/lib/hooks/useTTS'
 import type { TimelineEntry } from '@/components/TimelineContext'
 import { getEventYearForSim, formatEventLabelWithDate } from './utils'
+import { isTimelineBookIllustrationMedia, timelineMediaPath } from '@/lib/timelineMedia'
 
 const KEN_BURNS = [
     'animate-ken-burns-zoom-in',
@@ -147,15 +148,21 @@ export function TTSSlideshowOverlay({
         const ev = eventId ? events.find(e => e.id === eventId) : null
         if (!ev) return []
         if (skipPlanetSlide) {
-            return (ev.media || []).map(entry => {
-                const p = typeof entry === 'string' ? entry : (entry as any)?.path ?? ''
-                return { src: `${baseUrl}${p}`, eventId: ev.id }
-            })
+            return (ev.media || [])
+                .filter((entry) => !isTimelineBookIllustrationMedia(entry))
+                .map((entry) => {
+                    const p = timelineMediaPath(entry)
+                    return p ? { src: `${baseUrl}${p}`, eventId: ev.id } : null
+                })
+                .filter((x): x is SlideshowImage => x !== null)
         }
-        const imgs = (ev.media || []).map(entry => {
-            const p = typeof entry === 'string' ? entry : (entry as any)?.path ?? ''
-            return { src: `${baseUrl}${p}`, eventId: ev.id }
-        })
+        const imgs = (ev.media || [])
+            .filter((entry) => !isTimelineBookIllustrationMedia(entry))
+            .map((entry) => {
+                const p = timelineMediaPath(entry)
+                return p ? { src: `${baseUrl}${p}`, eventId: ev.id } : null
+            })
+            .filter((x): x is SlideshowImage => x !== null)
         if (imgs.length === 0) {
             return [{ src: '', eventId: ev.id, type: 'planet' }]  // chapter with no images: planet only
         }

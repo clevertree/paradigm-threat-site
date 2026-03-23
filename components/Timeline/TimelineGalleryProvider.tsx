@@ -4,6 +4,7 @@ import React, { useMemo, useCallback, useState, useRef, useEffect } from 'react'
 import { ImageGalleryContext, ImageGalleryOverlay } from '@/components/Image/ImageGalleryContext'
 import type { GalleryImage, ImageGalleryContextType } from '@/components/Image/ImageGalleryContext'
 import type { TimelineEntry } from '@/components/TimelineContext'
+import { timelineMediaPath } from '@/lib/timelineMedia'
 
 interface TimelineGalleryImage extends GalleryImage {
     eventId: string
@@ -34,15 +35,15 @@ export function TimelineGalleryProvider({
     // Build the complete, ordered image list from all events' media arrays.
     const globalImages = useMemo<TimelineGalleryImage[]>(() => {
         return events.flatMap((event) =>
-            (event.media || []).map((entry) => {
-                const path = typeof entry === 'string' ? entry : (entry as any)?.path ?? ''
-                return {
+            (event.media || []).flatMap((entry) => {
+                const path = timelineMediaPath(entry)
+                if (!path) return []
+                const img: TimelineGalleryImage = {
                     src: `${baseUrl}${path}`,
-                    alt: typeof path === 'string'
-                        ? path.split('/').pop()?.split('.')[0]?.replace(/_/g, ' ') || ''
-                        : '',
+                    alt: path.split('/').pop()?.split('.')[0]?.replace(/_/g, ' ') || '',
                     eventId: event.id,
                 }
+                return [img]
             })
         )
     }, [events, baseUrl])

@@ -2,6 +2,8 @@
  * Server-side timeline event lookup for metadata (OG, title).
  */
 
+import { firstTimelineOgMediaPath } from '@/lib/timelineMedia'
+
 const TIMELINE_BASE =
   process.env.NEXT_PUBLIC_TIMELINE_BASE_URL ||
   'https://clevertree.github.io/paradigm-threat-timeline'
@@ -9,7 +11,7 @@ const TIMELINE_BASE =
 interface TimelineEntry {
   id: string
   title: string
-  media?: string[]
+  media?: Array<string | { path: string; bookIllustration?: boolean }>
   children?: TimelineEntry[]
 }
 
@@ -40,8 +42,9 @@ export async function getTimelineEventMeta(eventId: string): Promise<TimelineEve
     const event = events.find((e) => e.id === eventId)
     if (!event) return null
 
-    const ogImageUrl = event.media?.[0]
-      ? `${TIMELINE_BASE.replace(/\/$/, '')}${event.media[0].startsWith('/') ? '' : '/'}${event.media[0]}`
+    const ogPath = firstTimelineOgMediaPath(event.media)
+    const ogImageUrl = ogPath
+      ? `${TIMELINE_BASE.replace(/\/$/, '')}${ogPath.startsWith('/') ? '' : '/'}${ogPath}`
       : undefined
 
     return {

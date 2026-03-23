@@ -64,11 +64,31 @@ export default function OptimizedImage({ children, className, ...props }: Optimi
         finalProps.src = optimizedSrc
     }
 
-    const containerStyle: React.CSSProperties = finalProps.width && finalProps.height ? { aspectRatio: `${finalProps.width}/${finalProps.height}` } : { minHeight: '100px' }
-    if (blurDataURL) {
-        containerStyle.backgroundImage = `url('${blurDataURL}')`
-        containerStyle.backgroundSize = 'cover'
-        containerStyle.backgroundPosition = 'center'
+    // Wide book diagrams often have index/API dimensions that do not match the decoded bitmap;
+    // a forced aspect-ratio box then leaves a large empty band above the caption (especially on mobile).
+    const isBookIllustration = /\bbook-illustration\b/.test(processedClassName || '')
+    const containerStyle: React.CSSProperties = {}
+    if (isBookIllustration) {
+        if (blurDataURL) {
+            containerStyle.backgroundImage = `url('${blurDataURL}')`
+            containerStyle.backgroundSize = 'contain'
+            containerStyle.backgroundPosition = 'center top'
+            containerStyle.backgroundRepeat = 'no-repeat'
+        }
+    } else if (finalProps.width && finalProps.height) {
+        containerStyle.aspectRatio = `${finalProps.width}/${finalProps.height}`
+        if (blurDataURL) {
+            containerStyle.backgroundImage = `url('${blurDataURL}')`
+            containerStyle.backgroundSize = 'cover'
+            containerStyle.backgroundPosition = 'center'
+        }
+    } else {
+        containerStyle.minHeight = '100px'
+        if (blurDataURL) {
+            containerStyle.backgroundImage = `url('${blurDataURL}')`
+            containerStyle.backgroundSize = 'cover'
+            containerStyle.backgroundPosition = 'center'
+        }
     }
 
     return (
@@ -77,7 +97,7 @@ export default function OptimizedImage({ children, className, ...props }: Optimi
             style={finalProps.width ? { maxWidth: `${finalProps.width}px` } : {}}
         >
             <div
-                className={`relative w-full bg-slate-100 dark:bg-slate-900 overflow-hidden ${!isVisible ? 'animate-pulse' : ''}`}
+                className={`relative w-full bg-slate-100 dark:bg-slate-900 overflow-hidden ${!isVisible ? 'animate-pulse' : ''} ${isBookIllustration && !isVisible ? 'min-h-12' : ''}`}
                 style={containerStyle}
             >
                 {/* next/image not used: dynamic src/placeholder and aspect ratio from props */}
@@ -86,7 +106,7 @@ export default function OptimizedImage({ children, className, ...props }: Optimi
                     ref={ref}
                     loading='lazy'
                     alt={alt}
-                    className={`w-full h-auto transition-opacity duration-700 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
+                    className={`block w-full max-w-full h-auto transition-opacity duration-700 ease-in-out ${isVisible ? 'opacity-100' : 'opacity-0'}`}
                     {...finalProps}
                     src={isVisible && finalProps.src ? (finalProps.src as string) : EMPTY_SRC_PLACEHOLDER}
                 />

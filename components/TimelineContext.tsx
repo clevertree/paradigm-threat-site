@@ -24,7 +24,8 @@ export interface TimelineEntry {
   categories?: string[]
   duplicate_of?: string
   related_events?: string[]
-  media?: string[]
+  /** Image paths for gallery / metadata; objects may set bookIllustration for print-only figures (skipped in TTS slideshow). */
+  media?: Array<string | { path: string; bookIllustration?: boolean }>
   tags?: string[]
 }
 
