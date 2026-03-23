@@ -167,6 +167,8 @@ export function TimelineDesktopLayout({
                     entries={entries}
                     events={events}
                     onSelectEvent={handleSelectEvent}
+                    leftSplitPct={leftPct}
+                    isLeftSplitDragging={isDragging}
                   />
                 </div>
               )}

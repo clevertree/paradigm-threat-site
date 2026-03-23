@@ -22,12 +22,26 @@ interface AnimationPlanetViewProps {
     entries?: TimelineEntry[]
     /** All events; used to select nearest event when year slider changes */
     events?: TimelineEntry[]
+    /**
+     * Desktop split layout: left column width %. The window does not fire `resize` when the
+     * splitter moves — force WebGL resize when % changes (while not dragging) or when a drag ends.
+     */
+    leftSplitPct?: number
+    /** True while the user is dragging the article/timeline splitter */
+    isLeftSplitDragging?: boolean
 }
 
 const MIN_YEAR = -5000
 const MAX_YEAR = 3000  // CE years use modern solar config
 
-export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = [], events = [] }: AnimationPlanetViewProps) {
+export function AnimationPlanetView({
+    onSelectEvent,
+    selectedEvent,
+    entries = [],
+    events = [],
+    leftSplitPct,
+    isLeftSplitDragging = false,
+}: AnimationPlanetViewProps) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     const ctrlRef = useRef<any>(null)
@@ -127,11 +141,46 @@ export function AnimationPlanetView({ onSelectEvent, selectedEvent, entries = []
         if (!ready || !containerRef.current || !ctrlRef.current?.resize) return
         const el = containerRef.current
         const ro = new ResizeObserver(() => {
-            requestAnimationFrame(() => ctrlRef.current?.resize?.())
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => ctrlRef.current?.resize?.())
+            })
         })
         ro.observe(el)
         return () => ro.disconnect()
     }, [ready])
+
+    // Splitter moves flex % — no window resize event; ResizeObserver can miss the final frame.
+    const prevSplitPctRef = useRef<number | undefined>(undefined)
+    const prevSplitDraggingRef = useRef(false)
+    useEffect(() => {
+        if (!ready || !ctrlRef.current?.resize) return
+        const pct = leftSplitPct
+        const dragging = isLeftSplitDragging
+        const pctChanged = pct !== undefined && pct !== prevSplitPctRef.current
+        const dragEnded = prevSplitDraggingRef.current && !dragging
+        prevSplitPctRef.current = pct
+        prevSplitDraggingRef.current = dragging
+
+        if (leftSplitPct === undefined) {
+            if (!dragEnded) return
+        } else {
+            if (dragging) return
+            if (!pctChanged && !dragEnded) return
+        }
+
+        let cancelled = false
+        let raf2 = 0
+        const raf1 = requestAnimationFrame(() => {
+            raf2 = requestAnimationFrame(() => {
+                if (!cancelled) ctrlRef.current?.resize?.()
+            })
+        })
+        return () => {
+            cancelled = true
+            cancelAnimationFrame(raf1)
+            cancelAnimationFrame(raf2)
+        }
+    }, [ready, leftSplitPct, isLeftSplitDragging])
 
     // Sync year only when user selects a different event — never overwrite manual slider drag.
     const selectedId = selectedEvent?.id ?? null
