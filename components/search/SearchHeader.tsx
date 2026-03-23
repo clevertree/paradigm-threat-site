@@ -24,7 +24,9 @@ export function SearchHeader({ query, loading, onChange }: SearchHeaderProps) {
             <div className="relative group">
                 <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors" size={28} />
                 <input
-                    type="text"
+                    type="search"
+                    autoFocus
+                    enterKeyHint="search"
                     value={query}
                     onChange={onChange}
                     placeholder="Type keywords (e.g. '911 physics', 'mars water')..."
