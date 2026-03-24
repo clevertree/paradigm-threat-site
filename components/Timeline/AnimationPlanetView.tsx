@@ -12,7 +12,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { Play, Pause, RotateCcw } from 'lucide-react'
 import type { TimelineEntry } from '@/components/TimelineContext'
-import { getEventYearForSim, findNearestEventToYear } from './utils'
+import { getEventYearForSim, findNearestEventToYear, formatElapsedForSignedStart } from './utils'
+import { useClientClock } from './useClientClock'
 
 interface AnimationPlanetViewProps {
     onSelectEvent?: (entry: TimelineEntry) => void
@@ -268,6 +269,13 @@ export function AnimationPlanetView({
 
     const formatYearLabel = (y: number) => y < 0 ? `${Math.abs(Math.round(y))} BCE` : `${Math.round(y)} CE`
 
+    const clientClock = useClientClock()
+    const roundedYear = Math.round(year)
+    const elapsedSimLine =
+        clientClock != null
+            ? formatElapsedForSignedStart(roundedYear, clientClock.refYear, clientClock.nowMs)
+            : null
+
     return (
         <div className="flex flex-col h-full w-full bg-slate-950 relative">
             {/* 3D canvas — explicit min-height so canvas gets dimensions even when flex parent is 0 */}
@@ -310,7 +318,14 @@ export function AnimationPlanetView({
                     className="flex-1 accent-purple-500 cursor-pointer"
                 />
 
-                <span className="text-xs text-slate-400 tabular-nums w-20 text-right">{formatYearLabel(year)}</span>
+                <div className="flex flex-col items-end flex-shrink-0 min-w-[5.5rem] max-w-[12rem]">
+                    <span className="text-xs text-slate-400 tabular-nums text-right">{formatYearLabel(year)}</span>
+                    {elapsedSimLine ? (
+                        <span className="text-[10px] text-slate-500 tabular-nums text-right leading-tight mt-0.5">
+                            {elapsedSimLine}
+                        </span>
+                    ) : null}
+                </div>
 
                 <select
                     value={speed}

@@ -7,7 +7,24 @@ import { PopImage, ShareLinks } from '@/components'
 import { TimelineAwareLink } from '@/components/Timeline/TimelineAwareLink'
 import { getLqipFromIndex, getDimensionsFromIndex, resolveImagePath } from '@/components/helpers/imageHelper'
 import { transformImageCaptions } from './markdownTransform'
-import { formatDateRange } from './utils'
+import { formatDateRange, formatElapsedSinceStart } from './utils'
+import { useClientClock } from './useClientClock'
+
+/** H1 date prefix: only when title begins with formatted range + em dash (avoids duplicating e.g. `1421 CE — Title`). */
+function getHeaderDatePrefixInfo(entry: TimelineEntry): {
+  dateStr: string | null
+  hasDatePrefix: boolean
+  sep: string | null
+  titleRest: string
+} {
+  const dateStr = entry.dates ? formatDateRange(entry) : null
+  const seps = [' — ', ' – '] as const
+  const sep = seps.find((s) => dateStr && dateStr !== '—' && entry.title.startsWith(dateStr + s)) ?? null
+  const hasDatePrefix = !!sep
+  const titleRest =
+    hasDatePrefix && sep && dateStr ? entry.title.slice((dateStr + sep).length) : entry.title
+  return { dateStr, hasDatePrefix, sep, titleRest }
+}
 
 /** Strip H1 title and YAML frontmatter before rendering. */
 function prepareMarkdownContent(md: string): string {
@@ -43,6 +60,7 @@ export function MarkdownCarousel({
   const [mdContent, setMdContent] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [index, setIndex] = useState<Record<string, unknown> | null>(null)
+  const clientClock = useClientClock()
 
   const currentIndex = events.findIndex((e) => e.id === selectedId)
   const currentEntry = currentIndex >= 0 ? events[currentIndex]! : null
@@ -50,6 +68,16 @@ export function MarkdownCarousel({
   const hasNext = currentIndex >= 0 && currentIndex < events.length - 1
   const prevEntry = hasPrev ? events[currentIndex! - 1]! : null
   const nextEntry = hasNext ? events[currentIndex! + 1]! : null
+
+  const elapsedHeaderLine =
+    currentEntry &&
+    currentEntry.type !== 'article' &&
+    clientClock &&
+    currentEntry.dates
+      ? formatElapsedSinceStart(currentEntry, clientClock.refYear, clientClock.nowMs)
+      : null
+
+  const headerDateInfo = currentEntry ? getHeaderDatePrefixInfo(currentEntry) : null
 
   useEffect(() => {
     if (!baseUrl) return
@@ -81,21 +109,15 @@ export function MarkdownCarousel({
           <>
             <div className="flex items-start justify-between gap-2 md:mb-4">
               <h2 className={`font-semibold text-slate-900 dark:text-slate-100 text-left select-text flex-1 min-w-0 ${currentEntry.type === 'article' ? 'text-sm' : 'text-lg'}`}>
-                {(() => {
-                  const dateStr = currentEntry.dates ? formatDateRange(currentEntry) : null
-                  const seps = [' — ', ' – '] as const
-                  const sep = seps.find((s) => dateStr && dateStr !== '—' && currentEntry.title.startsWith(dateStr + s))
-                  const hasDatePrefix = !!sep
-                  const titleRest = hasDatePrefix ? currentEntry.title.slice((dateStr! + sep!).length) : currentEntry.title
-                  return (
-                    <>
-                      {hasDatePrefix && (
-                        <span className="hidden md:inline">{dateStr}{sep}</span>
-                      )}
-                      {titleRest}
-                    </>
-                  )
-                })()}
+                <>
+                  {headerDateInfo?.hasDatePrefix && (
+                    <span className="hidden md:inline">
+                      {headerDateInfo.dateStr}
+                      {headerDateInfo.sep}
+                    </span>
+                  )}
+                  {headerDateInfo?.titleRest ?? currentEntry.title}
+                </>
               </h2>
               {onPlayEvent && (
                 <button
@@ -115,6 +137,21 @@ export function MarkdownCarousel({
                 </button>
               )}
             </div>
+            {headerDateInfo &&
+              currentEntry.type !== 'article' &&
+              headerDateInfo.dateStr &&
+              headerDateInfo.dateStr !== '—' && (
+                <div
+                  className={`text-xs text-slate-500 dark:text-slate-400 font-mono tabular-nums leading-tight mb-1 md:-mt-1 ${headerDateInfo.hasDatePrefix ? 'md:hidden' : ''}`}
+                >
+                  {headerDateInfo.dateStr}
+                </div>
+              )}
+            {elapsedHeaderLine && (
+              <div className="block text-[10px] text-slate-400 dark:text-slate-500 font-mono tabular-nums leading-tight mb-2 sm:-mt-0.5 md:-mt-1">
+                {elapsedHeaderLine}
+              </div>
+            )}
             {loading ? (
               <div className="text-slate-500 text-sm text-left">Loading…</div>
             ) : mdContent ? (

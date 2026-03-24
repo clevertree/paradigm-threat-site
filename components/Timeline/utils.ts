@@ -3,6 +3,7 @@
  * Uses approximate solar year in ms.
  */
 const MS_PER_YEAR = 365.25 * 24 * 60 * 60 * 1000
+const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 export function yearToDate(year: number): Date {
   return new Date(year * MS_PER_YEAR)
@@ -10,6 +11,95 @@ export function yearToDate(year: number): Date {
 
 /** Sentinel year for unknown start (before creation, undatable). Used for timeline positioning. */
 export const UNKNOWN_START_YEAR = -50000
+
+/** Phantom / conventional “blip” interval (Fomenko); subtract from BCE→present elapsed counts. */
+export const BLIP_SIGNED_START = -670
+export const BLIP_SIGNED_END = 1053
+
+/** Overlap of [segmentLo, segmentHi] with the blip interval (inclusive signed years), or null if disjoint. */
+function blipOverlapSegment(segmentLo: number, segmentHi: number): { o0: number; o1: number } | null {
+  const lo = Math.min(segmentLo, segmentHi)
+  const hi = Math.max(segmentLo, segmentHi)
+  const o0 = Math.max(lo, BLIP_SIGNED_START)
+  const o1 = Math.min(hi, BLIP_SIGNED_END)
+  if (o0 > o1) return null
+  return { o0, o1 }
+}
+
+/**
+ * Calendar years from signed `fromSigned` to `refYear` (no year 0; negative = BCE).
+ * Returns null if the event lies after `refYear` on the timeline.
+ */
+export function calendarYearsElapsed(fromSigned: number, refYear: number): number | null {
+  if (fromSigned > refYear) return null
+  if (fromSigned < 0 && refYear > 0) {
+    return Math.abs(fromSigned) + refYear - 1
+  }
+  return Math.abs(refYear - fromSigned)
+}
+
+/**
+ * Days elapsed in the same 365.25-day-year model as `yearToDate` / vis-timeline (not civil Gregorian days).
+ */
+export function approxSolarDaysElapsed(fromSigned: number, nowMs: number): number {
+  return Math.round((nowMs - yearToDate(fromSigned).getTime()) / MS_PER_DAY)
+}
+
+/**
+ * Elapsed label from a signed start year to “now” (calendar years, solar-model days; BCE adjusts for blip).
+ */
+export function formatElapsedForSignedStart(
+  start: number,
+  refYear: number,
+  nowMs: number
+): string | null {
+  if (start === UNKNOWN_START_YEAR) return null
+  const years = calendarYearsElapsed(start, refYear)
+  if (years == null) return null
+  let adjYears = years
+  let adjDays = approxSolarDaysElapsed(start, nowMs)
+  if (adjDays < 0) return null
+  let blipNote = ''
+  if (start < 0) {
+    const overlap = blipOverlapSegment(start, refYear)
+    if (overlap) {
+      const blipYears = calendarYearsElapsed(overlap.o0, overlap.o1)
+      if (blipYears != null && blipYears > 0) {
+        adjYears = years - blipYears
+        // Match calendar blip span to the solar-year model (365.25 d/y), same as `yearToDate`.
+        adjDays -= Math.round(blipYears * (MS_PER_YEAR / MS_PER_DAY))
+        blipNote = ' since event (blip omitted)'
+      }
+    }
+  }
+  if (adjYears < 0) return null
+  if (adjDays < 0) {
+    // Blip day deduction uses calendar-years×365.25; raw span uses real `nowMs` vs `yearToDate(start)`.
+    // For some BCE dates that span can be shorter than the deduction — align days with adjusted years.
+    adjDays = Math.round(adjYears * (MS_PER_YEAR / MS_PER_DAY))
+  }
+  return `~${adjYears.toLocaleString('en-US')} calendar years · ~${adjDays.toLocaleString('en-US')} days${blipNote}`
+}
+
+/**
+ * Supplementary label: elapsed calendar years and solar-model days to “now”.
+ * Uses explicit start only (not end fallback when start is unknown).
+ */
+export function formatElapsedSinceStart(
+  evt: {
+    type?: 'article' | 'event'
+    dates?: { start?: number | null; end?: number; calendar?: string; value?: number; start_label?: string }[]
+  },
+  refYear: number,
+  nowMs: number
+): string | null {
+  if (evt.type === 'article') return null
+  const d = evt.dates?.[0]
+  if (!d) return null
+  const start = d.start ?? (d as { value?: number }).value
+  if (start == null || start === UNKNOWN_START_YEAR) return null
+  return formatElapsedForSignedStart(start, refYear, nowMs)
+}
 
 /** Return effective start year for timeline positioning. Uses UNKNOWN_START_YEAR when start is unknown. */
 export function getEventStartYear(evt: { dates?: { start?: number | null; end?: number }[] }): number | null {
