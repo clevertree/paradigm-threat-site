@@ -44,8 +44,6 @@ describe('Dynamic Site Specification', () => {
     });
 
     it('visits a subpage', () => {
-        // Skip mudflood test due to malformed MDX in the content file
-        // The issue is in the source data, not our app
         cy.visit('/', { failOnStatusCode: false });
         cy.wait(500);
     });
@@ -101,24 +99,17 @@ describe('Dynamic Site Specification', () => {
         });
     });
 
-    it('visits the 911 page to verify Auto component definition', () => {
+    it('visits the 911 page without MDX runtime errors', () => {
         cy.visit('/events/911', { failOnStatusCode: false });
         cy.wait(1000);
-        // If the Auto component is missing, it throws a runtime error (uncaught exception)
-        // which our listener above tracks. 
-        // We can assert that the specific error didn't occur or just rely on the general "no critical errors" check at the end?
-        // Actually, uncaught exceptions fail tests by default unless we return false.
-        // Our listener returns false (ignoring error) but pushes to `caughtErrors`.
-        // So we need to check `caughtErrors` at the end or check if this specific visit caused one.
-
         cy.then(() => {
-            const autoError = caughtErrors.find(e => e.page.includes('911') && e.error.includes('Expected component `Auto` to be defined'));
-            if (autoError) {
-                throw new Error(`Critical Error found on 911 page: ${autoError.error}`);
+            const pageErrors = caughtErrors.filter((e) => e.page.includes('911'));
+            if (pageErrors.length > 0) {
+                throw new Error(
+                    `Critical errors on 911 page: ${pageErrors.map((e) => e.error).join('; ')}`
+                );
             }
         });
-
-        // Also check if content rendered
         cy.get('h1').should('exist');
     });
 });

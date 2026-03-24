@@ -11,6 +11,7 @@ import { ArticleTTSOverlay } from '@/components/ArticleTTS/ArticleTTSOverlay'
 import { ArticleTTSScrollSync } from '@/components/ArticleTTS/ArticleTTSScrollSync'
 import { stripMarkdownForTTS, buildParagraphStarts } from '@/components/Timeline/ttsHelpers'
 import { SuspenseLoader } from '@client'
+import { formatIndexDateTiny } from '@/lib/indexUpdated'
 
 export const CatchAllClient = memo(function CatchAllClient() {
   const params = useParams()
@@ -384,7 +385,14 @@ export const CatchAllClient = memo(function CatchAllClient() {
                 </div>
                 <div className="grid grid-cols-1 gap-4">
                   {mds.map(file => {
-                    const title = mdContents[file]?.title || file.replace(/_/g, ' ').replace(/\.md$/, '')
+                    let cur = filesIndex
+                    for (const s of slugArray) {
+                      if (cur) cur = cur[s]
+                    }
+                    const fileNode = cur?.[file]
+                    const updatedTiny = formatIndexDateTiny(fileNode?._updated)
+                    const docTitle =
+                      mdContents[file]?.title || file.replace(/_/g, ' ').replace(/\.md$/, '')
                     return (
                       <Link
                         key={file}
@@ -397,8 +405,13 @@ export const CatchAllClient = memo(function CatchAllClient() {
                               {file}
                             </span>
                             <span className="text-xl group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
-                              {title}
+                              {docTitle}
                             </span>
+                            {updatedTiny ? (
+                              <span className="mt-1 text-[10px] font-normal tabular-nums text-slate-500 dark:text-slate-400">
+                                {updatedTiny}
+                              </span>
+                            ) : null}
                           </div>
                           <svg className="w-5 h-5 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -421,8 +434,9 @@ export const CatchAllClient = memo(function CatchAllClient() {
                   {images.map(img => {
                     let current = filesIndex
                     for (const s of slugArray) if (current) current = current[s]
-                    const node = current?.[img]
-                    const title = node?._title
+                    const imgMeta = current?.[img]
+                    const imgTitle = imgMeta?._title
+                    const imgDateTiny = formatIndexDateTiny(imgMeta?._updated)
 
                     return (
                       <div key={img} className="flex flex-col gap-2">
@@ -435,14 +449,19 @@ export const CatchAllClient = memo(function CatchAllClient() {
                           />
                         </div>
                         <div className="px-1 min-w-0">
-                          {title && (
+                          {imgTitle && (
                             <div className="text-[10px] font-medium text-amber-600 dark:text-amber-400 truncate">
-                              {title}
+                              {imgTitle}
                             </div>
                           )}
                           <div className="text-[10px] text-slate-500 truncate">
                             {img}
                           </div>
+                          {imgDateTiny ? (
+                            <div className="truncate text-[9px] tabular-nums text-slate-500 dark:text-slate-400">
+                              {imgDateTiny}
+                            </div>
+                          ) : null}
                         </div>
                       </div>
                     )
