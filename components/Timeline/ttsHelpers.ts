@@ -33,7 +33,7 @@ function yearBig(n: number): string {
 
 /**
  * Calendar / history year to spoken English (TTS-friendly).
- * e.g. 1761 -> "seventeen sixty-one", 2005 -> "two thousand five", 2019 -> "twenty nineteen".
+ * e.g. 1761 -> "seventeen sixty-one", 1905 -> "nineteen oh five", 2005 -> "two thousand five", 2019 -> "twenty nineteen".
  */
 export function yearToWords(y: number): string {
     const n = Math.floor(Math.abs(y))
