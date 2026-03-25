@@ -46,6 +46,8 @@ export function yearToWords(y: number): string {
         if (c === 10 && r === 0) return 'one thousand'
         const cw = under100(c)
         if (r === 0) return `${cw} hundred`
+        // e.g. 1905 -> "nineteen oh five", not "nineteen five"
+        if (r < 10) return `${cw} oh ${UNITS[r]}`
         return `${cw} ${under100(r)}`
     }
     if (n < 2010) {
