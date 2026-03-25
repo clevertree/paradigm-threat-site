@@ -285,9 +285,27 @@ export function expandMathNotationForTTS(text: string): string {
     return s.replace(/[ \t]{2,}/g, ' ')
 }
 
+/**
+ * Roman-numeral world wars → spoken ordinals (TTS often reads "I" as the letter).
+ * Longer numerals first so "World War II" is not parsed as "World War I" + "I".
+ */
+export function expandWorldWarsForTTS(text: string): string {
+    let s = text
+    s = s.replace(/\bWorld War III\b/gi, 'World War Three')
+    s = s.replace(/\bWorld War II\b/gi, 'World War Two')
+    s = s.replace(/\bWorld War I\b/gi, 'World War One')
+    s = s.replace(/\bWWIII\b/gi, 'World War Three')
+    s = s.replace(/\bWWII\b/gi, 'World War Two')
+    s = s.replace(/\bWWI\b/gi, 'World War One')
+    s = s.replace(/\bWW\s*3\b/gi, 'World War Three')
+    s = s.replace(/\bWW\s*2\b/gi, 'World War Two')
+    s = s.replace(/\bWW\s*1\b/gi, 'World War One')
+    return s
+}
+
 /** Dates then Latin — single entry point for TTS preprocessing. */
 export function preprocessSpeechText(text: string): string {
-    return normalizeLatinForTTS(expandDatesForTTS(expandMathNotationForTTS(text)))
+    return normalizeLatinForTTS(expandDatesForTTS(expandMathNotationForTTS(expandWorldWarsForTTS(text))))
 }
 
 function centuryOrdinal(n: number): string {
