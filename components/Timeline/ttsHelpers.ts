@@ -192,9 +192,100 @@ export function normalizeLatinForTTS(text: string): string {
         .trim()
 }
 
+/** Map Unicode superscript digit code points to ASCII digits. */
+const SUPERSCRIPT_TO_DIGIT: Record<string, string> = {
+    '\u00B9': '1',
+    '\u00B2': '2',
+    '\u00B3': '3',
+    '\u2070': '0',
+    '\u2074': '4',
+    '\u2075': '5',
+    '\u2076': '6',
+    '\u2077': '7',
+    '\u2078': '8',
+    '\u2079': '9',
+}
+
+const SUPERSCRIPT_DIGIT_CLASS = `[${Object.keys(SUPERSCRIPT_TO_DIGIT).join('')}]`
+
+function ordinalSuffix(n: number): string {
+    const v = n % 100
+    if (v >= 11 && v <= 13) return 'th'
+    switch (n % 10) {
+        case 1: return 'st'
+        case 2: return 'nd'
+        case 3: return 'rd'
+        default: return 'th'
+    }
+}
+
+/** Exponent (plain digit form) → spoken English for TTS (e.g. 2 → "squared"). */
+export function exponentToSpoken(n: number): string {
+    if (!Number.isFinite(n) || n < 0) return String(n)
+    if (n === 2) return 'squared'
+    if (n === 3) return 'cubed'
+    if (n === 0) return 'to the zeroth power'
+    if (n === 1) return 'to the first power'
+    if (n >= 4 && n <= 12) {
+        const words = ['fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth']
+        return `to the ${words[n - 4]} power`
+    }
+    if (n < 100) return `to the ${n}${ordinalSuffix(n)} power`
+    return `to the ${n}th power`
+}
+
+/**
+ * Unicode superscript digit runs (e.g. x², 10¹⁰) → spoken powers.
+ */
+function expandUnicodeSuperscriptsForTTS(text: string): string {
+    const re = new RegExp(`${SUPERSCRIPT_DIGIT_CLASS}+`, 'g')
+    return text.replace(re, (run) => {
+        let digits = ''
+        for (const ch of run) {
+            const d = SUPERSCRIPT_TO_DIGIT[ch]
+            if (!d) return run
+            digits += d
+        }
+        const n = parseInt(digits, 10)
+        if (!Number.isFinite(n)) return run
+        return ` ${exponentToSpoken(n)}`
+    })
+}
+
+/** Caret exponents: mc^2, E = mc^2 → … squared */
+function expandCaretExponentsForTTS(text: string): string {
+    return text.replace(/\^\s*([0-9]+)/g, (_, exp: string) => {
+        const n = parseInt(exp, 10)
+        if (!Number.isFinite(n)) return _
+        return ` ${exponentToSpoken(n)}`
+    })
+}
+
+/** `=` between letters/digits → " equals " (e.g. e=mc^2). */
+function expandEqualsForFormulas(text: string): string {
+    return text.replace(/(?<=[A-Za-z0-9])\s*=\s*(?=[A-Za-z0-9])/g, ' equals ')
+}
+
+/**
+ * After "equals", a two-letter lowercase token before squared/cubed is often a product of variables (mc → m c).
+ */
+function spaceTwoLetterFactorBeforePower(text: string): string {
+    return text.replace(/(?<=equals )([a-z]{2})\s+(squared|cubed)\b/gi, (_, ab: string, pow: string) => `${ab[0]} ${ab[1]} ${pow}`)
+}
+
+/** Exponents, equals, and short formula tokens — run before year expansion. */
+export function expandMathNotationForTTS(text: string): string {
+    let s = expandUnicodeSuperscriptsForTTS(text)
+    s = expandCaretExponentsForTTS(s)
+    s = expandEqualsForFormulas(s)
+    s = spaceTwoLetterFactorBeforePower(s)
+    // Collapse horizontal runs only — keep newlines for sentence splitting.
+    return s.replace(/[ \t]{2,}/g, ' ')
+}
+
 /** Dates then Latin — single entry point for TTS preprocessing. */
 export function preprocessSpeechText(text: string): string {
-    return normalizeLatinForTTS(expandDatesForTTS(text))
+    return normalizeLatinForTTS(expandDatesForTTS(expandMathNotationForTTS(text)))
 }
 
 function centuryOrdinal(n: number): string {
