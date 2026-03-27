@@ -33,6 +33,7 @@ export function TimelineView() {
     onToggleFullscreen,
     browserPath,
     initialEventIdRef,
+    autoplayTtsRef,
     updateUrlForEvent,
   } = useTimelineUrlState()
 
@@ -77,6 +78,20 @@ export function TimelineView() {
     showContentDrawerRef,
     setShowContentDrawer,
   })
+
+  const autoplayConsumedRef = useRef(false)
+  useEffect(() => {
+    if (loading || !selected || !fullPage || !autoplayTtsRef.current || autoplayConsumedRef.current) return
+    autoplayConsumedRef.current = true
+    autoplayTtsRef.current = false
+    handlePlayEvent(selected)
+    queueMicrotask(() => {
+      const params = new URLSearchParams(window.location.search)
+      params.delete('play')
+      const q = params.toString()
+      window.history.replaceState(null, '', window.location.pathname + (q ? '?' + q : ''))
+    })
+  }, [loading, selected, fullPage, handlePlayEvent, autoplayTtsRef])
 
   useEffect(() => {
     if (!fullPage) return

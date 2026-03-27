@@ -10,12 +10,15 @@ export function useTimelineUrlState() {
   const [viewMode, setViewModeRaw] = useState<TimelineViewMode>('custom')
   const [browserPath, setBrowserPath] = useState<string | null>(null)
   const initialEventIdRef = useRef<string | null>(null)
+  /** When true, TimelineView should call handlePlayEvent once (with ?play=1). */
+  const autoplayTtsRef = useRef(false)
 
-  // Read ?fullscreen=1, ?view=<mode>, and event id from URL on mount
+  // Read ?fullscreen=1, ?play=1, ?view=<mode>, and event id from URL on mount
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
+    if (params.get('play') === '1') autoplayTtsRef.current = true
     queueMicrotask(() => {
-      if (params.get('fullscreen') === '1') setFullPage(true)
+      if (params.get('fullscreen') === '1' || params.get('play') === '1') setFullPage(true)
       const viewParam = params.get('view') as TimelineViewMode | null
       if (viewParam && (VIEW_MODES as readonly string[]).includes(viewParam)) {
         setViewModeRaw(viewParam)
@@ -92,6 +95,7 @@ export function useTimelineUrlState() {
     onToggleFullscreen,
     browserPath,
     initialEventIdRef,
+    autoplayTtsRef,
     updateUrlForEvent,
   }
 }
