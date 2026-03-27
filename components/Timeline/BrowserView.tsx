@@ -8,6 +8,7 @@ import { PopImage } from '@/components'
 import { TimelineAwareLink } from '@/components/Timeline/TimelineAwareLink'
 import { transformImageCaptions } from './markdownTransform'
 import { getLqipFromIndex, getDimensionsFromIndex, resolveImagePath } from '@/components/helpers/imageHelper'
+import { timelineManifestCacheQuery } from '@/lib/timelineManifestCacheBust'
 
 /* ── Types ──────────────────────────────────────────────────────── */
 
@@ -203,7 +204,7 @@ export function BrowserView({ initialPath }: BrowserViewProps) {
   useEffect(() => {
     let cancelled = false
     queueMicrotask(() => setLoadingIndex(true))
-    fetch(`${baseUrl}/index.json`)
+    fetch(`${baseUrl}/index.json${timelineManifestCacheQuery()}`, { cache: 'no-store' })
       .then((res) => {
         if (!res.ok) throw new Error(`Failed to fetch index: ${res.status}`)
         return res.json()

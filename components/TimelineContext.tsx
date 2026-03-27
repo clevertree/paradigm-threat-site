@@ -1,6 +1,7 @@
 'use client'
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from 'react'
+import { timelineManifestCacheQuery } from '@/lib/timelineManifestCacheBust'
 
 export interface TimelineDate {
   start: number
@@ -78,7 +79,9 @@ export function TimelineProvider({ children }: { children: ReactNode }) {
 
     const fetchData = async () => {
       try {
-        const res = await fetch(`${baseUrl}/data/events.json`)
+        const res = await fetch(`${baseUrl}/data/events.json${timelineManifestCacheQuery()}`, {
+          cache: 'no-store',
+        })
         if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`)
         const data: TimelineData = await res.json()
         if (isMounted) {

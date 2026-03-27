@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { timelineManifestCacheQuery } from '@/lib/timelineManifestCacheBust'
 
 const TIMELINE_BASE =
   process.env.NEXT_PUBLIC_TIMELINE_BASE_URL ||
@@ -58,7 +59,9 @@ export async function GET(request: Request) {
   const maxDepth = Math.min(4, Math.max(1, parseInt(searchParams.get('maxDepth') || '4', 10)))
 
   try {
-    const res = await fetch(`${TIMELINE_BASE}/data/events.json`, { next: { revalidate: 60 } })
+    const res = await fetch(`${TIMELINE_BASE}/data/events.json${timelineManifestCacheQuery()}`, {
+      next: { revalidate: 60 },
+    })
     if (!res.ok) throw new Error('Failed to fetch events')
     const data = await res.json()
     const entries = data.entries || []

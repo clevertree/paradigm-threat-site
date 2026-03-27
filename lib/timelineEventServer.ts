@@ -3,6 +3,7 @@
  */
 
 import { firstTimelineOgMediaPath } from '@/lib/timelineMedia'
+import { timelineManifestCacheQuery } from '@/lib/timelineManifestCacheBust'
 
 const TIMELINE_BASE =
   process.env.NEXT_PUBLIC_TIMELINE_BASE_URL ||
@@ -34,7 +35,9 @@ export interface TimelineEventMeta {
 
 export async function getTimelineEventMeta(eventId: string): Promise<TimelineEventMeta | null> {
   try {
-    const res = await fetch(`${TIMELINE_BASE}/data/events.json`, { next: { revalidate: 60 } })
+    const res = await fetch(`${TIMELINE_BASE}/data/events.json${timelineManifestCacheQuery()}`, {
+      next: { revalidate: 60 },
+    })
     if (!res.ok) return null
     const data = await res.json()
     const entries = (data.entries || []) as TimelineEntry[]

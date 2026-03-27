@@ -24,6 +24,27 @@ const withPWA = require('@ducanh2912/next-pwa').default({
   workboxOptions: {
     disableDevLogs: true,
     runtimeCaching: [
+      // Timeline manifest data (GitHub Pages default caching is aggressive; PWA must revalidate often)
+      {
+        urlPattern: /^https:\/\/clevertree\.github\.io\/paradigm-threat-timeline\/data\/events\.json(\?.*)?$/i,
+        handler: 'NetworkFirst',
+        options: {
+          cacheName: 'pt-timeline-events',
+          networkTimeoutSeconds: 5,
+          expiration: { maxEntries: 8, maxAgeSeconds: 60 },
+          cacheableResponse: { statuses: [0, 200] },
+        },
+      },
+      {
+        urlPattern: /^https:\/\/clevertree\.github\.io\/paradigm-threat-timeline\/index\.json(\?.*)?$/i,
+        handler: 'NetworkFirst',
+        options: {
+          cacheName: 'pt-timeline-index',
+          networkTimeoutSeconds: 5,
+          expiration: { maxEntries: 8, maxAgeSeconds: 60 },
+          cacheableResponse: { statuses: [0, 200] },
+        },
+      },
       {
         urlPattern: /^https:\/\/files\.paradigmthreat\.net\/index\.json(\?.*)?$/i,
         handler: 'StaleWhileRevalidate',

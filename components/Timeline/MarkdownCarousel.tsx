@@ -9,6 +9,7 @@ import { getLqipFromIndex, getDimensionsFromIndex, resolveImagePath } from '@/co
 import { transformImageCaptions } from './markdownTransform'
 import { formatDateRange, formatElapsedSinceStart } from './utils'
 import { useClientClock } from './useClientClock'
+import { timelineManifestCacheQuery } from '@/lib/timelineManifestCacheBust'
 
 /** H1 date prefix: only when title begins with formatted range + em dash (avoids duplicating e.g. `1421 CE — Title`). */
 function getHeaderDatePrefixInfo(entry: TimelineEntry): {
@@ -81,7 +82,7 @@ export function MarkdownCarousel({
 
   useEffect(() => {
     if (!baseUrl) return
-    fetch(`${baseUrl}/index.json`)
+    fetch(`${baseUrl}/index.json${timelineManifestCacheQuery()}`, { cache: 'no-store' })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => setIndex(data ?? null))
       .catch(() => setIndex(null))
